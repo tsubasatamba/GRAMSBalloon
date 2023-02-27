@@ -1,0 +1,88 @@
+cmake_minimum_required(VERSION 3.0)
+#CMAKE_MINIMUM_REQUIRED_VERSION(VERSION 3.14)
+
+### Initial definition of cmake variables
+set(CMAKE_INSTALL_PREFIX $ENV{HOME} CACHE PATH "install prefix")
+set(CMAKE_BUILD_TYPE Release CACHE STRING "build type")
+# set(CMAKE_BUILD_TYPE Debug CACHE STRING "build type")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -W -Wall" CACHE STRING "CXX_FLAGS for debug")
+set(CMAKE_C_FLAGS_DEBUG "-g -W -Wall" CACHE STRING "C_FLAGS for debug")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -W -Wall" CACHE STRING "CXX_FLAGS for release")
+set(CMAKE_C_FLAGS_RELEASE "-O3 -W -Wall" CACHE STRING "C_FLAGS for release")
+set(CMAKE_MACOSX_RPATH 1)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+### Definition of project
+project(GRAMSBalloon CXX C)
+set(PROJECT_VERSION 1.0)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(USE_RUBY ON)
+set(MY_LIBRARY GRAMSBalloon)
+#set(RASPI ON)
+
+find_package(Ruby 2.7 REQUIRED)
+
+## install options
+option(GB_INSTALL_HEADERS "install all header files" ON)
+option(GB_INSTALL_CMAKE_FILES "install all cmake files" ON)
+set(INSTALL_HEADERS ${GB_INSTALL_HEADERS})
+set(INSTALL_CMAKE_FILES ${GB_INSTALL_CMAKE_FILES})
+
+### External libraries
+### BOOST ###
+find_package(Boost 1.60.0 REQUIRED COMPONENTS system chrono thread)
+set(BOOST_INC_DIR ${Boost_INCLUDE_DIRS})
+set(BOOST_LIB_DIR ${Boost_LIBRARY_DIRS})
+set(BOOST_LIB ${Boost_LIBRARIES})
+message("-- BOOST_INC_DIR: ${BOOST_INC_DIR}")
+message("-- BOOST_LIB_DIR: ${BOOST_LIB_DIR}")
+message("-- BOOST_LIB: ${BOOST_LIB}")
+
+#ANL
+if(NOT DEFINED ANLNEXT_INSTALL)
+  if(DEFINED ENV{ANLNEXT_INSTALL})
+    set(ANLNEXT_INSTALL $ENV{ANLNEXT_INSTALL})
+  else()
+    set(ANLNEXT_INSTALL $ENV{HOME})
+  endif()
+endif(NOT DEFINED ANLNEXT_INSTALL)
+set(ANLNEXT_INC_DIR ${ANLNEXT_INSTALL}/include)
+set(ANLNEXT_LIB_DIR ${ANLNEXT_INSTALL}/lib)
+set(ANLNEXT_LIB ANLNext)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ANLNEXT_LIB_DIR}/anlnext)
+message("-- ANLNEXT_INSTALL = ${ANLNEXT_INSTALL}")
+
+### ROOT ###
+set(ROOTSYS $ENV{ROOTSYS})
+list(APPEND CMAKE_PREFIX_PATH ${ROOTSYS})
+find_package(ROOT REQUIRED COMPONENTS Core Physics)
+set(ROOT_INC_DIR ${ROOT_INCLUDE_DIRS})
+set(ROOT_LIB_DIR ${ROOT_LIBRARY_DIR})
+set(ROOT_LIB ${ROOT_LIBRARIES})
+list(APPEND CMAKE_INSTALL_RPATH ${ROOT_LIBRARY_DIR})
+message("-- ROOTSYS = ${ROOTSYS}")
+message("-- ROOT_INC_DIR = ${ROOT_INC_DIR}")
+message("-- ROOT_LIB_DIR = ${ROOT_LIB_DIR}")
+message("-- ROOT libraries = ${ROOT_LIB}")
+# add_definitions(-DANL_USE_TVECTOR -DANL_USE_HEPVECTOR)
+
+
+
+# Compile for RASPI
+#if(${RASPI})
+#find_package(pigpio REQUIRED)
+#add_subdirectory(balloon/src)
+
+#else()
+#add_subdirectory(ground/src)
+#endif(${RASPI})
+
+### subdirectories
+add_subdirectory(source)
+if(USE_RUBY)
+  add_subdirectory(rubyext)
+endif(USE_RUBY)
+
+
