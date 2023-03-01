@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
-include_directories(include
+include_directories(
+  include
+  ../BME68x-Sensor-API/include
   ${ADD_INC_DIR}
   ${BOOST_INC_DIR}
   ${PIGPIO_INC_DIR}
@@ -11,7 +13,7 @@ link_directories(
   )
 
 set(GB_CORE_CLASSES
-  src/bme68x.c
+  src/BME680IO.cc
 )
 
 add_library(GBCore SHARED
@@ -19,6 +21,7 @@ add_library(GBCore SHARED
   )
 
 target_link_libraries(GBCore
+  GBBME68x
   ${ADD_LIB}
   ${BOOST_LIB}
   pigpiod_if2

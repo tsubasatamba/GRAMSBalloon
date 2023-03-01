@@ -6,6 +6,7 @@ set(CLASS_LIST_FILE class_list_${TARGET_EXT_LIBRARY}.hh)
 set(RUBY_EXT_INCLUDE_DIRS
   ../source/modules/include
   ../source/core/include
+  ../source/BME68x-Sensor-API/include
   ${ANLNEXT_INC_DIR}
   ${BOOST_INC_DIR}
   ./interface
@@ -18,7 +19,11 @@ set(RUBY_EXT_LIBRARY_DIRS
   )
 set(RUBY_EXT_LIBRARIES
   ${ANLNEXT_LIB}
+  GBBME68x
+  GBCore
   GBModules
+  pigpiod_if2
+  rt
 )
 
 

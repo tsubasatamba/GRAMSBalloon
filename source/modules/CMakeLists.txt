@@ -21,20 +21,20 @@ link_directories(
 set(GB_MODULES
   src/SimpleLoop.cc
   src/SPIManager.cc
+  src/GetBME680Data.cc
   )
 
 add_library(GBModules SHARED
   ${GB_MODULES}
-  ${GB_BME68x}
   )
 
 target_link_libraries(GBModules
-  #GBCore
+  GBCore
+  GBBME68x
   ${ANLG4_LIB}
   ${ANLNEXT_LIB}
   ${ROOT_LIB}
   ${G4_LIB}
-  #${PIGPIO_LIB}
   pigpiod_if2
   rt
   )

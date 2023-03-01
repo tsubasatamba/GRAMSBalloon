@@ -7,6 +7,7 @@ using namespace anlnext;
 
 SPIManager::SPIManager()
 {
+  interface_ = std::make_unique<SPIInterface>();
 }
 
 SPIManager::~SPIManager() = default;
@@ -17,11 +18,6 @@ ANLStatus SPIManager::mod_define()
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("spi_flags", &mod_class::spiFlags_);
 
-  return AS_OK;
-}
-
-ANLStatus SPIManager::mod_pre_initialize()
-{
   return AS_OK;
 }
 
@@ -38,7 +34,7 @@ ANLStatus SPIManager::mod_initialize()
   }
 
   unsigned int spi_handler = spi_open(pi, channel_, baudrate_, spiFlags_);
-  if (spi_handler<0) {
+  if (static_cast<int>(spi_handler)<0) {
     std::cerr << "spi open failed: spi_handler = " << spi_handler << std::endl;
     return AS_QUIT_ERROR;
   }
@@ -51,17 +47,7 @@ ANLStatus SPIManager::mod_initialize()
   return AS_OK;
 }
 
-ANLStatus SPIManager::mod_begin_run()
-{
-  return AS_OK;
-}
-
 ANLStatus SPIManager::mod_analyze()
-{
-  return AS_OK;
-}
-
-ANLStatus SPIManager::mod_end_run()
 {
   return AS_OK;
 }

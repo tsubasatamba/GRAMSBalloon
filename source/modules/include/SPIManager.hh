@@ -22,15 +22,14 @@ public:
   virtual ~SPIManager();
   
   anlnext::ANLStatus mod_define() override;
-  anlnext::ANLStatus mod_pre_initialize() override;
   anlnext::ANLStatus mod_initialize() override;
-  anlnext::ANLStatus mod_begin_run() override;
   anlnext::ANLStatus mod_analyze() override;
-  anlnext::ANLStatus mod_end_run() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  SPIInterface* Interface() { return interface_.get(); }
+
 private:
-  std::unique_ptr<SPIInterface> interface_ = std::make_unique<SPIInterface>();
+  std::unique_ptr<SPIInterface> interface_ = nullptr;
   int channel_ = 0;
   int baudrate_ = 100000;
   int spiFlags_ = (1<<5) + (1<<6);

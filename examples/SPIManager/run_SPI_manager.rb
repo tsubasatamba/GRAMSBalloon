@@ -4,9 +4,10 @@ require 'anlnext'
 require 'GRAMSBalloon'
 
 class MyApp < ANL::ANLApp
-  def setup()
-    chain GRAMSBalloon::SPIManager
-  end
+    def setup()
+        chain GRAMSBalloon::SPIManager
+        chain GRAMSBalloon::GetBME680Data
+    end
 end
 
 a = MyApp.new

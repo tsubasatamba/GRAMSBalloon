@@ -4,6 +4,7 @@
 #include <anlnext/BasicModule.hh>
 #include "SimpleLoop.hh"
 #include "SPIManager.hh"
+#include "GetBME680Data.hh"
 
 %}
 
@@ -22,6 +23,12 @@ class SPIManager : public anlnext::BasicModule
 {
 public:
   SPIManager();
+};
+
+class GetBME680Data : public anlnext::BasicModule
+{
+public:
+  GetBME680Data();
 };
 
 
