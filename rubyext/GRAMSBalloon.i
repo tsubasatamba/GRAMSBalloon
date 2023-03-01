@@ -3,6 +3,7 @@
 // include headers of my modules
 #include <anlnext/BasicModule.hh>
 #include "SimpleLoop.hh"
+#include "SPIManager.hh"
 
 %}
 
@@ -15,6 +16,12 @@ class SimpleLoop : public anlnext::BasicModule
 {
 public:
   SimpleLoop();
+};
+
+class SPIManager : public anlnext::BasicModule
+{
+public:
+  SPIManager();
 };
 
 

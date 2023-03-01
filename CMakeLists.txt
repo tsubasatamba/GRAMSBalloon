@@ -54,20 +54,16 @@ set(ANLNEXT_LIB ANLNext)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ANLNEXT_LIB_DIR}/anlnext)
 message("-- ANLNEXT_INSTALL = ${ANLNEXT_INSTALL}")
 
-### ROOT ###
-set(ROOTSYS $ENV{ROOTSYS})
-list(APPEND CMAKE_PREFIX_PATH ${ROOTSYS})
-find_package(ROOT REQUIRED COMPONENTS Core Physics)
-set(ROOT_INC_DIR ${ROOT_INCLUDE_DIRS})
-set(ROOT_LIB_DIR ${ROOT_LIBRARY_DIR})
-set(ROOT_LIB ${ROOT_LIBRARIES})
-list(APPEND CMAKE_INSTALL_RPATH ${ROOT_LIBRARY_DIR})
-message("-- ROOTSYS = ${ROOTSYS}")
-message("-- ROOT_INC_DIR = ${ROOT_INC_DIR}")
-message("-- ROOT_LIB_DIR = ${ROOT_LIB_DIR}")
-message("-- ROOT libraries = ${ROOT_LIB}")
-# add_definitions(-DANL_USE_TVECTOR -DANL_USE_HEPVECTOR)
-
+### PIGPIO ###
+set(PIGPIO_INSTALL_PREFIX /home/grams/software/pigpio/util)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PIGPIO_INSTALL_PREFIX})
+find_package(pigpio REQUIRED)
+set(PIGPIO_INC_DIR ${pigpio_INCLUDE_DIRS})
+set(PIGPIO_LIB_DIR ${pigpio_LIBRARY_DIRS})
+set(PIGPIO_LIB ${pigpio_LIBRARIES})
+message("-- PIGPIO_INC_DIR: ${PIGPIO_INC_DIR}")
+message("-- PIGPIO_LIB_DIR: ${PIGPIO_LIB_DIR}")
+message("-- PIGPIO_LIB: ${PIGPIO_LIB}")
 
 
 # Compile for RASPI

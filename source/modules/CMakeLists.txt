@@ -1,11 +1,13 @@
 include_directories(
   include
-  #../core/include
+  ../core/include
+  ../BME68x-Sensor-API/include
   ${ANLG4_INC_DIR}
   ${ANLNEXT_INC_DIR}
   ${ROOT_INC_DIR}
   ${G4_INC_DIR}
   ${BOOST_INC_DIR}
+  ${PIGPIO_INC_DIR}
   )
 
 link_directories(
@@ -13,14 +15,17 @@ link_directories(
   ${ANLNEXT_LIB_DIR}
   ${ROOT_LIB_DIR}
   ${G4_LIB_DIR}
+  #${PIGPIO_LIB_DIR}
   )
 
 set(GB_MODULES
   src/SimpleLoop.cc
+  src/SPIManager.cc
   )
 
 add_library(GBModules SHARED
   ${GB_MODULES}
+  ${GB_BME68x}
   )
 
 target_link_libraries(GBModules
@@ -29,6 +34,9 @@ target_link_libraries(GBModules
   ${ANLNEXT_LIB}
   ${ROOT_LIB}
   ${G4_LIB}
+  #${PIGPIO_LIB}
+  pigpiod_if2
+  rt
   )
 
 install(TARGETS GBModules LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

@@ -5,6 +5,7 @@ set(SWIG_IF_FILE ${TARGET_EXT_LIBRARY}.i)
 set(CLASS_LIST_FILE class_list_${TARGET_EXT_LIBRARY}.hh)
 set(RUBY_EXT_INCLUDE_DIRS
   ../source/modules/include
+  ../source/core/include
   ${ANLNEXT_INC_DIR}
   ${BOOST_INC_DIR}
   ./interface
