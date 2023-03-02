@@ -1,4 +1,6 @@
 #include "BME680IO.hh"
+#include <vector>
+#include <iomanip>
 
 BME680IO::BME680IO()
 {
@@ -17,6 +19,10 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
   
   set_mode(pi, cs, PI_OUTPUT);
   gpio_write(pi, cs, CS_ENABLE);
+  #if 1
+  int dbg = gpio_read(pi, cs);
+  std::cout << "gpio_read: " << dbg << std::endl;
+  #endif
   char* address = reinterpret_cast<char *>(&reg_addr);
 
   int write_status = spi_write(pi, spihandler, address, BME_REGISTER_BYTES);
@@ -26,25 +32,43 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
     }
     std::cerr << "spi_write error: write_status = " << write_status << ", BME_REGISTER_BYTES = " << BME_REGISTER_BYTES << std::endl;
     rslt = static_cast<int8_t>(write_status);
+    gpio_write(pi, cs, CS_DISABLE);
     return rslt;
   }
-    
-  std::string temp(static_cast<int>(length), 'a');
-  int read_status = spi_read(pi, spihandler, const_cast<char *>(temp.c_str()), length);
+
+  std::vector<char> temp(length, 0);
+  
+  int read_status = spi_read(pi, spihandler, &temp[0], length);
   if (read_status != static_cast<int>(length)) {
     if (read_status==0) {
       read_status = -1000000;
     }
     std::cerr << "spi_read error: read_status = " << read_status << ", length = " << length << std::endl;
     rslt = static_cast<int8_t>(read_status);
+    gpio_write(pi, cs, CS_DISABLE);
     return rslt;
   }
     
   for (int i = 0; i < static_cast<int>(length); i++) {
-    reg_data[i] = temp[i];
+    reg_data[i] = temp[i];   
   }
+  
+  #if 0
+  std::cout << "reg_addr: " << std::hex << static_cast<int>(0x7F &  reg_addr) << std::endl;
+  for (int i=0; i<static_cast<int>(length); i++) {
+    std::cout << static_cast<int>(temp[i]) << " ";
+  }
+  for (int i=0; i<static_cast<int>(length); i++) {
+    std::cout << static_cast<int>(reg_data[i]) << " ";
+  }
+  std::cout << std::dec << std::endl;
+  #endif
 
   gpio_write(pi, cs, CS_DISABLE);
+  #if 1
+  int dbg2 = gpio_read(pi, cs);
+  std::cout << "gpio_read: " << dbg2 << std::endl;
+  #endif
     
   return rslt;
 }
@@ -65,6 +89,7 @@ int8_t BME680IO::writeReg(uint8_t reg_addr, const uint8_t *reg_data, uint32_t le
     }
     std::cerr << "spi_write error: write_status = " << write_status << ", BME_REGISTER_BYTES = " << BME_REGISTER_BYTES << std::endl;
     rslt = static_cast<int8_t>(write_status);
+    gpio_write(pi, cs, CS_DISABLE);
     return rslt;
   }
   
@@ -75,6 +100,7 @@ int8_t BME680IO::writeReg(uint8_t reg_addr, const uint8_t *reg_data, uint32_t le
     }
     std::cerr << "spi_write error: write_status = " << write_status << ", length = " << length << std::endl;
     rslt = static_cast<int8_t>(write_status);
+    gpio_write(pi, cs, CS_DISABLE);
     return rslt;
   }
   
@@ -112,15 +138,20 @@ void BME680IO::setup(SPIInterface* intf)
 
 int BME680IO::getData()
 {
-  //std::this_thread::sleep_for(std::chrono::microseconds(1000000));
+  bme68x_init(bme68xn_.get());
+  bme68x_set_conf(configure_.get(), bme68xn_.get());
   bme68x_set_op_mode(BME68X_FORCED_MODE, bme68xn_.get());
   uint8_t ndata = 0;
   int res = bme68x_get_data(BME68X_FORCED_MODE, sensorData_.get(), &ndata, bme68xn_.get());
+
+  std::cout << "ndata: " << static_cast<int>(ndata) << std::endl;
+ 
 
   if (res!=0) {
     std::cerr << "BME680IO::getData failed: ndata = " << ndata << ", get_data_id = " << res << std::endl;
   }
   bme68x_set_op_mode(BME68X_SLEEP_MODE, bme68xn_.get());
+  
 
   return res;
 }

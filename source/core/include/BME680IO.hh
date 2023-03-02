@@ -9,15 +9,6 @@
 #include "SPIInterface.hh"
 
 #define BME_REGISTER_BYTES 1
-#define SPI_CS_ENABLE 0
-
-#if SPI_CS_ENABLE == 0
-#define CS_ENABLE PI_OFF
-#define CS_DISABLE PI_ON
-#elif SPI_CS_ENABLE == 1
-#define CS_ENABLE PI_ON
-#define CS_DISABLE PI_OFF
-#endif
 
 /**
  * A class to handle BME680
@@ -35,6 +26,8 @@ public:
   void setup(SPIInterface* intf);
   int getData();
   void printData();
+
+  bme68x_data* SensorData() { return sensorData_.get(); }
   
 private:
   std::unique_ptr<bme68x_dev> bme68xn_ = nullptr;

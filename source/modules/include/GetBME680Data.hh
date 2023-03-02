@@ -13,6 +13,7 @@
 #include "SPIInterface.hh"
 #include "BME680IO.hh"
 #include "SPIManager.hh"
+#include <chrono>
 
 class GetBME680Data : public anlnext::BasicModule
 {
@@ -23,9 +24,12 @@ public:
   virtual ~GetBME680Data();
   
   anlnext::ANLStatus mod_define() override;
+  anlnext::ANLStatus mod_pre_initialize() override;
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
+
+  
 
 private:
   int chipSelect_ = 8;
@@ -33,6 +37,10 @@ private:
   SPIManager* SPIManager_ = nullptr;
   std::unique_ptr<BME680IO> bme680io_ = nullptr;
   std::unique_ptr<SPIInterface> interface_ = nullptr;
+  double pressure_;
+  double humidity_;
+  double temperature_;
+  std::chrono::system_clock::time_point lastUpdateTime_;
 };
 
 #endif /* GetBME680Data_H */

@@ -28,10 +28,6 @@ ANLStatus SPIManager::mod_initialize()
     std::cerr << "pigpio daemon connection failed: pi =  " << pi << std::endl;
     return AS_QUIT_ERROR;
   }
-  if (chipSelect_<0 || chipSelect_>=27) {
-    std::cerr << "Chip select must be non-negative and smaller than 27: CS=" << chipSelect_ << std::endl;
-    return AS_QUIT_ERROR;
-  }
 
   unsigned int spi_handler = spi_open(pi, channel_, baudrate_, spiFlags_);
   if (static_cast<int>(spi_handler)<0) {
@@ -40,10 +36,17 @@ ANLStatus SPIManager::mod_initialize()
   }
 
   interface_ -> setGPIOHandler(pi);
-  interface_ -> setChipSelect(chipSelect_);
+  interface_ -> setChipSelect(8);
   interface_ -> setSPIHandler(spi_handler);
-  
-  set_mode(interface_->GPIOHandler(), interface_->ChipSelect(), PI_OUTPUT);
+
+  const int n = chipSelectArray_.size();
+  std::cout << "n=" << n << std::endl;
+  for (int i=0; i<n; i++) {
+    set_mode(pi, chipSelectArray_[i], PI_OUTPUT);
+    set_pull_up_down(pi, chipSelectArray_[i], PI_PUD_UP);
+    gpio_write(pi, chipSelectArray_[i], CS_DISABLE);
+  }
+   
   return AS_OK;
 }
 
@@ -58,4 +61,9 @@ ANLStatus SPIManager::mod_finalize()
   pigpio_stop(interface_->GPIOHandler());
   
   return AS_OK;
+}
+
+void SPIManager::addChipSelect(int v)
+{
+  chipSelectArray_.push_back(v);
 }
