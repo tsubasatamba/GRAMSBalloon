@@ -22,6 +22,7 @@ set(GB_MODULES
   src/SimpleLoop.cc
   src/SPIManager.cc
   src/GetBME680Data.cc
+  src/ReceiveCommand.cc
   )
 
 add_library(GBModules SHARED

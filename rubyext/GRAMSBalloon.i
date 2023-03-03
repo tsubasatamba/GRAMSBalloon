@@ -5,6 +5,7 @@
 #include "SimpleLoop.hh"
 #include "SPIManager.hh"
 #include "GetBME680Data.hh"
+#include "ReceiveCommand.hh"
 
 %}
 
@@ -31,4 +32,9 @@ public:
   GetBME680Data();
 };
 
+class ReceiveCommand : public anlnext::BasicModule
+{
+public:
+  ReceiveCommand();
+};
 
