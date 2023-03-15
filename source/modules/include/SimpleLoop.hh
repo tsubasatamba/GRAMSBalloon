@@ -28,6 +28,12 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
 private:
+  int int_v = 0;
+  double double_v = 0.0;
+  std::string string_v;
+  std::vector<int> v1;
+  std::vector<double> v2;
+  std::vector<std::string> v3;
 };
 
 #endif /* SimpleLoop_H */
