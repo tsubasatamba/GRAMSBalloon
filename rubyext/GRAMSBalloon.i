@@ -6,7 +6,8 @@
 #include "SPIManager.hh"
 #include "GetBME680Data.hh"
 #include "ReceiveCommand.hh"
-
+#include "AnalogDiscoveryManager.hh"
+#include "RegulateHighVoltage.hh"
 %}
 
 %include "std_vector.i"
@@ -36,5 +37,17 @@ class ReceiveCommand : public anlnext::BasicModule
 {
 public:
   ReceiveCommand();
+};
+
+class AnalogDiscoveryManager : public anlnext::BasicModule
+{
+public:
+  AnalogDiscoveryManager();
+};
+
+class RegulateHighVoltage : public anlnext::BasicModule
+{
+public:
+  RegulateHighVoltage();
 };
 

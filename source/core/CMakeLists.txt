@@ -27,7 +27,9 @@ target_link_libraries(GBCore
   ${ADD_LIB}
   ${BOOST_LIB}
   pigpiod_if2
-  rt)
+  rt
+  dwf
+  )
 
 install(TARGETS GBCore LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 

@@ -9,6 +9,7 @@
 #include <digilent/waveforms/dwf.h>
 #endif
 
+#include <iostream>
 #include <vector>
 
 #define ANALOG_OUT_STOP 0
@@ -27,7 +28,7 @@ public:
   AnalogDiscoveryIO();
   int initialize();
   void setup(int device_id, int channel, double init_value=0.0);
-  void setVoltage(int device_id, int channel, double voltage, double sleep);
+  void setVoltage(int device_id, int channel, double voltage, int sleep);
   void finalize();
 
   

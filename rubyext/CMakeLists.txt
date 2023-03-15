@@ -24,6 +24,7 @@ set(RUBY_EXT_LIBRARIES
   GBModules
   pigpiod_if2
   rt
+  dwf
 )
 
 

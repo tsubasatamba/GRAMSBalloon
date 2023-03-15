@@ -4,16 +4,12 @@
 
 AnalogDiscoveryIO::AnalogDiscoveryIO()
 {
-  bme68xn_ = std::make_unique<bme68x_dev>();
-  sensorData_ = std::make_unique<bme68x_data>();
-  configure_ = std::make_unique<bme68x_conf>();
 }
 
 int AnalogDiscoveryIO::initialize()
 {
   if (!FDwfEnum(enumfilterAll, &numDevices_)) {
     FDwfGetLastErrorMsg(szError_);
-    printf("FDwfEnum: %s\n", szError_);
     std::cout << "FDwfEnum failed: " << szError_ << std::endl;
     return -1;
   }
@@ -31,7 +27,7 @@ int AnalogDiscoveryIO::initialize()
   return 0;
 }
 
-void AnalogDiscovery::setup(int device_id, int channel, double init_value*/=0.0*/)
+void AnalogDiscoveryIO::setup(int device_id, int channel, double init_value/*=0.0*/)
 {
   FDwfAnalogOutNodeEnableSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, true);
   FDwfAnalogOutNodeFunctionSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, funcDC);
@@ -39,11 +35,11 @@ void AnalogDiscovery::setup(int device_id, int channel, double init_value*/=0.0*
   FDwfAnalogOutConfigure(handlerList_[device_id], channel, ANALOG_OUT_START);
 }
 
-void AnalogDiscovery::setVoltage(int device_id, int channel, double voltage, double sleep)
+void AnalogDiscoveryIO::setVoltage(int device_id, int channel, double voltage, int sleep)
 {
   FDwfAnalogOutNodeOffsetSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, voltage);
   FDwfAnalogOutConfigure(handlerList_[device_id], channel, ANALOG_OUT_APPLY);
-  std::this_thread::sleep_for(std::chrono::seconds(sleep));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
 }
 
 void AnalogDiscoveryIO::finalize()

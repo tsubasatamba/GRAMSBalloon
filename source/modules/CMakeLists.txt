@@ -23,6 +23,8 @@ set(GB_MODULES
   src/SPIManager.cc
   src/GetBME680Data.cc
   src/ReceiveCommand.cc
+  src/AnalogDiscoveryManager.cc
+  src/RegulateHighVoltage.cc
   )
 
 add_library(GBModules SHARED
@@ -38,6 +40,7 @@ target_link_libraries(GBModules
   ${G4_LIB}
   pigpiod_if2
   rt
+  dwf
   )
 
 install(TARGETS GBModules LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
