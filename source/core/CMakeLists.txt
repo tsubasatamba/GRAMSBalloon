@@ -15,6 +15,7 @@ link_directories(
 set(GB_CORE_CLASSES
   src/BME680IO.cc
   src/SerialCommunication.cc
+  src/AnalogDiscoveryIO.cc
 )
 
 add_library(GBCore SHARED
