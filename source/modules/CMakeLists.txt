@@ -21,7 +21,7 @@ link_directories(
 set(GB_MODULES
   src/SimpleLoop.cc
   src/SPIManager.cc
-  src/GetBME680Data.cc
+  src/GetEnvironmentalData.cc
   src/ReceiveCommand.cc
   src/AnalogDiscoveryManager.cc
   src/RegulateHighVoltage.cc

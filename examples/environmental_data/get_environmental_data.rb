@@ -6,9 +6,9 @@ require 'GRAMSBalloon'
 class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::SPIManager
-        chain GRAMSBalloon::GetBME680Data
+        chain GRAMSBalloon::GetEnvironmentalData
         with_parameters(chip_select: 21)
-        chain GRAMSBalloon::GetBME680Data, "GetBME680Data2"
+        chain GRAMSBalloon::GetEnvironmentalData, "GetBME680Data2"
         with_parameters(chip_select: 19)
     end
 end

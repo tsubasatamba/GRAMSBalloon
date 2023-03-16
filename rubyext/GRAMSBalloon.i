@@ -4,7 +4,7 @@
 #include <anlnext/BasicModule.hh>
 #include "SimpleLoop.hh"
 #include "SPIManager.hh"
-#include "GetBME680Data.hh"
+#include "GetEnvironmentalData.hh"
 #include "ReceiveCommand.hh"
 #include "AnalogDiscoveryManager.hh"
 #include "RegulateHighVoltage.hh"
@@ -27,10 +27,10 @@ public:
   SPIManager();
 };
 
-class GetBME680Data : public anlnext::BasicModule
+class GetEnvironmentalData : public anlnext::BasicModule
 {
 public:
-  GetBME680Data();
+  GetEnvironmentalData();
 };
 
 class ReceiveCommand : public anlnext::BasicModule

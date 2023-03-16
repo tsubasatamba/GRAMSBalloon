@@ -1,21 +1,21 @@
 #include <thread>
 #include <chrono>
-#include "GetBME680Data.hh"
+#include "GetEnvironmentalData.hh"
 #include "pigpiod_if2.h"
 #include "bme68x.h"
 
 
 using namespace anlnext;
 
-GetBME680Data::GetBME680Data()
+GetEnvironmentalData::GetEnvironmentalData()
 {
   bme680io_ = std::make_unique<BME680IO>();
   interface_ = std::make_unique<SPIInterface>();
 }
 
-GetBME680Data::~GetBME680Data() = default;
+GetEnvironmentalData::~GetEnvironmentalData() = default;
 
-ANLStatus GetBME680Data::mod_define()
+ANLStatus GetEnvironmentalData::mod_define()
 {
   define_parameter("chip_select", &mod_class::chipSelect_);
   define_parameter("SPI_manager_name", &mod_class::SPIManagerName_);
@@ -23,7 +23,7 @@ ANLStatus GetBME680Data::mod_define()
   return AS_OK;
 }
 
-ANLStatus GetBME680Data::mod_pre_initialize()
+ANLStatus GetEnvironmentalData::mod_pre_initialize()
 {
   if (chipSelect_<0 || chipSelect_>=27) {
     std::cerr << "Chip select must be non-negative and smaller than 27: CS=" << chipSelect_ << std::endl;
@@ -35,7 +35,7 @@ ANLStatus GetBME680Data::mod_pre_initialize()
   return AS_OK;
 }
 
-ANLStatus GetBME680Data::mod_initialize()
+ANLStatus GetEnvironmentalData::mod_initialize()
 {
 
   const unsigned int spihandler = SPIManager_ -> Interface() -> SPIHandler();
@@ -50,7 +50,7 @@ ANLStatus GetBME680Data::mod_initialize()
   return AS_OK;
 }
 
-ANLStatus GetBME680Data::mod_analyze()
+ANLStatus GetEnvironmentalData::mod_analyze()
 {
   std::this_thread::sleep_for(std::chrono::microseconds(1000000));
   bme680io_ -> getData();
@@ -68,7 +68,7 @@ ANLStatus GetBME680Data::mod_analyze()
   return AS_OK;
 }
 
-ANLStatus GetBME680Data::mod_finalize()
+ANLStatus GetEnvironmentalData::mod_finalize()
 {  
   return AS_OK;
 }

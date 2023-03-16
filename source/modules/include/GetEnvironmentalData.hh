@@ -6,8 +6,8 @@
  */
 
 
-#ifndef GetBME680Data_H
-#define GetBME680Data_H 1
+#ifndef GetEnvironmentalData_H
+#define GetEnvironmentalData_H 1
 
 #include <anlnext/BasicModule.hh>
 #include "SPIInterface.hh"
@@ -15,13 +15,13 @@
 #include "SPIManager.hh"
 #include <chrono>
 
-class GetBME680Data : public anlnext::BasicModule
+class GetEnvironmentalData : public anlnext::BasicModule
 {
-  DEFINE_ANL_MODULE(GetBME680Data, 1.0);
+  DEFINE_ANL_MODULE(GetEnvironmentalData, 1.0);
 
 public:
-  GetBME680Data();
-  virtual ~GetBME680Data();
+  GetEnvironmentalData();
+  virtual ~GetEnvironmentalData();
   
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_pre_initialize() override;
@@ -43,4 +43,4 @@ private:
   std::chrono::system_clock::time_point lastUpdateTime_;
 };
 
-#endif /* GetBME680Data_H */
+#endif /* GetEnvironmentalData_H */
