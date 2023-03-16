@@ -19,7 +19,7 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
   
   set_mode(pi, cs, PI_OUTPUT);
   gpio_write(pi, cs, CS_ENABLE);
-  #if 1
+  #if 0
   int dbg = gpio_read(pi, cs);
   std::cout << "gpio_read: " << dbg << std::endl;
   #endif
@@ -65,7 +65,7 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
   #endif
 
   gpio_write(pi, cs, CS_DISABLE);
-  #if 1
+  #if 0
   int dbg2 = gpio_read(pi, cs);
   std::cout << "gpio_read: " << dbg2 << std::endl;
   #endif
@@ -143,8 +143,6 @@ int BME680IO::getData()
   bme68x_set_op_mode(BME68X_FORCED_MODE, bme68xn_.get());
   uint8_t ndata = 0;
   int res = bme68x_get_data(BME68X_FORCED_MODE, sensorData_.get(), &ndata, bme68xn_.get());
-
-  std::cout << "ndata: " << static_cast<int>(ndata) << std::endl;
  
 
   if (res!=0) {
