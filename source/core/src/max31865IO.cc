@@ -1,166 +1,217 @@
-#include "BME680IO.hh"
+#include "MAX31865IO.hh"
 #include <vector>
 #include <iomanip>
 
-BME680IO::BME680IO()
+MAX31865IO::MAX31865IO()
 {
-  bme68xn_ = std::make_unique<bme68x_dev>();
-  sensorData_ = std::make_unique<bme68x_data>();
-  configure_ = std::make_unique<bme68x_conf>();
 }
 
-int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, void *intf_ptr)
+void MAX31865IO::setInterface(SPIInterface* intf)
 {
-  int8_t rslt = BME68X_OK;
-  SPIInterface* intf = static_cast<SPIInterface *>(intf_ptr);
-  const int pi = intf->GPIOHandler();
-  const int cs = intf->ChipSelect();
-  const unsigned int spihandler = intf->SPIHandler();
-  
-  set_mode(pi, cs, PI_OUTPUT);
-  gpio_write(pi, cs, CS_ENABLE);
-  #if 0
-  int dbg = gpio_read(pi, cs);
-  std::cout << "gpio_read: " << dbg << std::endl;
-  #endif
-  char* address = reinterpret_cast<char *>(&reg_addr);
+  intf_ = intf;
+}
 
-  int write_status = spi_write(pi, spihandler, address, BME_REGISTER_BYTES);
-  if (write_status != BME_REGISTER_BYTES) {
-    if (write_status==0) {
-      write_status = -1000000;
+int MAX31865IO::readReg(int8_t reg, char *value, unsigned int length)
+{
+  const int pi = intf_->GPIOHandler();
+  const int cs = intf_->ChipSelect();
+  const unsigned int spihandler = intf_->SPIHandler();
+  gpio_write(pi, cs, PI_OFF);
+  reg &= ~MAX31865_WRITE_MSK;
+  int rslt = MAX31865_OK;
+  const int rslt_write = spi_write(pi, spihandler, reinterpret_cast<char *>(&reg), 1);
+  if (rslt_write != 1) {
+    if (rslt_write<0) {
+      std::cerr << "read_reg failed in writing address (error code: " << pigpio_error(rslt_write) << ")" << std::endl;
     }
-    std::cerr << "spi_write error: write_status = " << write_status << ", BME_REGISTER_BYTES = " << BME_REGISTER_BYTES << std::endl;
-    rslt = static_cast<int8_t>(write_status);
-    gpio_write(pi, cs, CS_DISABLE);
+    else {
+      std::cerr << "read_reg failed in writing data: rslt_write = " << rslt_write << std::endl;
+    }
+    rslt = rslt_write;
+    return rslt;
+  }
+  
+  const int rslt_read = spi_read(pi, spihandler, value, length);
+
+  if (rslt_read != static_cast<int>(length)) {
+    if (rslt_read<0) {
+      std::cerr << "read_reg failed in reading data (error code: " << pigpio_error(rslt_read) << ")" << std::endl;
+    }
+    else {
+      std::cerr << "read_reg failed in writing data: rslt_read = " << rslt_read << std::endl;
+    }
+    rslt = rslt_read;
     return rslt;
   }
 
-  std::vector<char> temp(length, 0);
-  
-  int read_status = spi_read(pi, spihandler, &temp[0], length);
-  if (read_status != static_cast<int>(length)) {
-    if (read_status==0) {
-      read_status = -1000000;
-    }
-    std::cerr << "spi_read error: read_status = " << read_status << ", length = " << length << std::endl;
-    rslt = static_cast<int8_t>(read_status);
-    gpio_write(pi, cs, CS_DISABLE);
-    return rslt;
-  }
-    
-  for (int i = 0; i < static_cast<int>(length); i++) {
-    reg_data[i] = temp[i];   
-  }
-  
-  #if 0
-  std::cout << "reg_addr: " << std::hex << static_cast<int>(0x7F &  reg_addr) << std::endl;
-  for (int i=0; i<static_cast<int>(length); i++) {
-    std::cout << static_cast<int>(temp[i]) << " ";
-  }
-  for (int i=0; i<static_cast<int>(length); i++) {
-    std::cout << static_cast<int>(reg_data[i]) << " ";
-  }
-  std::cout << std::dec << std::endl;
-  #endif
-
-  gpio_write(pi, cs, CS_DISABLE);
-  #if 0
-  int dbg2 = gpio_read(pi, cs);
-  std::cout << "gpio_read: " << dbg2 << std::endl;
-  #endif
-    
+  gpio_write(pi, cs, PI_ON);
+  rslt = rslt_read;
   return rslt;
 }
 
-int8_t BME680IO::writeReg(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length, void *intf_ptr)
+int MAX31865IO::writeReg(uint8_t reg, char *value, unsigned int length)
 {
-  int8_t rslt = BME68X_OK;
-  SPIInterface* intf = static_cast<struct SPIInterface*>(intf_ptr);
-  const int pi = intf->GPIOHandler();
-  const int cs = intf->ChipSelect();
-  const unsigned int spihandler = intf->SPIHandler();
-  
-  gpio_write(pi, cs, CS_ENABLE);
-  int write_status = spi_write(pi, spihandler, reinterpret_cast<char *>(&reg_addr), BME_REGISTER_BYTES);
-  if (write_status != BME_REGISTER_BYTES) {
-    if (write_status==0) {
-      write_status = -1000000;
+  const int pi = intf_->GPIOHandler();
+  const int cs = intf_->ChipSelect();
+  const unsigned int spihandler = intf_->SPIHandler();
+
+  gpio_write(pi, cs, PI_OFF);
+  reg |= MAX31865_WRITE_MSK;
+  int rslt = MAX31865_OK;
+  int rslt_write = spi_write(pi, spihandler, reinterpret_cast<char *>(&reg), 1);
+  if (rslt_write != 1) {
+    if (rslt_write<0) {
+      std::cerr << "write_reg failed in writing address (error code: " << pigpio_error(rslt_write) << ")" << std::endl;
     }
-    std::cerr << "spi_write error: write_status = " << write_status << ", BME_REGISTER_BYTES = " << BME_REGISTER_BYTES << std::endl;
-    rslt = static_cast<int8_t>(write_status);
-    gpio_write(pi, cs, CS_DISABLE);
+    else {
+      std::cerr << "write_reg failed in writing data: rslt_write = " << rslt_write << std::endl;
+    }
+    rslt = rslt_write;
     return rslt;
   }
   
-  write_status = spi_write(pi, spihandler, reinterpret_cast<char *>(const_cast<uint8_t *>(reg_data)), length);
-  if (write_status != static_cast<int>(length)) {
-    if (write_status==0) {
-      write_status = -1000000;
+  rslt_write = spi_write(pi, spihandler, value, length);
+  if (rslt_write != static_cast<int>(length)) {
+    if (rslt_write < 0) {
+      std::cerr << "write_reg failed in writing data (error code: " << pigpio_error(rslt_write) << ")" << std::endl;
     }
-    std::cerr << "spi_write error: write_status = " << write_status << ", length = " << length << std::endl;
-    rslt = static_cast<int8_t>(write_status);
-    gpio_write(pi, cs, CS_DISABLE);
+    else {
+      std::cerr << "write_reg failed in writing data: rslt_write = " << rslt_write << std::endl;
+    }
+    rslt = rslt_write;
     return rslt;
   }
-  
-  gpio_write(pi, cs, CS_DISABLE);
-  
+
+  gpio_write(pi, cs, PI_ON);
+  rslt = rslt_write;
   return rslt;
 }
 
-void BME680IO::delay(uint32_t period, void *intf_ptr)
+char MAX31865IO::configureBits()
 {
-  std::this_thread::sleep_for(std::chrono::microseconds(period));
+  char bits = 0;
+  
+  bits |= (bias_ & MAX31865_CONF_BIAS_MSK);
+  bits |= (conversion_ & MAX31865_CONF_CONVERSION_AUTO);
+  bits |= (faultDetection_ & (MAX31865_CONF_FD_CYCLE_MSK | MAX31865_CONF_F_STATUS_CLR_MSK));
+  bits |= (wires_ & MAX31865_CONF_3WIRE_MSK);
+  bits |= (filter_ & MAX31865_CONF_FILTER_SEL_MSK);
+  return bits;
 }
 
-void BME680IO::setup(SPIInterface* intf)
+int MAX31865IO::setConfigure()
 {
-  configure_->os_hum = BME68X_OS_1X;
-  configure_->os_pres = BME68X_OS_1X;
-  configure_->os_temp = BME68X_OS_1X;
-  configure_->filter = BME68X_FILTER_OFF;
-  
-  bme68xn_->intf = bme68x_intf::BME68X_SPI_INTF;
-  bme68xn_->read = BME680IO::readReg;
-  bme68xn_->write = BME680IO::writeReg;
-  bme68xn_->delay_us = BME680IO::delay;
-  bme68xn_->intf_ptr = intf;
-  
-  sensorData_->pressure = 0;
-  sensorData_->humidity = 0;
-  sensorData_->temperature = 0;
-  
-  bme68x_init(bme68xn_.get());
-  bme68x_set_conf(configure_.get(), bme68xn_.get());
-}
+  char bits = configureBits();
+  int _bias = bias_;
 
-
-int BME680IO::getData()
-{
-  bme68x_init(bme68xn_.get());
-  bme68x_set_conf(configure_.get(), bme68xn_.get());
-  bme68x_set_op_mode(BME68X_FORCED_MODE, bme68xn_.get());
-  uint8_t ndata = 0;
-  int res = bme68x_get_data(BME68X_FORCED_MODE, sensorData_.get(), &ndata, bme68xn_.get());
- 
-
-  if (res!=0) {
-    std::cerr << "BME680IO::getData failed: ndata = " << ndata << ", get_data_id = " << res << std::endl;
+  if (getConfigure() < 0) {
+    std::cerr << "set_configure failed due to get_configure failure." << std::endl;
+    return -1;
   }
-  bme68x_set_op_mode(BME68X_SLEEP_MODE, bme68xn_.get());
+  if (conversion_ == MAX31865_CONF_CONVERSION_AUTO) {
+    bits = (bits & (~MAX31865_CONF_FILTER_SEL_MSK)) | (filter & MAX31865_CONF_FILTER_SEL_MSK);
+  }
+
+  const int pi = intf_->GPIOHandler();
+  const int cs = intf_->ChipSelect();
+  const unsigned int spihandler = intf_->SPIHandler();
+
+  int dbg = write_reg(pi, spihandler, cs, MAX31865_CONF_WRITE_REG, &bits, 1);
+  if (dbg != 1) {
+    std::cerr << "set_configure failed due to write_reg failure. write_reg_bytes: " << dbg << std::endl;
+  }
+  if ((_bias != bias) && (_bias == MAX31865_CONF_BIAS_ON)) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100)); // should be fixed
+  }
   
-
-  return res;
+  return MAX31865_OK;
 }
 
-void BME680IO::printData()
+int MAX31865IO::getConfigure()
 {
-  std::cout << "Pressure: " << sensorData_->pressure << "\nHumidity: " << sensorData_->humidity << "\nTemperature: " << sensorData_->temperature << std::endl;
+  const int pi = intf_->GPIOHandler();
+  const int cs = intf_->ChipSelect();
+  const unsigned int spihandler = intf_->SPIHandler();
+  
+  char bits;
+  int rslt = read_reg(pi, spihandler, cs, MAX31865_CONF_READ_REG, &bits, 1);
+  if (rslt != 1) {
+    std::cerr << "get_configure failed to read. read bytes: " << rslt << std::endl;
+    return MAX31865_BAD;
+  }
+  bias_ = bits & MAX31865_CONF_BIAS_MSK;
+  conversion_ = bits & MAX31865_CONF_CONVERSION_MSK;
+  wires_ = bits & MAX31865_CONF_3WIRE_MSK;
+  faultDetection_ = bits & (MAX31865_CONF_FD_CYCLE_MSK | MAX31865_CONF_F_STATUS_CLR_MSK);
+  filter_ = bits & MAX31865_CONF_FILTER_SEL_MSK;
+
+  return MAX31865_OK;
 }
 
+int16_t MAX31865IO::getData()
+{
+  const int pi = intf_->GPIOHandler();
+  const int cs = intf_->ChipSelect();
+  const unsigned int spihandler = intf_->SPIHandler();
+  
+  int16_t data = 0;
+  char temp[2];
+  read_reg(pi, spihandler, cs, MAX31865_DATA_REG_MSB, &temp[0], 1);
+  read_reg(pi, spihandler, cs, MAX31865_DATA_REG_LSB, &temp[1], 1);
 
+  if ((temp[1] & MAX31865_DATA_FAULT_MSK) == 0) {
+    data |= temp[0] << 7;
+    data |= temp[1] >> 1;
+  }
+  else {
+    data = 0;
+    std::cerr << "MAX31865IO::getData() deteted fault." << std::endl;
+    getFaultStatus();
+    faultStatusClear();
+    return MAX31865_BAD;
+  }
+  return data;
+}
 
+int MAX31865IO::faultStatusClear()
+{
+  if (get_configure() < 0) {
+    std::cerr << "fault_status_clear may change configure due to get_configure failure." << std::endl;
+    return MAX31865_WARNING;
+  }
+  char bits = configureBits();
+  bits &= ~MAX31865_CONF_1SHOT_MSK;
+  bits &= ~MAX31865_CONF_FD_CYCLE_MSK;
+  bits |= MAX31865_CONF_F_STATUS_CLR_MSK;
+
+  int rslt_write = write_reg(pi, handle, cs, MAX31865_CONF_WRITE_REG, &bits, 1);
+  std::this_thread::sleep_for(std::chrono::microseconds(100));
+  if (rslt_write != 1) {
+    std::cerr << "fault_status_clear may not be executed. rslt_write = " << rslt_write << std::endl;
+    return MAX31865_BAD;
+  }
+  return MAX31865_OK;
+}
+
+int MAX31865IO::getFaultStatus()
+{
+  std::cout << "get_fault_status called" << std::endl;
+  char bits = 0b0;
+  int rslt_read = read_reg(pi, handle, cs, MAX31865_FAULT_STATUS_REG, &bits, 1);
+  if (rslt_read != 1) {
+    std::cerr << "get_fault_status failed due to read_reg failure. rslt_read = " << rslt_read << std::endl;
+  }
+  std::cout << "Fault status : " << std::bitset<8>(bits) << std::endl;
+  return MAX31865_OK;
+}
+
+double MAX31865IO::Tconversion(int adc)
+{
+  const int r_ref = 430;
+  const double ret = static_cast<double>(adc) * static_cast<double>(r_ref) / 400.0 * 32.0 - 256.0;
+
+  return ret;
+}
 
 
 
