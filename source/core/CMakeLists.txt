@@ -16,6 +16,7 @@ set(GB_CORE_CLASSES
   src/BME680IO.cc
   src/SerialCommunication.cc
   src/AnalogDiscoveryIO.cc
+  src/max31865IO.cc
 )
 
 add_library(GBCore SHARED
