@@ -8,6 +8,7 @@
 #include "ReceiveCommand.hh"
 #include "AnalogDiscoveryManager.hh"
 #include "RegulateHighVoltage.hh"
+#include "MeasureTemperatureWithRTDSensor.hh"
 %}
 
 %include "std_vector.i"
@@ -49,5 +50,11 @@ class RegulateHighVoltage : public anlnext::BasicModule
 {
 public:
   RegulateHighVoltage();
+};
+
+class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
+{
+public:
+  MeasureTemperatureWithRTDSensor();
 };
 

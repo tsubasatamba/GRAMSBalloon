@@ -25,6 +25,7 @@ set(GB_MODULES
   src/ReceiveCommand.cc
   src/AnalogDiscoveryManager.cc
   src/RegulateHighVoltage.cc
+  src/MeasureTemperatureWithRTDSensor.cc
   )
 
 add_library(GBModules SHARED
