@@ -26,6 +26,7 @@ set(GB_MODULES
   src/AnalogDiscoveryManager.cc
   src/RegulateHighVoltage.cc
   src/MeasureTemperatureWithRTDSensor.cc
+  src/ReadDAQ.cc
   )
 
 add_library(GBModules SHARED

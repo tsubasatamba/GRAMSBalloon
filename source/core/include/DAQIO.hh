@@ -20,7 +20,7 @@
 /**
  * A class to handle DAQ
  *
- * @author Tsubasa Tamba
+ * @author Tsubasa Tamba, Masato Kimura
  * @date 2023-03-21
  */
 class DAQIO
@@ -33,7 +33,8 @@ public:
   void setSampleParameters(double freq, double tw);
   int setupTrigger();
   int getData(int event_id, std::vector<short>& header, std::vector<std::vector<short>>& data);
-  void generateFileHeader(std::vector<short>& header);
+  void generateFileHeader(std::vector<short>& header, short num_event, const std::vector<double>& range, const std::vector<double>& offset);
+  void generateFileFooter(std::vector<short>& footer);
   
 
   

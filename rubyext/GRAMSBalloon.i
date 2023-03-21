@@ -9,6 +9,7 @@
 #include "AnalogDiscoveryManager.hh"
 #include "RegulateHighVoltage.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
+#include "ReadDAQ.hh"
 %}
 
 %include "std_vector.i"
@@ -56,5 +57,11 @@ class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
 {
 public:
   MeasureTemperatureWithRTDSensor();
+};
+
+class ReadDAQ : public anlnext::BasicModule
+{
+public:
+  ReadDAQ();
 };
 

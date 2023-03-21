@@ -122,11 +122,17 @@ int DAQIO::setupTrigger()
 int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::vector<short>>& data)
 {
   const int num_devices = ADIO_ -> NumDevices();
+  const int num_channels = num_devices * 2;
   const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
   STS status = 0;
   int count = 0;
   bool data_acquired = false;
   timeval event_time;
+
+  const int sz_header = 5;
+  header.resize(sz_header, 0);
+  header[0] = static_cast<short>(event_id);
+  data.resize(num_channels, std::vector<short>(numSample_));
 
   while (true) {
     FDwfAnalogInStatus(handler_list[trigDevice_], true, &status);
@@ -161,32 +167,64 @@ int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::ve
     }
   }
 
-  const int sz_header = 8;
-  header.resize(sz_header, 0);
-  header[0] = static_cast<short>(event_id);
-  header[1] = static_cast<short>(event_time.tv_sec&(0xff));
-  header[2] = static_cast<short>((event_time.tv_sec&(0xff00))>>8);
-  header[3] = static_cast<short>((event_time.tv_sec&(0xff0000))>>16);
-  header[4] = static_cast<short>((event_time.tv_sec&(0xff000000))>>24);
-  header[5] = static_cast<short>(event_time.tv_usec&(0xff));
-  header[6] = static_cast<short>((event_time.tv_usec&(0xff00))>>8);
-  
+  header[1] = static_cast<short>(event_time.tv_sec&(0xffff));
+  header[2] = static_cast<short>((event_time.tv_sec>>16)&(0xffff));
+  header[3] = static_cast<short>(event_time.tv_usec&(0xffff));
+  header[4] = static_cast<short>((event_time.tv_usec>>16)&(0xffff));
+
+  for (int i=0; i<num_devices; i++) {
+    for (int j=0; j<2; j++) {
+      const int k = i*2 + j;
+      FDwfAnalogInStatusData16(handler_list[i], j, &data[k][0], 0, numSample_);
+    }
+  }
 
   return 0;
 }
 
-void DAQIO::generateFileHeader(std::vector<short>& header)
+void DAQIO::generateFileHeader(std::vector<short>& header, short num_event, const std::vector<double>& range, const std::vector<double>& offset)
 {
   const int sz_header = 16;
   header.resize(sz_header);
+  timeval time_now;
+  gettimeofday(&time_now, NULL);
+
   header[0] = static_cast<short>(trigDevice_);
   header[1] = static_cast<short>(trigChannel_);
   header[2] = static_cast<short>(trigSrc_);
   header[3] = static_cast<short>(trigSlope_);
   header[4] = static_cast<short>(trigLevel_*100);
-  // header[3] = static_cast<short>(CHMASK_);
-  // header[4] = static_cast<short>(SAMPLE_);
-  // header[5] = static_cast<short>((TRIGPOS_*FREQ_));
-  // header[6] = static_cast<short>(NEVENT_);
+  header[5] = static_cast<short>(trigPosition_);
+  header[6] = static_cast<short>(sampleFreq_);
+  header[7] = static_cast<short>(timeWindow_);
+  header[8] = static_cast<short>(numSample_);
+  header[9] = static_cast<short>(num_event);
 
+  header[10] = static_cast<short>(time_now.tv_sec&(0xffff));
+  header[11] = static_cast<short>((time_now.tv_sec>>16)&(0xffff));
+  header[12] = static_cast<short>(time_now.tv_usec&(0xffff));
+  header[13] = static_cast<short>((time_now.tv_usec>>16)&(0xffff));
+
+  int start_index = 14;
+  for (int i=0; i<static_cast<int>(range.size()); i++) {
+    const double scale = 1.0E3;
+    header[start_index+i] = static_cast<short>(range[i]*scale);
+  }
+  start_index += 4;
+  for (int i=0; i<static_cast<int>(offset.size()); i++) {
+    const double scale = 1.0E3;
+    header[start_index+i] = static_cast<short>(offset[i]*scale);
+  }
+}
+
+void DAQIO::generateFileFooter(std::vector<short>& footer)
+{
+  const int sz_footer = 16;
+  footer.resize(sz_footer);
+  timeval time_now;
+  gettimeofday(&time_now, NULL);
+  footer[0] = static_cast<short>(time_now.tv_sec&(0xffff));
+  footer[1] = static_cast<short>((time_now.tv_sec>>16)&(0xffff));
+  footer[2] = static_cast<short>(time_now.tv_usec&(0xffff));
+  footer[3] = static_cast<short>((time_now.tv_usec>>16)&(0xffff));
 }
