@@ -27,15 +27,22 @@ class AnalogDiscoveryIO
 public:
   AnalogDiscoveryIO();
   int initialize();
-  void setup(int device_id, int channel, double init_value=0.0);
+  void setupAnalogOut(int device_id, int channel, double init_value=0.0);
+  void setupAnalogIn(int device_id, int channel, double freq, int buf_size, double range, double offset);
   void setVoltage(int device_id, int channel, double voltage, int sleep);
   void finalize();
+
+  int NumDevices() { return numDevices_; }
+  const std::vector<HDWF>& HandlerList() const { return handlerList_; }
+  
 
   
 private:
   int numDevices_ = 0;
   std::vector<HDWF> handlerList_;
   char szError_[512] = {0};
+  std::vector<std::vector<char>> deviceName_;
+  std::vector<std::vector<char>> deviceSerialName_;
 };
 
 

@@ -17,6 +17,7 @@ set(GB_CORE_CLASSES
   src/SerialCommunication.cc
   src/AnalogDiscoveryIO.cc
   src/MAX31865IO.cc
+  src/DAQIO.cc
 )
 
 add_library(GBCore SHARED

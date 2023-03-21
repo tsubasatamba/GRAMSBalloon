@@ -22,7 +22,7 @@ ANLStatus RegulateHighVoltage::mod_initialize()
 {
   get_module_NC(ADManagerName_, &ADManager_);
   AnalogDiscoveryIO* io = ADManager_->ADIO();
-  io -> setup(deviceID_, channel_);
+  io -> setupAnalogOut(deviceID_, channel_);
   
   return AS_OK;
 }
