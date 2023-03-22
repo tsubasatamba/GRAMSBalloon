@@ -7,7 +7,7 @@ using namespace anlnext;
 ReadDAQ::ReadDAQ()
 {
   daqio_ = std::make_unique<DAQIO>();
-  adcRangeList_ = std::vector<double>(4, 1.0);
+  adcRangeList_ = std::vector<double>(4, 100.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);
 }
 

@@ -117,6 +117,10 @@ int DAQIO::setupTrigger()
 	
   std::this_thread::sleep_for(std::chrono::seconds(2));
 
+  double range = 0.0;
+  FDwfAnalogInChannelRangeGet(handler_list[0], 0, &range);
+  std::cout << "range: " << range << std::endl;
+
   return 0;
 }
 

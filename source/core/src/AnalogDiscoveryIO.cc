@@ -44,8 +44,21 @@ void AnalogDiscoveryIO::setupAnalogIn(int device_id, int channel, double freq, i
   FDwfAnalogInFrequencySet(handlerList_[device_id], freq);
   FDwfAnalogInBufferSizeSet(handlerList_[device_id], buf_size);
 	FDwfAnalogInChannelEnableSet(handlerList_[device_id], channel, true);
+  std::cout << "setupanalogin: " << device_id << " " << channel << " " << range << std::endl;
 	FDwfAnalogInChannelRangeSet(handlerList_[device_id], channel, range);
 	FDwfAnalogInChannelOffsetSet(handlerList_[device_id], channel, offset);
+
+  const bool reconfigure = false;
+  const bool data_aquisition = true;  
+  FDwfAnalogInConfigure(device_id+1, reconfigure, data_aquisition);
+  double range_now = 15.0;
+  FDwfAnalogInChannelRangeGet(device_id+1, channel, &range_now);
+  std::cout << "range: " << range_now << std::endl;
+
+  double pvoltsMin, pvoltsMax, pnSteps;
+  FDwfAnalogInChannelRangeInfo(1, &pvoltsMin,  &pvoltsMax, &pnSteps);
+  std::cout << pvoltsMin << " " << pvoltsMax << " " << pnSteps << std::endl;
+
 }
 
 void AnalogDiscoveryIO::setVoltage(int device_id, int channel, double voltage, int sleep)
