@@ -41,7 +41,7 @@ ANLStatus ReadDAQ::mod_initialize()
   int k = 0;
   for (int i=0; i<num_devices; i++) {
     for (int j=0; j<2; j++) {
-      adio -> setupAnalogIn(i, j, sampleFreq_, num_sample, adcRangeList_[k], adcOffsetList_[k]);
+      adio -> setupAnalogIn(i, j, sampleFreq_*1.0E6, num_sample, adcRangeList_[k], adcOffsetList_[k]);
       k++;
     }
   }
@@ -68,7 +68,7 @@ ANLStatus ReadDAQ::mod_analyze()
     }
     createNewOutputFile();
   }
-  
+
   daqio_->getData(event_id, eventHeader_, eventData_);
   writeData();
 
@@ -93,7 +93,7 @@ void ReadDAQ::createNewOutputFile()
   std::vector<short> file_header;
   daqio_->generateFileHeader(file_header, numEventsPerFile_, adcRangeList_, adcOffsetList_);
   const int size = sizeof(short) * static_cast<int>(file_header.size());
-  ofs_.write(reinterpret_cast<char*>(&eventHeader_[0]), size);
+  ofs_.write(reinterpret_cast<char*>(&file_header[0]), size);
 }
 
 void ReadDAQ::closeOutputFile()
@@ -102,12 +102,16 @@ void ReadDAQ::closeOutputFile()
   daqio_->generateFileFooter(file_footer);
   const int size = sizeof(short) * static_cast<int>(file_footer.size());
   ofs_.write(reinterpret_cast<char*>(&file_footer[0]), size);
+  ofs_.close();
 }
 
 void ReadDAQ::writeData()
 {
   const int header_size = sizeof(short) * static_cast<int>(eventHeader_.size());
-  const int data_size = sizeof(short) * static_cast<int>(eventData_.size());
   ofs_.write(reinterpret_cast<char*>(&eventHeader_[0]), header_size);
-  ofs_.write(reinterpret_cast<char*>(&eventData_[0]), data_size);
+
+  for (int i=0; i<static_cast<int>(eventData_.size()); i++) {
+    const int data_size = sizeof(short) * static_cast<int>(eventData_[i].size());
+    ofs_.write(reinterpret_cast<char*>(&eventData_[i][0]), data_size);
+  }
 }

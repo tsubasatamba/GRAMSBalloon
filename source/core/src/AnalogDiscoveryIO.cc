@@ -10,7 +10,7 @@ int AnalogDiscoveryIO::initialize()
 {
   if (!FDwfEnum(enumfilterAll, &numDevices_)) {
     FDwfGetLastErrorMsg(szError_);
-    std::cout << "FDwfEnum failed: " << szError_ << std::endl;
+    std::cerr << "FDwfEnum failed: " << szError_ << std::endl;
     return -1;
   }
 

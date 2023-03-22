@@ -57,16 +57,16 @@ int DAQIO::setupTrigger()
   }
   else if (trigSrc_==PERIODIC_TRIGGER) {
     for(int i=0; i<num_devices; i++) {
-      FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcPC);
       FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcPC);
+      FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcPC);
     }
   }
   else if (trigSrc_==SELF_TRIGGER) {
     for(int i=0; i<num_devices; i++) {
       if (i==trigDevice_) {
-        FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcDetectorAnalogIn);
 	      FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
         FDwfAnalogInTriggerTypeSet(handler_list[i], trigtypeEdge);
+        FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcDetectorAnalogIn);
         for (int j=0; j<2; j++) {
           if (j==trigChannel_) {
             FDwfAnalogInTriggerChannelSet(handler_list[i], j);
@@ -108,6 +108,7 @@ int DAQIO::setupTrigger()
 	    FDwfAnalogInTriggerPositionSet(handler_list[i], (timeWindow_*0.5-trigPosition_)*us);
     }
   }
+
   for (int i=0; i<num_devices; i++){  
     const bool reconfigure = false;
     const bool data_aquisition = true;  
@@ -149,7 +150,11 @@ int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::ve
       }
     }
     count++;
-    if (count>=getDataMaxTrial_) break;
+    if (count>=getDataMaxTrial_) {
+      std::cout << "Data aquisition tried " << count << " times, but could not detect any event." << std::endl;
+      std::cout << "Maybe trigger level is too high: trigger level = " << trigLevel_ << std::endl;
+      break;
+    }
   }
 
   if (!data_acquired) {
@@ -184,7 +189,7 @@ int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::ve
 
 void DAQIO::generateFileHeader(std::vector<short>& header, short num_event, const std::vector<double>& range, const std::vector<double>& offset)
 {
-  const int sz_header = 16;
+  const int sz_header = 32;
   header.resize(sz_header);
   timeval time_now;
   gettimeofday(&time_now, NULL);

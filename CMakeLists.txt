@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 
 ### Initial definition of cmake variables
 set(CMAKE_INSTALL_PREFIX $ENV{HOME} CACHE PATH "install prefix")
-set(CMAKE_BUILD_TYPE Release CACHE STRING "build type")
-# set(CMAKE_BUILD_TYPE Debug CACHE STRING "build type")
+# set(CMAKE_BUILD_TYPE Release CACHE STRING "build type")
+set(CMAKE_BUILD_TYPE Debug CACHE STRING "build type")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -W -Wall" CACHE STRING "CXX_FLAGS for debug")
 set(CMAKE_C_FLAGS_DEBUG "-g -W -Wall" CACHE STRING "C_FLAGS for debug")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -W -Wall" CACHE STRING "CXX_FLAGS for release")
