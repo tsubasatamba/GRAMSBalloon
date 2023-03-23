@@ -8,7 +8,8 @@ AnalogDiscoveryIO::AnalogDiscoveryIO()
 
 int AnalogDiscoveryIO::initialize()
 {
-  if (!FDwfEnum(enumfilterAll, &numDevices_)) {
+  if (!FDwfEnum(enumfilterAll, &numDevices_))
+  {
     FDwfGetLastErrorMsg(szError_);
     std::cerr << "FDwfEnum failed: " << szError_ << std::endl;
     return -1;
@@ -18,12 +19,15 @@ int AnalogDiscoveryIO::initialize()
   deviceName_.resize(numDevices_, std::vector<char>(32));
   deviceSerialName_.resize(numDevices_, std::vector<char>(32));
 
-  for (int i=0; i<numDevices_; i++) {
+  for (int i = 0; i < numDevices_; i++)
+  {
     FDwfEnumDeviceName(i, &deviceName_[i][0]);
     FDwfEnumSN(i, &deviceSerialName_[i][0]);
-    if (!FDwfDeviceOpen(i, &handlerList_[i])) {
+    if (!FDwfDeviceOpen(i, &handlerList_[i]))
+    {
       FDwfGetLastErrorMsg(szError_);
-      std::cerr << "Device open failed: device id = " << i << ",\n" << szError_ << std::endl;
+      std::cerr << "Device open failed: device id = " << i << ",\n"
+                << szError_ << std::endl;
       return -1;
     }
   }
@@ -31,7 +35,7 @@ int AnalogDiscoveryIO::initialize()
   return 0;
 }
 
-void AnalogDiscoveryIO::setupAnalogOut(int device_id, int channel, double init_value/*=0.0*/)
+void AnalogDiscoveryIO::setupAnalogOut(int device_id, int channel, double init_value /*=0.0*/)
 {
   FDwfAnalogOutNodeEnableSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, true);
   FDwfAnalogOutNodeFunctionSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, funcDC);
@@ -43,23 +47,32 @@ void AnalogDiscoveryIO::setupAnalogIn(int device_id, int channel, double freq, i
 {
   FDwfAnalogInFrequencySet(handlerList_[device_id], freq);
   FDwfAnalogInBufferSizeSet(handlerList_[device_id], buf_size);
-	FDwfAnalogInChannelEnableSet(handlerList_[device_id], channel, true);
-  std::cout << "setupanalogin: " << device_id << " " << channel << " " << range << std::endl;
-	FDwfAnalogInChannelRangeSet(handlerList_[device_id], channel, range);
-	FDwfAnalogInChannelOffsetSet(handlerList_[device_id], channel, offset);
+  FDwfAnalogInChannelEnableSet(handlerList_[device_id], channel, true);
+  FDwfAnalogInChannelRangeSet(handlerList_[device_id], channel, range);
+  FDwfAnalogInChannelOffsetSet(handlerList_[device_id], channel, offset);
 
   const bool reconfigure = false;
-  const bool data_aquisition = true;  
-  FDwfAnalogInConfigure(device_id+1, reconfigure, data_aquisition);
+  const bool data_aquisition = true;
+  FDwfAnalogInConfigure(device_id + 1, reconfigure, data_aquisition);
+  # if 0
   double range_now = 15.0;
-  FDwfAnalogInChannelRangeGet(device_id+1, channel, &range_now);
+  FDwfAnalogInChannelRangeGet(device_id + 1, channel, &range_now);
   std::cout << "range: " << range_now << std::endl;
-
+  double rgVoltsStep[32] = {0};
+  int _pnSteps;
+  FDwfAnalogInChannelRangeSteps(handlerList_[device_id], rgVoltsStep, &_pnSteps);
+  std::cout << "RangeSteps: ";
+  for (int i = 0; i < _pnSteps; i++)
+  {
+    std::cout << rgVoltsStep[i] << " ";
+  }
+  std::cout << std::endl;
   double pvoltsMin, pvoltsMax, pnSteps;
-  FDwfAnalogInChannelRangeInfo(1, &pvoltsMin,  &pvoltsMax, &pnSteps);
-  std::cout << pvoltsMin << " " << pvoltsMax << " " << pnSteps << std::endl;
-
+  FDwfAnalogInChannelRangeInfo(1, &pvoltsMin, &pvoltsMax, &pnSteps);
+  #endif
+  
 }
+  
 
 void AnalogDiscoveryIO::setVoltage(int device_id, int channel, double voltage, int sleep)
 {
@@ -72,9 +85,3 @@ void AnalogDiscoveryIO::finalize()
 {
   FDwfDeviceCloseAll();
 }
-
-
-
-
-
-

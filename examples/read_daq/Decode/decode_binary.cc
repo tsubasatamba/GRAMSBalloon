@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     int index = 0;
     while (index<64) {
         short val = (static_cast<short>(temp[index])) + ((static_cast<short>(temp[index+1]))<<8);
-        //std::cout << (int)temp[index] << " " << (int)temp[index+1] << " " <<  val << std::endl;
+        std::cout << index/2 << " " << (int)temp[index] << " " << (int)temp[index+1] << " " <<  val << std::endl;
         index += 2;
     }
 

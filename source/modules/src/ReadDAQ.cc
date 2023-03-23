@@ -7,7 +7,7 @@ using namespace anlnext;
 ReadDAQ::ReadDAQ()
 {
   daqio_ = std::make_unique<DAQIO>();
-  adcRangeList_ = std::vector<double>(4, 100.0);
+  adcRangeList_ = std::vector<double>(4, 1.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);
 }
 
@@ -91,7 +91,7 @@ void ReadDAQ::createNewOutputFile()
   fileID_++;
 
   std::vector<short> file_header;
-  daqio_->generateFileHeader(file_header, numEventsPerFile_, adcRangeList_, adcOffsetList_);
+  daqio_->generateFileHeader(file_header, numEventsPerFile_);
   const int size = sizeof(short) * static_cast<int>(file_header.size());
   ofs_.write(reinterpret_cast<char*>(&file_header[0]), size);
 }

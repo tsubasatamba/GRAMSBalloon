@@ -33,7 +33,7 @@ public:
   void setSampleParameters(double freq, double tw);
   int setupTrigger();
   int getData(int event_id, std::vector<short>& header, std::vector<std::vector<short>>& data);
-  void generateFileHeader(std::vector<short>& header, short num_event, const std::vector<double>& range, const std::vector<double>& offset);
+  void generateFileHeader(std::vector<short>& header, short num_event);
   void generateFileFooter(std::vector<short>& footer);
   
 

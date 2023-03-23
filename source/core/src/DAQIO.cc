@@ -117,10 +117,6 @@ int DAQIO::setupTrigger()
 	
   std::this_thread::sleep_for(std::chrono::seconds(2));
 
-  double range = 0.0;
-  FDwfAnalogInChannelRangeGet(handler_list[0], 0, &range);
-  std::cout << "range: " << range << std::endl;
-
   return 0;
 }
 
@@ -191,8 +187,11 @@ int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::ve
   return 0;
 }
 
-void DAQIO::generateFileHeader(std::vector<short>& header, short num_event, const std::vector<double>& range, const std::vector<double>& offset)
+void DAQIO::generateFileHeader(std::vector<short>& header, short num_event)
 {
+  const int num_devices = ADIO_ -> NumDevices();
+  const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
+
   const int sz_header = 32;
   header.resize(sz_header);
   timeval time_now;
@@ -214,15 +213,27 @@ void DAQIO::generateFileHeader(std::vector<short>& header, short num_event, cons
   header[12] = static_cast<short>(time_now.tv_usec&(0xffff));
   header[13] = static_cast<short>((time_now.tv_usec>>16)&(0xffff));
 
-  int start_index = 14;
-  for (int i=0; i<static_cast<int>(range.size()); i++) {
-    const double scale = 1.0E3;
-    header[start_index+i] = static_cast<short>(range[i]*scale);
+  int index = 14;
+  for (int i=0; i<num_devices; i++) {
+    for (int j=0; j<2; j++) {
+      double range = 0.0;
+      FDwfAnalogInChannelRangeGet(handler_list[i], j, &range);
+      const double scale = 1.0E3;
+      header[index] = static_cast<short>((static_cast<int>(range*scale)) & (0xffff));
+      header[index+1] = static_cast<short>(((static_cast<int>(range*scale))>>16) & (0xffff));
+      index += 2;
+    }
   }
-  start_index += 4;
-  for (int i=0; i<static_cast<int>(offset.size()); i++) {
-    const double scale = 1.0E3;
-    header[start_index+i] = static_cast<short>(offset[i]*scale);
+
+  for (int i=0; i<num_devices; i++) {
+    for (int j=0; j<2; j++) {
+      double offset = 0.0;
+      FDwfAnalogInChannelOffsetGet(handler_list[i], j, &offset);
+      const double scale = 1.0E3;
+      header[index] = static_cast<short>((static_cast<int>(offset*scale)) & (0xffff));
+      header[index+1] = static_cast<short>(((static_cast<int>(offset*scale))>>16) & (0xffff));
+      index += 2;
+    }
   }
 }
 
