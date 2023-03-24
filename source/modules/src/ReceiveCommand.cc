@@ -5,45 +5,73 @@
 using namespace anlnext;
 
 ReceiveCommand::ReceiveCommand()
-  :inputBaudrate_(B1200), outputBaudrate_(B57600), openMode_(O_RDWR)
+  :baudrate_(B9600), openMode_(O_RDWR)
 {
-  sc_ = std::make_unique<SerialCommunication>();
   serialPath_ = "/dev/null";
+  for (int i=0; i<2; i++) {
+    que_.push(0);
+  }
+  comintp_ = std::make_unique<CommandInterpreter>(); 
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
 
 ANLStatus ReceiveCommand::mod_define()
 {
-  define_parameter("input_baudrate", &mod_class::inputBaudrate_);
-  define_parameter("output_baudrate", &mod_class::outputBaudrate_);
+  define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("open_mode", &mod_class::openMode_);
-  define_parameter("length", &mod_class::length_);
 
   return AS_OK;
 }
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
-  sc_->setBaudrate(inputBaudrate_, outputBaudrate_);
-  sc_->setSerialPath(serialPath_);
-  sc_->setOpenMode(openMode_);
+  if (exist_module("ReadDAQ")) {
+    get_module_NC("ReadDAQ", &readDAQ_);
+    DAQIO* io = readDAQ_->getDAQIO();
+    comintp_->setDAQIO(io);
+  }
 
-  sc_->initialize();
+  // communication
+  sc_ = std::make_unique<SerialCommunication>(serialPath_, baudrate_, openMode_);
+  sc_ -> initialize();
 
   return AS_OK;
 }
 
 ANLStatus ReceiveCommand::mod_analyze()
 {
-  sc_->sread(buffer_, length_);
-  std::cout << buffer_.size() << std::endl;
-  if (buffer_.size()>0) {
-    std::cout << buffer_[0] << std::endl;
+  uint8_t buffer = 0;
+  const int status = sc_->sreadSingle(buffer);
+  if (status == -1) {
+    std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
+    return AS_OK;
+  }
+  if (status == 0) {
+    return AS_OK;
   }
 
-  //std::this_thread::sleep_for(std::chrono::seconds(1));
+  que_.push(buffer);
+  que_.pop();
+  if (startReading_) {
+    command_.push_back(buffer);
+    if (que_.front()==0xc5 && que_.back()==0xc5) {
+      startReading_ = false;
+      applyCommand();
+    }
+  }
+  else {
+    if (que_.front()==0xeb && que_.back()==0x90) {
+      startReading_ = true;
+      command_.clear();
+      command_.push_back(que_.front());
+      command_.push_back(que_.back());
+    }
+  }
+
+  
+  
   
   return AS_OK;
 }
@@ -51,4 +79,14 @@ ANLStatus ReceiveCommand::mod_analyze()
 ANLStatus ReceiveCommand::mod_finalize()
 {
   return AS_OK;
+}
+
+void ReceiveCommand::applyCommand()
+{
+  comintp_ -> setCommand(command_);
+  if (!comintp_->isValid()) {
+    std::cout << "Command is not valid consulting MD5 check." << std::endl;
+    return;
+  }
+
 }

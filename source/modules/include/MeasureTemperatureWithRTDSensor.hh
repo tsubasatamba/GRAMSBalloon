@@ -29,6 +29,8 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  MAX31865IO* GetMAX31865IO() { return max31865io_.get(); }
+
 private:
   int chipSelect_ = 8;
   std::string SPIManagerName_ = "SPIManager";

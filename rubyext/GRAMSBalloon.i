@@ -10,6 +10,7 @@
 #include "RegulateHighVoltage.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
 #include "ReadDAQ.hh"
+#include "SendTelemetry.hh"
 %}
 
 %include "std_vector.i"
@@ -63,5 +64,11 @@ class ReadDAQ : public anlnext::BasicModule
 {
 public:
   ReadDAQ();
+};
+
+class SendTelemetry : public anlnext::BasicModule
+{
+public:
+  SendTelemetry();
 };
 

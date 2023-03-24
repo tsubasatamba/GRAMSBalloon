@@ -13,6 +13,10 @@
 #include <anlnext/BasicModule.hh>
 #include "AnalogDiscoveryManager.hh"
 #include "DAQIO.hh"
+#include "SendTelemetry.hh"
+#include "TelemetryGenerator.hh"
+
+class SendTelemetry;
 
 class ReadDAQ : public anlnext::BasicModule
 {
@@ -32,6 +36,8 @@ public:
   void writeData();
 
   const std::vector<std::vector<short>>& EventData() const { return eventData_; }
+  void setOndemand(bool v) { ondemand_ = v; }
+  DAQIO* getDAQIO() { return daqio_.get(); }
 
 private:
   std::string ADManagerName_ = "AnalogDiscoveryManager";
@@ -54,6 +60,7 @@ private:
   std::ofstream ofs_;
   int fileID_ = 0;
   bool ondemand_ = false;
+  SendTelemetry* sendTelemetry_;
 };
 
 #endif /* ReadDAQ_H */

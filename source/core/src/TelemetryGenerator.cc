@@ -1,40 +1,40 @@
-#include "Telemetry.hh"
+#include "TelemetryGenerator.hh"
 #include <thread>
 #include <chrono>
 
 
-Telemetry::Telemetry()
+TelemetryGenerator::TelemetryGenerator()
 {
 }
 
-void Telemetry::generateTelemetry(int telem_type)
+void TelemetryGenerator::generateTelemetry(int telemetry_type)
 {
   clear();
-  std::vector<uint8_t> start_code = {0xe, 0xb, 0x9, 0x0};
+  std::vector<uint8_t> start_code = {0xeb, 0x90};
   addVector(start_code);
-  addValue(telem_type);
+  addValue(telemetry_type);
   gettimeofday(&time_now, NULL);
   addValue(time_now.tv_sec);
   addValue(time_now.tv_usec);
   addValue(telemIndex_);
   telemIndex_++;
   
-  if (telem_type==TELEM_TYPE_NORMAL) {
+  if (telemetry_type==TELEM_TYPE_NORMAL) {
     generateTelemetryNormal();
   }
-  else if (telem_type==TELEM_TYPE_WAVE) {
+  else if (telemetry_type==TELEM_TYPE_WAVE) {
     generateTelemetryWave();
   }
   else {
-    std::cerr << "telemetry type not set appropriately: telem_type = " << telem_type << std::endl;
+    std::cerr << "telemetry type not set appropriately: telemetry_type = " << telemetry_type << std::endl;
     return;
   }
   writeMD5();
-  std::vector<uint8_t> end_code = {0xc, 0x5, 0xc, 0x5};
+  std::vector<uint8_t> end_code = {0xc5, 0xc5};
   addVector(end_code);
 }
 
-void Telemetry::generateTelemetryNormal()
+void TelemetryGenerator::generateTelemetryNormal()
 {
   addValue((uint16_t)0); // DAQ event count
   addValue((uint16_t)0); // Trigger event count
@@ -46,7 +46,7 @@ void Telemetry::generateTelemetryNormal()
   writeEnvironmentalData();
 }
 
-void Telemetry::generateTelemetryWave()
+void TelemetryGenerator::generateTelemetryWave()
 {
   addValue(eventID_);
   addVector(eventHeader_);
@@ -56,19 +56,20 @@ void Telemetry::generateTelemetryWave()
   }
 }
 
-void Telemetry::writeRTDTemperature()
+void TelemetryGenerator::writeRTDTemperature()
 {
   const int buf_size = 5;
   const double scale = 100.0;
   const int n = max31865ioVec_.size();
   std::vector<int16_t> temperature(buf_size, -300);
   for (int i=0; i<n; i++) {
+    if (i==buf_size) break;
     temperature[i] = static_cast<int16_t>(max31865ioVec_[i]->Temperature() * scale);
   }
   addVector(temperature);
 }
 
-void Telemetry::writeEnvironmentalData()
+void TelemetryGenerator::writeEnvironmentalData()
 {
   const int buf_size = 5;
   const int n = bme680ioVec_.size();
@@ -77,6 +78,7 @@ void Telemetry::writeEnvironmentalData()
   std::vector<uint16_t> pressure(buf_size);
 
   for (int i=0; i<n; i++) {
+    if (i==buf_size) break;
     temperature[i] = bme680ioVec_[i]->SensorData()->temperature;
     humidity[i] = bme680ioVec_[i]->SensorData()->humidity;
     pressure[i] = bme680ioVec_[i]->SensorData()->pressure;
@@ -86,31 +88,31 @@ void Telemetry::writeEnvironmentalData()
   addVector(pressure);
 }
 
-void Telemetry::writeMD5()
+void TelemetryGenerator::writeMD5()
 {
-  const int n = telem_.size();
+  const int n = telemetry_.size();
   std::vector<unsigned char> md(MD5_DIGEST_LENGTH);
-  MD5(&telem_[0], n, &md[0]);
+  MD5(&telemetry_[0], n, &md[0]);
   addVector(md);
 }
 
-void Telemetry::clear()
+void TelemetryGenerator::clear()
 {
-  telem_.clear();
+  telemetry_.clear();
 }
 
 template<typename T>
-void Telemetry::addValue(T input)
+void TelemetryGenerator::addValue(T input)
 {
   const int size = sizeof(T);
   for (int i=0; i<size; i++) {
-    telem_.push_back(static_cast<uint8_t>(input & 0xff));
+    telemetry_.push_back(static_cast<uint8_t>(input & 0xff));
     input >>= 8;
   }
 }
 
 template<typename T>
-void Telemetry::addVector(std::vector<T>& input)
+void TelemetryGenerator::addVector(std::vector<T>& input)
 {
   const int n = input.size();
   for (int i=0; i<n; i++) {

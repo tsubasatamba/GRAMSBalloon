@@ -27,6 +27,7 @@ set(GB_MODULES
   src/RegulateHighVoltage.cc
   src/MeasureTemperatureWithRTDSensor.cc
   src/ReadDAQ.cc
+  src/SendTelemetry.cc
   )
 
 add_library(GBModules SHARED

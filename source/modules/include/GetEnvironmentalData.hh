@@ -29,7 +29,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  
+  BME680IO* GetBME680IO() { return bme680io_.get(); }
 
 private:
   int chipSelect_ = 8;

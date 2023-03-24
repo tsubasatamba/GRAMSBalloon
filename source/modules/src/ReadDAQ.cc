@@ -38,6 +38,8 @@ ANLStatus ReadDAQ::mod_initialize()
   const int num_devices = adio->NumDevices();
   const int num_sample = static_cast<int>(sampleFreq_*timeWindow_);
 
+  get_module_NC("SendTelemetry", &sendTelemetry_);
+
   int k = 0;
   for (int i=0; i<num_devices; i++) {
     for (int j=0; j<2; j++) {
@@ -71,6 +73,11 @@ ANLStatus ReadDAQ::mod_analyze()
 
   daqio_->getData(event_id, eventHeader_, eventData_);
   if (ondemand_) {
+    TelemetryGenerator* telemgen = sendTelemetry_->GetTelemetryGenerator();
+    telemgen->setEventID(event_id);
+    telemgen->setEventHeader(eventHeader_);
+    telemgen->setEventData(eventData_);
+    sendTelemetry_->setTelemetryType(2);
     ondemand_ = false;
   }
   writeData();

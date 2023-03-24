@@ -18,8 +18,9 @@ set(GB_CORE_CLASSES
   src/AnalogDiscoveryIO.cc
   src/MAX31865IO.cc
   src/DAQIO.cc
-  src/Telemetry.cc
+  src/TelemetryGenerator.cc
   src/SerialCommand.cc
+  src/CommandInterpreter.cc
 )
 
 add_library(GBCore SHARED

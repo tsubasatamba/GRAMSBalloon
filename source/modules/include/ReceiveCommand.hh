@@ -10,7 +10,12 @@
 #define ReceiveCommand_H 1
 
 #include <anlnext/BasicModule.hh>
+#include <queue>
+#include "CommandInterpreter.hh"
+#include "ReadDAQ.hh"
 #include "SerialCommunication.hh"
+
+class ReadDAQ;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -25,14 +30,21 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  void applyCommand();
+
 private:
+  std::vector<uint8_t> command_;
+  std::queue<uint8_t> que_;
+  std::unique_ptr<CommandInterpreter> comintp_;
+  ReadDAQ* readDAQ_;
+
+  //communication
   std::unique_ptr<SerialCommunication> sc_ = nullptr;
-  speed_t inputBaudrate_;
-  speed_t outputBaudrate_;
+  speed_t baudrate_;
   std::string serialPath_;
   char openMode_;
-  std::vector<uint8_t> buffer_;
-  int length_ = 1;
+  bool startReading_ = false;
+  
 };
 
 #endif /* ReceiveCommand_H */

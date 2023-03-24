@@ -25,6 +25,7 @@ set(RUBY_EXT_LIBRARIES
   pigpiod_if2
   rt
   dwf
+  crypto
 )
 
 
