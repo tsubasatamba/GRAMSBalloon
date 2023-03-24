@@ -70,6 +70,9 @@ ANLStatus ReadDAQ::mod_analyze()
   }
 
   daqio_->getData(event_id, eventHeader_, eventData_);
+  if (ondemand_) {
+    ondemand_ = false;
+  }
   writeData();
 
   return AS_OK;

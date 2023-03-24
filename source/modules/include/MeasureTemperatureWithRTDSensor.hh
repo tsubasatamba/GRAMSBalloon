@@ -35,7 +35,6 @@ private:
   SPIManager* SPIManager_ = nullptr;
   std::unique_ptr<MAX31865IO> max31865io_ = nullptr;
   std::unique_ptr<SPIInterface> interface_ = nullptr;
-  double temperature_;
 };
 
 #endif /* MeasureTemperatureWithRTDSensor_H */

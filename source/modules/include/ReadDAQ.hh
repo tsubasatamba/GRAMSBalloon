@@ -53,6 +53,7 @@ private:
   int numEventsPerFile_ = 100;
   std::ofstream ofs_;
   int fileID_ = 0;
+  bool ondemand_ = false;
 };
 
 #endif /* ReadDAQ_H */

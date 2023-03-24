@@ -92,6 +92,8 @@ public:
   char getFaultDetection();
   char getFilter();
 
+  double Temperature() { return temperature_; };
+
 private:
   int pi;
   const int rRef_ = 430;
@@ -99,6 +101,7 @@ private:
   int cs;
   char currentBits_;
   SPIInterface* intf_;
+  double temperature_ = 0.0;
 };
 
 

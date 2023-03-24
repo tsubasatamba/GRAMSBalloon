@@ -18,6 +18,8 @@ set(GB_CORE_CLASSES
   src/AnalogDiscoveryIO.cc
   src/MAX31865IO.cc
   src/DAQIO.cc
+  src/Telemetry.cc
+  src/SerialCommand.cc
 )
 
 add_library(GBCore SHARED
@@ -31,6 +33,7 @@ target_link_libraries(GBCore
   pigpiod_if2
   rt
   dwf
+  crypto
   )
 
 install(TARGETS GBCore LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

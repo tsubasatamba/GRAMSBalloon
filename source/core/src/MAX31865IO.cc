@@ -146,7 +146,8 @@ int16_t MAX31865IO::getData()
     faultStatusClear();
     return MAX31865_BAD;
   }
-  return data;
+  temperature_ = Tconversion(data);
+  return MAX31865_OK;
 }
 
 int MAX31865IO::faultStatusClear()
