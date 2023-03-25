@@ -26,3 +26,29 @@ bool CommandInterpreter::isValid()
   return true;
 }
 
+void CommandInterpreter::parse()
+{
+  code_ = 0;
+  arguments_.clear();
+
+  const int header_length = 2;
+  const int footer_length = 2 + MD5_DIGEST_LENGTH;
+  if (command_.size() <= header_length + footer_length) {
+    std::cerr << "Coud not parse command: command length = " << command_.size() << std::endl;
+    return;
+  }
+  int index = header_length;
+  code_ = command_[index];
+  index++;
+
+  while (index<static_cast<int>(command_.size())-footer_length) {
+    arguments_.push_back(command_[index]);
+    index++;
+  }
+}
+
+void CommandInterpreter::interpret()
+{
+  
+}
+

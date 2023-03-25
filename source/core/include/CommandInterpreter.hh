@@ -24,6 +24,8 @@ public:
   CommandInterpreter();
 
   bool isValid();
+  void parse();
+  void interpret();
   
   void setCommand(std::vector<uint8_t>& v) { command_ = v; }
   void setDAQIO(DAQIO* io) { daqio_ = io; }
@@ -31,6 +33,8 @@ public:
   
 private:
   std::vector<uint8_t> command_;
+  uint8_t code_;
+  std::vector<uint8_t> arguments_;
 
   // access to other classes
   DAQIO* daqio_ = nullptr;

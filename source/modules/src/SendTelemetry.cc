@@ -77,6 +77,22 @@ ANLStatus SendTelemetry::mod_analyze()
 
   std::cout << (int)telemetry.size() << std::endl;
 
+  //debug
+
+  #if 1
+  
+  // std::vector<char> dbg(telemetry.size()*2+1);
+  // for (int i=0; i<(int)telemetry.size(); i++) {
+  //   sprintf(&dbg[i * 2], "%02x", (unsigned int)telemetry[i]);
+  // }
+  // printf("md5 digest: %s\n", &dbg[0]);
+
+  for (int i=0; i<(int)telemetry.size(); i++) {
+    std::cout << static_cast<int>(telemetry[i]) << std::endl;
+  }
+
+  #endif
+  
   return AS_OK;
 }
 

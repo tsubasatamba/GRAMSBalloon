@@ -73,6 +73,7 @@ int SerialCommunication::swrite(const std::vector<uint8_t>& buf)
 {
   const int length = buf.size();
   const int status = write(fd_, &buf[0], length);
+  
   return status;
 }
 

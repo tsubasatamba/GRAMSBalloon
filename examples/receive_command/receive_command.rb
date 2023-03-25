@@ -9,7 +9,7 @@ require 'GRAMSBalloon'
 class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::ReceiveCommand
-        with_parameters(input_baudrate: 4097, output_baudrate: 4097, serial_path: "/dev/ttyAMA0", length: 1)
+        with_parameters(serial_path: "/dev/ttyAMA0")
     end
 end
 

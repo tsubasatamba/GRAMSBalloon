@@ -51,7 +51,7 @@ public:
 private:
   std::vector<uint8_t> telemetry_;
   timeval time_now;
-  int telemIndex_ = 0;
+  uint32_t telemIndex_ = 0;
 
   // access to other classes
   std::vector<BME680IO*> bme680ioVec_;

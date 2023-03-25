@@ -20,8 +20,11 @@ class MyApp < ANL::ANLApp
         )
 =end
         chain GRAMSBalloon::SendTelemetry
+        with_parameters(
+            serial_path: "/dev/ttyAMA0"
+        )
     end
 end
 
 a = MyApp.new
-a.run(21, 1)
+a.run(1, 1)

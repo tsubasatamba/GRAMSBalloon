@@ -12,10 +12,10 @@ void TelemetryGenerator::generateTelemetry(int telemetry_type)
   clear();
   std::vector<uint8_t> start_code = {0xeb, 0x90};
   addVector(start_code);
-  addValue(telemetry_type);
+  addValue(static_cast<uint16_t>(telemetry_type));
   gettimeofday(&time_now, NULL);
-  addValue(time_now.tv_sec);
-  addValue(time_now.tv_usec);
+  addValue(static_cast<int32_t>(time_now.tv_sec));
+  addValue(static_cast<int32_t>(time_now.tv_usec));
   addValue(telemIndex_);
   telemIndex_++;
   
@@ -36,13 +36,13 @@ void TelemetryGenerator::generateTelemetry(int telemetry_type)
 
 void TelemetryGenerator::generateTelemetryNormal()
 {
-  addValue((uint16_t)0); // DAQ event count
-  addValue((uint16_t)0); // Trigger event count
-  addValue((uint16_t)0); // Chamber pressure
-  addValue((uint16_t)0); // Chamber temperature
+  addValue((uint32_t)0); // DAQ event count
+  addValue((uint32_t)0); // Trigger event count
+  addValue((uint32_t)0); // Chamber pressure
+  addValue((int32_t)0); // Chamber temperature
 
   writeRTDTemperature();
-  addValue((uint16_t)0); // CPU temperature
+  addValue((int32_t)0); // CPU temperature
   writeEnvironmentalData();
 }
 
@@ -61,10 +61,10 @@ void TelemetryGenerator::writeRTDTemperature()
   const int buf_size = 5;
   const double scale = 100.0;
   const int n = max31865ioVec_.size();
-  std::vector<int16_t> temperature(buf_size, -300);
+  std::vector<int32_t> temperature(buf_size, -300);
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int16_t>(max31865ioVec_[i]->Temperature() * scale);
+    temperature[i] = static_cast<int32_t>(max31865ioVec_[i]->Temperature() * scale);
   }
   addVector(temperature);
 }
@@ -73,15 +73,15 @@ void TelemetryGenerator::writeEnvironmentalData()
 {
   const int buf_size = 5;
   const int n = bme680ioVec_.size();
-  std::vector<uint16_t> temperature(buf_size);
-  std::vector<uint16_t> humidity(buf_size);
-  std::vector<uint16_t> pressure(buf_size);
+  std::vector<int32_t> temperature(buf_size);
+  std::vector<uint32_t> humidity(buf_size);
+  std::vector<uint32_t> pressure(buf_size);
 
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = bme680ioVec_[i]->SensorData()->temperature;
-    humidity[i] = bme680ioVec_[i]->SensorData()->humidity;
-    pressure[i] = bme680ioVec_[i]->SensorData()->pressure;
+    temperature[i] = static_cast<int32_t>(bme680ioVec_[i]->SensorData()->temperature * 100.0);
+    humidity[i] = static_cast<uint32_t>(bme680ioVec_[i]->SensorData()->humidity * 100.0);
+    pressure[i] = static_cast<uint32_t>(bme680ioVec_[i]->SensorData()->pressure * 10.0);
   }
   addVector(temperature);
   addVector(humidity);

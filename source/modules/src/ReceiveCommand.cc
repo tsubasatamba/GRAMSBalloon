@@ -70,7 +70,7 @@ ANLStatus ReceiveCommand::mod_analyze()
     }
   }
 
-  
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));  
   
   
   return AS_OK;
