@@ -52,6 +52,8 @@ ANLStatus ReceiveCommand::mod_analyze()
     return AS_OK;
   }
 
+  std::cout << "buffer: " << static_cast<int>(buffer) << std::endl;
+
   que_.push(buffer);
   que_.pop();
   if (startReading_) {
@@ -84,6 +86,10 @@ ANLStatus ReceiveCommand::mod_finalize()
 void ReceiveCommand::applyCommand()
 {
   comintp_ -> setCommand(command_);
+  std::cout << "command start" << std::endl;
+  for (int i=0; i<(int)command_.size(); i++) {
+    std::cout << static_cast<int>(command_[i]) << std::endl;
+  }
   if (!comintp_->isValid()) {
     std::cout << "Command is not valid consulting MD5 check." << std::endl;
     return;
