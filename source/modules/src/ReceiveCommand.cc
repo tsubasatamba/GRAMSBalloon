@@ -5,7 +5,7 @@
 using namespace anlnext;
 
 ReceiveCommand::ReceiveCommand()
-  :baudrate_(B9600), openMode_(O_RDWR)
+  :baudrate_(B9600), openMode_(O_RDWR), readWaveformModuleName_("ReadWaveform")
 {
   serialPath_ = "/dev/null";
   for (int i=0; i<2; i++) {
@@ -21,15 +21,16 @@ ANLStatus ReceiveCommand::mod_define()
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("open_mode", &mod_class::openMode_);
+  define_parameter("ReadWaveform_module_name", &mod_class::readWaveformModuleName_);
 
   return AS_OK;
 }
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
-  if (exist_module("ReadDAQ")) {
-    get_module_NC("ReadDAQ", &readDAQ_);
-    DAQIO* io = readDAQ_->getDAQIO();
+  if (exist_module(readWaveformModuleName_)) {
+    get_module_NC(readWaveformModuleName_, &readWaveform_);
+    DAQIO* io = readWaveform_->getDAQIO();
     comintp_->setDAQIO(io);
   }
 

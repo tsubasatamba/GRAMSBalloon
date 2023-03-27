@@ -24,9 +24,9 @@ set(GB_MODULES
   src/GetEnvironmentalData.cc
   src/ReceiveCommand.cc
   src/AnalogDiscoveryManager.cc
-  src/RegulateHighVoltage.cc
+  src/ControlHighVoltage.cc
   src/MeasureTemperatureWithRTDSensor.cc
-  src/ReadDAQ.cc
+  src/ReadWaveform.cc
   src/SendTelemetry.cc
   )
 

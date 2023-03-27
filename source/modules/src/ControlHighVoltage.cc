@@ -1,15 +1,15 @@
-#include "RegulateHighVoltage.hh"
+#include "ControlHighVoltage.hh"
 
 
 using namespace anlnext;
 
-RegulateHighVoltage::RegulateHighVoltage()
+ControlHighVoltage::ControlHighVoltage()
 {
 }
 
-RegulateHighVoltage::~RegulateHighVoltage() = default;
+ControlHighVoltage::~ControlHighVoltage() = default;
 
-ANLStatus RegulateHighVoltage::mod_define()
+ANLStatus ControlHighVoltage::mod_define()
 {
   define_parameter("device_id", &mod_class::deviceID_);
   define_parameter("channel", &mod_class::channel_);
@@ -18,7 +18,7 @@ ANLStatus RegulateHighVoltage::mod_define()
   return AS_OK;
 }
 
-ANLStatus RegulateHighVoltage::mod_initialize()
+ANLStatus ControlHighVoltage::mod_initialize()
 {
   get_module_NC(ADManagerName_, &ADManager_);
   AnalogDiscoveryIO* io = ADManager_->ADIO();
@@ -27,7 +27,7 @@ ANLStatus RegulateHighVoltage::mod_initialize()
   return AS_OK;
 }
 
-ANLStatus RegulateHighVoltage::mod_analyze()
+ANLStatus ControlHighVoltage::mod_analyze()
 {
   # if 0
   const int index = get_loop_index();
@@ -48,7 +48,7 @@ ANLStatus RegulateHighVoltage::mod_analyze()
   return AS_OK;
 }
 
-ANLStatus RegulateHighVoltage::mod_finalize()
+ANLStatus ControlHighVoltage::mod_finalize()
 {
   return AS_OK;
 }

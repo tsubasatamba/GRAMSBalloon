@@ -1,24 +1,24 @@
 /**
- * Regulate high voltage via Analog Discovery.
+ * Control high voltage via Analog Discovery.
  *
  * @author Tsubasa Tamba, Shota Arai
  * @date 2023-03-15
  */
 
 
-#ifndef RegulateHighVoltage_H
-#define RegulateHighVoltage_H 1
+#ifndef ControlHighVoltage_H
+#define ControlHighVoltage_H 1
 
 #include <anlnext/BasicModule.hh>
 #include "AnalogDiscoveryManager.hh"
 
-class RegulateHighVoltage : public anlnext::BasicModule
+class ControlHighVoltage : public anlnext::BasicModule
 {
-  DEFINE_ANL_MODULE(RegulateHighVoltage, 1.0);
+  DEFINE_ANL_MODULE(ControlHighVoltage, 1.0);
 
 public:
-  RegulateHighVoltage();
-  virtual ~RegulateHighVoltage();
+  ControlHighVoltage();
+  virtual ~ControlHighVoltage();
   
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
@@ -37,4 +37,4 @@ private:
   double nextVoltage_ = 0.0;
 };
 
-#endif /* RegulateHighVoltage_H */
+#endif /* ControlHighVoltage_H */

@@ -12,10 +12,10 @@
 #include <anlnext/BasicModule.hh>
 #include <queue>
 #include "CommandInterpreter.hh"
-#include "ReadDAQ.hh"
+#include "ReadWaveform.hh"
 #include "SerialCommunication.hh"
 
-class ReadDAQ;
+class ReadWaveform;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -36,7 +36,8 @@ private:
   std::vector<uint8_t> command_;
   std::queue<uint8_t> que_;
   std::unique_ptr<CommandInterpreter> comintp_;
-  ReadDAQ* readDAQ_;
+  ReadWaveform* readWaveform_;
+  std::string readWaveformModuleName_;
 
   //communication
   std::unique_ptr<SerialCommunication> sc_ = nullptr;
@@ -44,7 +45,7 @@ private:
   std::string serialPath_;
   char openMode_;
   bool startReading_ = false;
-  
+
 };
 
 #endif /* ReceiveCommand_H */

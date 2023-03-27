@@ -25,6 +25,9 @@
 #### 仕様
 - 
 
+### ControlHighVoltage
+
+
 ### GetEnvironmentalData
 
 #### 機能
@@ -77,13 +80,13 @@
 #### Core class
 - MAX31865IO.cc
 
-### ReadDAQ
+### ReadWaveform
 
 ### ReceiveCommand
 
 
 
-### RegulateHighVoltage
+
 
 ### SendTelemetry
 

@@ -6,8 +6,8 @@
  */
 
 
-#ifndef ReadDAQ_H
-#define ReadDAQ_H 1
+#ifndef ReadWaveform_H
+#define ReadWaveform_H 1
 
 #include<fstream>
 #include <anlnext/BasicModule.hh>
@@ -18,13 +18,13 @@
 
 class SendTelemetry;
 
-class ReadDAQ : public anlnext::BasicModule
+class ReadWaveform : public anlnext::BasicModule
 {
-  DEFINE_ANL_MODULE(ReadDAQ, 1.0);
+  DEFINE_ANL_MODULE(ReadWaveform, 1.0);
 
 public:
-  ReadDAQ();
-  virtual ~ReadDAQ();
+  ReadWaveform();
+  virtual ~ReadWaveform();
   
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
@@ -63,4 +63,4 @@ private:
   SendTelemetry* sendTelemetry_;
 };
 
-#endif /* ReadDAQ_H */
+#endif /* ReadWaveform_H */

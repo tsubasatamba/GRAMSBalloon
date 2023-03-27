@@ -12,11 +12,11 @@
 #include <anlnext/BasicModule.hh>
 #include "TelemetryGenerator.hh"
 #include "GetEnvironmentalData.hh"
-#include "ReadDAQ.hh"
+#include "ReadWaveform.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
 #include "SerialCommunication.hh"
 
-class ReadDAQ;
+class ReadWaveform;
 class GetEnvironmentalData;
 class MeasureTemperatureWithRTDSensor;
 
@@ -41,7 +41,8 @@ public:
 private:
   std::unique_ptr<TelemetryGenerator> telemgen_ = nullptr;
   std::vector<std::string> getEnvironmentalDataModuleNames_;
-  ReadDAQ* readDAQ_ = nullptr;
+  ReadWaveform* readWaveform_ = nullptr;
+  std::string readWaveformModuleName_;
   std::vector<std::string> measureTemperatureModuleNames_;
   int telemetryType_ = 1;
 

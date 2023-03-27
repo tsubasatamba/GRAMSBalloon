@@ -1,19 +1,19 @@
 #include <sstream>
-#include "ReadDAQ.hh"
+#include "ReadWaveform.hh"
 
 
 using namespace anlnext;
 
-ReadDAQ::ReadDAQ()
+ReadWaveform::ReadWaveform()
 {
   daqio_ = std::make_unique<DAQIO>();
   adcRangeList_ = std::vector<double>(4, 1.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);
 }
 
-ReadDAQ::~ReadDAQ() = default;
+ReadWaveform::~ReadWaveform() = default;
 
-ANLStatus ReadDAQ::mod_define()
+ANLStatus ReadWaveform::mod_define()
 {
   define_parameter("ad_manager_name", &mod_class::ADManagerName_);
   define_parameter("trig_device", &mod_class::trigDevice_);
@@ -31,7 +31,7 @@ ANLStatus ReadDAQ::mod_define()
   return AS_OK;
 }
 
-ANLStatus ReadDAQ::mod_initialize()
+ANLStatus ReadWaveform::mod_initialize()
 {
   get_module_NC(ADManagerName_, &ADManager_);
   AnalogDiscoveryIO* adio = ADManager_->ADIO();
@@ -61,7 +61,7 @@ ANLStatus ReadDAQ::mod_initialize()
   return AS_OK;
 }
 
-ANLStatus ReadDAQ::mod_analyze()
+ANLStatus ReadWaveform::mod_analyze()
 {
   const int event_id = get_loop_index();
   if (event_id%numEventsPerFile_ == 0) {
@@ -85,13 +85,13 @@ ANLStatus ReadDAQ::mod_analyze()
   return AS_OK;
 }
 
-ANLStatus ReadDAQ::mod_finalize()
+ANLStatus ReadWaveform::mod_finalize()
 {
   closeOutputFile();
   return AS_OK;
 }
 
-void ReadDAQ::createNewOutputFile()
+void ReadWaveform::createNewOutputFile()
 {
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileID_;
@@ -106,7 +106,7 @@ void ReadDAQ::createNewOutputFile()
   ofs_.write(reinterpret_cast<char*>(&file_header[0]), size);
 }
 
-void ReadDAQ::closeOutputFile()
+void ReadWaveform::closeOutputFile()
 {
   std::vector<short> file_footer;
   daqio_->generateFileFooter(file_footer);
@@ -115,7 +115,7 @@ void ReadDAQ::closeOutputFile()
   ofs_.close();
 }
 
-void ReadDAQ::writeData()
+void ReadWaveform::writeData()
 {
   const int header_size = sizeof(short) * static_cast<int>(eventHeader_.size());
   ofs_.write(reinterpret_cast<char*>(&eventHeader_[0]), header_size);

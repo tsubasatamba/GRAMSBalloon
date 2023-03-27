@@ -9,6 +9,7 @@ SendTelemetry::SendTelemetry()
   serialPath_ = "/dev/null";
   baudrate_ = B9600;
   openMode_ = O_RDWR;
+  readWaveformModuleName_ = "ReadWaveform";
 }
 
 SendTelemetry::~SendTelemetry() = default;
@@ -17,6 +18,7 @@ ANLStatus SendTelemetry::mod_define()
 {
   define_parameter("GetEnvironmentalData_module_names", &mod_class::getEnvironmentalDataModuleNames_);
   define_parameter("MasureTemperature_module_names", &mod_class::measureTemperatureModuleNames_);
+  define_parameter("ReadWaveform_module_name", &mod_class::readWaveform_);
   
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("baudrate", &mod_class::baudrate_);
@@ -37,9 +39,9 @@ ANLStatus SendTelemetry::mod_initialize()
     }
   }
 
-  if (exist_module("ReadDAQ")) {
-    get_module_NC("ReadDAQ", &readDAQ_);
-    DAQIO* io = readDAQ_->getDAQIO();
+  if (exist_module(readWaveformModuleName_)) {
+    get_module_NC(readWaveformModuleName_, &readWaveform_);
+    DAQIO* io = readWaveform_->getDAQIO();
     telemgen_->setDAQIO(io);
   }
 
