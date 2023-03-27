@@ -60,6 +60,9 @@ ANLStatus SendTelemetry::mod_initialize()
       measureTemperatureVec_.push_back(mt);
     }
   }
+  n = measuretemperatureVec_.size();
+  std::vector<int16_t> RTDTemperatureADC = telemdef_->RTDTemperatureADC();
+  RTDTemperatureADC.resize(n);
 
 
   // communication
@@ -132,7 +135,11 @@ void SendTelemetry::inputEnvironmentalData()
 
 void SendTelemetry::inputTemperatureData()
 {
-
+  const int n = measureTemperatureVec_.size();
+  std::vector<int16_t>& RTDTemperature = telemdef_->RTDTemperatureADC();
+  for (int i=0; i<n; i++) {
+    RTDTemperature[i] = measureTemperatureVec_->TemperatureADC();
+  }
 }
 
 } /* namespace GRAMSBalloon */

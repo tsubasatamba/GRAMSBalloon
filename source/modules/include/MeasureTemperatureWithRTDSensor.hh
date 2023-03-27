@@ -32,6 +32,7 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   MAX31865IO* GetMAX31865IO() { return max31865io_.get(); }
+  int16_t TemperatureADC() { return max31865io_->TemperatureADC(); }
 
 private:
   int chipSelect_ = 8;

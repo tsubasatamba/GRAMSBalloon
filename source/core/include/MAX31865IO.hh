@@ -94,7 +94,8 @@ public:
   char getFaultDetection();
   char getFilter();
 
-  double Temperature() { return temperature_; };
+  double Temperature() { return temperature_; }
+  int16_t TemperatureADC() { return temperatureADC_; }
 
 private:
   int pi;
@@ -103,6 +104,7 @@ private:
   int cs;
   char currentBits_;
   SPIInterface* intf_;
+  int16_t temperatureADC_ = 0;
   double temperature_ = 0.0;
 };
 

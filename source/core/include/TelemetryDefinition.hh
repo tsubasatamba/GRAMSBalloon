@@ -41,6 +41,7 @@ public:
   std::vector<double>& EnvTemperature() { return envTemperature_; }
   std::vector<double>& EnvHumidity() { return envHumidity_; }
   std::vector<double>& EnvPressure() { return envPressure_; }
+  std::vector<int16_t>& RTDTemperatureADC() { return RTDTemperatureADC_; }
   
   
 private:
@@ -50,6 +51,7 @@ private:
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
+  std::vector<int16_t> RTDTemperatureADC_;
 
  
 };
