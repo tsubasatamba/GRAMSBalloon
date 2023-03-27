@@ -12,6 +12,8 @@
 #include <anlnext/BasicModule.hh>
 #include "AnalogDiscoveryManager.hh"
 
+namespace GRAMSBalloon {
+
 class ControlHighVoltage : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(ControlHighVoltage, 1.0);
@@ -36,5 +38,7 @@ private:
   double currentVoltage_ = 0.0;
   double nextVoltage_ = 0.0;
 };
+
+} /* namespace GRAMSBalloon */
 
 #endif /* ControlHighVoltage_H */

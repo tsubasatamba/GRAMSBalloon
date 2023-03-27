@@ -1,11 +1,12 @@
 #include "SendTelemetry.hh"
 
-
 using namespace anlnext;
+
+namespace GRAMSBalloon {
 
 SendTelemetry::SendTelemetry()
 {
-  telemgen_ = std::make_unique<TelemetryGenerator>();
+  telemdef_ = std::make_unique<TelemetryGenerator>();
   serialPath_ = "/dev/null";
   baudrate_ = B9600;
   openMode_ = O_RDWR;
@@ -18,7 +19,7 @@ ANLStatus SendTelemetry::mod_define()
 {
   define_parameter("GetEnvironmentalData_module_names", &mod_class::getEnvironmentalDataModuleNames_);
   define_parameter("MasureTemperature_module_names", &mod_class::measureTemperatureModuleNames_);
-  define_parameter("ReadWaveform_module_name", &mod_class::readWaveform_);
+  define_parameter("ReadWaveform_module_name", &mod_class::readWaveformModuleName_);
   
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("baudrate", &mod_class::baudrate_);
@@ -34,15 +35,20 @@ ANLStatus SendTelemetry::mod_initialize()
     if (exist_module(module_name)) {
       GetEnvironmentalData* ged;
       get_module_NC(module_name, &ged);
-      BME680IO* io = ged -> GetBME680IO();
-      telemgen_ -> addBME680IO(io);
+      getEnvironmentalDataVec_.push_back(ged);
     }
   }
+  int n = getEnvironmentalDataVec_.size()
+  std::vector<double>& temperature = telemdef_->EnvTemperature();
+  std::vector<double>& humidity = telemdef_->EnvHumidity();
+  std::vector<double>& pressure = telemdef_->EnvPressure();
+  temperature.resize(n);
+  humidity.resize(n);
+  pressure.resize(n);
 
   if (exist_module(readWaveformModuleName_)) {
     get_module_NC(readWaveformModuleName_, &readWaveform_);
-    DAQIO* io = readWaveform_->getDAQIO();
-    telemgen_->setDAQIO(io);
+    //daqio_ = readWaveform_->getDAQIO();
   }
 
   const int num_modules_temp = measureTemperatureModuleNames_.size();
@@ -51,10 +57,10 @@ ANLStatus SendTelemetry::mod_initialize()
     if (exist_module(module_name)) {
       MeasureTemperatureWithRTDSensor* mt;
       get_module_NC(module_name, &mt);
-      MAX31865IO* io = mt -> GetMAX31865IO();
-      telemgen_ -> addMAX31865IO(io);
+      measureTemperatureVec_.push_back(mt);
     }
   }
+
 
   // communication
   sc_ = std::make_unique<SerialCommunication>(serialPath_, baudrate_, openMode_);
@@ -65,13 +71,15 @@ ANLStatus SendTelemetry::mod_initialize()
 
 ANLStatus SendTelemetry::mod_analyze()
 {
-  telemgen_->generateTelemetry(telemetryType_);
+  inputInfo();
+
+  telemdef_->generateTelemetry(telemetryType_);
 
   if (telemetryType_==2) {
     telemetryType_ = 1;
   }
 
-  const std::vector<uint8_t>& telemetry = telemgen_->Telemetry();
+  const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
   const int status = sc_->swrite(telemetry);
   if (status != static_cast<int>(telemetry.size())) {
     std::cerr << "Sending telemetry failed: status = " << status << std::endl;
@@ -103,3 +111,28 @@ ANLStatus SendTelemetry::mod_finalize()
   return AS_OK;
 }
 
+void SendTelemetry::inputInfo()
+{
+  inputEnvironmentalData();
+  inputTemperatureData();
+}
+
+void SendTelemetry::inputEnvironmentalData()
+{
+  const int n = getEnvironmentalDataVec_.size();
+  std::vector<double>& temperature = telemdef_->EnvTemperature();
+  std::vector<double>& humidity = telemdef_->EnvHumidity();
+  std::vector<double>& pressure = telemdef_->EnvPressure();
+  for (int i=0; i<n; i++) {
+    temperature[i] = getEnvironmentalDataVec_[i] -> Temperature();
+    humidity[i] = getEnvironmentalDataVec_[i] -> Humidity();
+    pressure[i] = getEnvironmentalDataVec_[i] -> Pressure();
+  }
+}
+
+void SendTelemetry::inputTemperatureData()
+{
+
+}
+
+} /* namespace GRAMSBalloon */

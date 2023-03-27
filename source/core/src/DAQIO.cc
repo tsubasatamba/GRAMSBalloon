@@ -3,6 +3,8 @@
 #include <chrono>
 #include <sys/time.h>
 
+namespace GRAMSBalloon {
+
 DAQIO::DAQIO()
 {
 }
@@ -250,3 +252,5 @@ void DAQIO::generateFileFooter(std::vector<short>& footer)
   footer[2] = static_cast<short>(time_now.tv_usec&(0xffff));
   footer[3] = static_cast<short>((time_now.tv_usec>>16)&(0xffff));
 }
+
+} /* namespace GRAMSBalloon */

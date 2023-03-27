@@ -1,8 +1,9 @@
 #include <sstream>
 #include "ReadWaveform.hh"
 
-
 using namespace anlnext;
+
+namespace GRAMSBalloon {
 
 ReadWaveform::ReadWaveform()
 {
@@ -125,3 +126,5 @@ void ReadWaveform::writeData()
     ofs_.write(reinterpret_cast<char*>(&eventData_[i][0]), data_size);
   }
 }
+
+} /* namespace GRAMSBalloon */

@@ -12,6 +12,8 @@
 #include <anlnext/BasicModule.hh>
 #include <cstdint>
 
+namespace GRAMSBalloon {
+
 class SimpleLoop : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(SimpleLoop, 1.0);
@@ -35,5 +37,7 @@ private:
   std::vector<double> v2;
   std::vector<std::string> v3;
 };
+
+} /* namespace GRAMSBalloon */
 
 #endif /* SimpleLoop_H */

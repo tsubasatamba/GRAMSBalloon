@@ -2,6 +2,8 @@
 
 using namespace anlnext;
 
+namespace GRAMSBalloon {
+
 AnalogDiscoveryManager::AnalogDiscoveryManager()
 {
   ADIO_ = std::make_unique<AnalogDiscoveryIO>();
@@ -37,4 +39,6 @@ ANLStatus AnalogDiscoveryManager::mod_finalize()
   
   return AS_OK;
 }
+
+} /* namespace GRAMSBalloon */
 

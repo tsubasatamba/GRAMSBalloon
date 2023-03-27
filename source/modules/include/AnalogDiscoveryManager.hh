@@ -12,7 +12,7 @@
 #include <anlnext/BasicModule.hh>
 #include "AnalogDiscoveryIO.hh"
 
-
+namespace GRAMSBalloon{
 
 class AnalogDiscoveryManager : public anlnext::BasicModule
 {
@@ -33,5 +33,7 @@ public:
 private:
   std::unique_ptr<AnalogDiscoveryIO> ADIO_ = nullptr;
 };
+
+} /* namespace GRAMSBalloon */
 
 #endif /* AnalogDiscoveryManager_H */

@@ -1,13 +1,14 @@
-#include "TelemetryGenerator.hh"
+#include "TelemetryDefinition.hh"
 #include <thread>
 #include <chrono>
 
+namespace GRAMSBalloon {
 
-TelemetryGenerator::TelemetryGenerator()
+TelemetryDefinition::TelemetryDefinition()
 {
 }
 
-void TelemetryGenerator::generateTelemetry(int telemetry_type)
+void TelemetryDefinition::generateTelemetry(int telemetry_type)
 {
   clear();
   std::vector<uint8_t> start_code = {0xeb, 0x90};
@@ -34,7 +35,7 @@ void TelemetryGenerator::generateTelemetry(int telemetry_type)
   addVector(end_code);
 }
 
-void TelemetryGenerator::generateTelemetryNormal()
+void TelemetryDefinition::generateTelemetryNormal()
 {
   addValue((uint32_t)0); // DAQ event count
   addValue((uint32_t)0); // Trigger event count
@@ -46,7 +47,7 @@ void TelemetryGenerator::generateTelemetryNormal()
   writeEnvironmentalData();
 }
 
-void TelemetryGenerator::generateTelemetryWave()
+void TelemetryDefinition::generateTelemetryWave()
 {
   addValue(eventID_);
   addVector(eventHeader_);
@@ -56,7 +57,7 @@ void TelemetryGenerator::generateTelemetryWave()
   }
 }
 
-void TelemetryGenerator::writeRTDTemperature()
+void TelemetryDefinition::writeRTDTemperature()
 {
   const int buf_size = 5;
   const double scale = 100.0;
@@ -69,26 +70,26 @@ void TelemetryGenerator::writeRTDTemperature()
   addVector(temperature);
 }
 
-void TelemetryGenerator::writeEnvironmentalData()
+void TelemetryDefinition::writeEnvironmentalData()
 {
   const int buf_size = 5;
-  const int n = bme680ioVec_.size();
+  const int n = envTemperature_.size();
   std::vector<int32_t> temperature(buf_size);
   std::vector<uint32_t> humidity(buf_size);
   std::vector<uint32_t> pressure(buf_size);
 
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int32_t>(bme680ioVec_[i]->SensorData()->temperature * 100.0);
-    humidity[i] = static_cast<uint32_t>(bme680ioVec_[i]->SensorData()->humidity * 100.0);
-    pressure[i] = static_cast<uint32_t>(bme680ioVec_[i]->SensorData()->pressure * 10.0);
+    temperature[i] = static_cast<int32_t>(envTemperature_[i] * 100.0);
+    humidity[i] = static_cast<uint32_t>(envHumidity_[i] * 100.0);
+    pressure[i] = static_cast<uint32_t>(envPressure_[i] * 10.0);
   }
   addVector(temperature);
   addVector(humidity);
   addVector(pressure);
 }
 
-void TelemetryGenerator::writeMD5()
+void TelemetryDefinition::writeMD5()
 {
   const int n = telemetry_.size();
   std::vector<unsigned char> md(MD5_DIGEST_LENGTH);
@@ -96,13 +97,13 @@ void TelemetryGenerator::writeMD5()
   addVector(md);
 }
 
-void TelemetryGenerator::clear()
+void TelemetryDefinition::clear()
 {
   telemetry_.clear();
 }
 
 template<typename T>
-void TelemetryGenerator::addValue(T input)
+void TelemetryDefinition::addValue(T input)
 {
   const int size = sizeof(T);
   for (int i=0; i<size; i++) {
@@ -112,10 +113,12 @@ void TelemetryGenerator::addValue(T input)
 }
 
 template<typename T>
-void TelemetryGenerator::addVector(std::vector<T>& input)
+void TelemetryDefinition::addVector(std::vector<T>& input)
 {
   const int n = input.size();
   for (int i=0; i<n; i++) {
     addValue(input[i]);
   }
 }
+
+} /* namespace GRAMSBalloon */

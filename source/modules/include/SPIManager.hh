@@ -12,7 +12,7 @@
 #include <anlnext/BasicModule.hh>
 #include "SPIInterface.hh"
 
-
+namespace GRAMSBalloon {
 
 class SPIManager : public anlnext::BasicModule
 {
@@ -39,5 +39,7 @@ private:
   const std::string portNumber_ = "8888";
   std::vector<int> chipSelectArray_;
 };
+
+} /* namespace GRAMSBalloon */
 
 #endif /* SPIManager_H */

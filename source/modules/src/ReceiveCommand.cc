@@ -4,8 +4,10 @@
 
 using namespace anlnext;
 
+namespace GRAMSBalloon {
+
 ReceiveCommand::ReceiveCommand()
-  :baudrate_(B9600), openMode_(O_RDWR), readWaveformModuleName_("ReadWaveform")
+  :readWaveformModuleName_("ReadWaveform"), baudrate_(B9600), openMode_(O_RDWR)
 {
   serialPath_ = "/dev/null";
   for (int i=0; i<2; i++) {
@@ -95,5 +97,6 @@ void ReceiveCommand::applyCommand()
     std::cout << "Command is not valid consulting MD5 check." << std::endl;
     return;
   }
-
 }
+
+} /* namespace GRAMSBalloon */

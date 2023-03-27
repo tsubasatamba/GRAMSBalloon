@@ -4,8 +4,9 @@
 #include "pigpiod_if2.h"
 #include "bme68x.h"
 
-
 using namespace anlnext;
+
+namespace GRAMSBalloon {
 
 GetEnvironmentalData::GetEnvironmentalData()
 {
@@ -72,3 +73,5 @@ ANLStatus GetEnvironmentalData::mod_finalize()
 {  
   return AS_OK;
 }
+
+} /* namespace GRAMSBalloon */

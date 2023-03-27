@@ -22,6 +22,9 @@
  * @author Tsubasa Tamba, Shota Arai
  * @date 2023-03-15
  */
+
+namespace GRAMSBalloon {
+
 class AnalogDiscoveryIO
 {
 public:
@@ -45,6 +48,6 @@ private:
   std::vector<std::vector<char>> deviceSerialName_;
 };
 
-
+} /* namespace GRAMSBalloon */
 
 #endif /* AnalogDiscoveryIO_H */

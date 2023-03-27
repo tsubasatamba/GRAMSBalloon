@@ -16,6 +16,9 @@
  * @author Tsubasa Tamba, Shota Arai
  * @date 2023-03-01
  */
+
+namespace GRAMSBalloon {
+
 class BME680IO
 {
 public:
@@ -35,6 +38,6 @@ private:
   std::unique_ptr<bme68x_conf> configure_ = nullptr;
 };
 
-
+} /* namespace GRAMSBalloon */
 
 #endif /* BME680IO_H */

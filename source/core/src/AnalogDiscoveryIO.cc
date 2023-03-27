@@ -2,6 +2,8 @@
 #include <thread>
 #include <chrono>
 
+namespace GRAMSBalloon {
+
 AnalogDiscoveryIO::AnalogDiscoveryIO()
 {
 }
@@ -85,3 +87,5 @@ void AnalogDiscoveryIO::finalize()
 {
   FDwfDeviceCloseAll();
 }
+
+} /* namespace GRAMSBalloon */

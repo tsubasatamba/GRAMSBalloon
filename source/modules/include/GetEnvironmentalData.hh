@@ -15,6 +15,8 @@
 #include "SPIManager.hh"
 #include <chrono>
 
+namespace GRAMSBalloon {
+
 class GetEnvironmentalData : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(GetEnvironmentalData, 1.0);
@@ -30,6 +32,9 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   BME680IO* GetBME680IO() { return bme680io_.get(); }
+  double Temperature() { return temperature_; }
+  double Humidity() { return humidity_; }
+  double Pressure() { return pressure_; }
 
 private:
   int chipSelect_ = 8;
@@ -42,5 +47,7 @@ private:
   double temperature_;
   std::chrono::system_clock::time_point lastUpdateTime_;
 };
+
+} /* namespace GRAMSBalloon */
 
 #endif /* GetEnvironmentalData_H */

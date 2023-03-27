@@ -18,6 +18,8 @@
 
 class SendTelemetry;
 
+namespace GRAMSBalloon {
+
 class ReadWaveform : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(ReadWaveform, 1.0);
@@ -62,5 +64,7 @@ private:
   bool ondemand_ = false;
   SendTelemetry* sendTelemetry_;
 };
+
+} /* namespace GRAMSBalloon */
 
 #endif /* ReadWaveform_H */

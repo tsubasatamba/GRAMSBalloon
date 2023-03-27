@@ -17,6 +17,8 @@
 
 class ReadWaveform;
 
+namespace GRAMSBalloon {
+
 class ReceiveCommand : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(ReceiveCommand, 1.0);
@@ -35,17 +37,19 @@ public:
 private:
   std::vector<uint8_t> command_;
   std::queue<uint8_t> que_;
-  std::unique_ptr<CommandInterpreter> comintp_;
-  ReadWaveform* readWaveform_;
-  std::string readWaveformModuleName_;
+  std::unique_ptr<CommandInterpreter> comintp_ = nullptr;
+  ReadWaveform* readWaveform_ = nullptr;
+  std::string readWaveformModuleName_ = "ReadWaveform";
 
   //communication
   std::unique_ptr<SerialCommunication> sc_ = nullptr;
   speed_t baudrate_;
   std::string serialPath_;
-  char openMode_;
+  char openMode_ = O_RDWR;
   bool startReading_ = false;
 
 };
+
+} /* namespace GRAMSBalloon */
 
 #endif /* ReceiveCommand_H */

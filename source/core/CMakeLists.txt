@@ -18,8 +18,7 @@ set(GB_CORE_CLASSES
   src/AnalogDiscoveryIO.cc
   src/MAX31865IO.cc
   src/DAQIO.cc
-  src/TelemetryGenerator.cc
-  src/SerialCommand.cc
+  src/TelemetryDefinition.cc
   src/CommandInterpreter.cc
 )
 

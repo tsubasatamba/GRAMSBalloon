@@ -5,8 +5,7 @@ require 'GRAMSBalloon'
 
 class MyApp < ANL::ANLApp
   def setup()
-    chain GRAMSBalloon::SimpleLoop
-    with_parameters(int_v: 2)
+    chain GRAMSBalloon::GetRaspiStatus
   end
 end
 

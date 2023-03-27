@@ -10,14 +10,15 @@
 #include "MAX31865IO.hh"
 #include "DAQIO.hh"
 
-
-
 /**
  * A class to define telemetry
  *
  * @author Tsubasa Tamba, Shota Arai
  * @date 2023-03-25
  */
+
+namespace GRAMSBalloon {
+
 class CommandInterpreter
 {
 public:
@@ -40,6 +41,6 @@ private:
   DAQIO* daqio_ = nullptr;
 };
 
-
+} /* namespace GRAMSBalloon */
 
 #endif /* CommandInterpreter_H */

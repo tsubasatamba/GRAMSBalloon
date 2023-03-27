@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <vector>
 
+namespace GRAMSBalloon {
 
 class SerialCommunication
 {
@@ -44,6 +45,6 @@ private:
   char openMode_;
 };
 
-
+} /* namespace GRAMSBalloon */
 
 #endif /* SerialCommunication_H */

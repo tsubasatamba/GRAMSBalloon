@@ -2,6 +2,7 @@
 #include <thread>
 #include <chrono>
 
+namespace GRAMSBalloon {
 
 CommandInterpreter::CommandInterpreter()
 {
@@ -52,3 +53,4 @@ void CommandInterpreter::interpret()
   
 }
 
+} /* namespace GRAMSBalloon */

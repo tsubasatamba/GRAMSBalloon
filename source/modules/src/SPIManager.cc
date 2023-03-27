@@ -2,8 +2,9 @@
 #include "pigpiod_if2.h"
 #include "bme68x.h"
 
-
 using namespace anlnext;
+
+namespace GRAMSBalloon {
 
 SPIManager::SPIManager()
 {
@@ -67,3 +68,5 @@ void SPIManager::addChipSelect(int v)
 {
   chipSelectArray_.push_back(v);
 }
+
+} /* namespace GRAMSBalloon */

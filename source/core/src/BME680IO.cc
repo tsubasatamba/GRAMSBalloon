@@ -2,6 +2,8 @@
 #include <vector>
 #include <iomanip>
 
+namespace GRAMSBalloon {
+
 BME680IO::BME680IO()
 {
   bme68xn_ = std::make_unique<bme68x_dev>();
@@ -159,7 +161,7 @@ void BME680IO::printData()
   std::cout << "Pressure: " << sensorData_->pressure << "\nHumidity: " << sensorData_->humidity << "\nTemperature: " << sensorData_->temperature << std::endl;
 }
 
-
+} /* namespace GRAMSBalloon */
 
 
 

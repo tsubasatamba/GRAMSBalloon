@@ -28,6 +28,7 @@ set(GB_MODULES
   src/MeasureTemperatureWithRTDSensor.cc
   src/ReadWaveform.cc
   src/SendTelemetry.cc
+  src/GetRaspiStatus.cc
   )
 
 add_library(GBModules SHARED

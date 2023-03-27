@@ -7,16 +7,19 @@
 #include "GetEnvironmentalData.hh"
 #include "ReceiveCommand.hh"
 #include "AnalogDiscoveryManager.hh"
-#include "RegulateHighVoltage.hh"
+#include "ControlHighVoltage.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
-#include "ReadDAQ.hh"
+#include "ReadWaveform.hh"
 #include "SendTelemetry.hh"
+#include "GetRaspiStatus.hh"
 %}
 
 %include "std_vector.i"
 %import(module="anlnext/ANL") "anlnext/ruby/ANL.i"
 
 // interface to my modules
+
+namespace GRAMSBalloon {
 
 class SimpleLoop : public anlnext::BasicModule
 {
@@ -48,10 +51,10 @@ public:
   AnalogDiscoveryManager();
 };
 
-class RegulateHighVoltage : public anlnext::BasicModule
+class ControlHighVoltage : public anlnext::BasicModule
 {
 public:
-  RegulateHighVoltage();
+  ControlHighVoltage();
 };
 
 class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
@@ -60,10 +63,10 @@ public:
   MeasureTemperatureWithRTDSensor();
 };
 
-class ReadDAQ : public anlnext::BasicModule
+class ReadWaveform : public anlnext::BasicModule
 {
 public:
-  ReadDAQ();
+  ReadWaveform();
 };
 
 class SendTelemetry : public anlnext::BasicModule
@@ -72,3 +75,11 @@ public:
   SendTelemetry();
 };
 
+class GetRaspiStatus : public anlnext::BasicModule
+{
+public:
+  GetRaspiStatus();
+};
+
+
+} // namespace GRAMSBalloon

@@ -23,6 +23,9 @@
  * @author Tsubasa Tamba, Masato Kimura
  * @date 2023-03-21
  */
+
+namespace GRAMSBalloon {
+
 class DAQIO
 {
 public:
@@ -54,6 +57,6 @@ private:
   const int getDataMaxTrial_ = 1000;
 };
 
-
+} /* namespace GRAMSBalloon */
 
 #endif /* DAQIO_H */
