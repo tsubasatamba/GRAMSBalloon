@@ -162,13 +162,14 @@ int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::ve
     return 0;
   }
 
+  std::vector<bool> detected(num_devices, true);
   for (int i=0; i<num_devices; i++) {
     if (i!=trigDevice_) {
       FDwfAnalogInStatus(handler_list[i], true, &status);
     }
     if (status!=DwfStateDone) {
+      detected[i] = false;
       std::cout << "device " << i << " does not detect an event..." << std::endl;
-      return -1;
     }
   }
 
@@ -178,6 +179,7 @@ int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::ve
   header[4] = static_cast<short>((event_time.tv_usec>>16)&(0xffff));
 
   for (int i=0; i<num_devices; i++) {
+    if (!detected[i]) continue;
     for (int j=0; j<2; j++) {
       const int k = i*2 + j;
       FDwfAnalogInStatusData16(handler_list[i], j, &data[k][0], 0, numSample_);
