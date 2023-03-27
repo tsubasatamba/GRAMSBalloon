@@ -12,9 +12,18 @@
 
 ## ANL Modules
 
+
 ### AnalogDiscoveryManager
 
+#### 機能
 
+- Analog discovery への接続を確立する。Analog discovery への接続を試みる他のモジュールは必ず本モジュールを参照する必要がある。
+
+#### 入力パラメータ
+- なし。
+
+#### 仕様
+- 
 
 ### GetEnvironmentalData
 
@@ -46,7 +55,7 @@
 ### MeasureTemperatureWithRTDSensor
 
 #### 機能
-- 側温抵抗体MAX31865を用いて、真空断熱容器・電磁弁・外気の温度を測定する。
+- 測温抵抗体MAX31865を用いて、真空断熱容器・電磁弁・外気の温度を測定する。
 
 #### 入力パラメータ
 
@@ -57,6 +66,16 @@
 
 #### 仕様
 
+- <b>mod_pre_initialize</b><br>
+  <tt>chip_select</tt>の値をSPIManagerに渡す。
+- <b>mod_initialize</b><br>
+  GPIO および SPI のハンドラーをSPIManagerからもらう。<tt>max31865io -> setConfigureSingle()</tt>で温度計の初期設定を行う。
+- <b>mod_analyze</b><br>
+  MAX31865 にアクセスし、温度を測定。
+  <span style="color: red">測定の周期やデータの保存方法は未定。</span>
+
+#### Core class
+- MAX31865IO.cc
 
 ### ReadDAQ
 
