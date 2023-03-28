@@ -6,7 +6,7 @@ namespace GRAMSBalloon {
 
 SendTelemetry::SendTelemetry()
 {
-  telemdef_ = std::make_unique<TelemetryGenerator>();
+  telemdef_ = std::make_unique<TelemetryDefinition>();
   serialPath_ = "/dev/null";
   baudrate_ = B9600;
   openMode_ = O_RDWR;
@@ -38,7 +38,7 @@ ANLStatus SendTelemetry::mod_initialize()
       getEnvironmentalDataVec_.push_back(ged);
     }
   }
-  int n = getEnvironmentalDataVec_.size()
+  int n = getEnvironmentalDataVec_.size();
   std::vector<double>& temperature = telemdef_->EnvTemperature();
   std::vector<double>& humidity = telemdef_->EnvHumidity();
   std::vector<double>& pressure = telemdef_->EnvPressure();
@@ -60,7 +60,7 @@ ANLStatus SendTelemetry::mod_initialize()
       measureTemperatureVec_.push_back(mt);
     }
   }
-  n = measuretemperatureVec_.size();
+  n = measureTemperatureVec_.size();
   std::vector<int16_t> RTDTemperatureADC = telemdef_->RTDTemperatureADC();
   RTDTemperatureADC.resize(n);
 
@@ -138,7 +138,7 @@ void SendTelemetry::inputTemperatureData()
   const int n = measureTemperatureVec_.size();
   std::vector<int16_t>& RTDTemperature = telemdef_->RTDTemperatureADC();
   for (int i=0; i<n; i++) {
-    RTDTemperature[i] = measureTemperatureVec_->TemperatureADC();
+    RTDTemperature[i] = measureTemperatureVec_[i]->TemperatureADC();
   }
 }
 

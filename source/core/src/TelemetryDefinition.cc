@@ -60,12 +60,11 @@ void TelemetryDefinition::generateTelemetryWave()
 void TelemetryDefinition::writeRTDTemperature()
 {
   const int buf_size = 5;
-  const double scale = 100.0;
-  const int n = max31865ioVec_.size();
-  std::vector<int32_t> temperature(buf_size, -300);
+  const int n = RTDTemperatureADC_.size();
+  std::vector<int16_t> temperature(buf_size, 0);
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int32_t>(max31865ioVec_[i]->Temperature() * scale);
+    temperature[i] = RTDTemperatureADC_[i];
   }
   addVector(temperature);
 }

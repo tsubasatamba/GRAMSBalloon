@@ -14,7 +14,7 @@
 #include "AnalogDiscoveryManager.hh"
 #include "DAQIO.hh"
 #include "SendTelemetry.hh"
-#include "TelemetryGenerator.hh"
+#include "TelemetryDefinition.hh"
 
 class SendTelemetry;
 

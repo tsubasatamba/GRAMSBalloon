@@ -42,18 +42,26 @@ public:
   std::vector<double>& EnvHumidity() { return envHumidity_; }
   std::vector<double>& EnvPressure() { return envPressure_; }
   std::vector<int16_t>& RTDTemperatureADC() { return RTDTemperatureADC_; }
-  
+
+  void setEventID(int v) { eventID_ = v; }
+  void setEventHeader(const std::vector<short>& v) { eventHeader_ = v; }
+  void setEventData(const std::vector<std::vector<short>>& v) { eventData_ = v; }
+  int EventID() { return eventID_; }
+  const std::vector<short>& EventHeader() const { return eventHeader_; }
+  const std::vector<std::vector<short>>& EventData() const { return eventData_; }
   
 private:
   std::vector<uint8_t> telemetry_;
   timeval time_now;
   uint32_t telemIndex_ = 0;
+  // info
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
-  std::vector<int16_t> RTDTemperatureADC_;
-
- 
+  int eventID_;
+  std::vector<short> eventHeader_;
+  std::vector<std::vector<short>> eventData_;
+  std::vector<int16_t> RTDTemperatureADC_; 
 };
 
 } /* namespace GRAMSBalloon */

@@ -41,9 +41,12 @@ public:
 
   void setTelemetryType(int v) { telemetryType_ = v; }
 
-  //void setEventID(int v) { eventID_ = v; };
-  //void setEventHeader(std::vector<short> v) { eventHeader_ = v; }
-  //void setEventData(std::vector<std::vector<short>> v) { eventData_ = v; }
+  void setEventID(int v) { telemdef_->setEventID(v); };
+  void setEventHeader(const std::vector<short>& v) { telemdef_->setEventHeader(v); }
+  void setEventData(const std::vector<std::vector<short>>& v) { telemdef_->setEventData(v); }
+  int EventID() { return telemdef_->EventID(); }
+  const std::vector<short>& EventHeader() const { return telemdef_->EventHeader(); }
+  const std::vector<std::vector<short>>& EventData() const { return telemdef_->EventData(); }
 
 private:
   std::unique_ptr<TelemetryDefinition> telemdef_ = nullptr;
@@ -54,10 +57,6 @@ private:
   std::vector<GetEnvironmentalData*> getEnvironmentalDataVec_;
   std::string readWaveformModuleName_;
   ReadWaveform* readWaveform_ = nullptr;
-  // DAQIO* daqio_ = nullptr;
-  // int eventID_;
-  // std::vector<short> eventHeader_;
-  // std::vector<std::vector<short>> eventData_;
   std::vector<std::string> measureTemperatureModuleNames_;
   std::vector<MeasureTemperatureWithRTDSensor*> measureTemperatureVec_;
 

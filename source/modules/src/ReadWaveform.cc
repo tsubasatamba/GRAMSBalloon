@@ -74,10 +74,9 @@ ANLStatus ReadWaveform::mod_analyze()
 
   daqio_->getData(event_id, eventHeader_, eventData_);
   if (ondemand_) {
-    TelemetryGenerator* telemgen = sendTelemetry_->GetTelemetryGenerator();
-    telemgen->setEventID(event_id);
-    telemgen->setEventHeader(eventHeader_);
-    telemgen->setEventData(eventData_);
+    sendTelemetry_->setEventID(event_id);
+    sendTelemetry_->setEventHeader(eventHeader_);
+    sendTelemetry_->setEventData(eventData_);
     sendTelemetry_->setTelemetryType(2);
     ondemand_ = false;
   }
