@@ -102,28 +102,28 @@ void ReadWaveform::createNewOutputFile()
   ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
   fileID_++;
 
-  std::vector<short> file_header;
+  std::vector<int16_t> file_header;
   daqio_->generateFileHeader(file_header, numEventsPerFile_);
-  const int size = sizeof(short) * static_cast<int>(file_header.size());
+  const int size = sizeof(in16_t) * static_cast<int>(file_header.size());
   ofs_->write(reinterpret_cast<char*>(&file_header[0]), size);
 }
 
 void ReadWaveform::closeOutputFile()
 {
-  std::vector<short> file_footer;
+  std::vector<int16_t> file_footer;
   daqio_->generateFileFooter(file_footer);
-  const int size = sizeof(short) * static_cast<int>(file_footer.size());
+  const int size = sizeof(int16_t) * static_cast<int>(file_footer.size());
   ofs_->write(reinterpret_cast<char*>(&file_footer[0]), size);
   ofs_->close();
 }
 
 void ReadWaveform::writeData()
 {
-  const int header_size = sizeof(short) * static_cast<int>(eventHeader_.size());
+  const int header_size = sizeof(int16_t) * static_cast<int>(eventHeader_.size());
   ofs_->write(reinterpret_cast<char*>(&eventHeader_[0]), header_size);
 
   for (int i=0; i<static_cast<int>(eventData_.size()); i++) {
-    const int data_size = sizeof(short) * static_cast<int>(eventData_[i].size());
+    const int data_size = sizeof(int16_t) * static_cast<int>(eventData_[i].size());
     ofs_->write(reinterpret_cast<char*>(&eventData_[i][0]), data_size);
   }
 }

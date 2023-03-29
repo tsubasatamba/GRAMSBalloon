@@ -49,11 +49,11 @@ public:
   void setTelemetryType(int v) { telemetryType_ = v; }
 
   void setEventID(int v) { telemdef_->setEventID(v); };
-  void setEventHeader(const std::vector<short>& v) { telemdef_->setEventHeader(v); }
-  void setEventData(const std::vector<std::vector<short>>& v) { telemdef_->setEventData(v); }
+  void setEventHeader(const std::vector<int16_t>& v) { telemdef_->setEventHeader(v); }
+  void setEventData(const std::vector<std::vector<int16_t>>& v) { telemdef_->setEventData(v); }
   int EventID() { return telemdef_->EventID(); }
-  const std::vector<short>& EventHeader() const { return telemdef_->EventHeader(); }
-  const std::vector<std::vector<short>>& EventData() const { return telemdef_->EventData(); }
+  const std::vector<int16_t>& EventHeader() const { return telemdef_->EventHeader(); }
+  const std::vector<std::vector<int16_t>>& EventData() const { return telemdef_->EventData(); }
 
 private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;

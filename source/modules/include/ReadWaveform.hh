@@ -41,7 +41,7 @@ public:
   void closeOutputFile();
   void writeData();
 
-  const std::vector<std::vector<short>>& EventData() const { return eventData_; }
+  const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
   void setOndemand(bool v) { ondemand_ = v; }
   DAQIO* getDAQIO() { return daqio_.get(); }
 
@@ -59,8 +59,8 @@ private:
   std::vector<double> adcRangeList_; // volt
   std::vector<double> adcOffsetList_;
 
-  std::vector<short> eventHeader_;
-  std::vector<std::vector<short>> eventData_;
+  std::vector<int16_t> eventHeader_;
+  std::vector<std::vector<int16_t>> eventData_;
   std::string outputFilenameBase_ = "output";
   int numEventsPerFile_ = 100;
   std::shared_ptr<std::ofstream> ofs_;

@@ -35,9 +35,9 @@ public:
   void setTriggerParameters(int device, int channel, int mode, double level, double position);
   void setSampleParameters(double freq, double tw);
   int setupTrigger();
-  int getData(int event_id, std::vector<short>& header, std::vector<std::vector<short>>& data);
-  void generateFileHeader(std::vector<short>& header, short num_event);
-  void generateFileFooter(std::vector<short>& footer);
+  int getData(int event_id, std::vector<int16_t>& header, std::vector<std::vector<int16_t>>& data);
+  void generateFileHeader(std::vector<int16_t>& header, int16_t num_event);
+  void generateFileFooter(std::vector<int16_t>& footer);
   
 
   
