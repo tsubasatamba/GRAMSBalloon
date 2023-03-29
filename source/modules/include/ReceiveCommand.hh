@@ -11,6 +11,8 @@
 
 #include <anlnext/BasicModule.hh>
 #include <queue>
+#include <sys/select.h>
+#include <sys/time.h>
 #include "CommandDefinition.hh"
 #include "ReadWaveform.hh"
 #include "SerialCommunication.hh"
@@ -49,6 +51,8 @@ private:
   std::string serialPath_;
   char openMode_ = O_RDWR;
   bool startReading_ = false;
+  fd_set fdset_;
+  timeval timeout_;
 
 };
 

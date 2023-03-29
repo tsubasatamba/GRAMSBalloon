@@ -19,4 +19,6 @@ uint16_t calcCRC16(const std::vector<uint8_t>& pbuffer) {
   return crc;   //  CCIC 版は、~crc
 }
 
+/* http://mrkk.ciao.jp/memorandom/crc/crc.html */
+
 } /* namespace GRAMSBalloon */

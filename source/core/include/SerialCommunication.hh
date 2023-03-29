@@ -36,6 +36,8 @@ public:
   void setSerialPath(const std::string& s) { serialPath_ = s; }
   void setOpenMode(char c) { openMode_ = c; }
 
+  int FD() { return fd_; }
+
   
 private:
   std::unique_ptr<termios> tio_ = nullptr;

@@ -38,42 +38,63 @@ ANLStatus ReceiveCommand::mod_initialize()
   sc_ = std::make_unique<SerialCommunication>(serialPath_, baudrate_, openMode_);
   sc_ -> initialize();
 
+  FD_ZERO(&fdset_);
+  FD_SET(sc_->FD(), &fdset_);
+  timeout_.tv_sec = 1;
+  timeout_.tv_usec = 0;
+
   return AS_OK;
 }
 
 ANLStatus ReceiveCommand::mod_analyze()
 {
-  uint8_t buffer = 0;
-  const int status = sc_->sreadSingle(buffer);
-  if (status == -1) {
-    std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
-    return AS_OK;
-  }
-  if (status == 0) {
-    return AS_OK;
-  }
+  const int max_trial = 100;
 
-  std::cout << "buffer: " << static_cast<int>(buffer) << std::endl;
-
-  que_.push(buffer);
-  que_.pop();
-  if (startReading_) {
-    command_.push_back(buffer);
-    if (que_.front()==0xc5 && que_.back()==0xc5) {
-      startReading_ = false;
-      applyCommand();
+  for (int ti=0; ti<max_trial; ti++) {
+    int rv = select(sc_->FD() + 1, &fdset_, NULL, NULL, &timeout_);
+    uint8_t buffer = 0;
+    
+    if (rv == -1) {
+      std::cerr << "Error in ReceiveCommand::mod_analyze: rv = -1" << std::endl;
+      break;
     }
-  }
-  else {
-    if (que_.front()==0xeb && que_.back()==0x90) {
-      startReading_ = true;
-      command_.clear();
-      command_.push_back(que_.front());
-      command_.push_back(que_.back());
+    else if (rv == 0) {
+      std::cout << "Time out" << std::endl;
+      break;
     }
+    else {
+      const int status = sc_->sreadSingle(buffer);
+      if (status == -1) {
+        std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
+        break;
+      }
+      if (status == 0) {
+        break;
+      }
+    }
+    std::cout << "buffer: " << static_cast<int>(buffer) << std::endl;
+    que_.push(buffer);
+    que_.pop();
+    if (startReading_) {
+      command_.push_back(buffer);
+      if (que_.front()==0xc5 && que_.back()==0xc5) {
+        startReading_ = false;
+        applyCommand();
+        break;
+      }
+    }
+    else {
+      if (que_.front()==0xeb && que_.back()==0x90) {
+        startReading_ = true;
+        command_.clear();
+        command_.push_back(que_.front());
+        command_.push_back(que_.back());
+      }
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));  
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));  
+  
   
   return AS_OK;
 }
@@ -90,13 +111,11 @@ void ReceiveCommand::applyCommand()
   for (int i=0; i<(int)command_.size(); i++) {
     std::cout << static_cast<int>(command_[i]) << std::endl;
   }
-  /*
-  if (!comdef_->isValid()) {
-    std::cout << "Command is not valid consulting MD5 check." << std::endl;
+  bool status = comdef_->interpret();
+  if (!status) {
     return;
   }
-  */
-  comdef_ -> parse();
+
 }
 
 } /* namespace GRAMSBalloon */

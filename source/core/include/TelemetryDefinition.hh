@@ -42,7 +42,7 @@ public:
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
 
-
+  // env data
   void setEnvTemperature(int index, double v) { envTemperature_[index] = v; }
   void setEnvHumidity(int index, double v) { envTemperature_[index] = v; }
   void setEnvPressure(int index, double v) { envPressure_[index] = v; }
@@ -53,18 +53,21 @@ public:
   std::vector<double>& EnvHumidity() { return envHumidity_; }
   std::vector<double>& EnvPressure() { return envPressure_; }
 
-  void setEventID(int v) { eventID_ = v; }
-  void setEventHeader(const std::vector<short>& v) { eventHeader_ = v; }
-  void setEventData(const std::vector<std::vector<short>>& v) { eventData_ = v; }
+  // daq
+  void setEventID(uint32_t v) { eventID_ = v; }
+  void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
+  void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
   int EventID() { return eventID_; }
-  const std::vector<short>& EventHeader() const { return eventHeader_; }
-  const std::vector<std::vector<short>>& EventData() const { return eventData_; }
+  const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
+  const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
 
-  void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
-
+  // rtd
   void setRTDTemperatureADC(int index, int16_t v) { RTDTemperatureADC_[index] = v; }
   void resizeRTDTemperatureADC(int n) { RTDTemperatureADC_.resize(n); }
   std::vector<int16_t>& RTDTemperatureADC() { return RTDTemperatureADC_; }
+
+  // command
+  void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
   
 private:
   std::vector<uint8_t> telemetry_;
@@ -74,9 +77,9 @@ private:
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
-  int eventID_;
-  std::vector<short> eventHeader_;
-  std::vector<std::vector<short>> eventData_;
+  uint32_t eventID_;
+  std::vector<int16_t> eventHeader_;
+  std::vector<std::vector<int16_t>> eventData_;
   std::vector<int16_t> RTDTemperatureADC_;
   uint16_t lastCommandCode_;
 };

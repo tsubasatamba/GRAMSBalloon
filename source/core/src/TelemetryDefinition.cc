@@ -12,12 +12,12 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
 {
   clear();
   uint16_t start_code = 0xeb90;
-  addValue(start_code);
-  addValue(static_cast<uint16_t>(telemetry_type));
+  addValue<uint16_t>(start_code);
+  addValue<uint16_t>(static_cast<uint16_t>(telemetry_type));
   gettimeofday(&time_now, NULL);
-  addValue(static_cast<int32_t>(time_now.tv_sec));
-  addValue(static_cast<int32_t>(time_now.tv_usec));
-  addValue(telemIndex_);
+  addValue<int32_t>(static_cast<int32_t>(time_now.tv_sec));
+  addValue<int32_t>(static_cast<int32_t>(time_now.tv_usec));
+  addValue<uint32_t>(telemIndex_);
   telemIndex_++;
   
   if (telemetry_type==static_cast<int>(TelemetryType::normal)) {
@@ -35,40 +35,40 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
   }
   writeCRC16();
   uint16_t end_code = 0xc5c5;
-  addValue(end_code);
+  addValue<uint16_t>(end_code);
 }
 
 void TelemetryDefinition::generateTelemetryNormal()
 {
-  addValue((uint32_t)0); // Event count
-  addValue((uint32_t)0); // Trigger count
-  addValue((uint16_t)0); // Chamber pressure
+  addValue<uint32_t>((uint32_t)0); // Event count
+  addValue<uint32_t>((uint32_t)0); // Trigger count
+  addValue<uint16_t>((uint16_t)0); // Chamber pressure
   
   writeRTDTemperature();
-  addValue((int32_t)0); // TPC High Voltage Setting
-  addValue((int16_t)0); // TPC High Voltage measurement
-  addValue((int32_t)0); // PMT High Voltage Setting
-  addValue((int16_t)0); // PMT High Voltage measurement
-  addValue((int16_t)0); // CPU temperature
+  addValue<int32_t>((int32_t)0); // TPC High Voltage Setting
+  addValue<int16_t>((int16_t)0); // TPC High Voltage measurement
+  addValue<int32_t>((int32_t)0); // PMT High Voltage Setting
+  addValue<int16_t>((int16_t)0); // PMT High Voltage measurement
+  addValue<int16_t>((int16_t)0); // CPU temperature
   writeEnvironmentalData();
   for (int i=0; i<9; i++) {
-    addValue((int16_t)0); // acceleration
+    addValue<int16_t>((int16_t)0); // acceleration
   }
-  addValue((int16_t)0); //main current
-  addValue((int16_t)0); //main voltage
-  addValue((uint32_t)0); // last command index
-  addValue(lastCommandCode_); // last command code
-  addValue((uint16_t)0); //command reject count
-  addValue((uint16_t)0); //software error code
+  addValue<int16_t>((int16_t)0); //main current
+  addValue<int16_t>((int16_t)0); //main voltage
+  addValue<uint32_t>((uint32_t)0); // last command index
+  addValue<uint16_t>(lastCommandCode_); // last command code
+  addValue<uint16_t>((uint16_t)0); //command reject count
+  addValue<uint16_t>((uint16_t)0); //software error code
 }
 
 void TelemetryDefinition::generateTelemetryWave()
 {
-  addValue(eventID_);
-  addVector(eventHeader_);
+  addValue<uint32_t>(eventID_);
+  addVector<int16_t>(eventHeader_);
   const int n = eventData_.size();
   for (int i=0; i<n; i++) {
-    addVector(eventData_[i]);
+    addVector<int16_t>(eventData_[i]);
   }
 }
 
@@ -86,7 +86,7 @@ void TelemetryDefinition::writeRTDTemperature()
     if (i==buf_size) break;
     temperature[i] = RTDTemperatureADC_[i];
   }
-  addVector(temperature);
+  addVector<uint16_t>(temperature);
 }
 
 void TelemetryDefinition::writeEnvironmentalData()
@@ -103,15 +103,15 @@ void TelemetryDefinition::writeEnvironmentalData()
     humidity[i] = static_cast<uint16_t>(envHumidity_[i] * 100.0);
     pressure[i] = static_cast<uint16_t>(envPressure_[i] * 10.0);
   }
-  addVector(temperature);
-  addVector(humidity);
-  addVector(pressure);
+  addVector<int16_t>(temperature);
+  addVector<uint16_t>(humidity);
+  addVector<uint16_t>(pressure);
 }
 
 void TelemetryDefinition::writeCRC16()
 {
   uint16_t crc = calcCRC16(telemetry_);
-  addValue(crc);
+  addValue<uint16_t>(crc);
 }
 
 void TelemetryDefinition::clear()
