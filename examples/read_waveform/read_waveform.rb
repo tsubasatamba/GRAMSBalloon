@@ -5,7 +5,7 @@ require 'GRAMSBalloon'
 class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::AnalogDiscoveryManager
-        chain GRAMSBalloon::ReadDAQ
+        chain GRAMSBalloon::ReadWaveform
         with_parameters(
             trig_device: 0,
             trig_channel: 0,

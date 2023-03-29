@@ -153,7 +153,7 @@ int DAQIO::getData(int event_id, std::vector<short>& header, std::vector<std::ve
     }
     count++;
     if (count>=getDataMaxTrial_) {
-      std::cout << "Data aquisition tried " << count << " times, but could not detect any event." << std::endl;
+      std::cout << "Data acquisition tried " << count << " times, but could not detect any event." << std::endl;
       std::cout << "Maybe trigger level is too high: trigger level = " << trigLevel_ << std::endl;
       break;
     }

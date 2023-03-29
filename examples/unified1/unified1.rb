@@ -4,9 +4,20 @@ require 'GRAMSBalloon'
 
 class MyApp < ANL::ANLApp
     def setup()
-=begin
+        chain GRAMSBalloon::ReceiveCommand
+        with_parameters(serial_path: "/dev/ttyAMA1")
+        
+        chain GRAMSBalloon::SPIManager
+        with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 1)
+
+        chain GRAMSBalloon::MeasureTemperatureWithRTDSensor
+        with_parameters(chip_select: 8)
+
+        chain GRAMSBalloon::GetRaspiStatus
+
         chain GRAMSBalloon::AnalogDiscoveryManager
-        chain GRAMSBalloon::ReadDAQ
+
+        chain GRAMSBalloon::ReadWaveform
         with_parameters(
             trig_device: 0,
             trig_channel: 0,
@@ -17,8 +28,8 @@ class MyApp < ANL::ANLApp
             sample_frequency: 2.0, #MHz
             output_filename_base: "DAQ_output",
             num_events_per_file: 5
-        )
-=end
+        )        
+
         chain GRAMSBalloon::SendTelemetry
         with_parameters(
             serial_path: "/dev/ttyAMA0"
@@ -27,4 +38,4 @@ class MyApp < ANL::ANLApp
 end
 
 a = MyApp.new
-a.run(2, 1)
+a.run(40, 1)

@@ -20,10 +20,10 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
   addValue(telemIndex_);
   telemIndex_++;
   
-  if (telemetry_type==TELEM_TYPE_NORMAL) {
+  if (telemetry_type==static_cast<int>(TelemetryType::normal)) {
     generateTelemetryNormal();
   }
-  else if (telemetry_type==TELEM_TYPE_WAVE) {
+  else if (telemetry_type==static_cast<int>(TelemetryType::wave)) {
     generateTelemetryWave();
   }
   else {
@@ -33,18 +33,32 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
   writeMD5();
   std::vector<uint8_t> end_code = {0xc5, 0xc5};
   addVector(end_code);
+  std::cout << "time_sec: " << time_now.tv_sec << std::endl;
+  std::cout << "time_usec: " << time_now.tv_usec << std::endl;
 }
 
 void TelemetryDefinition::generateTelemetryNormal()
 {
-  addValue((uint32_t)0); // DAQ event count
-  addValue((uint32_t)0); // Trigger event count
-  addValue((uint32_t)0); // Chamber pressure
-  addValue((int32_t)0); // Chamber temperature
-
+  addValue((uint32_t)0); // Event count
+  addValue((uint32_t)0); // Trigger count
+  addValue((uint16_t)0); // Chamber pressure
+  
   writeRTDTemperature();
-  addValue((int32_t)0); // CPU temperature
+  addValue((int32_t)0); // TPC High Voltage Setting
+  addValue((int16_t)0); // TPC High Voltage measurement
+  addValue((int32_t)0); // PMT High Voltage Setting
+  addValue((int16_t)0); // PMT High Voltage measurement
+  addValue((int16_t)0); // CPU temperature
   writeEnvironmentalData();
+  for (int i=0; i<9; i++) {
+    addValue((int16_t)0); // acceleration
+  }
+  addValue((int16_t)0); //main current
+  addValue((int16_t)0); //main voltage
+  addValue((uint32_t)0); // last command index
+  addValue(lastCommandCode_); // last command code
+  addValue((uint16_t)0); //command reject count
+  addValue((uint16_t)0); //software error code
 }
 
 void TelemetryDefinition::generateTelemetryWave()
@@ -61,7 +75,7 @@ void TelemetryDefinition::writeRTDTemperature()
 {
   const int buf_size = 5;
   const int n = RTDTemperatureADC_.size();
-  std::vector<int16_t> temperature(buf_size, 0);
+  std::vector<uint16_t> temperature(buf_size, 0);
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
     temperature[i] = RTDTemperatureADC_[i];
@@ -73,15 +87,15 @@ void TelemetryDefinition::writeEnvironmentalData()
 {
   const int buf_size = 5;
   const int n = envTemperature_.size();
-  std::vector<int32_t> temperature(buf_size);
-  std::vector<uint32_t> humidity(buf_size);
-  std::vector<uint32_t> pressure(buf_size);
+  std::vector<int16_t> temperature(buf_size);
+  std::vector<uint16_t> humidity(buf_size);
+  std::vector<uint16_t> pressure(buf_size);
 
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int32_t>(envTemperature_[i] * 100.0);
-    humidity[i] = static_cast<uint32_t>(envHumidity_[i] * 100.0);
-    pressure[i] = static_cast<uint32_t>(envPressure_[i] * 10.0);
+    temperature[i] = static_cast<int16_t>(envTemperature_[i] * 100.0);
+    humidity[i] = static_cast<uint16_t>(envHumidity_[i] * 100.0);
+    pressure[i] = static_cast<uint16_t>(envPressure_[i] * 10.0);
   }
   addVector(temperature);
   addVector(humidity);

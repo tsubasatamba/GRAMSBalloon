@@ -11,7 +11,7 @@
 
 #include <anlnext/BasicModule.hh>
 #include <queue>
-#include "CommandInterpreter.hh"
+#include "CommandDefinition.hh"
 #include "ReadWaveform.hh"
 #include "SerialCommunication.hh"
 
@@ -34,10 +34,12 @@ public:
 
   void applyCommand();
 
+  uint16_t LastCommandCode() { return comdef_->Code(); }
+
 private:
   std::vector<uint8_t> command_;
   std::queue<uint8_t> que_;
-  std::unique_ptr<CommandInterpreter> comintp_ = nullptr;
+  std::unique_ptr<CommandDefinition> comdef_ = nullptr;
   ReadWaveform* readWaveform_ = nullptr;
   std::string readWaveformModuleName_ = "ReadWaveform";
 

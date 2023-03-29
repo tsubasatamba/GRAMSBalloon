@@ -1,14 +1,14 @@
-#include "CommandInterpreter.hh"
+#include "CommandDefinition.hh"
 #include <thread>
 #include <chrono>
 
 namespace GRAMSBalloon {
 
-CommandInterpreter::CommandInterpreter()
+CommandDefinition::CommandDefinition()
 {
 }
 
-bool CommandInterpreter::isValid()
+bool CommandDefinition::isValid()
 {
   const int n = command_.size();
   if (n<4) {
@@ -27,7 +27,7 @@ bool CommandInterpreter::isValid()
   return true;
 }
 
-void CommandInterpreter::parse()
+void CommandDefinition::parse()
 {
   code_ = 0;
   arguments_.clear();
@@ -39,18 +39,13 @@ void CommandInterpreter::parse()
     return;
   }
   int index = header_length;
-  code_ = command_[index];
-  index++;
+  code_ = static_cast<uint16_t>(command_[index]) + (static_cast<uint16_t>(command_[index+1])<<8);
+  index += 2;
 
   while (index<static_cast<int>(command_.size())-footer_length) {
     arguments_.push_back(command_[index]);
     index++;
   }
-}
-
-void CommandInterpreter::interpret()
-{
-  
 }
 
 } /* namespace GRAMSBalloon */

@@ -39,16 +39,12 @@ ANLStatus SendTelemetry::mod_initialize()
     }
   }
   int n = getEnvironmentalDataVec_.size();
-  std::vector<double>& temperature = telemdef_->EnvTemperature();
-  std::vector<double>& humidity = telemdef_->EnvHumidity();
-  std::vector<double>& pressure = telemdef_->EnvPressure();
-  temperature.resize(n);
-  humidity.resize(n);
-  pressure.resize(n);
+  telemdef_->resizeEnvTemperature(n);
+  telemdef_->resizeEnvHumidity(n);
+  telemdef_->resizeEnvPressure(n);
 
   if (exist_module(readWaveformModuleName_)) {
     get_module_NC(readWaveformModuleName_, &readWaveform_);
-    //daqio_ = readWaveform_->getDAQIO();
   }
 
   const int num_modules_temp = measureTemperatureModuleNames_.size();
@@ -61,8 +57,11 @@ ANLStatus SendTelemetry::mod_initialize()
     }
   }
   n = measureTemperatureVec_.size();
-  std::vector<int16_t> RTDTemperatureADC = telemdef_->RTDTemperatureADC();
-  RTDTemperatureADC.resize(n);
+  telemdef_->resizeRTDTemperatureADC(n);
+
+  if (exist_module("ReceiveCommand")) {
+    get_module_NC("ReceiveCommand", &receiveCommand_);
+  }
 
 
   // communication
@@ -101,7 +100,7 @@ ANLStatus SendTelemetry::mod_analyze()
   // printf("md5 digest: %s\n", &dbg[0]);
 
   for (int i=0; i<(int)telemetry.size(); i++) {
-    std::cout << static_cast<int>(telemetry[i]) << std::endl;
+    std::cout << i << " " << static_cast<int>(telemetry[i]) << std::endl;
   }
 
   #endif
@@ -118,28 +117,33 @@ void SendTelemetry::inputInfo()
 {
   inputEnvironmentalData();
   inputTemperatureData();
+  inputLastCommandInfo();
 }
 
 void SendTelemetry::inputEnvironmentalData()
 {
   const int n = getEnvironmentalDataVec_.size();
-  std::vector<double>& temperature = telemdef_->EnvTemperature();
-  std::vector<double>& humidity = telemdef_->EnvHumidity();
-  std::vector<double>& pressure = telemdef_->EnvPressure();
+  
   for (int i=0; i<n; i++) {
-    temperature[i] = getEnvironmentalDataVec_[i] -> Temperature();
-    humidity[i] = getEnvironmentalDataVec_[i] -> Humidity();
-    pressure[i] = getEnvironmentalDataVec_[i] -> Pressure();
+    telemdef_->setEnvTemperature(i, getEnvironmentalDataVec_[i] -> Temperature());
+    telemdef_->setEnvHumidity(i, getEnvironmentalDataVec_[i] -> Humidity());
+    telemdef_->setEnvPressure(i, getEnvironmentalDataVec_[i] -> Pressure());
   }
 }
 
 void SendTelemetry::inputTemperatureData()
 {
   const int n = measureTemperatureVec_.size();
-  std::vector<int16_t>& RTDTemperature = telemdef_->RTDTemperatureADC();
   for (int i=0; i<n; i++) {
-    RTDTemperature[i] = measureTemperatureVec_[i]->TemperatureADC();
+    telemdef_->setRTDTemperatureADC(i, measureTemperatureVec_[i]->TemperatureADC());
   }
+}
+
+void SendTelemetry::inputLastCommandInfo()
+{
+  const uint16_t last_command_code = receiveCommand_ -> LastCommandCode();
+  telemdef_->setLastCommandCode(last_command_code);
+  std::cout << "last_command_code: " << last_command_code << std::endl;
 }
 
 } /* namespace GRAMSBalloon */

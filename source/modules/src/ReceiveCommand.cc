@@ -13,7 +13,7 @@ ReceiveCommand::ReceiveCommand()
   for (int i=0; i<2; i++) {
     que_.push(0);
   }
-  comintp_ = std::make_unique<CommandInterpreter>(); 
+  comdef_ = std::make_unique<CommandDefinition>(); 
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
@@ -32,8 +32,6 @@ ANLStatus ReceiveCommand::mod_initialize()
 {
   if (exist_module(readWaveformModuleName_)) {
     get_module_NC(readWaveformModuleName_, &readWaveform_);
-    DAQIO* io = readWaveform_->getDAQIO();
-    comintp_->setDAQIO(io);
   }
 
   // communication
@@ -77,7 +75,6 @@ ANLStatus ReceiveCommand::mod_analyze()
 
   std::this_thread::sleep_for(std::chrono::milliseconds(10));  
   
-  
   return AS_OK;
 }
 
@@ -88,15 +85,18 @@ ANLStatus ReceiveCommand::mod_finalize()
 
 void ReceiveCommand::applyCommand()
 {
-  comintp_ -> setCommand(command_);
+  comdef_ -> setCommand(command_);
   std::cout << "command start" << std::endl;
   for (int i=0; i<(int)command_.size(); i++) {
     std::cout << static_cast<int>(command_[i]) << std::endl;
   }
-  if (!comintp_->isValid()) {
+  /*
+  if (!comdef_->isValid()) {
     std::cout << "Command is not valid consulting MD5 check." << std::endl;
     return;
   }
+  */
+  comdef_ -> parse();
 }
 
 } /* namespace GRAMSBalloon */

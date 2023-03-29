@@ -71,8 +71,9 @@ ANLStatus ReadWaveform::mod_analyze()
     }
     createNewOutputFile();
   }
-
+  std::cout << "getData start" << std::endl;
   daqio_->getData(event_id, eventHeader_, eventData_);
+  std::cout << "getData end" << std::endl;
   if (ondemand_) {
     sendTelemetry_->setEventID(event_id);
     sendTelemetry_->setEventHeader(eventHeader_);

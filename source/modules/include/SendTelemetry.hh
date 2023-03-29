@@ -15,10 +15,12 @@
 #include "ReadWaveform.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
 #include "SerialCommunication.hh"
+#include "ReceiveCommand.hh"
 
 class ReadWaveform;
 class GetEnvironmentalData;
 class MeasureTemperatureWithRTDSensor;
+class ReceiveCommand;
 
 namespace GRAMSBalloon {
 
@@ -38,6 +40,7 @@ public:
   void inputInfo();
   void inputEnvironmentalData();
   void inputTemperatureData();
+  void inputLastCommandInfo();
 
   void setTelemetryType(int v) { telemetryType_ = v; }
 
@@ -59,6 +62,7 @@ private:
   ReadWaveform* readWaveform_ = nullptr;
   std::vector<std::string> measureTemperatureModuleNames_;
   std::vector<MeasureTemperatureWithRTDSensor*> measureTemperatureVec_;
+  ReceiveCommand* receiveCommand_ = nullptr;
 
   // communication
   std::unique_ptr<SerialCommunication> sc_;

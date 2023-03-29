@@ -24,7 +24,11 @@ ANLStatus AnalogDiscoveryManager::mod_initialize()
     std::cerr << "status = " << status << std::endl;
     return AS_QUIT_ERROR;
   }
-   
+  if (ADIO_->NumDevices()==0) {
+    std::cerr << "Analog Discovery not connected." << std::endl;
+    return AS_QUIT_ERROR;
+  }
+
   return AS_OK;
 }
 
@@ -36,9 +40,8 @@ ANLStatus AnalogDiscoveryManager::mod_analyze()
 ANLStatus AnalogDiscoveryManager::mod_finalize()
 {
   ADIO_->finalize();
-  
+
   return AS_OK;
 }
 
 } /* namespace GRAMSBalloon */
-

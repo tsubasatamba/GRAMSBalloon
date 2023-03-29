@@ -1,14 +1,11 @@
-#ifndef CommandInterpreter_H
-#define CommandInterpreter_H 1
+#ifndef CommandDefinition_H
+#define CommandDefinition_H 1
 
 
 #include <iostream>
 #include <vector>
 #include <sys/time.h>
 #include <openssl/md5.h>
-#include "BME680IO.hh"
-#include "MAX31865IO.hh"
-#include "DAQIO.hh"
 
 /**
  * A class to define telemetry
@@ -19,28 +16,31 @@
 
 namespace GRAMSBalloon {
 
-class CommandInterpreter
+class CommandDefinition
 {
 public:
-  CommandInterpreter();
+  CommandDefinition();
 
   bool isValid();
   void parse();
   void interpret();
   
-  void setCommand(std::vector<uint8_t>& v) { command_ = v; }
-  void setDAQIO(DAQIO* io) { daqio_ = io; }
+  void setCommand(const std::vector<uint8_t>& v) { command_ = v; }
+
+  const std::vector<uint8_t>& Command() const { return command_; }
+  uint16_t Code() { return code_; }
+  const std::vector<uint8_t>& Arguments() const {return arguments_; }
 
   
 private:
   std::vector<uint8_t> command_;
-  uint8_t code_;
+  uint16_t code_ = 0;
   std::vector<uint8_t> arguments_;
 
   // access to other classes
-  DAQIO* daqio_ = nullptr;
+  
 };
 
 } /* namespace GRAMSBalloon */
 
-#endif /* CommandInterpreter_H */
+#endif /* CommandDefinition_H */

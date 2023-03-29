@@ -19,7 +19,7 @@ set(GB_CORE_CLASSES
   src/MAX31865IO.cc
   src/DAQIO.cc
   src/TelemetryDefinition.cc
-  src/CommandInterpreter.cc
+  src/CommandDefinition.cc
 )
 
 add_library(GBCore SHARED

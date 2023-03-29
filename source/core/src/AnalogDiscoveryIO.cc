@@ -10,23 +10,22 @@ AnalogDiscoveryIO::AnalogDiscoveryIO()
 
 int AnalogDiscoveryIO::initialize()
 {
-  if (!FDwfEnum(enumfilterAll, &numDevices_))
-  {
+  if (!FDwfEnum(enumfilterAll, &numDevices_)) {
     FDwfGetLastErrorMsg(szError_);
     std::cerr << "FDwfEnum failed: " << szError_ << std::endl;
     return -1;
   }
 
+  std::cout << "number of Analog Discovery: " << numDevices_ << std::endl;
+
   handlerList_.resize(numDevices_);
   deviceName_.resize(numDevices_, std::vector<char>(32));
   deviceSerialName_.resize(numDevices_, std::vector<char>(32));
 
-  for (int i = 0; i < numDevices_; i++)
-  {
+  for (int i = 0; i < numDevices_; i++) {
     FDwfEnumDeviceName(i, &deviceName_[i][0]);
     FDwfEnumSN(i, &deviceSerialName_[i][0]);
-    if (!FDwfDeviceOpen(i, &handlerList_[i]))
-    {
+    if (!FDwfDeviceOpen(i, &handlerList_[i])) {
       FDwfGetLastErrorMsg(szError_);
       std::cerr << "Device open failed: device id = " << i << ",\n"
                 << szError_ << std::endl;

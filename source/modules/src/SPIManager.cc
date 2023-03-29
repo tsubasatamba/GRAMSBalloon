@@ -41,7 +41,7 @@ ANLStatus SPIManager::mod_initialize()
   interface_ -> setSPIHandler(spi_handler);
 
   const int n = chipSelectArray_.size();
-  std::cout << "n=" << n << std::endl;
+  std::cout << "number of chip select inputted: " << n << std::endl;
   for (int i=0; i<n; i++) {
     set_mode(pi, chipSelectArray_[i], PI_OUTPUT);
     set_pull_up_down(pi, chipSelectArray_[i], PI_PUD_UP);
