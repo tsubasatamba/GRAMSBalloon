@@ -19,7 +19,7 @@
 
 // interface to my modules
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class SimpleLoop : public anlnext::BasicModule
 {
