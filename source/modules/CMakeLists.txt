@@ -20,19 +20,31 @@ link_directories(
 
 set(GB_MODULES
   src/SimpleLoop.cc
-  src/SPIManager.cc
-  src/GetEnvironmentalData.cc
-  src/ReceiveCommand.cc
-  src/AnalogDiscoveryManager.cc
-  src/ControlHighVoltage.cc
-  src/MeasureTemperatureWithRTDSensor.cc
-  src/ReadWaveform.cc
-  src/SendTelemetry.cc
   src/GetRaspiStatus.cc
   )
 
+if(GB_USE_PIGPIO)
+  set(GB_PIGPIO_MODULES
+    src/SPIManager.cc
+    src/GetEnvironmentalData.cc
+    src/MeasureTemperatureWithRTDSensor.cc
+    )
+endif(GB_USE_PIGPIO)
+
+if(GB_USE_WAVEFORMS)
+  set(GB_WAVEFORMS_MODULES
+    src/AnalogDiscoveryManager.cc
+    src/ControlHighVoltage.cc
+    src/ReadWaveform.cc
+    src/ReceiveCommand.cc
+    src/SendTelemetry.cc
+    )
+endif(GB_USE_WAVEFORMS)
+
 add_library(GBModules SHARED
   ${GB_MODULES}
+  ${GB_PIGPIO_MODULES}
+  ${GB_WAVEFORMS_MODULES}
   )
 
 target_link_libraries(GBModules
@@ -42,9 +54,9 @@ target_link_libraries(GBModules
   ${ANLNEXT_LIB}
   ${ROOT_LIB}
   ${G4_LIB}
-  pigpiod_if2
-  rt
-  dwf
+  ${PIGPIO_LIB_DAEMON}
+  ${PIGPIO_LIB_RT}
+  ${WAVEFORMS_LIB}
   )
 
 install(TARGETS GBModules LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

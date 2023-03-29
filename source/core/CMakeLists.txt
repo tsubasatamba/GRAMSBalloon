@@ -13,28 +13,39 @@ link_directories(
   )
 
 set(GB_CORE_CLASSES
-  src/BME680IO.cc
   src/SerialCommunication.cc
-  src/AnalogDiscoveryIO.cc
-  src/MAX31865IO.cc
-  src/DAQIO.cc
   src/TelemetryDefinition.cc
   src/CommandDefinition.cc
   src/CRC16.cc
-)
+  )
+
+if(GB_USE_PIGPIO)
+  set(GB_PIGPIO_CORE_CLASSES
+    src/BME680IO.cc
+    src/MAX31865IO.cc
+    )
+endif(GB_USE_PIGPIO)
+
+if(GB_USE_WAVEFORMS)
+  set(GB_WAVEFORMS_CORE_CLASSES
+    src/AnalogDiscoveryIO.cc
+    src/DAQIO.cc
+    )
+endif(GB_USE_WAVEFORMS)
 
 add_library(GBCore SHARED
   ${GB_CORE_CLASSES}
+  ${GB_PIGPIO_CORE_CLASSES}
+  ${GB_WAVEFORMS_CORE_CLASSES}
   )
 
 target_link_libraries(GBCore
   GBBME68x
   ${ADD_LIB}
   ${BOOST_LIB}
-  pigpiod_if2
-  rt
-  dwf
-  crypto
+  ${PIGPIO_LIB_DAEMON}
+  ${PIGPIO_LIB_RT}
+  ${WAVEFORMS_LIB}
   )
 
 install(TARGETS GBCore LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

@@ -24,11 +24,22 @@ set(MY_LIBRARY GRAMSBalloon)
 
 find_package(Ruby 2.7 REQUIRED)
 
+### options
+## library options
+option(GB_USE_PIGPIO "enable PIGPIO" ON)
+option(GB_USE_WAVEFORMS "enable waveforms")
 ## install options
 option(GB_INSTALL_HEADERS "install all header files" ON)
 option(GB_INSTALL_CMAKE_FILES "install all cmake files" ON)
 set(INSTALL_HEADERS ${GB_INSTALL_HEADERS})
 set(INSTALL_CMAKE_FILES ${GB_INSTALL_CMAKE_FILES})
+## shortcut options
+option(GB_MAC "shortcut" OFF)
+
+if (GB_MAC)
+  set(GB_USE_PIGPIO OFF)
+  set(GB_USE_WAVEFORMS OFF)
+endif(GB_MAC)
 
 ### External libraries
 ### BOOST ###
@@ -55,25 +66,27 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ANLNEXT_LIB_DIR}/anlnext)
 message("-- ANLNEXT_INSTALL = ${ANLNEXT_INSTALL}")
 
 ### PIGPIO ###
-set(PIGPIO_INSTALL_PREFIX /home/grams/software/pigpio/util)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PIGPIO_INSTALL_PREFIX})
-find_package(pigpio REQUIRED)
-set(PIGPIO_INC_DIR ${pigpio_INCLUDE_DIRS})
-set(PIGPIO_LIB_DIR ${pigpio_LIBRARY_DIRS})
-set(PIGPIO_LIB ${pigpio_LIBRARIES})
-message("-- PIGPIO_INC_DIR: ${PIGPIO_INC_DIR}")
-message("-- PIGPIO_LIB_DIR: ${PIGPIO_LIB_DIR}")
-message("-- PIGPIO_LIB: ${PIGPIO_LIB}")
+if(GB_USE_PIGPIO)
+  set(PIGPIO_INSTALL_PREFIX /home/grams/software/pigpio/util)
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PIGPIO_INSTALL_PREFIX})
+  find_package(pigpio REQUIRED)
+  set(PIGPIO_INC_DIR ${pigpio_INCLUDE_DIRS})
+  set(PIGPIO_LIB_DIR ${pigpio_LIBRARY_DIRS})
+  set(PIGPIO_LIB ${pigpio_LIBRARIES})
+  message("-- PIGPIO_INC_DIR: ${PIGPIO_INC_DIR}")
+  message("-- PIGPIO_LIB_DIR: ${PIGPIO_LIB_DIR}")
+  message("-- PIGPIO_LIB: ${PIGPIO_LIB}")
+  set(PIGPIO_LIB_DAEMON pigpiod_if2)
+  message("-- PIGPIO_LIB_DAEMON: ${PIGPIO_LIB_DAEMON}")
+  set(PIGPIO_LIB_RT rt)
+  message("-- PIGPIO_LIB_RT: ${PIGPIO_LIB_RT}")
+endif(GB_USE_PIGPIO)
 
-
-# Compile for RASPI
-#if(${RASPI})
-#find_package(pigpio REQUIRED)
-#add_subdirectory(balloon/src)
-
-#else()
-#add_subdirectory(ground/src)
-#endif(${RASPI})
+### Waveforms ###
+if(GB_USE_WAVEFORMS)
+  set(WAVEFORMS_LIB dwf)
+  message("-- WAVEFORMS_LIB: ${WAVEFORMS_LIB}")
+endif(GB_USE_WAVEFORMS)
 
 ### subdirectories
 add_subdirectory(source)

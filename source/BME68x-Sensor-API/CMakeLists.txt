@@ -11,9 +11,11 @@ link_directories(
   ${BOOST_LIB_DIR}
   )
 
-set(GB_BME68x_CLASSES
-  src/bme68x.c
-)
+if(GB_USE_PIGPIO)
+  set(GB_BME68x_CLASSES
+    src/bme68x.c
+    )
+endif(GB_USE_PIGPIO)
 
 add_library(GBBME68x SHARED
   ${GB_BME68x_CLASSES}
@@ -22,8 +24,9 @@ add_library(GBBME68x SHARED
 target_link_libraries(GBBME68x
   ${ADD_LIB}
   ${BOOST_LIB}
-  pigpiod_if2
-  rt)
+  ${PIGPIO_LIB_DAEMON}
+  ${PIGPIO_LIB_RT}
+  )
 
 install(TARGETS GBBME68x LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
