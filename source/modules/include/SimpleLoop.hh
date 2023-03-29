@@ -12,7 +12,7 @@
 #include <anlnext/BasicModule.hh>
 #include <cstdint>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class SimpleLoop : public anlnext::BasicModule
 {
@@ -42,6 +42,6 @@ private:
   std::vector<std::string> v3;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* SimpleLoop_H */

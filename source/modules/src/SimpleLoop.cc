@@ -3,7 +3,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 SimpleLoop::SimpleLoop()
 {
@@ -55,4 +55,4 @@ ANLStatus SimpleLoop::mod_finalize()
   return AS_OK;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

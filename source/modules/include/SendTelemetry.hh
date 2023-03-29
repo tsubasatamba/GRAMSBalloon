@@ -22,7 +22,7 @@ class GetEnvironmentalData;
 class MeasureTemperatureWithRTDSensor;
 class ReceiveCommand;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class SendTelemetry : public anlnext::BasicModule
 {
@@ -76,6 +76,6 @@ private:
 
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* SendTelemetry_H */

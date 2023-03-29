@@ -2,7 +2,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 AnalogDiscoveryManager::AnalogDiscoveryManager()
 {
@@ -44,4 +44,4 @@ ANLStatus AnalogDiscoveryManager::mod_finalize()
   return AS_OK;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

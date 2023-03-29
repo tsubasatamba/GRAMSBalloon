@@ -48,6 +48,6 @@ private:
   std::vector<std::vector<char>> deviceSerialName_;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* AnalogDiscoveryIO_H */

@@ -6,7 +6,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 GetEnvironmentalData::GetEnvironmentalData()
 {
@@ -74,4 +74,4 @@ ANLStatus GetEnvironmentalData::mod_finalize()
   return AS_OK;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

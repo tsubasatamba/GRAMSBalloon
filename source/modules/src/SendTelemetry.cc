@@ -2,7 +2,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 SendTelemetry::SendTelemetry()
 {
@@ -146,4 +146,4 @@ void SendTelemetry::inputLastCommandInfo()
   std::cout << "last_command_code: " << last_command_code << std::endl;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

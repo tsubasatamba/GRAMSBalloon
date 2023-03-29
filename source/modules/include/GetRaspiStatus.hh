@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <fstream>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class GetRaspiStatus : public anlnext::BasicModule
 {
@@ -38,6 +38,6 @@ private:
   std::shared_ptr<std::ifstream> ifsTemp_;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* GetRaspiStatus_H */

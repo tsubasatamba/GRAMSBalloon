@@ -18,7 +18,7 @@
 
 class SendTelemetry;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class ReadWaveform : public anlnext::BasicModule
 {
@@ -69,6 +69,6 @@ private:
   SendTelemetry* sendTelemetry_;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* ReadWaveform_H */

@@ -19,7 +19,7 @@
 
 class ReadWaveform;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -58,6 +58,6 @@ private:
   
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* ReceiveCommand_H */

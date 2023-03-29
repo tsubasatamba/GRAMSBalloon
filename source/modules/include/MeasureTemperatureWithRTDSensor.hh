@@ -15,7 +15,7 @@
 #include "SPIManager.hh"
 #include <chrono>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
 {
@@ -46,6 +46,6 @@ private:
   std::shared_ptr<SPIInterface> interface_ = nullptr;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* MeasureTemperatureWithRTDSensor_H */

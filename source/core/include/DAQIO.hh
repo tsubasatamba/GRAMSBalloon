@@ -24,7 +24,7 @@
  * @date 2023-03-21
  */
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class DAQIO
 {
@@ -57,6 +57,6 @@ private:
   const int getDataMaxTrial_ = 1000;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* DAQIO_H */

@@ -2,7 +2,7 @@
 #include <thread>
 #include <chrono>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 CommandDefinition::CommandDefinition()
 {
@@ -91,4 +91,4 @@ void CommandDefinition::getVector(int index, int num, std::vector<T>& vec)
 
 
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

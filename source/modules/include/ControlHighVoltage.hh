@@ -12,7 +12,7 @@
 #include <anlnext/BasicModule.hh>
 #include "AnalogDiscoveryManager.hh"
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class ControlHighVoltage : public anlnext::BasicModule
 {
@@ -43,6 +43,6 @@ private:
   double nextVoltage_ = 0.0;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* ControlHighVoltage_H */

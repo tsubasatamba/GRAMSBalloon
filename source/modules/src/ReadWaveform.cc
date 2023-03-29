@@ -3,7 +3,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 ReadWaveform::ReadWaveform()
 {
@@ -128,4 +128,4 @@ void ReadWaveform::writeData()
   }
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

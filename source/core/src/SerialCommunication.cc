@@ -1,6 +1,6 @@
 #include "SerialCommunication.hh"
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 SerialCommunication::SerialCommunication()
   :baudrate_(B9600), openMode_(O_RDWR)
@@ -78,6 +78,6 @@ int SerialCommunication::swrite(const std::vector<uint8_t>& buf)
   return status;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 

@@ -4,7 +4,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 ReceiveCommand::ReceiveCommand()
   :readWaveformModuleName_("ReadWaveform"), baudrate_(B9600), openMode_(O_RDWR)
@@ -121,4 +121,4 @@ void ReceiveCommand::applyCommand()
 
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

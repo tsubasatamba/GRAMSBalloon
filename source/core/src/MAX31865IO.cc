@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <bitset>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 MAX31865IO::MAX31865IO()
 {
@@ -248,4 +248,4 @@ char MAX31865IO::getFilter()
   return (currentBits_ & MAX31865_CONF_FILTER_SEL_MSK);
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

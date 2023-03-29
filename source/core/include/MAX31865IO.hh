@@ -62,7 +62,7 @@
 #define MAX31865_BAD -1
 #define MAX31865_WARNING 10
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class MAX31865IO
 {
@@ -108,7 +108,7 @@ private:
   double temperature_ = 0.0;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif 
 

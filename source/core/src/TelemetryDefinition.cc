@@ -2,7 +2,7 @@
 #include <thread>
 #include <chrono>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 TelemetryDefinition::TelemetryDefinition()
 {
@@ -139,4 +139,4 @@ void TelemetryDefinition::addVector(std::vector<T>& input)
   }
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

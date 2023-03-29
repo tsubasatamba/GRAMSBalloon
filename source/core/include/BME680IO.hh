@@ -38,6 +38,6 @@ private:
   std::unique_ptr<bme68x_conf> configure_ = nullptr;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* BME680IO_H */

@@ -2,7 +2,7 @@
 #include <vector>
 #include <iomanip>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 BME680IO::BME680IO()
 {
@@ -161,7 +161,7 @@ void BME680IO::printData()
   std::cout << "Pressure: " << sensorData_->pressure << "\nHumidity: " << sensorData_->humidity << "\nTemperature: " << sensorData_->temperature << std::endl;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 
 

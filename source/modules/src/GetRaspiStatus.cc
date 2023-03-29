@@ -2,7 +2,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 GetRaspiStatus::GetRaspiStatus()
 {
@@ -35,4 +35,4 @@ ANLStatus GetRaspiStatus::mod_finalize()
   return AS_OK;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

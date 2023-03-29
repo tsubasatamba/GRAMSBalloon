@@ -20,7 +20,7 @@
 #define CS_DISABLE PI_OFF
 #endif
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class SPIInterface
 {
@@ -38,6 +38,6 @@ private:
   int GPIOHandler_ = -1;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* SPIInterface_H */

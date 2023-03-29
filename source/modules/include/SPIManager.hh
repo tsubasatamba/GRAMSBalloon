@@ -13,7 +13,7 @@
 #include "SPIInterface.hh"
 
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class SPIManager : public anlnext::BasicModule
 {
@@ -44,6 +44,6 @@ private:
   std::vector<int> chipSelectArray_;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* SPIManager_H */

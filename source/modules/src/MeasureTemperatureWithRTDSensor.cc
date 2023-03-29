@@ -6,7 +6,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 MeasureTemperatureWithRTDSensor::MeasureTemperatureWithRTDSensor()
 {
@@ -76,4 +76,4 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_finalize()
   return AS_OK;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

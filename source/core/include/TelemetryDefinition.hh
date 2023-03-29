@@ -15,7 +15,7 @@
  * @date 2023-03-23
  */
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 enum class TelemetryType {
   normal = 1,
@@ -84,6 +84,6 @@ private:
   uint16_t lastCommandCode_;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* TelemetryDefinition_H */

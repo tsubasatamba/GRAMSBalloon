@@ -4,7 +4,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 SPIManager::SPIManager()
 {
@@ -69,4 +69,4 @@ void SPIManager::addChipSelect(int v)
   chipSelectArray_.push_back(v);
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

@@ -2,7 +2,7 @@
 
 using namespace anlnext;
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 ControlHighVoltage::ControlHighVoltage()
 {
@@ -54,4 +54,4 @@ ANLStatus ControlHighVoltage::mod_finalize()
   return AS_OK;
 }
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

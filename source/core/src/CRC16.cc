@@ -1,6 +1,6 @@
 #include "CRC16.hh"
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 uint16_t calcCRC16(const std::vector<uint8_t>& pbuffer) {
   uint16_t crc = 0;  //  CCIT版は、0xffff
@@ -21,4 +21,4 @@ uint16_t calcCRC16(const std::vector<uint8_t>& pbuffer) {
 
 /* http://mrkk.ciao.jp/memorandom/crc/crc.html */
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */

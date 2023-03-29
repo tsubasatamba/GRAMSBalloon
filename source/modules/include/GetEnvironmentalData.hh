@@ -15,7 +15,7 @@
 #include "SPIManager.hh"
 #include <chrono>
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class GetEnvironmentalData : public anlnext::BasicModule
 {
@@ -52,6 +52,6 @@ private:
   std::chrono::system_clock::time_point lastUpdateTime_;
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* GetEnvironmentalData_H */
