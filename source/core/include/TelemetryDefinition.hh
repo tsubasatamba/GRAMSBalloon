@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <sys/time.h>
-#include <openssl/md5.h>
+#include "CRC16.hh"
 
 
 /**
@@ -30,9 +30,10 @@ public:
   void generateTelemetry(int telem_type);
   void generateTelemetryNormal();
   void generateTelemetryWave();
+  void generateTelemetryStatus();
   void writeRTDTemperature();
   void writeEnvironmentalData();
-  void writeMD5();
+  void writeCRC16();
   void clear();
 
   

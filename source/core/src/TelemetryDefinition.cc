@@ -11,8 +11,8 @@ TelemetryDefinition::TelemetryDefinition()
 void TelemetryDefinition::generateTelemetry(int telemetry_type)
 {
   clear();
-  std::vector<uint8_t> start_code = {0xeb, 0x90};
-  addVector(start_code);
+  uint16_t start_code = 0xeb90;
+  addValue(start_code);
   addValue(static_cast<uint16_t>(telemetry_type));
   gettimeofday(&time_now, NULL);
   addValue(static_cast<int32_t>(time_now.tv_sec));
@@ -26,15 +26,16 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
   else if (telemetry_type==static_cast<int>(TelemetryType::wave)) {
     generateTelemetryWave();
   }
+  else if (telemetry_type==static_cast<int>(TelemetryType::status)) {
+    generateTelemetryStatus();
+  }
   else {
     std::cerr << "telemetry type not set appropriately: telemetry_type = " << telemetry_type << std::endl;
     return;
   }
-  writeMD5();
-  std::vector<uint8_t> end_code = {0xc5, 0xc5};
-  addVector(end_code);
-  std::cout << "time_sec: " << time_now.tv_sec << std::endl;
-  std::cout << "time_usec: " << time_now.tv_usec << std::endl;
+  writeCRC16();
+  uint16_t end_code = 0xc5c5;
+  addValue(end_code);
 }
 
 void TelemetryDefinition::generateTelemetryNormal()
@@ -71,6 +72,11 @@ void TelemetryDefinition::generateTelemetryWave()
   }
 }
 
+void TelemetryDefinition::generateTelemetryStatus()
+{
+
+}
+
 void TelemetryDefinition::writeRTDTemperature()
 {
   const int buf_size = 5;
@@ -102,12 +108,10 @@ void TelemetryDefinition::writeEnvironmentalData()
   addVector(pressure);
 }
 
-void TelemetryDefinition::writeMD5()
+void TelemetryDefinition::writeCRC16()
 {
-  const int n = telemetry_.size();
-  std::vector<unsigned char> md(MD5_DIGEST_LENGTH);
-  MD5(&telemetry_[0], n, &md[0]);
-  addVector(md);
+  uint16_t crc = calcCRC16(telemetry_);
+  addValue(crc);
 }
 
 void TelemetryDefinition::clear()
@@ -119,9 +123,10 @@ template<typename T>
 void TelemetryDefinition::addValue(T input)
 {
   const int size = sizeof(T);
+  uint32_t v = static_cast<uint32_t>(input);
   for (int i=0; i<size; i++) {
-    telemetry_.push_back(static_cast<uint8_t>(input & 0xff));
-    input >>= 8;
+    const int shift = 8 * (size-1-i);
+    telemetry_.push_back(static_cast<uint8_t>((v>>shift) & 0xff));
   }
 }
 

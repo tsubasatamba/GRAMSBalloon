@@ -20,6 +20,7 @@ set(GB_CORE_CLASSES
   src/DAQIO.cc
   src/TelemetryDefinition.cc
   src/CommandDefinition.cc
+  src/CRC16.cc
 )
 
 add_library(GBCore SHARED
