@@ -6,7 +6,7 @@ namespace GRAMSBalloon {
 
 SendTelemetry::SendTelemetry()
 {
-  telemdef_ = std::make_unique<TelemetryDefinition>();
+  telemdef_ = std::make_shared<TelemetryDefinition>();
   serialPath_ = "/dev/null";
   baudrate_ = B9600;
   openMode_ = O_RDWR;
@@ -65,7 +65,7 @@ ANLStatus SendTelemetry::mod_initialize()
 
 
   // communication
-  sc_ = std::make_unique<SerialCommunication>(serialPath_, baudrate_, openMode_);
+  sc_ = std::make_shared<SerialCommunication>(serialPath_, baudrate_, openMode_);
   sc_->initialize();
   
   return AS_OK;

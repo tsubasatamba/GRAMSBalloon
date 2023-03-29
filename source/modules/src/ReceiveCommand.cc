@@ -13,7 +13,7 @@ ReceiveCommand::ReceiveCommand()
   for (int i=0; i<2; i++) {
     que_.push(0);
   }
-  comdef_ = std::make_unique<CommandDefinition>(); 
+  comdef_ = std::make_shared<CommandDefinition>(); 
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
@@ -35,13 +35,10 @@ ANLStatus ReceiveCommand::mod_initialize()
   }
 
   // communication
-  sc_ = std::make_unique<SerialCommunication>(serialPath_, baudrate_, openMode_);
+  sc_ = std::make_shared<SerialCommunication>(serialPath_, baudrate_, openMode_);
   sc_ -> initialize();
 
-  FD_ZERO(&fdset_);
-  FD_SET(sc_->FD(), &fdset_);
-  timeout_.tv_sec = 1;
-  timeout_.tv_usec = 0;
+  
 
   return AS_OK;
 }
@@ -51,7 +48,13 @@ ANLStatus ReceiveCommand::mod_analyze()
   const int max_trial = 100;
 
   for (int ti=0; ti<max_trial; ti++) {
-    int rv = select(sc_->FD() + 1, &fdset_, NULL, NULL, &timeout_);
+    fd_set fdset;
+    timeval timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+    FD_ZERO(&fdset);
+    FD_SET(sc_->FD(), &fdset);
+    int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
     uint8_t buffer = 0;
     
     if (rv == -1) {

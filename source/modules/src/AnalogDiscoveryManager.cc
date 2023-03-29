@@ -6,7 +6,7 @@ namespace GRAMSBalloon {
 
 AnalogDiscoveryManager::AnalogDiscoveryManager()
 {
-  ADIO_ = std::make_unique<AnalogDiscoveryIO>();
+  ADIO_ = std::make_shared<AnalogDiscoveryIO>();
 }
 
 AnalogDiscoveryManager::~AnalogDiscoveryManager() = default;

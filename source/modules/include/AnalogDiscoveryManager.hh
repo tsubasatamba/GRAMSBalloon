@@ -17,11 +17,15 @@ namespace GRAMSBalloon{
 class AnalogDiscoveryManager : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(AnalogDiscoveryManager, 1.0);
+  ENABLE_PARALLEL_RUN();
 
 public:
   AnalogDiscoveryManager();
   virtual ~AnalogDiscoveryManager();
-  
+protected:
+  AnalogDiscoveryManager(const AnalogDiscoveryManager& r) = default;
+
+public:  
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
   
@@ -30,8 +34,9 @@ public:
 
   AnalogDiscoveryIO* ADIO() { return ADIO_.get(); }
 
+
 private:
-  std::unique_ptr<AnalogDiscoveryIO> ADIO_ = nullptr;
+  std::shared_ptr<AnalogDiscoveryIO> ADIO_ = nullptr;
 };
 
 } /* namespace GRAMSBalloon */

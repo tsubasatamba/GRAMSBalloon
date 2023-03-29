@@ -23,7 +23,7 @@
  * @date 2023-03-15
  */
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class AnalogDiscoveryIO
 {

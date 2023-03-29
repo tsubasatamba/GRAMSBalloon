@@ -20,11 +20,15 @@ namespace GRAMSBalloon {
 class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(MeasureTemperatureWithRTDSensor, 1.0);
+  ENABLE_PARALLEL_RUN();
 
 public:
   MeasureTemperatureWithRTDSensor();
   virtual ~MeasureTemperatureWithRTDSensor();
-  
+protected:
+  MeasureTemperatureWithRTDSensor(const MeasureTemperatureWithRTDSensor& r) = default;
+
+public:
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_pre_initialize() override;
   anlnext::ANLStatus mod_initialize() override;
@@ -38,8 +42,8 @@ private:
   int chipSelect_ = 8;
   std::string SPIManagerName_ = "SPIManager";
   SPIManager* SPIManager_ = nullptr;
-  std::unique_ptr<MAX31865IO> max31865io_ = nullptr;
-  std::unique_ptr<SPIInterface> interface_ = nullptr;
+  std::shared_ptr<MAX31865IO> max31865io_ = nullptr;
+  std::shared_ptr<SPIInterface> interface_ = nullptr;
 };
 
 } /* namespace GRAMSBalloon */

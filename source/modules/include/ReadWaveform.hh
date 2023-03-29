@@ -23,11 +23,15 @@ namespace GRAMSBalloon {
 class ReadWaveform : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(ReadWaveform, 1.0);
+  ENABLE_PARALLEL_RUN();
 
 public:
   ReadWaveform();
   virtual ~ReadWaveform();
-  
+protected:
+  ReadWaveform(const ReadWaveform& r) = default;
+
+public:  
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
@@ -44,7 +48,7 @@ public:
 private:
   std::string ADManagerName_ = "AnalogDiscoveryManager";
   AnalogDiscoveryManager* ADManager_ = nullptr;
-  std::unique_ptr<DAQIO> daqio_ = nullptr;
+  std::shared_ptr<DAQIO> daqio_ = nullptr;
   int trigDevice_ = 0;
   int trigChannel_ = 0;
   int trigMode_ = 2;
@@ -59,7 +63,7 @@ private:
   std::vector<std::vector<short>> eventData_;
   std::string outputFilenameBase_ = "output";
   int numEventsPerFile_ = 100;
-  std::ofstream ofs_;
+  std::shared_ptr<std::ofstream> ofs_;
   int fileID_ = 0;
   bool ondemand_ = false;
   SendTelemetry* sendTelemetry_;

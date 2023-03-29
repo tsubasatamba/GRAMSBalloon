@@ -14,7 +14,7 @@
  * @date 2023-03-25
  */
 
-namespace GRAMSBalloon {
+namespace gramsballoon {
 
 class CommandDefinition
 {
@@ -42,6 +42,6 @@ private:
   
 };
 
-} /* namespace GRAMSBalloon */
+} /* namespace gramsballoon */
 
 #endif /* CommandDefinition_H */

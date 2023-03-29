@@ -20,11 +20,15 @@ namespace GRAMSBalloon {
 class GetEnvironmentalData : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(GetEnvironmentalData, 1.0);
+  ENABLE_PARALLEL_RUN();
 
 public:
   GetEnvironmentalData();
   virtual ~GetEnvironmentalData();
-  
+protected:
+  GetEnvironmentalData(const GetEnvironmentalData& r) = default;
+
+public:  
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_pre_initialize() override;
   anlnext::ANLStatus mod_initialize() override;
@@ -40,8 +44,8 @@ private:
   int chipSelect_ = 8;
   std::string SPIManagerName_ = "SPIManager";
   SPIManager* SPIManager_ = nullptr;
-  std::unique_ptr<BME680IO> bme680io_ = nullptr;
-  std::unique_ptr<SPIInterface> interface_ = nullptr;
+  std::shared_ptr<BME680IO> bme680io_ = nullptr;
+  std::shared_ptr<SPIInterface> interface_ = nullptr;
   double pressure_;
   double humidity_;
   double temperature_;

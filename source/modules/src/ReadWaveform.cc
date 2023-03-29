@@ -7,9 +7,10 @@ namespace GRAMSBalloon {
 
 ReadWaveform::ReadWaveform()
 {
-  daqio_ = std::make_unique<DAQIO>();
+  daqio_ = std::make_shared<DAQIO>();
   adcRangeList_ = std::vector<double>(4, 1.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);
+  ofs_ = std::make_shared<std::ofstream>();
 }
 
 ReadWaveform::~ReadWaveform() = default;
@@ -98,13 +99,13 @@ void ReadWaveform::createNewOutputFile()
   sout << std::setfill('0') << std::right << std::setw(6) << fileID_;
   const std::string id_str = sout.str();
   const std::string filename = outputFilenameBase_ + "_" + id_str + ".dat";
-  ofs_ = std::ofstream(filename, std::ios::out|std::ios::binary);
+  ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
   fileID_++;
 
   std::vector<short> file_header;
   daqio_->generateFileHeader(file_header, numEventsPerFile_);
   const int size = sizeof(short) * static_cast<int>(file_header.size());
-  ofs_.write(reinterpret_cast<char*>(&file_header[0]), size);
+  ofs_->write(reinterpret_cast<char*>(&file_header[0]), size);
 }
 
 void ReadWaveform::closeOutputFile()
@@ -112,18 +113,18 @@ void ReadWaveform::closeOutputFile()
   std::vector<short> file_footer;
   daqio_->generateFileFooter(file_footer);
   const int size = sizeof(short) * static_cast<int>(file_footer.size());
-  ofs_.write(reinterpret_cast<char*>(&file_footer[0]), size);
-  ofs_.close();
+  ofs_->write(reinterpret_cast<char*>(&file_footer[0]), size);
+  ofs_->close();
 }
 
 void ReadWaveform::writeData()
 {
   const int header_size = sizeof(short) * static_cast<int>(eventHeader_.size());
-  ofs_.write(reinterpret_cast<char*>(&eventHeader_[0]), header_size);
+  ofs_->write(reinterpret_cast<char*>(&eventHeader_[0]), header_size);
 
   for (int i=0; i<static_cast<int>(eventData_.size()); i++) {
     const int data_size = sizeof(short) * static_cast<int>(eventData_[i].size());
-    ofs_.write(reinterpret_cast<char*>(&eventData_[i][0]), data_size);
+    ofs_->write(reinterpret_cast<char*>(&eventData_[i][0]), data_size);
   }
 }
 

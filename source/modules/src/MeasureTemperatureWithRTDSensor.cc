@@ -10,8 +10,8 @@ namespace GRAMSBalloon {
 
 MeasureTemperatureWithRTDSensor::MeasureTemperatureWithRTDSensor()
 {
-  max31865io_ = std::make_unique<MAX31865IO>();
-  interface_ = std::make_unique<SPIInterface>();
+  max31865io_ = std::make_shared<MAX31865IO>();
+  interface_ = std::make_shared<SPIInterface>();
 }
 
 MeasureTemperatureWithRTDSensor::~MeasureTemperatureWithRTDSensor() = default;

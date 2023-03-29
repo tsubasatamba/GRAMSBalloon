@@ -17,10 +17,14 @@ namespace GRAMSBalloon {
 class SimpleLoop : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(SimpleLoop, 1.0);
+  ENABLE_PARALLEL_RUN();
 public:
   SimpleLoop();
   virtual ~SimpleLoop();
-  
+protected:
+  SimpleLoop(const SimpleLoop& r) = default;
+
+public:
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_pre_initialize() override;
   anlnext::ANLStatus mod_initialize() override;

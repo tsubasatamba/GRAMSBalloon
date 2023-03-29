@@ -8,7 +8,7 @@ namespace GRAMSBalloon {
 
 SPIManager::SPIManager()
 {
-  interface_ = std::make_unique<SPIInterface>();
+  interface_ = std::make_shared<SPIInterface>();
 }
 
 SPIManager::~SPIManager() = default;

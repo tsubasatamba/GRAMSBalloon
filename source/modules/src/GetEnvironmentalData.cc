@@ -10,8 +10,8 @@ namespace GRAMSBalloon {
 
 GetEnvironmentalData::GetEnvironmentalData()
 {
-  bme680io_ = std::make_unique<BME680IO>();
-  interface_ = std::make_unique<SPIInterface>();
+  bme680io_ = std::make_shared<BME680IO>();
+  interface_ = std::make_shared<SPIInterface>();
 }
 
 GetEnvironmentalData::~GetEnvironmentalData() = default;

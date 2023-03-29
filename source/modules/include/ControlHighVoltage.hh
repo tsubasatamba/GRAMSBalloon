@@ -17,11 +17,15 @@ namespace GRAMSBalloon {
 class ControlHighVoltage : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(ControlHighVoltage, 1.0);
+  ENABLE_PARALLEL_RUN(); 
 
 public:
   ControlHighVoltage();
   virtual ~ControlHighVoltage();
-  
+protected:
+  ControlHighVoltage(const ControlHighVoltage& r) = default;
+
+public:  
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;

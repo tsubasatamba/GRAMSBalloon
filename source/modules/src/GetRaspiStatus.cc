@@ -6,7 +6,7 @@ namespace GRAMSBalloon {
 
 GetRaspiStatus::GetRaspiStatus()
 {
-  ifsTemp_ = std::ifstream("/sys/class/thermal/thermal_zone0/temp");
+  ifsTemp_ = std::make_shared<std::ifstream>("/sys/class/thermal/thermal_zone0/temp");
 }
 
 GetRaspiStatus::~GetRaspiStatus() = default;
@@ -23,7 +23,7 @@ ANLStatus GetRaspiStatus::mod_initialize()
 
 ANLStatus GetRaspiStatus::mod_analyze()
 {
-  ifsTemp_ >> temperatureADC_;
+  (*ifsTemp_) >> temperatureADC_;
   
   return AS_OK;
 }
@@ -31,7 +31,7 @@ ANLStatus GetRaspiStatus::mod_analyze()
 
 ANLStatus GetRaspiStatus::mod_finalize()
 {
-  ifsTemp_.close();
+  ifsTemp_->close();
   return AS_OK;
 }
 

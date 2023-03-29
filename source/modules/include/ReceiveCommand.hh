@@ -24,11 +24,15 @@ namespace GRAMSBalloon {
 class ReceiveCommand : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(ReceiveCommand, 1.0);
+  ENABLE_PARALLEL_RUN();
 
 public:
   ReceiveCommand();
   virtual ~ReceiveCommand();
-  
+protected:
+  ReceiveCommand(const ReceiveCommand& r) = default;
+
+public:  
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
@@ -41,19 +45,17 @@ public:
 private:
   std::vector<uint8_t> command_;
   std::queue<uint8_t> que_;
-  std::unique_ptr<CommandDefinition> comdef_ = nullptr;
+  std::shared_ptr<CommandDefinition> comdef_ = nullptr;
   ReadWaveform* readWaveform_ = nullptr;
   std::string readWaveformModuleName_ = "ReadWaveform";
 
   //communication
-  std::unique_ptr<SerialCommunication> sc_ = nullptr;
+  std::shared_ptr<SerialCommunication> sc_ = nullptr;
   speed_t baudrate_;
   std::string serialPath_;
   char openMode_ = O_RDWR;
   bool startReading_ = false;
-  fd_set fdset_;
-  timeval timeout_;
-
+  
 };
 
 } /* namespace GRAMSBalloon */

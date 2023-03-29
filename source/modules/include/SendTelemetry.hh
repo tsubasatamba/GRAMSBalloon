@@ -27,11 +27,15 @@ namespace GRAMSBalloon {
 class SendTelemetry : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(SendTelemetry, 1.0);
+  ENABLE_PARALLEL_RUN();
 
 public:
   SendTelemetry();
   virtual ~SendTelemetry();
+protected:
+  SendTelemetry(const SendTelemetry& r) = default;
 
+public:
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
@@ -52,7 +56,7 @@ public:
   const std::vector<std::vector<short>>& EventData() const { return telemdef_->EventData(); }
 
 private:
-  std::unique_ptr<TelemetryDefinition> telemdef_ = nullptr;
+  std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
   int telemetryType_ = 1;
 
   // access to other classes
@@ -65,7 +69,7 @@ private:
   ReceiveCommand* receiveCommand_ = nullptr;
 
   // communication
-  std::unique_ptr<SerialCommunication> sc_;
+  std::shared_ptr<SerialCommunication> sc_;
   std::string serialPath_;
   speed_t baudrate_ = B9600;
   char openMode_ = O_RDWR;
