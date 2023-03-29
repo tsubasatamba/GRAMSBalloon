@@ -9,7 +9,6 @@ set(RUBY_EXT_INCLUDE_DIRS
   ../source/BME68x-Sensor-API/include
   ${ANLNEXT_INC_DIR}
   ${BOOST_INC_DIR}
-  ./interface
   )
 set(RUBY_EXT_LIBRARY_DIRS
   /usr/local/lib
@@ -22,20 +21,19 @@ set(RUBY_EXT_LIBRARIES
   GBBME68x
   GBCore
   GBModules
-  pigpiod_if2
-  rt
-  dwf
-  crypto
+  ${PIGPIO_LIB_DAEMON}
+  ${PIGPIO_LIB_RT}
+  ${WAVEFORMS_LIB}
 )
 
 
 ########################################################
 set(cxx_definitions )
-if(CS_USE_SIMX)
-  list(APPEND cxx_definitions -DUSE_SIMX)
+if(GB_USE_PIGPIO)
+  list(APPEND cxx_definitions -DUSE_PIGPIO)
 endif()
-if(CS_USE_FITSIO)
-  list(APPEND cxx_definitions -DUSE_FITSIO)
+if(CS_USE_WAVEFORMS)
+  list(APPEND cxx_definitions -DUSE_WAVEFORMS)
 endif()
 
 set(SWIG_FLAGS ${cxx_definitions})
