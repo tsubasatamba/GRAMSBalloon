@@ -17,7 +17,7 @@ if(GB_USE_PIGPIO)
     )
 endif(GB_USE_PIGPIO)
 
-add_library(GBBME68x SHARED
+add_library(${BME68x_LIB} SHARED
   ${GB_BME68x_CLASSES}
   )
 

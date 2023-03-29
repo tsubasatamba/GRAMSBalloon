@@ -40,7 +40,7 @@ add_library(GBCore SHARED
   )
 
 target_link_libraries(GBCore
-  GBBME68x
+  ${BME68x_LIB}
   ${ADD_LIB}
   ${BOOST_LIB}
   ${PIGPIO_LIB_DAEMON}

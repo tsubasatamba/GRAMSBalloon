@@ -49,7 +49,7 @@ add_library(GBModules SHARED
 
 target_link_libraries(GBModules
   GBCore
-  GBBME68x
+  ${BME68x_LIB}
   ${ANLG4_LIB}
   ${ANLNEXT_LIB}
   ${ROOT_LIB}

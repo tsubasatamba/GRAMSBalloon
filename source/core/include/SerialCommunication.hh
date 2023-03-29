@@ -19,6 +19,10 @@
 #include <fcntl.h>
 #include <vector>
 
+#ifdef __APPLE__
+#define TCSETS TIOCSETA
+#endif
+
 namespace gramsballoon {
 
 class SerialCommunication

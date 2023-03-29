@@ -80,6 +80,7 @@ if(GB_USE_PIGPIO)
   message("-- PIGPIO_LIB_DAEMON: ${PIGPIO_LIB_DAEMON}")
   set(PIGPIO_LIB_RT rt)
   message("-- PIGPIO_LIB_RT: ${PIGPIO_LIB_RT}")
+  set(BME68x_LIB GBBME68x)
 endif(GB_USE_PIGPIO)
 
 ### Waveforms ###
