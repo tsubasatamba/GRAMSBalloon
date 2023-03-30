@@ -1,0 +1,11 @@
+{
+  "ws_host": "localhost",
+  "ws_port": "8080",
+  "title": "GRAMS Balloon QuickLook",
+  "ti_scaling": 64,
+  "schema_list": {
+    "Main": {
+      "HK": "user_data/schema/HK/hk.js"
+    }
+  }
+}
