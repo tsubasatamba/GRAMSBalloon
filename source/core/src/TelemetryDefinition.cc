@@ -114,7 +114,7 @@ void TelemetryDefinition::writeCRC16()
   addValue<uint16_t>(crc);
 }
 
-void interpret()
+void TelemetryDefinition::interpret()
 {
   telemetryType_ = getValue<uint16_t>(2);
   timeNow_.tv_sec = getValue<int32_t>(4);
@@ -202,7 +202,7 @@ T TelemetryDefinition::getValue(int index)
   uint32_t v = 0;
   for (int i=0; i<byte; i++) {
     const int shift = 8 * (byte-1-i);
-    v |= command_[i] << (shift);
+    v |= telemetry_[i] << (shift);
   }
   return static_cast<T>(v);
 }
@@ -210,7 +210,7 @@ T TelemetryDefinition::getValue(int index)
 template<typename T>
 void TelemetryDefinition::getVector(int index, int num, std::vector<T>& vec)
 {
-  const int n = command_.size();
+  const int n = telemetry_.size();
   const int byte = sizeof(T);
   if (index+byte*num > n) {
     std::cerr << "TelemetryDefinition::getVector error: out of range" << std::endl;

@@ -77,6 +77,7 @@ public:
   
 private:
   std::vector<uint8_t> telemetry_;
+  uint16_t telemetryType_;
   timeval timeNow_;
   uint32_t telemIndex_ = 0;
   // info

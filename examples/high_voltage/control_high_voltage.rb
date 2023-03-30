@@ -7,7 +7,7 @@ class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::AnalogDiscoveryManager
         chain GRAMSBalloon::ControlHighVoltage
-        with_parameters(device_id: 1, channel: 0)
+        with_parameters(device_id: 1, channel: 1)
     end
 end
 
