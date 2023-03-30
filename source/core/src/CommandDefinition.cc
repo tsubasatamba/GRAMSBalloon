@@ -17,6 +17,15 @@ bool CommandDefinition::interpret()
     return false;
   }
 
+  if (command_[0]!=0xeb || command_[1]!=0x90) {
+    std::cerr << "start code incorect" << std::endl;
+    return false;
+  }
+  if (command_[n-2]!=0xc5 || command_[n-1]!=0xc5) {
+    std::cerr << "end code incorrect" << std::endl;
+    return false;
+  }
+
   std::cout << "--- command received start ---" << std::endl;
   for (int i=0; i<(int)command_.size(); i++) {
     std::cout << i << " " << std::hex << static_cast<int>(command_[i]) << std::dec << std::endl;

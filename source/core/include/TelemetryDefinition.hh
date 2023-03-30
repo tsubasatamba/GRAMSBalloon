@@ -77,18 +77,36 @@ public:
   
 private:
   std::vector<uint8_t> telemetry_;
-  timeval time_now;
+  timeval timeNow_;
   uint32_t telemIndex_ = 0;
   // info
   uint32_t eventCount_;
+  uint32_t triggerCount_;
+  uint16_t chamberPressure_;
+  std::vector<uint16_t> chamberTemperature_;
+  uint16_t valveTemperature_;
+  uint16_t outerTemperature_;
+  int32_t TPCHVSetting_;
+  uint16_t TPCHVMeasure_;
+  int32_t PMTHVSetting_;
+  uint16_t PMTHVMeasure_;
+  int16_t CPUTemperature_;  
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
+  // acceleration
+  int16_t mainCurrent_;
+  int16_t mainVoltage_;
+  uint32_t lastCommandIndex_;
+  uint16_t lastCommandCode_;
+  uint16_t commandRejectCount_;
+  uint16_t softwareErrorCode_;
+  
   uint32_t eventID_;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
   std::vector<int16_t> RTDTemperatureADC_;
-  uint16_t lastCommandCode_;
+  
 };
 
 } /* namespace gramsballoon */

@@ -14,9 +14,9 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
   uint16_t start_code = 0xeb90;
   addValue<uint16_t>(start_code);
   addValue<uint16_t>(static_cast<uint16_t>(telemetry_type));
-  gettimeofday(&time_now, NULL);
-  addValue<int32_t>(static_cast<int32_t>(time_now.tv_sec));
-  addValue<int32_t>(static_cast<int32_t>(time_now.tv_usec));
+  gettimeofday(&timeNow_, NULL);
+  addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_sec));
+  addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_usec));
   addValue<uint32_t>(telemIndex_);
   telemIndex_++;
   
@@ -117,6 +117,45 @@ void TelemetryDefinition::writeCRC16()
 void interpret()
 {
   telemetryType_ = getValue<uint16_t>(2);
+  timeNow_.tv_sec = getValue<int32_t>(4);
+  timeNow_.tv_usec = getValue<int32_t>(8);
+  telemIndex_ = getValue<uint32_t>(12);
+  eventCount_ = getValue<uint32_t>(16);
+  triggerCount_ = getValue<uint32_t>(20);
+  chamberPressure_ = getValue<uint16_t>(24);
+  chamberTemperature_.resize(3);
+  getVector<uint16_t>(26, 3, chamberTemperature_);
+  valveTemperature_ = getValue<uint16_t>(32);
+  outerTemperature_ = getValue<uint16_t>(34);
+  TPCHVSetting_ = getValue<int32_t>(36);
+  TPCHVMeasure_ = getValue<uint16_t>(40);
+  PMTHVSetting_ = getValue<int32_t>(42);
+  PMTHVMeasure_ = getValue<uint16_t>(46);
+  CPUTemperature_ = getValue<int16_t>(48);
+  
+  envTemperature_.resize(5);
+  envHumidity_.resize(5);
+  envPressure_.resize(5);
+  std::vector<int16_t> temp(5);
+  std::vector<uint16_t> hum(5);
+  std::vector<uint16_t> pre(5);
+  getVector<int16_t>(50, 5, temp);
+  getVector<uint16_t>(60, 5, hum);
+  getVector<uint16_t>(70, 5, pre);
+  for (int i=0; i<5; i++) {
+    envTemperature_[i] = static_cast<double>(temp[i])*0.1;
+    envHumidity_[i] = static_cast<double>(hum[i])*0.1;
+    envPressure_[i] = static_cast<double>(pre[i])*0.1;
+  }
+  // acceleration
+  mainCurrent_ = getValue<int16_t>(98);
+  mainVoltage_ = getValue<int16_t>(100);
+  lastCommandIndex_ = getValue<uint32_t>(102);
+  lastCommandCode_ = getValue<uint16_t>(106);
+  commandRejectCount_ = getValue<uint16_t>(108);
+  softwareErrorCode_ = getValue<uint16_t>(110);
+
+
 }
 
 void TelemetryDefinition::clear()
