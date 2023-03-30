@@ -36,11 +36,17 @@ public:
   void writeCRC16();
   void clear();
 
+  void interpret();
   
   template<typename T> void addValue(T input);
   template<typename T> void addVector(std::vector<T>& input);
+  template<typename T> T getValue(int index);
+  template<typename T> void getVector(int index, int num, std::vector<T>& vec);
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
+
+  // detector
+  void setEventCount(uint32_t v) { eventCount_ = v; } 
 
   // env data
   void setEnvTemperature(int index, double v) { envTemperature_[index] = v; }
@@ -74,6 +80,7 @@ private:
   timeval time_now;
   uint32_t telemIndex_ = 0;
   // info
+  uint32_t eventCount_;
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;

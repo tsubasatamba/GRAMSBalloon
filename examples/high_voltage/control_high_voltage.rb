@@ -6,10 +6,10 @@ require 'GRAMSBalloon'
 class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::AnalogDiscoveryManager
-        chain GRAMSBalloon::RegulateHighVoltage
-        with_parameters(device_id: 0, channel: 1)
+        chain GRAMSBalloon::ControlHighVoltage
+        with_parameters(device_id: 1, channel: 0)
     end
 end
 
 a = MyApp.new
-a.run(10, 1)
+a.run(1000, 1)

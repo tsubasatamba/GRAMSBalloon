@@ -40,7 +40,7 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
 
 void TelemetryDefinition::generateTelemetryNormal()
 {
-  addValue<uint32_t>((uint32_t)0); // Event count
+  addValue<uint32_t>(eventCount_); // Event count
   addValue<uint32_t>((uint32_t)0); // Trigger count
   addValue<uint16_t>((uint16_t)0); // Chamber pressure
   
@@ -114,6 +114,11 @@ void TelemetryDefinition::writeCRC16()
   addValue<uint16_t>(crc);
 }
 
+void interpret()
+{
+  telemetryType_ = getValue<uint16_t>(2);
+}
+
 void TelemetryDefinition::clear()
 {
   telemetry_.clear();
@@ -136,6 +141,54 @@ void TelemetryDefinition::addVector(std::vector<T>& input)
   const int n = input.size();
   for (int i=0; i<n; i++) {
     addValue(input[i]);
+  }
+}
+
+template<typename T>
+T TelemetryDefinition::getValue(int index)
+{
+  const int n = telemetry_.size();
+  const int byte = sizeof(T);
+  if (index+byte>n) {
+    std::cerr << "TelemetryDefinition::getValue error: out of range" << std::endl;
+    std::cerr << "telemetry_.size() = " << n << ", index = " << index << ", byte = " << byte << std::endl;
+    return static_cast<T>(0);
+  }
+  if (byte > 4) {
+    std::cerr << "TelemetryDefinition::getValue error: typename error" << std::endl;
+    std::cerr << "byte should be equal to or less than 4: byte = " << byte << std::endl;
+    return static_cast<T>(0);
+  }
+
+  uint32_t v = 0;
+  for (int i=0; i<byte; i++) {
+    const int shift = 8 * (byte-1-i);
+    v |= command_[i] << (shift);
+  }
+  return static_cast<T>(v);
+}
+
+template<typename T>
+void TelemetryDefinition::getVector(int index, int num, std::vector<T>& vec)
+{
+  const int n = command_.size();
+  const int byte = sizeof(T);
+  if (index+byte*num > n) {
+    std::cerr << "TelemetryDefinition::getVector error: out of range" << std::endl;
+    std::cerr << "telemetry_.size() = " << n << ", index = " << index << ", byte = " << byte
+    << ", num = " << num << std::endl;
+    return;
+  }
+  if (byte > 4) {
+    std::cerr << "TelemetryDefinition::getVector error: typename error" << std::endl;
+    std::cerr << "byte should be equal to or less than 4: byte = " << byte << std::endl;
+    return;
+  }
+  vec.clear();
+  for (int i=0; i<num; i++) {
+    T v = getValue<T>(index);
+    vec.push_back(v);
+    index += byte;
   }
 }
 

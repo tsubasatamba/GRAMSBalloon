@@ -124,6 +124,8 @@ void SendTelemetry::inputInfo()
 
 void SendTelemetry::inputDetectorInfo()
 {
+  uint32_t event_count = readWaveform_->EventCount();
+  telemdef_->setEventCount(event_count);
 }
 
 void SendTelemetry::inputEnvironmentalData()

@@ -38,4 +38,4 @@ class MyApp < ANL::ANLApp
 end
 
 a = MyApp.new
-a.run(40, 1)
+a.run(:all, 1)

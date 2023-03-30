@@ -1,4 +1,6 @@
 #include "ControlHighVoltage.hh"
+#include <chrono>
+#include <thread>
 
 using namespace anlnext;
 
@@ -39,12 +41,16 @@ ANLStatus ControlHighVoltage::mod_analyze()
     nextVoltage_ = 4.0;
   }
   # endif
+
+  nextVoltage_ = 2.0;
   
   if (currentVoltage_!=nextVoltage_) {
     AnalogDiscoveryIO* io = ADManager_->ADIO();
     io -> setVoltage(deviceID_, channel_, static_cast<double>(nextVoltage_), sleep_);
     currentVoltage_ = nextVoltage_;
   }
+
+  std::this_thread::sleep_for(std::chrono::seconds(1));
   
   return AS_OK;
 }
