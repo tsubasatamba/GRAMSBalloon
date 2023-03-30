@@ -33,8 +33,9 @@ int main(int argc, char **argv)
                 data.push_back(val);
                 index += 2;
             }
+            std::cout << "size: " << num_bins << std::endl;
             for (int k=0; k<num_bins; k++) {
-                std::cout << k << " " << data[k] << " ";
+                std::cout << data[k] << " ";
             }
             std::cout << std::endl;
         }

@@ -39,7 +39,7 @@ public:
   void generateFileHeader(std::vector<int16_t>& header, int16_t num_event);
   void generateFileFooter(std::vector<int16_t>& footer);
   
-
+  uint32_t EventCount() { return eventCount_; }
   
 private:
   AnalogDiscoveryIO* ADIO_;
@@ -55,6 +55,8 @@ private:
   double sampleFreq_ = 2.0; //MHz
   int numSample_ = 0;
   const int getDataMaxTrial_ = 1000;
+
+  uint32_t eventCount_ = 0;
 };
 
 } /* namespace gramsballoon */

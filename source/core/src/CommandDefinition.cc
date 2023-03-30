@@ -1,6 +1,7 @@
 #include "CommandDefinition.hh"
 #include <thread>
 #include <chrono>
+#include <iomanip>
 
 namespace gramsballoon {
 
@@ -16,11 +17,19 @@ bool CommandDefinition::interpret()
     return false;
   }
 
+  std::cout << "--- command received start ---" << std::endl;
+  for (int i=0; i<(int)command_.size(); i++) {
+    std::cout << i << " " << std::hex << static_cast<int>(command_[i]) << std::dec << std::endl;
+  }
+  std::cout << "--- command received end ---" << std::endl;
+
   code_ = getValue<uint16_t>(2);
   argc_ = getValue<uint16_t>(4);
 
   if (n != 10 + 4 * static_cast<int>(argc_)) {
     std::cerr << "Invalid command: length not appropriate" << std::endl;
+    std::cerr << "The length of command should be " << 10+4*static_cast<int>(argc_) <<
+      ", but now it is " << n << std::endl;
     return false;
   }
 
@@ -60,7 +69,7 @@ T CommandDefinition::getValue(int index)
   uint32_t v = 0;
   for (int i=0; i<byte; i++) {
     const int shift = 8 * (byte-1-i);
-    v |= command_[i] << (shift);
+    v |= (command_[index+i] << (shift));
   }
   return static_cast<T>(v);
 }

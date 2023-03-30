@@ -45,6 +45,8 @@ public:
   void setOndemand(bool v) { ondemand_ = v; }
   DAQIO* getDAQIO() { return daqio_.get(); }
 
+  uint32_t EventCount() { return daqio_->EventCount(); }
+
 private:
   std::string ADManagerName_ = "AnalogDiscoveryManager";
   AnalogDiscoveryManager* ADManager_ = nullptr;

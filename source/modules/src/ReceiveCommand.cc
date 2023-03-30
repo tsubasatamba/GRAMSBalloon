@@ -45,45 +45,57 @@ ANLStatus ReceiveCommand::mod_initialize()
 
 ANLStatus ReceiveCommand::mod_analyze()
 {
-  const int max_trial = 100;
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  const int max_trial = 26;
 
-  for (int ti=0; ti<max_trial; ti++) {
-    fd_set fdset;
-    timeval timeout;
-    timeout.tv_sec = 1;
-    timeout.tv_usec = 0;
-    FD_ZERO(&fdset);
-    FD_SET(sc_->FD(), &fdset);
-    int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
-    uint8_t buffer = 0;
-    
-    if (rv == -1) {
-      std::cerr << "Error in ReceiveCommand::mod_analyze: rv = -1" << std::endl;
-      break;
-    }
-    else if (rv == 0) {
-      std::cout << "Time out" << std::endl;
-      break;
-    }
-    else {
-      const int status = sc_->sreadSingle(buffer);
-      if (status == -1) {
-        std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
-        break;
-      }
-      if (status == 0) {
-        break;
-      }
-    }
-    std::cout << "buffer: " << static_cast<int>(buffer) << std::endl;
-    que_.push(buffer);
+  command_.clear();
+
+  fd_set fdset;
+  timeval timeout;
+  timeout.tv_sec = 10;
+  timeout.tv_usec = 0;
+  FD_ZERO(&fdset);
+  FD_SET(sc_->FD(), &fdset);
+  int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
+
+  std::cout << "rv: " << rv << std::endl;
+
+  if (rv == -1) {
+    std::cerr << "Error in ReceiveCommand::mod_analyze: rv = -1" << std::endl;
+    return AS_ERROR;
+  }
+  
+  if (rv==0) {
+    std::cout << "Time out" << std::endl;
+    return AS_OK;
+  }
+
+  std::vector<uint8_t> buffer(max_trial);
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  const int status = sc_->sread(buffer, max_trial);
+  if (status == -1) {
+    std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
+    return AS_OK;
+  }
+
+  std::cout << "status: " << status << std::endl;
+  for (int i=0; i<status; i++) {
+    command_.push_back(buffer[i]);
+  }
+  for (int i=0; i<status; i++) {
+    std::cout << "command[" << i << "] = " << static_cast<int>(command_[i]) << std::endl;
+  }
+  applyCommand();                                    
+  
+/*
+  for (int i=0; i<status; i++) {
+    que_.push(buffer[i]);
     que_.pop();
     if (startReading_) {
-      command_.push_back(buffer);
+      command_.push_back(buffer[i]);
       if (que_.front()==0xc5 && que_.back()==0xc5) {
         startReading_ = false;
         applyCommand();
-        break;
       }
     }
     else {
@@ -93,10 +105,9 @@ ANLStatus ReceiveCommand::mod_analyze()
         command_.push_back(que_.front());
         command_.push_back(que_.back());
       }
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));  
+    }  
   }
-
+*/
   
   
   return AS_OK;
@@ -117,6 +128,12 @@ void ReceiveCommand::applyCommand()
   bool status = comdef_->interpret();
   if (!status) {
     return;
+  }
+
+  const int code = comdef_->Code();
+
+  if (code==210) {
+    readWaveform_->setOndemand(true);
   }
 
 }

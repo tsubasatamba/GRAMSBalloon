@@ -42,6 +42,7 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   void inputInfo();
+  void inputDetectorInfo();
   void inputEnvironmentalData();
   void inputTemperatureData();
   void inputLastCommandInfo();

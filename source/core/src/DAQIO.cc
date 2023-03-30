@@ -142,6 +142,7 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
     if (status==DwfStateDone) {
       data_acquired = true;
       gettimeofday(&event_time, NULL);
+      eventCount_++;
       break;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1));

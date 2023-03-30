@@ -32,7 +32,8 @@ class MyApp < ANL::ANLApp
 
         chain GRAMSBalloon::SendTelemetry
         with_parameters(
-            serial_path: "/dev/ttyAMA0"
+            serial_path: "/dev/ttyAMA0",
+            MeasureTemperature_module_names: ["MeasureTemperatureWithRTDSensor"]
         )
     end
 end
@@ -48,4 +49,4 @@ a.modify do |m|
     m.get_parallel_module(1, :ReadWaveform).off
     m.get_parallel_module(1, :SendTelemetry).off
 end
-a.run(40, 1)
+a.run(400, 1)

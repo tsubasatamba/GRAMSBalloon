@@ -27,7 +27,7 @@ find_package(Ruby 2.7 REQUIRED)
 ### options
 ## library options
 option(GB_USE_PIGPIO "enable PIGPIO" ON)
-option(GB_USE_WAVEFORMS "enable waveforms")
+option(GB_USE_WAVEFORMS "enable waveforms" ON)
 ## install options
 option(GB_INSTALL_HEADERS "install all header files" ON)
 option(GB_INSTALL_CMAKE_FILES "install all cmake files" ON)

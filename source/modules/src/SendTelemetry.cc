@@ -18,7 +18,7 @@ SendTelemetry::~SendTelemetry() = default;
 ANLStatus SendTelemetry::mod_define()
 {
   define_parameter("GetEnvironmentalData_module_names", &mod_class::getEnvironmentalDataModuleNames_);
-  define_parameter("MasureTemperature_module_names", &mod_class::measureTemperatureModuleNames_);
+  define_parameter("MeasureTemperature_module_names", &mod_class::measureTemperatureModuleNames_);
   define_parameter("ReadWaveform_module_name", &mod_class::readWaveformModuleName_);
   
   define_parameter("serial_path", &mod_class::serialPath_);
@@ -104,7 +104,8 @@ ANLStatus SendTelemetry::mod_analyze()
   }
 
   #endif
-  
+
+  std::this_thread::sleep_for(std::chrono::seconds(1));
   return AS_OK;
 }
 
@@ -115,9 +116,14 @@ ANLStatus SendTelemetry::mod_finalize()
 
 void SendTelemetry::inputInfo()
 {
+  inputDetectorInfo();
   inputEnvironmentalData();
   inputTemperatureData();
   inputLastCommandInfo();
+}
+
+void SendTelemetry::inputDetectorInfo()
+{
 }
 
 void SendTelemetry::inputEnvironmentalData()
