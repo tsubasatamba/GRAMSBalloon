@@ -1,4 +1,5 @@
-% module GRAMSBalloon % {
+% module GRAMSBalloon
+% {
 // include headers of my modules
 #include <anlnext/BasicModule.hh>
 #include "SimpleLoop.hh"
