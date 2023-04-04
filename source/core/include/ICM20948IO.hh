@@ -29,9 +29,9 @@ public:
     void setDevicePath(std::string &devicePath);
 
 private:
-    ICM20948::Config *conf_;
+    ICM20948::Config conf_;
     const IMUData *data_;
-    ICM20948 *icm_;
+    ICM20948 icm_;
     double currentTime_;
     std::string devicePath_;
 };

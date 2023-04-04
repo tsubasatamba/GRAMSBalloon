@@ -19,7 +19,7 @@ const IMUData *ICM20948IO::getData()
 
 void ICM20948IO::wait_for_process()
 {
-    int sleepTime = static_cast<int>(((1.0f / icm_->getConfig().mFramerate) - (getTime() - currentTime_)) * 1000000.0);
+    int sleepTime = static_cast<int>(((1.0f / icm_.getConfig().mFramerate) - (getTime() - currentTime_)) * 1000000.0);
     if (sleepTime > 0)
     {
         std::this_thread::sleep_for(std::chrono::microseconds(sleepTime));
@@ -32,7 +32,7 @@ void ICM20948IO::wait_for_process()
  */
 void ICM20948IO::calibrateGyro()
 {
-    icm_->calibrateGyro();
+    icm_.calibrateGyro();
 }
 
 void ICM20948IO::setDevicePath(std::string &devicePath)
@@ -42,9 +42,8 @@ void ICM20948IO::setDevicePath(std::string &devicePath)
 
 bool ICM20948IO::initialise()
 {
-    strcpy(conf_->mDevice, devicePath_.c_str());
-    std::cout << "!" << std::endl;
-    bool rslt = icm_->initialise(*conf_);
+    strcpy(conf_.mDevice, devicePath_.c_str());
+    bool rslt = icm_.initialise(conf_);
     if (!rslt)
     {
         std::cerr << "Device not found" << std::endl;
@@ -54,7 +53,7 @@ bool ICM20948IO::initialise()
 
 bool ICM20948IO::measure()
 {
-    data_ = &icm_->imuDataGet();
+    data_ = &icm_.imuDataGet();
     wait_for_process();
     return true;
 }

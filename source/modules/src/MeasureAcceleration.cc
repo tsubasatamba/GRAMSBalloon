@@ -23,11 +23,10 @@ namespace gramsballoon
         // std::cout
         //     << "MeasureAcceleration: Now Initializing...";
         // icm_->initialise(*conf_.get());
-        std::cout << "0" << std::endl;
         icmIO_->initialise();
-        std::cout << "a" << std::endl;
         icmIO_->calibrateGyro();
-        data_ = icmIO_->getData();
+        icmIO_->measure();
+        data_ = const_cast<IMUData *>(icmIO_->getData());
         return AS_OK;
     }
     anlnext::ANLStatus MeasureAcceleration::mod_analyze()
