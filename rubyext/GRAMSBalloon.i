@@ -32,7 +32,8 @@
 // #endif
 % }
 
-% include "std_vector.i" % import(module = "anlnext/ANL") "anlnext/ruby/ANL.i"
+% include "std_vector.i"
+% import(module = "anlnext/ANL") "anlnext/ruby/ANL.i"
 
 // interface to my modules
 

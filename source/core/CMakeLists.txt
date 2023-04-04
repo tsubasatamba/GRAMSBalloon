@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0)
 include_directories(
   include
   ../BME68x-Sensor-API/include
+  ../ICM20948-linux-i2c/src
+  ../ICM20948-linux-i2c/I2C/src
   ${ADD_INC_DIR}
   ${BOOST_INC_DIR}
   ${PIGPIO_INC_DIR}
@@ -43,6 +45,7 @@ add_library(GBCore SHARED
   ${GB_CORE_CLASSES}
   ${GB_PIGPIO_CORE_CLASSES}
   ${GB_WAVEFORMS_CORE_CLASSES}
+  ${GB_ICM20948_CORE_CLASSES}
   )
 
 target_link_libraries(GBCore
@@ -52,6 +55,7 @@ target_link_libraries(GBCore
   ${PIGPIO_LIB_DAEMON}
   ${PIGPIO_LIB_RT}
   ${WAVEFORMS_LIB}
+  ${ICM20948_LIB}
   )
 
 install(TARGETS GBCore LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
