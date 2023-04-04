@@ -7,6 +7,8 @@ set(RUBY_EXT_INCLUDE_DIRS
   ../source/modules/include
   ../source/core/include
   ../source/BME68x-Sensor-API/include
+  ../source/ICM20948-linux-i2c/src
+  ../source/ICM20948-linux-i2c/I2C/src
   ${ANLNEXT_INC_DIR}
   ${BOOST_INC_DIR}
   )
@@ -24,6 +26,7 @@ set(RUBY_EXT_LIBRARIES
   ${PIGPIO_LIB_DAEMON}
   ${PIGPIO_LIB_RT}
   ${WAVEFORMS_LIB}
+  ${ICM20948_LIB}
 )
 
 
@@ -32,10 +35,12 @@ set(cxx_definitions )
 if(GB_USE_PIGPIO)
   list(APPEND cxx_definitions -DUSE_PIGPIO)
 endif()
-if(CS_USE_WAVEFORMS)
+if(GB_USE_WAVEFORMS)
   list(APPEND cxx_definitions -DUSE_WAVEFORMS)
 endif()
-
+if(GB_USE_ICM20948)
+  list(APPEND cxx_definitions -DUSE_ICM20948)
+endif()
 set(SWIG_FLAGS ${cxx_definitions})
 add_definitions(${cxx_definitions})
 

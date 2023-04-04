@@ -45,7 +45,7 @@ endif(GB_USE_WAVEFORMS)
 
 if(GB_USE_ICM20948)
   set(GB_ICM20948_MODULES
-    src/
+    src/MeasureAcceleration.cc
   )
 endif(GB_USE_ICM20948)
 
