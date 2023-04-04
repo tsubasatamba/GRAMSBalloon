@@ -20,8 +20,9 @@ namespace gramsballoon
         // std::cout
         //     << "MeasureAcceleration: Now Initializing...";
         // icm_->initialise(*conf_.get());
-
+        std::cout << "0" << std::endl;
         icmIO_->initialise();
+        std::cout << "a" << std::endl;
         icmIO_->calibrateGyro();
         data_ = icmIO_->getData();
         return AS_OK;
@@ -47,6 +48,9 @@ namespace gramsballoon
             std::cout << data_->mMag[j] << " ";
         }
         std::cout << std::endl;
+        return AS_OK;
+    }
+    anlnext::ANLStatus MeasureAcceleration::mod_finalize(){
         return AS_OK;
     }
 }

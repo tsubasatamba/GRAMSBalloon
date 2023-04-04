@@ -6,6 +6,6 @@ class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::MeasureAcceleration
     end
-
+end
 a = MyApp.new
 a.run(1000)
