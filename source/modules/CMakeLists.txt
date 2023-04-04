@@ -2,6 +2,8 @@ include_directories(
   include
   ../core/include
   ../BME68x-Sensor-API/include
+  ../ICM20948-linux-i2c/src
+  ../ICM20948-linux-i2c/I2C/src
   ${ANLG4_INC_DIR}
   ${ANLNEXT_INC_DIR}
   ${ROOT_INC_DIR}
@@ -41,10 +43,17 @@ if(GB_USE_WAVEFORMS)
     )
 endif(GB_USE_WAVEFORMS)
 
+if(GB_USE_ICM20948)
+  set(GB_ICM20948_MODULES
+    src/
+  )
+endif(GB_USE_ICM20948)
+
 add_library(GBModules SHARED
   ${GB_MODULES}
   ${GB_PIGPIO_MODULES}
   ${GB_WAVEFORMS_MODULES}
+  ${GB_ICM20948_MODULES}
   )
 
 target_link_libraries(GBModules
@@ -57,6 +66,7 @@ target_link_libraries(GBModules
   ${PIGPIO_LIB_DAEMON}
   ${PIGPIO_LIB_RT}
   ${WAVEFORMS_LIB}
+  ${ICM20948_LIB}
   )
 
 install(TARGETS GBModules LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

@@ -1,5 +1,8 @@
 if(GB_USE_PIGPIO)
   add_subdirectory(BME68x-Sensor-API)
 endif(GB_USE_PIGPIO)
+if(GB_USE_ICM20948)
+  add_subdirectory(ICM20948-linux-i2c)
+endif(GB_USE_ICM20948)
 add_subdirectory(core)
 add_subdirectory(modules)

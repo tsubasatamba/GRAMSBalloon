@@ -28,6 +28,7 @@ find_package(Ruby 2.7 REQUIRED)
 ## library options
 option(GB_USE_PIGPIO "enable PIGPIO" ON)
 option(GB_USE_WAVEFORMS "enable waveforms" ON)
+option(GB_USE_ICM20948 "enable ICM20948" ON)
 ## install options
 option(GB_INSTALL_HEADERS "install all header files" ON)
 option(GB_INSTALL_CMAKE_FILES "install all cmake files" ON)
@@ -39,6 +40,7 @@ option(GB_MAC "shortcut" OFF)
 if (GB_MAC)
   set(GB_USE_PIGPIO OFF)
   set(GB_USE_WAVEFORMS OFF)
+  set(GB_USE_ICM20948 OFF)
 endif(GB_MAC)
 
 ### External libraries
@@ -89,10 +91,13 @@ if(GB_USE_WAVEFORMS)
   message("-- WAVEFORMS_LIB: ${WAVEFORMS_LIB}")
 endif(GB_USE_WAVEFORMS)
 
+if(GB_USE_ICM20948)
+  set(ICM20948_LIB ICM20948)
+  message("-- ICM20948_LIB: ${ICM20948_LIB}")
+endif(GB_USE_ICM20948)
+
 ### subdirectories
 add_subdirectory(source)
 if(USE_RUBY)
   add_subdirectory(rubyext)
 endif(USE_RUBY)
-
-
