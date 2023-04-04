@@ -4,7 +4,10 @@ using namespace anlnext;
 
 namespace gramsballoon
 {
-    MeasureAcceleration::MeasureAcceleration() = default;
+    MeasureAcceleration::MeasureAcceleration()
+    {
+        icmIO_ = std::make_shared<ICM20948IO>();
+    };
     MeasureAcceleration::~MeasureAcceleration() = default;
     anlnext::ANLStatus MeasureAcceleration::mod_define()
     {
@@ -50,7 +53,8 @@ namespace gramsballoon
         std::cout << std::endl;
         return AS_OK;
     }
-    anlnext::ANLStatus MeasureAcceleration::mod_finalize(){
+    anlnext::ANLStatus MeasureAcceleration::mod_finalize()
+    {
         return AS_OK;
     }
 }

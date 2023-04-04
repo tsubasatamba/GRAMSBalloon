@@ -3,6 +3,7 @@
 ICM20948IO::ICM20948IO()
 {
     currentTime_ = getTime();
+    devicePath_ = "/dev/i2c-1";
 }
 double ICM20948IO::getTime()
 {
@@ -34,7 +35,7 @@ void ICM20948IO::calibrateGyro()
     icm_->calibrateGyro();
 }
 
-void ICM20948IO::setDevicePath(std::string devicePath)
+void ICM20948IO::setDevicePath(std::string &devicePath)
 {
     devicePath = devicePath_;
 }
@@ -42,6 +43,7 @@ void ICM20948IO::setDevicePath(std::string devicePath)
 bool ICM20948IO::initialise()
 {
     strcpy(conf_->mDevice, devicePath_.c_str());
+    std::cout << "!" << std::endl;
     bool rslt = icm_->initialise(*conf_);
     if (!rslt)
     {

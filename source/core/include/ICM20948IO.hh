@@ -26,7 +26,7 @@ public:
     void wait_for_process();
     void calibrateGyro();
 
-    void setDevicePath(std::string devicePath);
+    void setDevicePath(std::string &devicePath);
 
 private:
     ICM20948::Config *conf_;
