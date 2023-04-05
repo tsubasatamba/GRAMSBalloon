@@ -37,17 +37,17 @@ ANLStatus MeasureAcceleration::mod_analyze()
 
   #if 1
   const IMUData* data = getData();
-  std::cout << "Accel: ";
+  std::cout << "Accel (g): ";
   for (int j = 0; j < 3; j++) {
     std::cout << data->mAcc[j] << " ";
   }
   std::cout << std::endl;
-  std::cout << "Gyro(dps): ";
+  std::cout << "Gyro (dps): ";
   for (int j = 0; j < 3; j++) {
     std::cout << data->mGyro[j] << " ";
   }
   std::cout << std::endl;
-  std::cout << "Magnet[uT]";
+  std::cout << "Magnet (uT)";
   for (int j = 0; j < 3; j++) {
     std::cout << data->mMag[j] << " ";
   }

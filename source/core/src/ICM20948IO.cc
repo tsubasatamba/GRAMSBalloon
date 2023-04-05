@@ -28,9 +28,9 @@ void ICM20948IO::measure()
 void ICM20948IO::waitForProcess()
 {
   const double frame_time = 1.0 / icm_.getConfig().mFramerate;
-  int sleepTime = static_cast<int>(frame_time * 1.0E6);
-  if (sleepTime > 0) {
-    std::this_thread::sleep_for(std::chrono::microseconds(sleepTime));
+  int sleep_time = static_cast<int>(frame_time * 1.0E6);
+  if (sleep_time > 0) {
+    std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
   }
 }
 
