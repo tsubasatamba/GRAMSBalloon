@@ -10,7 +10,6 @@
 #define MeasureAcceleration_H 1
 
 #include <anlnext/BasicModule.hh>
-//#include "ICM20948.h"
 #include "ICM20948IO.hh"
 #include <string.h>
 #include <thread>
