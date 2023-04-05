@@ -10,44 +10,47 @@
 #define MeasureAcceleration_H 1
 
 #include <anlnext/BasicModule.hh>
-#include "ICM20948.h"
+//#include "ICM20948.h"
 #include "ICM20948IO.hh"
 #include <string.h>
 #include <thread>
 #include <chrono>
 #include <string>
 
-namespace gramsballoon
+namespace gramsballoon {
+
+class MeasureAcceleration : public anlnext::BasicModule
 {
+  DEFINE_ANL_MODULE(MeasureAcceleration, 1.0);
+  ENABLE_PARALLEL_RUN();
 
-    class MeasureAcceleration : public anlnext::BasicModule
-    {
-        DEFINE_ANL_MODULE(MeasureAcceleration, 1.0);
-        ENABLE_PARALLEL_RUN();
+public:
+  MeasureAcceleration();
+  virtual ~MeasureAcceleration();
 
-    public:
-        MeasureAcceleration();
-        virtual ~MeasureAcceleration();
+protected:
+  MeasureAcceleration(const MeasureAcceleration &r) = default;
 
-    protected:
-        MeasureAcceleration(const MeasureAcceleration &r) = default;
+public:
+  anlnext::ANLStatus mod_define() override;
+  anlnext::ANLStatus mod_initialize() override;
+  anlnext::ANLStatus mod_analyze() override;
+  anlnext::ANLStatus mod_finalize() override;
 
-    public:
-        anlnext::ANLStatus mod_define() override;
-        anlnext::ANLStatus mod_initialize() override;
-        anlnext::ANLStatus mod_analyze() override;
-        anlnext::ANLStatus mod_finalize() override;
+  const IMUData* getData() const { return icmIO_->getData(); }
+  const float* getAcceleration() const { return icmIO_->getData()->mAcc; }
+  float getAcceleration(int index) { return (index>=0 && index<3) ? icmIO_->getData()->mAcc[index] : 0; }
+  const float* getGyro() const { return icmIO_->getData()->mGyro; }
+  float getGyro(int index) { return (index>=0 && index<3) ? icmIO_->getData()->mGyro[index] : 0; }
+  const float* getMagnet() const { return icmIO_->getData()->mMag; }
+  float getMagnet(int index) { return (index>=0 && index<3) ? icmIO_->getData()->mMag[index] : 0; }
 
-        
+private:
+  std::shared_ptr<ICM20948IO> icmIO_;
+  std::string devicePath_ = "";
+  bool calibrateGyro_ = false;
+};
 
-    private:
-        // std::shared_ptr<ICM20948> icm_;
-        std::string devicePath_;
-        std::shared_ptr<ICM20948IO> icmIO_;
-        // std::shared_ptr<ICM20948::Config> conf_;
-        bool calibrateGyro_ = false;
-    };
-
-} /*namespace gramsballoon*/
+} /* namespace gramsballoon */
 
 #endif /*MeasureAcceleration_H*/

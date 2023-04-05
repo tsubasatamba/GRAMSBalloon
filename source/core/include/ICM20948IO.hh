@@ -1,7 +1,7 @@
 /**
- * A class for ICM20948
+ * A class for ICM20948 handler
  *
- * @author Tsubasa Tamba, Shota Arai
+ * @author  Shota Arai, Tsubasa Tamba
  * @date 2023-04-04
  */
 
@@ -14,27 +14,29 @@
 #include <string>
 #include <iostream>
 
-namespace gramsballoon{
+namespace gramsballoon {
+
 class ICM20948IO
 {
 public:
-    ICM20948IO();
-    ~ICM20948IO() = default;
-    bool initialise();
-    void measure();
-    static double getTime();
-    const IMUData *getData();
-    void wait_for_process();
-    void calibrateGyro();
+  ICM20948IO();
+  ~ICM20948IO();
 
-    void setDevicePath(const std::string &device_path);
+  bool initialize();
+  void measure();
+  void waitForProcess();
+  void calibrateGyro();
+  
+  void setDevicePath(const std::string& s) { devicePath_ = s; }
+  const IMUData* getData() const { return data_; }
 
 private:
-    ICM20948::Config conf_;
-    const IMUData *data_;
-    ICM20948 icm_;
-    double currentTime_;
-    std::string devicePath_;
+  ICM20948 icm_;
+  ICM20948::Config conf_;
+  const IMUData* data_;
+  std::string devicePath_ = "";
 };
-}
+
+} /* namespace gramsballoon */
+
 #endif /*ICM20948IO_H*/
