@@ -54,7 +54,6 @@ ANLStatus MeasureAcceleration::mod_analyze()
   std::cout << std::endl;
   #endif
 
-
   return AS_OK;
 }
 
