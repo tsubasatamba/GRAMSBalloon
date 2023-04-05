@@ -38,12 +38,14 @@ namespace gramsballoon
         anlnext::ANLStatus mod_analyze() override;
         anlnext::ANLStatus mod_finalize() override;
 
+        
+
     private:
-        const IMUData *data_;
         // std::shared_ptr<ICM20948> icm_;
-        std::string devicePath_ = "/dev/i2c-1";
+        std::string devicePath_;
         std::shared_ptr<ICM20948IO> icmIO_;
-        //    std::shared_ptr<ICM20948::Config> conf_;
+        // std::shared_ptr<ICM20948::Config> conf_;
+        bool calibrateGyro_ = false;
     };
 
 } /*namespace gramsballoon*/

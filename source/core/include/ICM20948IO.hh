@@ -14,19 +14,20 @@
 #include <string>
 #include <iostream>
 
+namespace gramsballoon{
 class ICM20948IO
 {
 public:
     ICM20948IO();
     ~ICM20948IO() = default;
     bool initialise();
-    bool measure();
+    void measure();
     static double getTime();
     const IMUData *getData();
     void wait_for_process();
     void calibrateGyro();
 
-    void setDevicePath(std::string &devicePath);
+    void setDevicePath(const std::string &device_path);
 
 private:
     ICM20948::Config conf_;
@@ -35,5 +36,5 @@ private:
     double currentTime_;
     std::string devicePath_;
 };
-
+}
 #endif /*ICM20948IO_H*/
