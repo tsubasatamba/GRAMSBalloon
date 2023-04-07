@@ -81,9 +81,4 @@ namespace gramsballoon
         return AS_OK;
     }
 
-    void ReceiveTelemetry::interpretTelemetry()
-    {
-        teldef_->interpret()
-    }
-
 } // namespace gramsballoon

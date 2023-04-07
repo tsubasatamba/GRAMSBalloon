@@ -27,8 +27,6 @@ namespace gramsballoon
         anlnext::ANLStatus mod_analyze() override;
         anlnext::ANLStatus mod_finalize() override;
 
-        void interpretTelemetry();
-
     private:
         std::vector<uint8_t> telemetry_;
         std::queue<uint8_t> que_;
