@@ -41,8 +41,11 @@ endif()
 if(GB_USE_ICM20948)
   list(APPEND cxx_definitions -DUSE_ICM20948)
 endif()
+
 set(SWIG_FLAGS ${cxx_definitions})
 add_definitions(${cxx_definitions})
+
+message("-- cxx_definitions: ${cxx_definitions}")
 
 ########################################################
 include(CreateSwigRuby)
