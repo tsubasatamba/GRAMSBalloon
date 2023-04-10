@@ -23,6 +23,7 @@ link_directories(
 set(GB_MODULES
   src/SimpleLoop.cc
   src/GetRaspiStatus.cc
+  src/ReceiveTelemetry.cc
   )
 
 if(GB_USE_PIGPIO)

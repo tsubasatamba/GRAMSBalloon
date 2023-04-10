@@ -31,6 +31,7 @@
 #ifdef USE_ICM20948
 #include "MeasureAcceleration.hh"
 #endif
+#include "ReceiveTelemetry.hh"
 %}
 
 %include "std_vector.i"
@@ -123,5 +124,11 @@ public:
   MeasureAcceleration();
 };
 #endif
+
+class ReceiveTelemetry :  public anlnext::BasicModule
+{
+public:
+  ReceiveTelemetry();
+};
 
 } // namespace GRAMSBalloon
