@@ -41,8 +41,9 @@ namespace gramsballoon
 
   protected:
     SystemControl(const SystemControl &r) = default;
-    static void reboot_system();
-    static void shutdown_system();
+  public:
+    static int reboot_system();
+    static int shutdown_system();
   };
 } /*namespace gramsballoon*/
 #endif /*SystemControl_HH*/

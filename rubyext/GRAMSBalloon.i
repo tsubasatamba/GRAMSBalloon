@@ -33,6 +33,7 @@
 #endif
 #include "ReceiveTelemetry.hh"
 #include "GetSystemStatus.hh"
+#include "ShutdownSystem.hh"
 %}
 
 %include "std_vector.i"
@@ -136,6 +137,11 @@ class GetSystemStatus : public anlnext::BasicModule
 {
 public:
   GetSystemStatus();
+};
+class ShutdownSystem : public anlnext::BasicModule
+{
+public:
+  ShutdownSystem();
 };
 
 } // namespace GRAMSBalloon

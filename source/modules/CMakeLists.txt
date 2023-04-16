@@ -25,6 +25,7 @@ set(GB_MODULES
   src/GetRaspiStatus.cc
   src/ReceiveTelemetry.cc
   src/GetSystemStatus.cc
+  src/ShutdownSystem.cc
   )
 
 if(GB_USE_PIGPIO)

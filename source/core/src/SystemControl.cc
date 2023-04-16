@@ -2,15 +2,15 @@
 
 namespace gramsballoon
 {
-  void SystemControl::reboot_system()
+  int SystemControl::reboot_system()
   {
     sync();
-    reboot(LINUX_REBOOT_CMD_RESTART);
+    return reboot(LINUX_REBOOT_CMD_RESTART);
   }
-  void SystemControl::shutdown_system()
+  int SystemControl::shutdown_system()
   {
     sync();
-    reboot(LINUX_REBOOT_CMD_HALT);
+    return reboot(LINUX_REBOOT_CMD_HALT);
   }
   SystemStatus::SystemStatus(const std::string &path)
   {
