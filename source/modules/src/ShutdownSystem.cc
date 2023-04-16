@@ -1,7 +1,10 @@
 #include "ShutdownSystem.hh"
+#include <string.h>
+#include <errno.h>
 
 using namespace anlnext;
-namespace gramsballoon{
+namespace gramsballoon
+{
 
   ANLStatus ShutdownSystem::mod_define()
   {
@@ -13,18 +16,25 @@ namespace gramsballoon{
   {
     return AS_OK;
   }
-  ANLStatus ShutdownSystem::mod_finalize(){
+  ANLStatus ShutdownSystem::mod_finalize() /*this could be changed to mod_analyze*/
+  {
     int rslt = 0;
     if (confirmed_)
     {
-      if (reboot_){
+      if (reboot_)
+      {
         rslt = SystemControl::reboot_system();
       }
-      else{
+      else
+      {
         rslt = SystemControl::shutdown_system();
       }
     }
-    if (rslt < 0){
+    if (rslt < 0)
+    {
+#if 1
+      std::cerr << "Error code: " << strerror(errno) << std::endl;
+#endif
       return AS_ERROR;
     }
     return AS_OK;

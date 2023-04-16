@@ -6,7 +6,7 @@ require 'GRAMSBalloon'
 class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::ShutdownSystem
-        with_parameters(confirmed:true,restart:true)
+        with_parameters(confirmed:true,reboot:true)
     end
 end
 
