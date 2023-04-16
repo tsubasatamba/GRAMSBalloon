@@ -12,6 +12,11 @@ namespace gramsballoon
     sync();
     reboot(LINUX_REBOOT_CMD_HALT);
   }
+  SystemStatus::SystemStatus(const std::string &path)
+  {
+    path_ = path;
+    statfs64(path_.data(), &capacity_);
+  }
   SystemStatus::SystemStatus()
   {
     path_ = "/";

@@ -1,3 +1,8 @@
+/**
+ * Classes to control Linux system and get status about the system
+ * @authors Tsubasa Tamba, Shota Arai
+ * @date 2023-04-16s
+ */
 #ifndef SystemControl_HH
 #define SystemControl_HH 1
 #include <sys/reboot.h>
@@ -14,17 +19,18 @@ namespace gramsballoon
   class SystemStatus
   {
   public:
+    SystemStatus(const std::string &path);
     SystemStatus();
     ~SystemStatus() = default;
     long long get_freesize();
     long long get_allsize();
 
   protected:
-    SystemStatus(SystemStatus &r) = default;
+    SystemStatus(const SystemStatus &r) = default;
 
   private:
     struct statfs64 capacity_;
-    std::string path_ = "";
+    std::string path_;
   };
 
   class SystemControl
@@ -34,7 +40,7 @@ namespace gramsballoon
     ~SystemControl() = default;
 
   protected:
-    SystemControl(SystemControl &r) = default;
+    SystemControl(const SystemControl &r) = default;
     static void reboot_system();
     static void shutdown_system();
   };

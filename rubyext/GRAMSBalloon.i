@@ -32,6 +32,7 @@
 #include "MeasureAcceleration.hh"
 #endif
 #include "ReceiveTelemetry.hh"
+#include "GetSystemStatus.hh"
 %}
 
 %include "std_vector.i"
@@ -129,6 +130,12 @@ class ReceiveTelemetry :  public anlnext::BasicModule
 {
 public:
   ReceiveTelemetry();
+};
+
+class GetSystemStatus : public anlnext::BasicModule
+{
+public:
+  GetSystemStatus();
 };
 
 } // namespace GRAMSBalloon

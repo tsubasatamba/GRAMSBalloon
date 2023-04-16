@@ -24,6 +24,7 @@ set(GB_MODULES
   src/SimpleLoop.cc
   src/GetRaspiStatus.cc
   src/ReceiveTelemetry.cc
+  src/GetSystemStatus.cc
   )
 
 if(GB_USE_PIGPIO)
@@ -77,4 +78,3 @@ if(INSTALL_HEADERS)
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include/GRAMSBalloon
     FILES_MATCHING PATTERN "*.hh")
 endif(INSTALL_HEADERS)
-
