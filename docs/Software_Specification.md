@@ -7,7 +7,7 @@
 ## 目的
 
 
-
+## 全体像
 
 
 ## ANL Modules
@@ -23,10 +23,28 @@
 - なし。
 
 #### 仕様
-- 
+- <b>mod_pre_initialize</b><br>
+  <tt>ADIO->initialize()</tt> で、Analog Discovery の初期化を行う。接続されているデバイスを検出し、ハンドラーIDを設定する。Analog Discovery を扱う他のモジュールは、本モジュールにアクセスすることで、ハンドラーのリストを取得する。
+- <b>mod_finalize</b><br>
+  Analog Discovery の終了操作を行う。
+
+#### Core class
+- AnalogDiscoveryIO.cc
+
 
 ### ControlHighVoltage
 
+#### 機能
+
+- Analog Discovery のDAC側にアクセスし、任意の電圧を出力する。
+
+#### 入力パラメータ
+
+- <modpar>device_id</modpar> (default: 0)<br>
+- <modpar>channel</modpar> (default: 0)<br>
+- <modpar>sleep</modpar> (default: 0)<br>
+
+#### 仕様
 
 ### GetEnvironmentalData
 
@@ -54,6 +72,7 @@
 #### Core class
 - BME680IO.cc
 
+### MeasureAcceleration
 
 ### MeasureTemperatureWithRTDSensor
 
@@ -110,7 +129,7 @@ SPI通信を確立する。他のSPI通信を用いるmoduleは必ず本module�
 - <b>mod_finalize</b><br>
   <tt>spi_close</tt>と<tt>pigpio_stop</tt>により、SPI通信の終了作業を行う。
 
-### <span style="color: blue;">加速度センサ (仮)</span>
+
 
 
 <modpar>aaaspi_flags</modpar>bcd
