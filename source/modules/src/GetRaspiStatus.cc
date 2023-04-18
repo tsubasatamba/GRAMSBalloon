@@ -54,14 +54,14 @@ ANLStatus GetRaspiStatus::mod_finalize()
 
 int GetRaspiStatus::getCapacity()
 {
-  statfs64 capacity;
+  struct statfs64 capacity;
   int rslt = statfs64(path_.c_str(), &capacity);
   if (rslt < 0) {
     std::cerr << "failed in get_freesize(). Code: " << rslt << std::endl;
     return -1;
   }
-  capacityFree_ = capacity_.f_bfree * capacity_.f_bsize;
-  capacityAll_ = capacity_.f_blocks * capacity_.f_bsize;
+  capacityFree_ = capacity.f_bfree * capacity.f_bsize;
+  capacityAll_ = capacity.f_blocks * capacity.f_bsize;
   return 0;
 }
 

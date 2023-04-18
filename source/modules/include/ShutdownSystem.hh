@@ -10,7 +10,6 @@
 #include <anlnext/BasicModule.hh>
 #include <sys/reboot.h>
 #include <linux/reboot.h>
-#include "SystemControl.hh"
 
 namespace gramsballoon {
 
