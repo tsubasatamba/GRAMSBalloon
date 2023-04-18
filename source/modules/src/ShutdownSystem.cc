@@ -9,7 +9,6 @@ namespace gramsballoon {
 ANLStatus ShutdownSystem::mod_analyze()
 {
   int rslt = 0;
-  reboot_ = true;
   if (reboot_) {
     sync();
     rslt = reboot(LINUX_REBOOT_CMD_RESTART);
