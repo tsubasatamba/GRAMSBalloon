@@ -22,7 +22,6 @@ link_directories(
 
 set(GB_MODULES
   src/SimpleLoop.cc
-  src/GetRaspiStatus.cc
   src/ReceiveTelemetry.cc
   )
 
@@ -47,14 +46,22 @@ endif(GB_USE_WAVEFORMS)
 if(GB_USE_ICM20948)
   set(GB_ICM20948_MODULES
     src/MeasureAcceleration.cc
-  )
+    )
 endif(GB_USE_ICM20948)
+
+if(GB_USE_RASPISYS)
+  set(GB_RASPISYS_MODULES
+    src/GetRaspiStatus.cc
+    src/ShutdownSystem.cc
+    )
+endif(GB_USE_RASPISYS)
 
 add_library(GBModules SHARED
   ${GB_MODULES}
   ${GB_PIGPIO_MODULES}
   ${GB_WAVEFORMS_MODULES}
   ${GB_ICM20948_MODULES}
+  ${GB_RASPISYS_MODULES}
   )
 
 target_link_libraries(GBModules
@@ -77,4 +84,3 @@ if(INSTALL_HEADERS)
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include/GRAMSBalloon
     FILES_MATCHING PATTERN "*.hh")
 endif(INSTALL_HEADERS)
-
