@@ -3,41 +3,31 @@
 #include <errno.h>
 
 using namespace anlnext;
-namespace gramsballoon
+
+namespace gramsballoon {
+
+ANLStatus ShutdownSystem::mod_analyze()
 {
+  int rslt = 0;
+  if (reboot_) {
+    rslt = reboot(LINUX_REBOOT_CMD_RESTART);
+  }
+  else if (shutdown_) {
+    rslt = reboot(LINUX_REBOOT_CMD_HALT);
+  }
+ 
+  if (rslt < 0) {
+    std::cerr << "Error in ShutdownSystem::mod_analyze()" << std::endl;
+    std::cerr << "Error code: " << strerror(errno) << std::endl;
+    return AS_QUIT_ERROR;
+  }
+  
+  return AS_OK;
+}
 
-  ANLStatus ShutdownSystem::mod_define()
-  {
-    define_parameter("confirmed", &mod_class::confirmed_);
-    define_parameter("reboot", &mod_class::reboot_);
-    return AS_OK;
-  }
-  ANLStatus ShutdownSystem::mod_initialize()
-  {
-    return AS_OK;
-  }
-  ANLStatus ShutdownSystem::mod_finalize() /*this could be changed to mod_analyze*/
-  {
-    int rslt = 0;
-    if (confirmed_)
-    {
-      if (reboot_)
-      {
-        rslt = SystemControl::reboot_system();
-      }
-      else
-      {
-        rslt = SystemControl::shutdown_system();
-      }
-    }
-    if (rslt < 0)
-    {
-#if 1
-      std::cerr << "Error code: " << strerror(errno) << std::endl;
-#endif
-      return AS_ERROR;
-    }
-    return AS_OK;
-  }
+ANLStatus ShutdownSystem::mod_finalize()
+{
+  return AS_OK;
+}
 
-} /*namespace gramsballoon*/
+} /* namespace gramsballoon */

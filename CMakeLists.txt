@@ -41,6 +41,7 @@ if (GB_MAC)
   set(GB_USE_PIGPIO OFF)
   set(GB_USE_WAVEFORMS OFF)
   set(GB_USE_ICM20948 OFF)
+  set(GB_USE_RASPISYS OFF)
 endif(GB_MAC)
 
 ### External libraries

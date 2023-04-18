@@ -31,11 +31,19 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  int getCapacity();
+
   int TemperatureADC() { return temperatureADC_; }
+  uint64_t CapacityFree() { return capacityFree_; }
+  uint64_t CapacityAll() { return capacityAll_; }
 
 private:
   int temperatureADC_;
   std::shared_ptr<std::ifstream> ifsTemp_;
+  std::string tempFile_;
+  std::string path_;
+  uint64_t capacityFree_ = 0;
+  uint64_t capacityAll_ = 0;
 };
 
 } /* namespace gramsballoon */

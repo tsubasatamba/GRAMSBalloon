@@ -27,13 +27,16 @@
 #ifdef USE_WAVEFORMS
 #include "SendTelemetry.hh"
 #endif
+#ifdef USE_RASPISYS
 #include "GetRaspiStatus.hh"
+#endif
 #ifdef USE_ICM20948
 #include "MeasureAcceleration.hh"
 #endif
 #include "ReceiveTelemetry.hh"
-#include "GetSystemStatus.hh"
+#ifdef USE_RASPISYS
 #include "ShutdownSystem.hh"
+#endif
 %}
 
 %include "std_vector.i"
@@ -113,11 +116,13 @@ public:
 };
 #endif
 
+#ifdef USE_RASPISYS
 class GetRaspiStatus : public anlnext::BasicModule
 {
 public:
   GetRaspiStatus();
 };
+#endif
 
 #ifdef USE_ICM20948
 class MeasureAcceleration :  public anlnext::BasicModule
@@ -133,15 +138,12 @@ public:
   ReceiveTelemetry();
 };
 
-class GetSystemStatus : public anlnext::BasicModule
-{
-public:
-  GetSystemStatus();
-};
+#ifdef USE_RASPISYS
 class ShutdownSystem : public anlnext::BasicModule
 {
 public:
   ShutdownSystem();
 };
+#endif
 
 } // namespace GRAMSBalloon
