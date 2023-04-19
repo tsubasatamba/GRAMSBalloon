@@ -37,6 +37,7 @@
 #ifdef USE_RASPISYS
 #include "ShutdownSystem.hh"
 #endif
+#include "InterpretHKTelemetry.hh"
 %}
 
 %include "std_vector.i"
@@ -146,4 +147,9 @@ public:
 };
 #endif
 
+class InterpretHKTelemetry : public anlnext::BasicModule
+{
+public:
+  InterpretHKTelemetry();
+};
 } // namespace GRAMSBalloon

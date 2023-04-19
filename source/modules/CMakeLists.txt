@@ -23,6 +23,7 @@ link_directories(
 set(GB_MODULES
   src/SimpleLoop.cc
   src/ReceiveTelemetry.cc
+  src/InterpretHKTelemetry.cc
   )
 
 if(GB_USE_PIGPIO)

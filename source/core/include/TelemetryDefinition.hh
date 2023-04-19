@@ -43,6 +43,7 @@ public:
   template<typename T> T getValue(int index);
   template<typename T> void getVector(int index, int num, std::vector<T>& vec);
 
+  void setTelemetry(const std::vector<uint8_t>& v) { telemetry_ = v; }
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
 
   // detector
@@ -55,9 +56,6 @@ public:
   void resizeEnvTemperature(int n) { envTemperature_.resize(n); }
   void resizeEnvHumidity(int n) { envHumidity_.resize(n); }
   void resizeEnvPressure(int n) { envPressure_.resize(n); }
-  std::vector<double>& EnvTemperature() { return envTemperature_; }
-  std::vector<double>& EnvHumidity() { return envHumidity_; }
-  std::vector<double>& EnvPressure() { return envPressure_; }
 
   // daq
   void setEventID(uint32_t v) { eventID_ = v; }
@@ -74,7 +72,36 @@ public:
 
   // command
   void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
+
   
+  // getter
+  timeval TimeNow() { return timeNow_; }
+  uint32_t TelemIndex() { return telemIndex_; }
+  uint32_t EventCount() { return eventCount_; }
+  uint32_t TriggerCount() { return triggerCount_; }
+  uint16_t ChamberPressure() { return chamberPressure_; }
+  const std::vector<uint16_t>& ChamberTemperature() const { return chamberTemperature_; }
+  std::vector<uint16_t>& ChamberTemperature() { return chamberTemperature_; }
+  uint16_t ValveTemperature() { return valveTemperature_; }
+  uint16_t OuterTemperature() { return outerTemperature_; }
+  int32_t TPCHVSetting() { return TPCHVSetting_; }
+  uint16_t TPCHVMeasure() { return TPCHVMeasure_; }
+  int32_t PMTHVSetting() { return PMTHVSetting_; }
+  uint16_t PMTHVMeasure() { return PMTHVMeasure_; }
+  int16_t CPUTemperature() { return CPUTemperature_; }
+  const std::vector<double>& EnvTemperature() const { return envTemperature_; }
+  std::vector<double>& EnvTemperature() { return envTemperature_; }
+  const std::vector<double>& EnvHumidity() const { return envHumidity_; }
+  std::vector<double>& EnvHumidity() { return envHumidity_; }
+  const std::vector<double>& EnvPressure() const { return envPressure_; }
+  std::vector<double>& EnvPressure() { return envPressure_; }
+  int16_t MainCurrent() { return mainCurrent_; }
+  int16_t MainVoltage() { return mainVoltage_; }
+  uint32_t LastCommandIndex() { return lastCommandIndex_; }
+  uint16_t LastCommandCode() { return lastCommandCode_; }
+  uint16_t CommandRejectCount() { return commandRejectCount_; }
+  uint16_t SoftwareErrorCode() { return softwareErrorCode_; }
+
 private:
   std::vector<uint8_t> telemetry_;
   uint16_t telemetryType_;
@@ -91,7 +118,7 @@ private:
   uint16_t TPCHVMeasure_;
   int32_t PMTHVSetting_;
   uint16_t PMTHVMeasure_;
-  int16_t CPUTemperature_;  
+  int16_t CPUTemperature_;
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
