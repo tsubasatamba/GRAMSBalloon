@@ -63,11 +63,15 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   for (int i = 0; i < status; i++) {
     telemetry_.push_back(buffer[i]);
   }
-  #if 0
+  #if 1
   for (int i = 0; i < status;i++) {
     std::cout << "telemetry[" <<i<< "] = "<<static_cast<int>(telemetry_[i]) << std::endl;
   }
   #endif
+
+  // determine if the telemetry is valid or not
+
+  return AS_OK;
 }
 
 ANLStatus ReceiveTelemetry::mod_finalize()

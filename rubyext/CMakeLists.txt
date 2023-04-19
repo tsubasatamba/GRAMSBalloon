@@ -11,6 +11,7 @@ set(RUBY_EXT_INCLUDE_DIRS
   ../source/ICM20948-linux-i2c/I2C/src
   ${ANLNEXT_INC_DIR}
   ${BOOST_INC_DIR}
+  ${HSQUICKLOOK_INC_DIR}
   )
 set(RUBY_EXT_LIBRARY_DIRS
   /usr/local/lib
@@ -27,6 +28,8 @@ set(RUBY_EXT_LIBRARIES
   ${PIGPIO_LIB_RT}
   ${WAVEFORMS_LIB}
   ${ICM20948_LIB}
+  ${HSQUICKLOOK_LIB}
+  ${MONGODB_LIB}
 )
 
 
@@ -43,6 +46,9 @@ if(GB_USE_ICM20948)
 endif()
 if(GB_USE_RASPISYS)
   list(APPEND cxx_definitions -DUSE_RASPISYS)
+endif()
+if(GB_USE_HSQUICKLOOK)
+  list(APPEND cxx_definitions -DUSE_HSQUICKLOOK)
 endif()
 
 set(SWIG_FLAGS ${cxx_definitions})
