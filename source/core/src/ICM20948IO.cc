@@ -11,6 +11,8 @@ ICM20948IO::~ICM20948IO() = default;
 bool ICM20948IO::initialize()
 {
   strcpy(conf_.mDevice, devicePath_.c_str());
+  conf_.mAcc.mRange = ICM20948::ACC_RANGE::ACC_RANGE_16G;
+  conf_.mGyro.mRange = ICM20948::GYRO_RANGE::GYRO_RANGE_1000DPS;
   bool rslt = icm_.initialise(conf_);
   if (!rslt) {
     std::cerr << "Device not found" << std::endl;

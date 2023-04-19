@@ -6,7 +6,7 @@ class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::ReceiveCommand
         with_parameters(serial_path: "/dev/ttyAMA0")
-        
+
         chain GRAMSBalloon::SPIManager
         with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 1)
 
@@ -28,7 +28,8 @@ class MyApp < ANL::ANLApp
             sample_frequency: 2.0, #MHz
             output_filename_base: "DAQ_output",
             num_events_per_file: 100
-        )        
+        )
+
 
         chain GRAMSBalloon::SendTelemetry
         with_parameters(
