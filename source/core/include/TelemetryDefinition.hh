@@ -75,13 +75,15 @@ public:
 
   
   // getter
+  uint16_t TelemetryType() { return telemetryType_; }
   timeval TimeNow() { return timeNow_; }
-  uint32_t TelemIndex() { return telemIndex_; }
+  uint32_t TelemetryIndex() { return telemetryIndex_; }
   uint32_t EventCount() { return eventCount_; }
   uint32_t TriggerCount() { return triggerCount_; }
   uint16_t ChamberPressure() { return chamberPressure_; }
   const std::vector<uint16_t>& ChamberTemperature() const { return chamberTemperature_; }
   std::vector<uint16_t>& ChamberTemperature() { return chamberTemperature_; }
+  uint16_t ChamberTemperature(int index) { return (index<(int)chamberTemperature_.size()) ? chamberTemperature_[index] : 0 ; }
   uint16_t ValveTemperature() { return valveTemperature_; }
   uint16_t OuterTemperature() { return outerTemperature_; }
   int32_t TPCHVSetting() { return TPCHVSetting_; }
@@ -91,10 +93,22 @@ public:
   int16_t CPUTemperature() { return CPUTemperature_; }
   const std::vector<double>& EnvTemperature() const { return envTemperature_; }
   std::vector<double>& EnvTemperature() { return envTemperature_; }
+  double EnvTemperature(int index) { return index<(int)envTemperature_.size() ? envTemperature_[index] : 0 ; }
   const std::vector<double>& EnvHumidity() const { return envHumidity_; }
   std::vector<double>& EnvHumidity() { return envHumidity_; }
+  double EnvHumidity(int index) { return index<(int)envHumidity_.size() ? envHumidity_[index] : 0 ; }
   const std::vector<double>& EnvPressure() const { return envPressure_; }
   std::vector<double>& EnvPressure() { return envPressure_; }
+  double EnvPressure(int index) { return index<(int)envPressure_.size() ? envPressure_[index] : 0 ; }
+  const std::vector<float>& Acceleration() const { return acceleration_; }
+  std::vector<float>& Acceleration() { return acceleration_; }
+  float Acceleration(int index) { return index<(int)acceleration_.size() ? acceleration_[index] : 0 ; }
+  const std::vector<float>& Gyro() const { return gyro_; }
+  std::vector<float>& Gyro() { return gyro_; }
+  float Gyro(int index) { return index<(int)gyro_.size() ? gyro_[index] : 0 ; }
+  const std::vector<float>& Magnet() const { return magnet_; }
+  std::vector<float>& Magnet() { return magnet_; }
+  float Magnet(int index) { return index<(int)magnet_.size() ? magnet_[index] : 0 ; }
   int16_t MainCurrent() { return mainCurrent_; }
   int16_t MainVoltage() { return mainVoltage_; }
   uint32_t LastCommandIndex() { return lastCommandIndex_; }
@@ -106,7 +120,7 @@ private:
   std::vector<uint8_t> telemetry_;
   uint16_t telemetryType_;
   timeval timeNow_;
-  uint32_t telemIndex_ = 0;
+  uint32_t telemetryIndex_ = 0;
   // info
   uint32_t eventCount_;
   uint32_t triggerCount_;
@@ -122,7 +136,9 @@ private:
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
-  // acceleration
+  std::vector<float> acceleration_;
+  std::vector<float> gyro_;
+  std::vector<float> magnet_;
   int16_t mainCurrent_;
   int16_t mainVoltage_;
   uint32_t lastCommandIndex_;

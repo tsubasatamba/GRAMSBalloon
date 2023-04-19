@@ -2,7 +2,10 @@
 #define GRAMSBALOON_PushToMongoDB_H 1
 
 #include <anlnext/BasicModule.hh>
-#include <random>
+#include <hsquicklook/MongoDBClient.hh>
+#include "InterpretHKTelemetry.hh"
+#include "TelemetryDefinition.hh"
+
 
 namespace gramsballoon {
 
@@ -19,8 +22,8 @@ public:
   anlnext::ANLStatus mod_analyze() override;
 
 private:
-  MongoDBClient* mongodb_client_ = nullptr;
-  std::mt19937 random_engine_;
+  hsquicklook::MongoDBClient* mongodbClient_ = nullptr;
+  InterpretHKTelemetry* hkInterpreter_ = nullptr;
 };
 
 } /* namespace gramsballoon */

@@ -17,8 +17,8 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
   gettimeofday(&timeNow_, NULL);
   addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_sec));
   addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_usec));
-  addValue<uint32_t>(telemIndex_);
-  telemIndex_++;
+  addValue<uint32_t>(telemetryIndex_);
+  telemetryIndex_++;
   
   if (telemetry_type==static_cast<int>(TelemetryType::normal)) {
     generateTelemetryNormal();
@@ -117,9 +117,10 @@ void TelemetryDefinition::writeCRC16()
 void TelemetryDefinition::interpret()
 {
   telemetryType_ = getValue<uint16_t>(2);
+  std::cout << "telemetry type: " << telemetryType_ << std::endl;
   timeNow_.tv_sec = getValue<int32_t>(4);
   timeNow_.tv_usec = getValue<int32_t>(8);
-  telemIndex_ = getValue<uint32_t>(12);
+  telemetryIndex_ = getValue<uint32_t>(12);
   eventCount_ = getValue<uint32_t>(16);
   triggerCount_ = getValue<uint32_t>(20);
   chamberPressure_ = getValue<uint16_t>(24);
@@ -147,7 +148,22 @@ void TelemetryDefinition::interpret()
     envHumidity_[i] = static_cast<double>(hum[i])*0.1;
     envPressure_[i] = static_cast<double>(pre[i])*0.1;
   }
-  // acceleration
+
+  acceleration_.resize(3);
+  gyro_.resize(3);
+  magnet_.resize(3);
+  std::vector<int16_t> acc(3);
+  std::vector<int16_t> gyr(3);
+  std::vector<int16_t> mag(3);
+  getVector<int16_t>(80, 3, acc);
+  getVector<int16_t>(86, 3, gyr);
+  getVector<int16_t>(92, 3, mag);
+  for (int i=0; i<3; i++) {
+    acceleration_[i] = static_cast<double>(acc[i]*0.01);
+    gyro_[i] = static_cast<double>(gyr[i]*0.01);
+    magnet_[i] = static_cast<double>(mag[i]*0.01);
+  }
+
   mainCurrent_ = getValue<int16_t>(98);
   mainVoltage_ = getValue<int16_t>(100);
   lastCommandIndex_ = getValue<uint32_t>(102);
@@ -201,8 +217,9 @@ T TelemetryDefinition::getValue(int index)
 
   uint32_t v = 0;
   for (int i=0; i<byte; i++) {
+    const int j = index + i;
     const int shift = 8 * (byte-1-i);
-    v |= telemetry_[i] << (shift);
+    v |= telemetry_[j] << (shift);
   }
   return static_cast<T>(v);
 }

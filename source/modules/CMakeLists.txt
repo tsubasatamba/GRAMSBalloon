@@ -10,6 +10,8 @@ include_directories(
   ${G4_INC_DIR}
   ${BOOST_INC_DIR}
   ${PIGPIO_INC_DIR}
+  ${HSQUICKLOOK_INC_DIR}
+  #/Users/tambatsubasa/include/hsquicklook
   )
 
 link_directories(
@@ -57,12 +59,19 @@ if(GB_USE_RASPISYS)
     )
 endif(GB_USE_RASPISYS)
 
+if(GB_USE_HSQUICKLOOK)
+  set(GB_HSQUICKLOOK_MODULES
+    src/PushToMongoDB.cc
+  )
+endif(GB_USE_HSQUICKLOOK)
+
 add_library(GBModules SHARED
   ${GB_MODULES}
   ${GB_PIGPIO_MODULES}
   ${GB_WAVEFORMS_MODULES}
   ${GB_ICM20948_MODULES}
   ${GB_RASPISYS_MODULES}
+  ${GB_HSQUICKLOOK_MODULES}
   )
 
 target_link_libraries(GBModules
@@ -76,6 +85,8 @@ target_link_libraries(GBModules
   ${PIGPIO_LIB_RT}
   ${WAVEFORMS_LIB}
   ${ICM20948_LIB}
+  ${MONGODB_LIB}
+  ${HSQUICKLOOK_LIB}
   )
 
 install(TARGETS GBModules LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

@@ -4,8 +4,8 @@
 #include <boost/format.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
-#include "MongoDBClient.hh"
-#include "DocumentBuilder.hh"
+#include <hsquicklook/DocumentBuilder.hh>
+
 
 using namespace anlnext;
 
@@ -22,30 +22,30 @@ ANLStatus PushToMongoDB::mod_define()
 
 ANLStatus PushToMongoDB::mod_initialize()
 {
-  get_module_NC("MongoDBClient", &mongodb_client_);
-  mongodb_client_->createCappedCollection("grams", 1*1024*1024);
+  get_module_NC("MongoDBClient", &mongodbClient_);
+  mongodbClient_->createCappedCollection("grams", 1*1024*1024);
 
-  get_module("InterpretHKTelemetry", &hk_telemetry_);
+  get_module_NC("InterpretHKTelemetry", &hkInterpreter_);
 
   return AS_OK;
 }
 
 ANLStatus PushToMongoDB::mod_analyze()
 {
-  const TelemetryDefinition hk_info = hk_telemetry_->getHKTelemetry();
+  TelemetryDefinition* hk_telemdef = hkInterpreter_->Telemdef();
 
-  DocumentBuilder builder("Telemetry", "HK");
+  hsquicklook::DocumentBuilder builder("Telemetry", "HK");
   builder.setTI(0);
   builder.setTimeNow();
 
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start"           << hk_info->Start()
-      << "Telemetry_Type"  << hk_info->TelemetryType()
-      << "Time"            << hk_info->Time()
-      << "Time_us"         << hk_info->Time_us()
-      << "Telemetry_Index" << hk_info->Telemetry_Index()
+      << "Start"           << 0
+      << "Telemetry_Type"  << static_cast<int>(hk_telemdef->TelemetryType())
+      << "Time"            << static_cast<int>((hk_telemdef->TimeNow()).tv_sec)
+      << "Time_us"         << static_cast<int>((hk_telemdef->TimeNow()).tv_usec)
+      << "Telemetry_Index" << static_cast<int>(hk_telemdef->TelemetryIndex())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -53,18 +53,18 @@ ANLStatus PushToMongoDB::mod_analyze()
   {
     const std::string section_name = "Detector";
     auto section = bsoncxx::builder::stream::document{}
-      << "Event_Count"                  << hk_info->Event_Count()
-      << "Trigger_Count"                << hk_info->Trigger_Count()
-      << "Chamber_Puressure"            << hk_info->Trigger_Count()
-      << "Chamber_Temperature_1"        << hk_info->Trigger_Count()
-      << "Chamber_Temperature_2"        << hk_info->Trigger_Count()
-      << "Chamber_Temperature_3"        << hk_info->Trigger_Count()
-      << "Valve_Temperature"            << hk_info->Trigger_Count()
-      << "Outer_Temperature"            << hk_info->Trigger_Count()
-      << "TPC_High_Voltage_Setting"     << hk_info->Trigger_Count()
-      << "TPC_High_Voltage_Measurement" << hk_info->Trigger_Count()
-      << "PMT_High_Voltage_Setting"     << hk_info->Trigger_Count()
-      << "PMT_High_Voltage_Measurement" << hk_info->Trigger_Count()
+      << "Event_Count"                  << static_cast<int>(hk_telemdef->EventCount())
+      << "Trigger_Count"                << static_cast<int>(hk_telemdef->TriggerCount())
+      << "Chamber_Puressure"            << static_cast<int>(hk_telemdef->ChamberPressure())
+      << "Chamber_Temperature_1"        << static_cast<int>(hk_telemdef->ChamberTemperature(0))
+      << "Chamber_Temperature_2"        << static_cast<int>(hk_telemdef->ChamberTemperature(1))
+      << "Chamber_Temperature_3"        << static_cast<int>(hk_telemdef->ChamberTemperature(2))
+      << "Valve_Temperature"            << static_cast<int>(hk_telemdef->ValveTemperature())
+      << "Outer_Temperature"            << static_cast<int>(hk_telemdef->OuterTemperature())
+      << "TPC_High_Voltage_Setting"     << static_cast<int>(hk_telemdef->TPCHVSetting())
+      << "TPC_High_Voltage_Measurement" << static_cast<int>(hk_telemdef->TPCHVMeasure())
+      << "PMT_High_Voltage_Setting"     << static_cast<int>(hk_telemdef->PMTHVSetting())
+      << "PMT_High_Voltage_Measurement" << static_cast<int>(hk_telemdef->PMTHVMeasure())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -73,18 +73,22 @@ ANLStatus PushToMongoDB::mod_analyze()
     const std::string section_name = "DAQ_Vessel";
     auto section_stream = bsoncxx::builder::stream::document{};
     section_stream
-      << "CPU_Temperature" << hk_info->CPU_Temperature();
-    for (int k=1; k<=5; k++) {
-      section_stream << (boost::format("HK_Temperature_%d") % k).str() << hk_info->HK_Temperatures(k);
-      section_stream << (boost::format("HK_Humidity_%d") % k).str()    << hk_info->HK_Humidity(k);
-      section_stream << (boost::format("HK_Pressure_%d") % k).str()    << hk_info->HK_Pressure(k);
+      << "CPU_Temperature" << hk_telemdef->CPUTemperature();
+    for (int i=0; i<5; i++) {
+      const int k = i+1;
+      section_stream << (boost::format("HK_Temperature_%d") % k).str() << hk_telemdef->EnvTemperature(i);
+      section_stream << (boost::format("HK_Humidity_%d") % k).str()    << hk_telemdef->EnvHumidity(i);
+      section_stream << (boost::format("HK_Pressure_%d") % k).str()    << hk_telemdef->EnvPressure(i);
     }
-    for (int k=1; k<=9; k++) {
-      section_stream << (boost::format("Acceleration_%d") % k).str() << hk_info->Acceleration(k);
+    for (int i=0; i<3; i++) {
+      const char c = 'x' + i;
+      section_stream << (boost::format("Acceleration_%s") % c).str() << hk_telemdef->Acceleration(i);
+      section_stream << (boost::format("Gyro_%d") % c).str() << hk_telemdef->Gyro(i);
+      section_stream << (boost::format("Acceleration_%d") % c).str() << hk_telemdef->Magnet(i);
     }
     section_stream
-      << "Main_Current" << hk_info->MainCurrent()
-      << "Main_Voltage" << hk_info->MainVoltage();
+      << "Main_Current" << static_cast<int>(hk_telemdef->MainCurrent())
+      << "Main_Voltage" << static_cast<int>(hk_telemdef->MainVoltage());
     auto section = section_stream << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -92,18 +96,18 @@ ANLStatus PushToMongoDB::mod_analyze()
   {
     const std::string section_name = "Software";
     auto section = bsoncxx::builder::stream::document{}
-      << "Last_Command_Index"   << hk_info->Event_Count()
-      << "Last_Command_Code"    << hk_info->Event_Count()
-      << "Command_Reject_Count" << hk_info->Event_Count()
-      << "Software_Error_Code"  << hk_info->Event_Count()
+      << "Last_Command_Index"   << static_cast<int>(hk_telemdef->LastCommandIndex())
+      << "Last_Command_Code"    << static_cast<int>(hk_telemdef->LastCommandCode())
+      << "Command_Reject_Count" << static_cast<int>(hk_telemdef->CommandRejectCount())
+      << "Software_Error_Code"  << static_cast<int>(hk_telemdef->SoftwareErrorCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
 
   auto doc = builder.generate();
-  mongodb_client_->push("grams", doc);
+  mongodbClient_->push("grams", doc);
 
   return AS_OK;
 }
 
-} /* namespace hsquicklook */
+} /* namespace gramsballoon */

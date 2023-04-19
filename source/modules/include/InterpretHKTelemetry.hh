@@ -25,6 +25,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  TelemetryDefinition* Telemdef() { return telemdef_.get(); }
   
 private:
   std::shared_ptr<TelemetryDefinition> telemdef_;

@@ -38,6 +38,9 @@
 #include "ShutdownSystem.hh"
 #endif
 #include "InterpretHKTelemetry.hh"
+#ifdef USE_HSQUICKLOOK
+#include "PushToMongoDB.hh"
+#endif
 %}
 
 %include "std_vector.i"
@@ -152,4 +155,12 @@ class InterpretHKTelemetry : public anlnext::BasicModule
 public:
   InterpretHKTelemetry();
 };
+
+#ifdef USE_HSQUICKLOOK
+class PushToMongoDB : public anlnext::BasicModule
+{
+public:
+  PushToMongoDB();
+};
+#endif
 } // namespace GRAMSBalloon
