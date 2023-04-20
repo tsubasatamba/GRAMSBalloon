@@ -10,7 +10,7 @@ class MyApp < ANL::ANLApp
         chain GRAMSBalloon::SPIManager,"SPI1"
         with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 1)
 
-        chian GRAMSBalloon::SPIManager,"SPI2"
+        chain GRAMSBalloon::SPIManager,"SPI2"
         with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7))
 
         chain GRAMSBalloon::MeasureTemperatureWithRTDSensor,"RTD1"
