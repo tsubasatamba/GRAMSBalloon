@@ -5,7 +5,7 @@ require 'GRAMSBalloon'
 class MyApp < ANL::ANLApp
     def setup()
         chain GRAMSBalloon::ReceiveCommand
-        with_parameters(serial_path: "/dev/ttyAMA1")
+        with_parameters(serial_path: "/dev/ttyAMA0")
 
         chain GRAMSBalloon::SPIManager,"SPI1"
         with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 1)
@@ -64,7 +64,8 @@ class MyApp < ANL::ANLApp
 
         chain GRAMSBalloon::SendTelemetry
         with_parameters(
-            serial_path: "/dev/ttyAMA0"
+            serial_path: "/dev/ttyAMA0",
+            MeasureTemperature_module_names: ["RTD1","RTD2","RTD3","RTD4","RTD5"]
         )
     end
 end
