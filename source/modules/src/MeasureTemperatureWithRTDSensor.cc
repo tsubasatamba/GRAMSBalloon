@@ -32,7 +32,7 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_pre_initialize()
   }
   get_module_NC(SPIManagerName_, &SPIManager_);
   SPIManager_->addChipSelect(chipSelect_);
-  
+
   return AS_OK;
 }
 
@@ -40,7 +40,7 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_initialize()
 {
   const unsigned int spihandler = SPIManager_ -> Interface() -> SPIHandler();
   const int pi = SPIManager_ -> Interface() -> GPIOHandler();
-  
+
   interface_ -> setSPIHandler(spihandler);
   interface_ -> setChipSelect(chipSelect_);
   interface_ -> setGPIOHandler(pi);
@@ -67,12 +67,12 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
   std::cout << "temperature ADC: " << TemperatureADC() << std::endl;
   std::cout << " temperature : " << temperature << std::endl;
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  
+
   return AS_OK;
 }
 
 ANLStatus MeasureTemperatureWithRTDSensor::mod_finalize()
-{  
+{
   return AS_OK;
 }
 
