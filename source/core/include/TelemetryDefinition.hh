@@ -18,9 +18,9 @@
 namespace gramsballoon {
 
 enum class TelemetryType {
-  normal = 1,
-  wave = 2,
-  status = 3
+  HK = 1,
+  WF = 2,
+  Status = 3
 };
 
 class TelemetryDefinition
