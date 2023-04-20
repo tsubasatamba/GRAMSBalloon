@@ -64,7 +64,7 @@ class MyApp < ANL::ANLApp
 
         chain GRAMSBalloon::SendTelemetry
         with_parameters(
-            serial_path: "/dev/ttyAMA0",
+            serial_path: "/dev/ttyAMA1",
             MeasureTemperature_module_names: ["RTD1","RTD2","RTD3","RTD4","RTD5"]
         )
     end
