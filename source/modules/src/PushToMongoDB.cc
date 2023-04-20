@@ -41,7 +41,7 @@ ANLStatus PushToMongoDB::mod_analyze()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start"           << 0
+      << "Start"           << static_cast<int>(hk_telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(hk_telemdef->TelemetryType())
       << "Time"            << static_cast<int>((hk_telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((hk_telemdef->TimeNow()).tv_usec)

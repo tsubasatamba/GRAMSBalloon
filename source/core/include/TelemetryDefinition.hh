@@ -36,14 +36,17 @@ public:
   void writeCRC16();
   void clear();
 
+  bool setTelemetry(const std::vector<uint8_t>& v);
   void interpret();
+  void interpretHK();
+  void interpretWF();
+  void interpretStatus();
   
   template<typename T> void addValue(T input);
   template<typename T> void addVector(std::vector<T>& input);
   template<typename T> T getValue(int index);
   template<typename T> void getVector(int index, int num, std::vector<T>& vec);
 
-  void setTelemetry(const std::vector<uint8_t>& v) { telemetry_ = v; }
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
 
   // detector
@@ -75,9 +78,12 @@ public:
 
   
   // getter
+  uint16_t StartCode() { return startCode_; }
   uint16_t TelemetryType() { return telemetryType_; }
   timeval TimeNow() { return timeNow_; }
   uint32_t TelemetryIndex() { return telemetryIndex_; }
+  uint16_t CRC() { return crc_; }
+  uint16_t StopCode() { return stopCode_; }
   uint32_t EventCount() { return eventCount_; }
   uint32_t TriggerCount() { return triggerCount_; }
   uint16_t ChamberPressure() { return chamberPressure_; }
@@ -118,10 +124,16 @@ public:
 
 private:
   std::vector<uint8_t> telemetry_;
+  // header
+  uint16_t startCode_;
   uint16_t telemetryType_;
   timeval timeNow_;
-  uint32_t telemetryIndex_ = 0;
-  // info
+  uint32_t telemetryIndex_;
+  // footer
+  uint16_t crc_;
+  uint16_t stopCode_;
+
+  // HK
   uint32_t eventCount_;
   uint32_t triggerCount_;
   uint16_t chamberPressure_;

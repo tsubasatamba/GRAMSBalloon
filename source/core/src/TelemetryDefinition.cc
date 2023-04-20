@@ -20,13 +20,13 @@ void TelemetryDefinition::generateTelemetry(int telemetry_type)
   addValue<uint32_t>(telemetryIndex_);
   telemetryIndex_++;
   
-  if (telemetry_type==static_cast<int>(TelemetryType::normal)) {
+  if (telemetry_type==static_cast<int>(TelemetryType::HK)) {
     generateTelemetryNormal();
   }
-  else if (telemetry_type==static_cast<int>(TelemetryType::wave)) {
+  else if (telemetry_type==static_cast<int>(TelemetryType::WF)) {
     generateTelemetryWave();
   }
-  else if (telemetry_type==static_cast<int>(TelemetryType::status)) {
+  else if (telemetry_type==static_cast<int>(TelemetryType::Status)) {
     generateTelemetryStatus();
   }
   else {
@@ -114,13 +114,60 @@ void TelemetryDefinition::writeCRC16()
   addValue<uint16_t>(crc);
 }
 
+bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
+{
+  const int n = v.size();
+  if (n<6) {
+    std::cerr << "Telemetry is too short!!: length = " << n << std::endl; 
+    return false;
+  }
+
+  if (v[0]!=0xeb || v[1]!=0x90) {
+    std::cerr << "start code incorect" << std::endl;
+    return false;
+  }
+  if (v[n-2]!=0xc5 || v[n-1]!=0xc5) {
+    std::cerr << "stop code incorrect" << std::endl;
+    return false;
+  }
+
+  telemetry_ = v;
+  std::vector<uint8_t> telem_without_fotter;
+  for (int i=0; i<n-4; i++) {
+    telem_without_fotter.push_back(v[i]);
+  }
+  
+  uint16_t crc_calc = calcCRC16(telem_without_fotter);
+  uint16_t crc_attached = getValue<uint16_t>(n-4);
+  if (crc_calc != crc_attached) {
+    std::cerr << "Invalid command: CRC16 not appropriate" << std::endl;
+    return false;
+  }
+
+  return true;
+}
+
 void TelemetryDefinition::interpret()
 {
+  startCode_ = getValue<uint16_t>(0);
   telemetryType_ = getValue<uint16_t>(2);
   std::cout << "telemetry type: " << telemetryType_ << std::endl;
   timeNow_.tv_sec = getValue<int32_t>(4);
   timeNow_.tv_usec = getValue<int32_t>(8);
   telemetryIndex_ = getValue<uint32_t>(12);
+  if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::HK)) {
+    interpretHK();
+  }
+  else if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::WF)) {
+    interpretWF();
+  }
+  else if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::Status)) {
+    interpretStatus();
+  }
+}
+
+void TelemetryDefinition::interpretHK()
+{
   eventCount_ = getValue<uint32_t>(16);
   triggerCount_ = getValue<uint32_t>(20);
   chamberPressure_ = getValue<uint16_t>(24);
@@ -170,9 +217,15 @@ void TelemetryDefinition::interpret()
   lastCommandCode_ = getValue<uint16_t>(106);
   commandRejectCount_ = getValue<uint16_t>(108);
   softwareErrorCode_ = getValue<uint16_t>(110);
-
-
+  crc_ = getValue<uint16_t>(112);
+  stopCode_ = getValue<uint16_t>(114);
 }
+
+void TelemetryDefinition::interpretWF()
+{}
+
+void TelemetryDefinition::interpretStatus()
+{}
 
 void TelemetryDefinition::clear()
 {
