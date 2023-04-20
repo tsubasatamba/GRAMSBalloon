@@ -27,9 +27,9 @@ class TelemetryDefinition
 {
 public:
   TelemetryDefinition();
-  void generateTelemetry(int telem_type);
-  void generateTelemetryNormal();
-  void generateTelemetryWave();
+  void generateTelemetry();
+  void generateTelemetryHK();
+  void generateTelemetryWF();
   void generateTelemetryStatus();
   void writeRTDTemperature();
   void writeEnvironmentalData();
@@ -48,17 +48,7 @@ public:
   template<typename T> void getVector(int index, int num, std::vector<T>& vec);
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
-
-  // detector
-  void setEventCount(uint32_t v) { eventCount_ = v; } 
-
-  // env data
-  void setEnvTemperature(int index, double v) { envTemperature_[index] = v; }
-  void setEnvHumidity(int index, double v) { envTemperature_[index] = v; }
-  void setEnvPressure(int index, double v) { envPressure_[index] = v; }
-  void resizeEnvTemperature(int n) { envTemperature_.resize(n); }
-  void resizeEnvHumidity(int n) { envHumidity_.resize(n); }
-  void resizeEnvPressure(int n) { envPressure_.resize(n); }
+  
 
   // daq
   void setEventID(uint32_t v) { eventID_ = v; }
@@ -73,9 +63,46 @@ public:
   void resizeRTDTemperatureADC(int n) { RTDTemperatureADC_.resize(n); }
   std::vector<int16_t>& RTDTemperatureADC() { return RTDTemperatureADC_; }
 
-  // command
-  void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
 
+  // setter
+  void setTelemetryType(uint16_t v) { telemetryType_ = v; }
+  void setEventCount(uint32_t v) { eventCount_ = v; }
+  void setTriggerCount(uint32_t v) { triggerCount_ = v; }
+  void setChamberPressure(uint16_t v) { chamberPressure_ = v; }
+  void setChamberTemperature(const std::vector<uint16_t>& v) { chamberTemperature_ = v; } //should be fixed
+  void setChamberTemperature(int index, uint16_t v) { if (index<static_cast<int>(chamberTemperature_.size())) chamberTemperature_[index] = v; }
+  void resizeChamberTemperature(int n) { chamberTemperature_.resize(n); }
+  void setValveTemperature(uint16_t v) { valveTemperature_ = v; }
+  void setOuterTemperature(uint16_t v) { outerTemperature_ = v; }
+  void setTPCHVSetting(int32_t v) { TPCHVSetting_ = v; }
+  void setTPCHVMeasure(uint16_t v) {TPCHVMeasure_ = v; }
+  void setPMTHVSetting(int32_t v) { PMTHVSetting_ = v; }
+  void setPMTHVMeasure(uint16_t v) {PMTHVMeasure_ = v; }
+  void setCPUTemperature(int16_t v) { CPUTemperature_ = v; }
+  void setEnvTemperature(const std::vector<double>& v) { envTemperature_ = v; }
+  void setEnvTemperature(int index, double v) { if (index<static_cast<int>(envTemperature_.size())) envTemperature_[index] = v; }
+  void resizeEnvTemperature(int n) { envTemperature_.resize(n); }
+  void setEnvHumidity(const std::vector<double>& v) { envHumidity_ = v; }
+  void setEnvHumidity(int index, double v) { if (index<static_cast<int>(envHumidity_.size())) envTemperature_[index] = v; }
+  void resizeEnvHumidity(int n) { envHumidity_.resize(n); }
+  void setEnvPressure(const std::vector<double>& v) { envPressure_ = v; }
+  void setEnvPressure(int index, double v) { if (index<static_cast<int>(envPressure_.size())) envPressure_[index] = v; }
+  void resizeEnvPressure(int n) { envPressure_.resize(n); }
+  void setAcceleration(const std::vector<float>& v) { acceleration_ = v; }
+  void setAcceleration(int index, float v) { if (index<static_cast<int>(acceleration_.size())) acceleration_[index] = v; }
+  void resizeAcceleration(int n) { acceleration_.resize(n); }
+  void setGyro(const std::vector<float>& v) { gyro_ = v; }
+  void setGyro(int index, float v) { if (index<static_cast<int>(gyro_.size())) gyro_[index] = v; }
+  void resizeGyro(int n) { gyro_.resize(n); }
+  void setMagnet(const std::vector<float>& v) { magnet_ = v; }
+  void setMagnet(int index, float v) { if (index<static_cast<int>(magnet_.size())) magnet_[index] = v; }
+  void resizeMagnet(int n) { magnet_.resize(n); }
+  void setMainCurrent(int16_t v) { mainCurrent_ = v; }
+  void setMainVoltage(int16_t v) { mainVoltage_ = v; }
+  void setLastCommandIndex(uint32_t v) { lastCommandIndex_ = v; }
+  void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
+  void setCommandRejectCount(uint16_t v) { commandRejectCount_ = v; }
+  void setSoftwareErrorCode(uint16_t v) { softwareErrorCode_ = v; }
   
   // getter
   uint16_t StartCode() { return startCode_; }

@@ -6,39 +6,46 @@ namespace gramsballoon {
 
 TelemetryDefinition::TelemetryDefinition()
 {
+  chamberTemperature_.resize(3);
+  envTemperature_.resize(5);
+  envHumidity_.resize(5);
+  envPressure_.resize(5);
+  acceleration_.resize(3);
+  gyro_.resize(3);
+  magnet_.resize(3);
 }
 
-void TelemetryDefinition::generateTelemetry(int telemetry_type)
+void TelemetryDefinition::generateTelemetry()
 {
   clear();
-  uint16_t start_code = 0xeb90;
-  addValue<uint16_t>(start_code);
-  addValue<uint16_t>(static_cast<uint16_t>(telemetry_type));
+  startCode_ = 0xeb90;
+  addValue<uint16_t>(startCode_);
+  addValue<uint16_t>(static_cast<uint16_t>(telemetryType_));
   gettimeofday(&timeNow_, NULL);
   addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_sec));
   addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_usec));
   addValue<uint32_t>(telemetryIndex_);
   telemetryIndex_++;
   
-  if (telemetry_type==static_cast<int>(TelemetryType::HK)) {
-    generateTelemetryNormal();
+  if (telemetryType_==static_cast<int>(TelemetryType::HK)) {
+    generateTelemetryHK();
   }
-  else if (telemetry_type==static_cast<int>(TelemetryType::WF)) {
-    generateTelemetryWave();
+  else if (telemetryType_==static_cast<int>(TelemetryType::WF)) {
+    generateTelemetryWF();
   }
-  else if (telemetry_type==static_cast<int>(TelemetryType::Status)) {
+  else if (telemetryType_==static_cast<int>(TelemetryType::Status)) {
     generateTelemetryStatus();
   }
   else {
-    std::cerr << "telemetry type not set appropriately: telemetry_type = " << telemetry_type << std::endl;
+    std::cerr << "telemetry type not set appropriately: telemetry_type = " << telemetryType_ << std::endl;
     return;
   }
   writeCRC16();
-  uint16_t end_code = 0xc5c5;
-  addValue<uint16_t>(end_code);
+  stopCode_ = 0xc5c5;
+  addValue<uint16_t>(stopCode_);
 }
 
-void TelemetryDefinition::generateTelemetryNormal()
+void TelemetryDefinition::generateTelemetryHK()
 {
   addValue<uint32_t>(eventCount_); // Event count
   addValue<uint32_t>((uint32_t)0); // Trigger count
@@ -62,7 +69,7 @@ void TelemetryDefinition::generateTelemetryNormal()
   addValue<uint16_t>((uint16_t)0); //software error code
 }
 
-void TelemetryDefinition::generateTelemetryWave()
+void TelemetryDefinition::generateTelemetryWF()
 {
   addValue<uint32_t>(eventID_);
   addVector<int16_t>(eventHeader_);
@@ -144,6 +151,12 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
     return false;
   }
 
+  uint16_t type = getValue<uint16_t>(2);
+  if (type==1 && n!=116) {
+    std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
+    return false;
+  }
+
   return true;
 }
 
@@ -163,6 +176,9 @@ void TelemetryDefinition::interpret()
   }
   else if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::Status)) {
     interpretStatus();
+  }
+  else {
+    std::cerr << "could not interpret telemetry: telemetry_type = " << telemetryType_ << std::endl;
   }
 }
 

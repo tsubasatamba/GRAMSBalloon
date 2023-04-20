@@ -75,7 +75,8 @@ ANLStatus SendTelemetry::mod_analyze()
 {
   inputInfo();
 
-  telemdef_->generateTelemetry(telemetryType_);
+  telemdef_->setTelemetryType(telemetryType_);
+  telemdef_->generateTelemetry();
 
   if (telemetryType_==2) {
     telemetryType_ = 1;
