@@ -46,7 +46,7 @@ ANLStatus SendTelemetry::mod_initialize()
 
   const std::string get_raspi_status_md = "GetRaspiStatus";
   if (exist_module(get_raspi_status_md)) {
-    get_module_NC(get_raspi_status_mod, &getRaspiStatus_);
+    get_module_NC(get_raspi_status_md, &getRaspiStatus_);
   }
 
   const int num_modules_env = getEnvironmentalDataModuleNames_.size();
@@ -149,7 +149,6 @@ void SendTelemetry::inputDetectorInfo()
   // TPCHV Measure
   // PMTHV Setting
   // PMTHV Measure
-  telemdef_->setCPUTemperature();
 }
 
 
