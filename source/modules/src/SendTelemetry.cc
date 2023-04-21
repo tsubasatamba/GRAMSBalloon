@@ -138,7 +138,7 @@ void SendTelemetry::inputInfo()
   if (telemetryType_==1) {
     inputDetectorInfo();
     inputHKVesselInfo();
-    inputLastCommandInfo();
+    inputSoftwareInfo();
   }
   else if (telemetryType_==2) {
     ;
@@ -198,12 +198,14 @@ void SendTelemetry::inputHKVesselInfo()
 }
 
 
-void SendTelemetry::inputLastCommandInfo()
+void SendTelemetry::inputSoftwareInfo()
 {
   if (receiveCommand_!=nullptr) {
-    const uint16_t last_command_code = receiveCommand_ -> LastCommandCode();
-    telemdef_->setLastCommandCode(last_command_code);
+    telemdef_->setLastCommandIndex(receiveCommand_->CommandIndex());
+    telemdef_->setLastCommandCode(receiveCommand_ -> CommandCode());
+    telemdef_->setCommandRejectCount(receiveCommand_->CommandRejectCount());
   }
+  // software error code
 }
 
 } /* namespace gramsballoon */

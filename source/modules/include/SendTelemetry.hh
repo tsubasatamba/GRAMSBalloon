@@ -52,7 +52,7 @@ public:
   void inputInfo();
   void inputDetectorInfo();
   void inputHKVesselInfo();
-  void inputLastCommandInfo();
+  void inputSoftwareInfo();
 
   void setTelemetryType(int v) { telemetryType_ = v; }
 

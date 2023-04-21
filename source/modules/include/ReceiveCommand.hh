@@ -40,14 +40,17 @@ public:
 
   void applyCommand();
 
-  uint16_t LastCommandCode() { return comdef_->Code(); }
+  uint16_t CommandCode() { return comdef_->Code(); }
+  uint32_t CommandIndex() { return commandIndex_; }
+  uint16_t CommandRejectCount() { return commandRejectCount_; }
 
 private:
   std::vector<uint8_t> command_;
   std::queue<uint8_t> que_;
   std::shared_ptr<CommandDefinition> comdef_ = nullptr;
   ReadWaveform* readWaveform_ = nullptr;
-  std::string readWaveformModuleName_ = "ReadWaveform";
+  uint32_t commandIndex_ = 0;
+  uint16_t commandRejectCount_ = 0;
 
   //communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;

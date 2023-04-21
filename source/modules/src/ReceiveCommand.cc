@@ -30,15 +30,14 @@ ANLStatus ReceiveCommand::mod_define()
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
-  if (exist_module(readWaveformModuleName_)) {
-    get_module_NC(readWaveformModuleName_, &readWaveform_);
+  const std::string read_wf_md = "ReadWaveform";
+  if (exist_module(read_wf_md)) {
+    get_module_NC(read_wf_md, &readWaveform_);
   }
 
   // communication
   sc_ = std::make_shared<SerialCommunication>(serialPath_, baudrate_, openMode_);
   sc_ -> initialize();
-
-  
 
   return AS_OK;
 }
@@ -127,9 +126,11 @@ void ReceiveCommand::applyCommand()
   }
   bool status = comdef_->interpret();
   if (!status) {
+    commandRejectCount_++;
     return;
   }
-
+  
+  commandIndex_++;
   const int code = comdef_->Code();
 
   if (code==210) {
