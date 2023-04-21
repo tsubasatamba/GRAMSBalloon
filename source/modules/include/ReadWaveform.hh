@@ -51,6 +51,7 @@ private:
   std::string ADManagerName_ = "";
   AnalogDiscoveryManager* ADManager_ = nullptr;
   std::shared_ptr<DAQIO> daqio_ = nullptr;
+  bool triggerChanged_ = false;
   int trigDevice_ = 0;
   int trigChannel_ = 0;
   int trigMode_ = 2;
