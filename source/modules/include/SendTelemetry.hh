@@ -15,6 +15,7 @@
 #include "MeasureTemperatureWithRTDSensor.hh"
 #include "GetRaspiStatus.hh"
 #include "GetEnvironmentalData.hh"
+#include "MeasureAcceleration.hh"
 #include "SerialCommunication.hh"
 #include "ReceiveCommand.hh"
 
@@ -25,6 +26,7 @@ class ReadWaveform;
 class MeasureTemperatureWithRTDSensor;
 class GetRaspiStatus;
 class GetEnvironmentalData;
+class MeasureAcceleration;
 class ReceiveCommand;
 
 
@@ -70,6 +72,7 @@ private:
   GetRaspiStatus* getRaspiStatus_ = nullptr;
   std::vector<std::string> getEnvironmentalDataModuleNames_;
   std::vector<GetEnvironmentalData*> getEnvironmentalDataVec_;
+  MeasureAcceleration* measureAcceleration_ = nullptr;
   ReceiveCommand* receiveCommand_ = nullptr;
 
   // communication

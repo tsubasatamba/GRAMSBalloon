@@ -67,7 +67,7 @@
   GPIO および SPI のハンドラーをSPIManagerからもらう。
 - <b>mod_analyze</b><br>
   BME680 にアクセスし、温度・湿度・気圧を測定。
-  <span style="color: red">測定の周期やデータの保存方法は未定。</span>
+  
 
 #### Core class
 - BME680IO.cc
@@ -94,7 +94,30 @@
 
 ### InterpretTelemetry
 
+
 ### MeasureAcceleration
+
+#### 機能
+
+- 加速度センサICM20948を用いて、加速度・角速度・地磁気を測定する。
+
+#### 入力パラメータ
+
+- <modpar>device_path</modpar> (default: "/dev/i2c-1")<br>
+  ????
+- <modpar>calibrate_gyro</modpar> (default: false)<br>
+  角速度測定時にキャリブレーションを行うかどうかをbooleanで入力する。
+
+#### 仕様
+- <b>mod_initialize</b><br>
+  ICM20948の初期化作業、および角速度キャリブレーションを行う。
+- <b>mod_analyze</b><br>
+  ICM20948センサにアクセスして加速度・角速度・地磁気のデータを取得する。
+
+#### Core class
+- ICM20948IO.cc
+  
+
 
 ### MeasureTemperatureWithRTDSensor
 

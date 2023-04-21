@@ -63,11 +63,15 @@ ANLStatus SendTelemetry::mod_initialize()
   telemdef_->resizeEnvHumidity(nenv);
   telemdef_->resizeEnvPressure(nenv);
 
+  const std::string measure_acceleration_md = "MeasureAcceleration";
+  if (exist_module(measure_acceleration_md)) {
+    get_module_NC(measure_acceleration_md, &measureAcceleration_);
+  }
+
   const std::string receive_command_md = "ReceiveCommand";
   if (exist_module(receive_command_md)) {
     get_module_NC(receive_command_md, &receiveCommand_);
   }
-
 
   // communication
   sc_ = std::make_shared<SerialCommunication>(serialPath_, baudrate_, openMode_);
@@ -162,6 +166,10 @@ void SendTelemetry::inputHKVesselInfo()
     telemdef_->setEnvHumidity(i, getEnvironmentalDataVec_[i] -> Humidity());
     telemdef_->setEnvPressure(i, getEnvironmentalDataVec_[i] -> Pressure());
   }
+
+  telemdef_->setAcceleration(measureAcceleration_->getAcceleration());
+  telemdef_->setGyro(measureAcceleration_->getGyro());
+  telemdef_->setMagnet(measureAcceleration_->getMagnet());
 }
 
 
