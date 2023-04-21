@@ -63,7 +63,7 @@ private:
 
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
-  std::string outputFilenameBase_ = "output";
+  std::string outputFilenameBase_ = "";
   int numEventsPerFile_ = 100;
   std::shared_ptr<std::ofstream> ofs_;
   int fileID_ = 0;

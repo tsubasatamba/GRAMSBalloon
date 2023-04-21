@@ -130,6 +130,7 @@
 #### 機能
 
 - Analog Discvoveryを操作することで、波形データを読み込み、保存する。
+- 地上からのコマンドで波形データを要求された場合、直近で取得した波形を<tt>SendTelemetry</tt> moduleに書き込みに行く (参照渡しではなく、値をコピーする)。
   
 #### 入力パラメータ
 
@@ -140,11 +141,39 @@
 - <modpar>trig_channel</modpar> (default: 0)<br>
   トリガーソースとなるチャンネル。Analog Discoveryには2つチャンネルがあるので、0か1を指定する。前項と合わせて、トリガーソースとなる波形が決定できる。
 - <modpar>trig_mode</modpar> (default: 0x02)<br>
-  トリガーモードを入力する。0 (random trigger)
-- 
+  トリガーモードを入力する。8 bit の整数で構成され、前半4 bitはtrigger slopeを表し、後半4 bitはtrigger sourceを表す。0-255までの値を入力できるが、invalidな値も多数ある。Trigger slope は、0 (RISE), 1 (FALL), 2 (EITHER) である。Trigger source は、0 (random trigger), 1 (periodic trigger), 2 (self trigger), 11 (external trigger) である。デフォルト値は、RISE + self triggerとなっている。
+  たとえば、FALL + external trigger を設定したい場合は、0x1B=27を入力すれば良い。
+- <modpar>trig_level</modpar> (default: 0.0)<br>
+  トリガーレベルを入力する。単位は${\rm V}$。
+- <modpar>trig_position</modpar> (default: 0.0)<br>
+  トリガーポジションを入力する。単位は${\rm \mu s}$。
+- <modpar>time_window</modpar> (default: 10.0)<br>
+  タイムウィンドウ (取得する波形の時間的長さ)を入力する。単位は${\rm \mu s}$。
+- <modpar>sample_frequency</modpar> (default: 2.0)<br>
+  サンプル周波数を入力する。単位はMHz。<tt>time_window</tt> $\times$ <tt>sample_frequency</tt> でトータルのサンプル数 (=波形データのサイズ)となる。
+- <modpar>adc_range_list</modpar> (default: [1.0, 1.0, 1.0, 1.0])<br>
+  ADC のレンジを4チャンネルそれぞれ設定する。単位は${\rm V}$。Analog Discoveryの仕様上、$5\;{\rm V}$ と$50\;{\rm V}$しか許されず、デフォルトでは1.0を入れているが実際は$5\;{\rm V}$ (実際は$5.5\;{\rm V}$くらい) となっている。基本的に変更しない。
+- <modpar>adc_offset_list</modpar> (default: [0.0, 0.0, 0.0, 0.0])<br>
+  ADC のオフセットを入力する。単位は${\rm V}$。基本的に変更しない。<br>
+  ADCの変換公式は次のとおりである。<br>
+  ${\rm Voltage}={\rm ADC}*{\rm range}/65536+{\rm offset}$<br>
+  詳細は、https://www.mouser.com/pdfDocs/waveforms_sdk_rm.pdf を参照。
+- <modpar>output_filename_base</modpar> (default: "output")<br>
+  波形データを保存するバイナリーファイルの名前のベース。バイナリーファイルは"output_000000.dat", "output_000001.dat"... と順次生成されていく。
+- <modpar>num_events_per_file</modpar> (default: 100)<br>
+  1つのバイナリーファイルに格納するイベントの数を入力する。
 
 #### 仕様
 
+- <b>mod_initialize</b><br>
+  AnalogDiscoveryManger module およびsendTelemetry moduleへのアクセスを確立する。その後、Analog Discovery のAnalogInの設定を行う。<tt>adio->setupAnalogIn()</tt> でサンプル周波数、レンジ、オフセットを設定し、その後<tt>daqio->initialize()</tt> で初期化作業を行う。さらに、<tt>daqio->setupTrigger()</tt> でトリガーのセットアップを行う。
+  
+- <b>mod_analyze</b><br>
+  1ループごとに<tt>daqio->getData()</tt> を走らせることでデータ取得を行う。<tt>numEventsPerFile</tt>ループごとにバイナリーファイルを保存する。トリガーのセットアップを変える指令がコマンド側から来た場合にはそれを反映する。波形データをテレメトリーで送る必要がある場合には、<tt>SendTelemetry</tt> moduleにデータを書き込みに行く。
+
+- <b>mod_finalize</b><br>
+  保存していないデータを保存する。
+  
 #### Core class
 
 - DAQIO.cc
