@@ -46,7 +46,7 @@ int DAQIO::setupTrigger()
   const int num_devices = ADIO_ -> NumDevices();
   const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
 
-  if (trigSrc_==RANDOM_TRIGGER) {
+  if (trigSrc_==static_cast<int>(TriggerSrc::RANDOM_TRIGGER)) {
     FDwfDeviceTriggerSet(handler_list[trigDevice_], 0, trigsrcNone);
     for(int i=0; i<num_devices; i++) {
       if(i==trigDevice_) {
@@ -57,13 +57,13 @@ int DAQIO::setupTrigger()
       }
     }
   }
-  else if (trigSrc_==PERIODIC_TRIGGER) {
+  else if (trigSrc_==static_cast<int>(TriggerSrc::PERIODIC_TRIGGER)) {
     for(int i=0; i<num_devices; i++) {
       FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcPC);
       FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcPC);
     }
   }
-  else if (trigSrc_==SELF_TRIGGER) {
+  else if (trigSrc_==static_cast<int>(TriggerSrc::SELF_TRIGGER)) {
     for(int i=0; i<num_devices; i++) {
       if (i==trigDevice_) {
 	      FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
@@ -73,13 +73,13 @@ int DAQIO::setupTrigger()
           if (j==trigChannel_) {
             FDwfAnalogInTriggerChannelSet(handler_list[i], j);
             FDwfAnalogInTriggerLevelSet(handler_list[i], trigLevel_); // Volt
-            if (trigSlope_==TRIGGER_SLOPE_RISE) {
+            if (trigSlope_==static_cast<int>(TriggerSlope::RISE)) {
               FDwfAnalogInTriggerConditionSet(handler_list[i], DwfTriggerSlopeRise);
             }
-            else if (trigSlope_==TRIGGER_SLOPE_FALL) {
+            else if (trigSlope_==static_cast<int>(TriggerSlope::FALL)) {
               FDwfAnalogInTriggerConditionSet(handler_list[i], DwfTriggerSlopeFall);
             }
-            else if (trigSlope_==TRIGGER_SLOPE_EITHER){
+            else if (trigSlope_==static_cast<int>(TriggerSlope::EITHER)){
               FDwfAnalogInTriggerConditionSet(handler_list[i], DwfTriggerSlopeEither);
             }
             else {
@@ -94,7 +94,7 @@ int DAQIO::setupTrigger()
       }
     }
   }
-  else if (trigSrc_==EXTERNAL_TRIGGER) {
+  else if (trigSrc_==static_cast<int>(TriggerSrc::EXTERNAL_TRIGGER)) {
     for(int i=0; i<num_devices; i++){
       FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcExternal1);
     }
@@ -146,7 +146,7 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
       break;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    if (trigSrc_==PERIODIC_TRIGGER) {
+    if (trigSrc_==static_cast<int>(TriggerSrc::PERIODIC_TRIGGER)) {
       std::this_thread::sleep_for(std::chrono::milliseconds(PERIODIC_TRIGGER_MS));
       for (int i=0; i<num_devices; i++) {
         FDwfDeviceTriggerPC(handler_list[i]);

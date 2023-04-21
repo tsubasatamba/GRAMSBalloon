@@ -72,6 +72,28 @@
 #### Core class
 - BME680IO.cc
 
+
+### GetRaspiStatus
+
+#### 機能
+- Raspberyypiのステータスを取得・保持する。具体的には、CPU温度とSDカードの全体容量および残量を取得する。
+
+#### 入力パラメータ
+
+- <modpar>temperature_filename</modpar> (default: "/sys/class/thermal/thermal_zone0/temp")<br>
+  CPU温度が書いてあるテキストファイル。基本的に変更しない。
+- <modpar>path</modpar> (default: "/")<br>
+  データ容量・残量を確認する対象のパス。基本的に変更しない。
+
+#### 仕様
+- <b>mod_analyze</b><br>
+  まず、CPU温度を<tt>temperature_filename</tt>に読みにいく。この際、読み込まれる数字はADC値で、実際の温度の1000倍に相当する数である(°C単位)。次に、<tt>getCapacity()</tt>でディスクの全体容量と空き容量を取得する。
+
+#### Core class
+- なし。
+
+### InterpretTelemetry
+
 ### MeasureAcceleration
 
 ### MeasureTemperatureWithRTDSensor
@@ -93,21 +115,53 @@
 - <b>mod_initialize</b><br>
   GPIO および SPI のハンドラーをSPIManagerからもらう。<tt>max31865io -> setConfigureSingle()</tt>で温度計の初期設定を行う。
 - <b>mod_analyze</b><br>
-  MAX31865 にアクセスし、温度を測定。
-  <span style="color: red">測定の周期やデータの保存方法は未定。</span>
+  MAX31865 にアクセスし、温度を測定。この際、実際の温度とADC値の両方を取得することできる。Telemetryに用いるのは、ADC値の方である。
+  
 
 #### Core class
 - MAX31865IO.cc
 
+### PushToMongoDB
+
+
+
 ### ReadWaveform
+
+#### 機能
+
+- Analog Discvoveryを操作することで、波形データを読み込み、保存する。
+  
+#### 入力パラメータ
+
+- <modpar>ad_manager_name</modpar> (default: "AnalogDiscoveryManager")<br>
+  AnalogDiscoveryManager module の名前を入力する。ひとつのモジュールですべてのAnalog Discoveryを管理することが想定されるので、基本的に変更しなくてよい。
+- <modpar>trig_device</modpar> (default: 0)<br>
+  トリガーソースとなるデバイス。2台のAnalog Discoveryを用いる場合、0か1である。
+- <modpar>trig_channel</modpar> (default: 0)<br>
+  トリガーソースとなるチャンネル。Analog Discoveryには2つチャンネルがあるので、0か1を指定する。前項と合わせて、トリガーソースとなる波形が決定できる。
+- <modpar>trig_mode</modpar> (default: 0x02)<br>
+  トリガーモードを入力する。0 (random trigger)
+- 
+
+#### 仕様
+
+#### Core class
+
+- DAQIO.cc
+
+
 
 ### ReceiveCommand
 
-
+### ReceiveTelemetry
 
 
 
 ### SendTelemetry
+
+### ShutdownSystem
+
+### SimpleLoop
 
 ### SPIManager
 

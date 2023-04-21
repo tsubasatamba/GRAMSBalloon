@@ -7,6 +7,7 @@ namespace gramsballoon {
 
 ReadWaveform::ReadWaveform()
 {
+  ADManagerName_ = "AnalogDiscoveryManager";
   daqio_ = std::make_shared<DAQIO>();
   adcRangeList_ = std::vector<double>(4, 1.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);

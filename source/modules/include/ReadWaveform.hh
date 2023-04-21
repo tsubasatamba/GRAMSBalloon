@@ -48,7 +48,7 @@ public:
   uint32_t EventCount() { return daqio_->EventCount(); }
 
 private:
-  std::string ADManagerName_ = "AnalogDiscoveryManager";
+  std::string ADManagerName_ = "";
   AnalogDiscoveryManager* ADManager_ = nullptr;
   std::shared_ptr<DAQIO> daqio_ = nullptr;
   int trigDevice_ = 0;

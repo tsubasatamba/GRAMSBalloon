@@ -63,10 +63,12 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
   if (status!=MAX31865_OK) {
     return AS_SKIP;
   }
+
+  #if 0
   double temperature = max31865io_->Temperature();
   std::cout << "temperature ADC: " << TemperatureADC() << std::endl;
   std::cout << " temperature : " << temperature << std::endl;
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  #endif
   
   return AS_OK;
 }
