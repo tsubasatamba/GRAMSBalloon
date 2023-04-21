@@ -167,9 +167,11 @@ void SendTelemetry::inputHKVesselInfo()
     telemdef_->setEnvPressure(i, getEnvironmentalDataVec_[i] -> Pressure());
   }
 
-  telemdef_->setAcceleration(measureAcceleration_->getAcceleration());
-  telemdef_->setGyro(measureAcceleration_->getGyro());
-  telemdef_->setMagnet(measureAcceleration_->getMagnet());
+  for (int i=0; i<3; i++) {
+    telemdef_->setAcceleration(i, measureAcceleration_->getAcceleration(i));
+    telemdef_->setGyro(i, measureAcceleration_->getGyro(i));
+    telemdef_->setMagnet(i, measureAcceleration_->getMagnet(i));
+  }
 }
 
 
