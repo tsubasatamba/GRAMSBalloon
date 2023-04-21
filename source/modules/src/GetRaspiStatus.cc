@@ -30,7 +30,7 @@ ANLStatus GetRaspiStatus::mod_initialize()
 ANLStatus GetRaspiStatus::mod_analyze()
 {
   (*ifsTemp_) >> CPUTemperatureADC_;
-  CPMTemperature_ = CPUTemperatureADC_ / 1000.0;
+  CPUTemperature_ = CPUTemperatureADC_ / 1000.0;
 
   const int status = getCapacity();
   if (status != 0) {
