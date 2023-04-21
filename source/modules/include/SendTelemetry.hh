@@ -13,6 +13,7 @@
 #include "TelemetryDefinition.hh"
 #include "ReadWaveform.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
+#include "ControlHighVoltage.hh"
 #include "GetRaspiStatus.hh"
 #include "GetEnvironmentalData.hh"
 #include "MeasureAcceleration.hh"
@@ -24,6 +25,7 @@ namespace gramsballoon {
 
 class ReadWaveform;
 class MeasureTemperatureWithRTDSensor;
+class ControlHighVoltage;
 class GetRaspiStatus;
 class GetEnvironmentalData;
 class MeasureAcceleration;
@@ -69,6 +71,10 @@ private:
   ReadWaveform* readWaveform_ = nullptr;
   std::vector<std::string> measureTemperatureModuleNames_;
   std::vector<MeasureTemperatureWithRTDSensor*> measureTemperatureVec_;
+  std::string TPCHVControllerModuleName_ = "";
+  ControlHighVoltage* TPCHVController_ = nullptr;
+  std::string PMTHVControllerModuleName_ = "";
+  ControlHighVoltage* PMTHVController_ = nullptr;
   GetRaspiStatus* getRaspiStatus_ = nullptr;
   std::vector<std::string> getEnvironmentalDataModuleNames_;
   std::vector<GetEnvironmentalData*> getEnvironmentalDataVec_;

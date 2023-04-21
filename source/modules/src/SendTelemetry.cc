@@ -7,6 +7,8 @@ namespace gramsballoon {
 SendTelemetry::SendTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
+  TPCHVControllerModuleName_ = "ControlHighVoltage_TPC";
+  PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   serialPath_ = "/dev/null";
   baudrate_ = B9600;
   openMode_ = O_RDWR;
@@ -16,8 +18,10 @@ SendTelemetry::~SendTelemetry() = default;
 
 ANLStatus SendTelemetry::mod_define()
 {
-  define_parameter("GetEnvironmentalData_module_names", &mod_class::getEnvironmentalDataModuleNames_);
   define_parameter("MeasureTemperature_module_names", &mod_class::measureTemperatureModuleNames_);
+  define_parameter("TPCHVController_module_name", &mod_class::TPCHVControllerModuleName_);
+  define_parameter("PMTHVController_module_name", &mod_class::PMTHVControllerModuleName_);
+  define_parameter("GetEnvironmentalData_module_names", &mod_class::getEnvironmentalDataModuleNames_);
   
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("baudrate", &mod_class::baudrate_);
@@ -43,6 +47,14 @@ ANLStatus SendTelemetry::mod_initialize()
   }
   const int ntemp = measureTemperatureVec_.size();
   telemdef_->resizeRTDTemperatureADC(ntemp);
+
+  if (exist_module(TPCHVControllerModuleName_)) {
+    get_module_NC(TPCHVControllerModuleName_, &TPCHVController_);
+  }
+
+  if (exist_module(PMTHVControllerModuleName_)) {
+    get_module_NC(PMTHVControllerModuleName_, &PMTHVController_);
+  }
 
   const std::string get_raspi_status_md = "GetRaspiStatus";
   if (exist_module(get_raspi_status_md)) {
@@ -141,24 +153,33 @@ void SendTelemetry::inputInfo()
 
 void SendTelemetry::inputDetectorInfo()
 {
-  uint32_t event_count = readWaveform_->EventCount();
-  telemdef_->setEventCount(event_count);
+  if (readWaveform_!=nullptr) {
+    uint32_t event_count = readWaveform_->EventCount();
+    telemdef_->setEventCount(event_count);
+  }
   // trigger count
   // chamber pressure
   const int n = measureTemperatureVec_.size();
   for (int i=0; i<n; i++) {
     telemdef_->setRTDTemperatureADC(i, measureTemperatureVec_[i]->TemperatureADC());
   }
-  // TPCHV Setting
+
+  if (TPCHVController_!=nullptr) {
+    telemdef_->setTPCHVSetting(TPCHVController_->NextVoltage());
+  }
   // TPCHV Measure
-  // PMTHV Setting
+  if (PMTHVController_!=nullptr) {
+    telemdef_->setPMTHVSetting(PMTHVController_->NextVoltage());
+  }
   // PMTHV Measure
 }
 
 
 void SendTelemetry::inputHKVesselInfo()
 {
-  telemdef_->setCPUTemperature(getRaspiStatus_->CPUTemperature());
+  if (getRaspiStatus_!=nullptr) {
+    telemdef_->setCPUTemperature(getRaspiStatus_->CPUTemperature());
+  }
 
   const int n_env = getEnvironmentalDataVec_.size();
   for (int i=0; i<n_env; i++) {
@@ -167,19 +188,22 @@ void SendTelemetry::inputHKVesselInfo()
     telemdef_->setEnvPressure(i, getEnvironmentalDataVec_[i] -> Pressure());
   }
 
-  for (int i=0; i<3; i++) {
-    telemdef_->setAcceleration(i, measureAcceleration_->getAcceleration(i));
-    telemdef_->setGyro(i, measureAcceleration_->getGyro(i));
-    telemdef_->setMagnet(i, measureAcceleration_->getMagnet(i));
+  if (measureAcceleration_!=nullptr) {
+    for (int i=0; i<3; i++) {
+      telemdef_->setAcceleration(i, measureAcceleration_->getAcceleration(i));
+      telemdef_->setGyro(i, measureAcceleration_->getGyro(i));
+      telemdef_->setMagnet(i, measureAcceleration_->getMagnet(i));
+    }
   }
 }
 
 
 void SendTelemetry::inputLastCommandInfo()
 {
-  const uint16_t last_command_code = receiveCommand_ -> LastCommandCode();
-  telemdef_->setLastCommandCode(last_command_code);
-  std::cout << "last_command_code: " << last_command_code << std::endl;
+  if (receiveCommand_!=nullptr) {
+    const uint16_t last_command_code = receiveCommand_ -> LastCommandCode();
+    telemdef_->setLastCommandCode(last_command_code);
+  }
 }
 
 } /* namespace gramsballoon */

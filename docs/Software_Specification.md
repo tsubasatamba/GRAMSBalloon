@@ -36,15 +36,29 @@
 
 #### 機能
 
-- Analog Discovery のDAC側にアクセスし、任意の電圧を出力する。
+- Analog Discovery のDAC側にアクセスし、任意の電圧を出力する。出力した電圧でHVを制御する。
+- 高圧電源の扱いは慎重に行う必要があるため、電圧の変化は2段階認証を必要としている。つまり、目標電圧をセットしたのち、あらためて実行許可を出す必要がある。
+- TPC用とPMT用の2つのmoduleを用意することが想定されている。
 
 #### 入力パラメータ
 
 - <modpar>device_id</modpar> (default: 0)<br>
+  対象となるAnalog Discovery の device ID。
 - <modpar>channel</modpar> (default: 0)<br>
-- <modpar>sleep</modpar> (default: 0)<br>
+  対象となるAnalog Discovery の channel。前項と合わせて、出力するDAC端子が一意に決まる。
+- <modpar>sleep</modpar> (default: 500)<br>
+  電圧を出力した後、sleep する時間。単位は${\rm ms}$。
 
 #### 仕様
+
+- <b>mod_initialize</b><br>
+  <tt>AnalogDiscoveryManager</tt> module にアクセスし、AnalogOut の初期設定を行う。
+- <b>mod_analyze</b><br>
+  現在の出力電圧 (<tt>currentVoltage_</tt>)と次の出力電圧 (<tt>nextVoltage_</tt>)が異なっていた場合、<tt>nextVoltage_</tt> を新たにDACで出力する。ただし、メンバー変数 <tt>exec_</tt> がfalseのときはこの操作は行われない。<tt>exec_</tt> は、操作を行うごとにfalseに戻されるため、設定が意図した通りになっているかどうかを確認した後、逐一true に書き換える必要がある。
+
+#### Core class
+
+- なし。
 
 ### GetEnvironmentalData
 
@@ -104,7 +118,7 @@
 #### 入力パラメータ
 
 - <modpar>device_path</modpar> (default: "/dev/i2c-1")<br>
-  ????
+  I2C通信の際の仮想ファイルのパス。基本的に変更しない。
 - <modpar>calibrate_gyro</modpar> (default: false)<br>
   角速度測定時にキャリブレーションを行うかどうかをbooleanで入力する。
 
@@ -212,8 +226,6 @@
 ### SendTelemetry
 
 ### ShutdownSystem
-
-### SimpleLoop
 
 ### SPIManager
 

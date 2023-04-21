@@ -52,9 +52,9 @@ void TelemetryDefinition::generateTelemetryHK()
   addValue<uint16_t>(chamberPressure_);
   
   writeRTDTemperature();
-  addValue<int32_t>(TPCHVSetting_);
+  addValue<int32_t>(static_cast<int32_t>(TPCHVSetting_ / 1E-3));
   addValue<int16_t>(TPCHVMeasure_);
-  addValue<int32_t>(PMTHVSetting_);
+  addValue<int32_t>(static_cast<int32_t>(PMTHVSetting_ / 1E-3));
   addValue<int16_t>(PMTHVMeasure_);
   addValue<int16_t>(static_cast<int16_t>(CPUTemperature_ / 0.1));
   writeEnvironmentalData();
@@ -109,9 +109,9 @@ void TelemetryDefinition::writeEnvironmentalData()
 
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int16_t>(envTemperature_[i] * 100.0);
-    humidity[i] = static_cast<uint16_t>(envHumidity_[i] * 100.0);
-    pressure[i] = static_cast<uint16_t>(envPressure_[i] * 10.0);
+    temperature[i] = static_cast<int16_t>(envTemperature_[i] / 0.01);
+    humidity[i] = static_cast<uint16_t>(envHumidity_[i] / 0.01);
+    pressure[i] = static_cast<uint16_t>(envPressure_[i] / 0.1);
   }
   addVector<int16_t>(temperature);
   addVector<uint16_t>(humidity);
@@ -207,9 +207,9 @@ void TelemetryDefinition::interpretHK()
   getVector<uint16_t>(26, 3, chamberTemperature_);
   valveTemperature_ = getValue<uint16_t>(32);
   outerTemperature_ = getValue<uint16_t>(34);
-  TPCHVSetting_ = getValue<int32_t>(36);
+  TPCHVSetting_ = static_cast<double>(getValue<int32_t>(36))*1E-3;
   TPCHVMeasure_ = getValue<uint16_t>(40);
-  PMTHVSetting_ = getValue<int32_t>(42);
+  PMTHVSetting_ = static_cast<double>(getValue<int32_t>(42))*1E-3;
   PMTHVMeasure_ = getValue<uint16_t>(46);
   CPUTemperature_ = static_cast<double>(getValue<int16_t>(48)) * 0.1;
   

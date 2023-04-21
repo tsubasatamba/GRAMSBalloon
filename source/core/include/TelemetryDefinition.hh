@@ -75,9 +75,9 @@ public:
   void resizeChamberTemperature(int n) { chamberTemperature_.resize(n); }
   void setValveTemperature(uint16_t v) { valveTemperature_ = v; }
   void setOuterTemperature(uint16_t v) { outerTemperature_ = v; }
-  void setTPCHVSetting(int32_t v) { TPCHVSetting_ = v; }
+  void setTPCHVSetting(double v) { TPCHVSetting_ = v; }
   void setTPCHVMeasure(uint16_t v) {TPCHVMeasure_ = v; }
-  void setPMTHVSetting(int32_t v) { PMTHVSetting_ = v; }
+  void setPMTHVSetting(double v) { PMTHVSetting_ = v; }
   void setPMTHVMeasure(uint16_t v) {PMTHVMeasure_ = v; }
   void setCPUTemperature(double v) { CPUTemperature_ = v; }
   void setEnvTemperature(const std::vector<double>& v) { envTemperature_ = v; }
@@ -120,9 +120,9 @@ public:
   uint16_t ChamberTemperature(int index) { return (index<(int)chamberTemperature_.size()) ? chamberTemperature_[index] : 0 ; }
   uint16_t ValveTemperature() { return valveTemperature_; }
   uint16_t OuterTemperature() { return outerTemperature_; }
-  int32_t TPCHVSetting() { return TPCHVSetting_; }
+  double TPCHVSetting() { return TPCHVSetting_; }
   uint16_t TPCHVMeasure() { return TPCHVMeasure_; }
-  int32_t PMTHVSetting() { return PMTHVSetting_; }
+  double PMTHVSetting() { return PMTHVSetting_; }
   uint16_t PMTHVMeasure() { return PMTHVMeasure_; }
   double CPUTemperature() { return CPUTemperature_; }
   const std::vector<double>& EnvTemperature() const { return envTemperature_; }
@@ -168,9 +168,9 @@ private:
   std::vector<uint16_t> chamberTemperature_;
   uint16_t valveTemperature_;
   uint16_t outerTemperature_;
-  int32_t TPCHVSetting_;
+  double TPCHVSetting_;
   uint16_t TPCHVMeasure_;
-  int32_t PMTHVSetting_;
+  double PMTHVSetting_;
   uint16_t PMTHVMeasure_;
   double CPUTemperature_;
   std::vector<double> envTemperature_;
