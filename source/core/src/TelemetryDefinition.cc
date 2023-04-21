@@ -47,26 +47,24 @@ void TelemetryDefinition::generateTelemetry()
 
 void TelemetryDefinition::generateTelemetryHK()
 {
-  addValue<uint32_t>(eventCount_); // Event count
-  addValue<uint32_t>((uint32_t)0); // Trigger count
-  addValue<uint16_t>((uint16_t)0); // Chamber pressure
+  addValue<uint32_t>(eventCount_);
+  addValue<uint32_t>(triggerCount_);
+  addValue<uint16_t>(chamberPressure_);
   
   writeRTDTemperature();
-  addValue<int32_t>((int32_t)0); // TPC High Voltage Setting
-  addValue<int16_t>((int16_t)0); // TPC High Voltage measurement
-  addValue<int32_t>((int32_t)0); // PMT High Voltage Setting
-  addValue<int16_t>((int16_t)0); // PMT High Voltage measurement
-  addValue<int16_t>((int16_t)0); // CPU temperature
+  addValue<int32_t>(TPCHVSetting_);
+  addValue<int16_t>(TPCHVMeasure_);
+  addValue<int32_t>(PMTHVSetting_);
+  addValue<int16_t>(PMTHVMeasure_);
+  addValue<int16_t>(CPUTemperature_);
   writeEnvironmentalData();
-  for (int i=0; i<9; i++) {
-    addValue<int16_t>((int16_t)0); // acceleration
-  }
-  addValue<int16_t>((int16_t)0); //main current
-  addValue<int16_t>((int16_t)0); //main voltage
-  addValue<uint32_t>((uint32_t)0); // last command index
+  writeAccelerationData();
+  addValue<int16_t>(mainCurrent_); //main current
+  addValue<int16_t>(mainVoltage_); //main voltage
+  addValue<uint32_t>(lastCommandIndex_); // last command index
   addValue<uint16_t>(lastCommandCode_); // last command code
-  addValue<uint16_t>((uint16_t)0); //command reject count
-  addValue<uint16_t>((uint16_t)0); //software error code
+  addValue<uint16_t>(commandRejectCount_); //command reject count
+  addValue<uint16_t>(softwareErrorCode_); //software error code
 }
 
 void TelemetryDefinition::generateTelemetryWF()
@@ -94,6 +92,11 @@ void TelemetryDefinition::writeRTDTemperature()
     temperature[i] = RTDTemperatureADC_[i];
   }
   addVector<uint16_t>(temperature);
+  for (int i=0; i<3; i++) {
+    setChamberTemperature(i, temperature[i]);
+  }
+  setValveTemperature(temperature[3]);
+  setOuterTemperature(temperature[4]);
 }
 
 void TelemetryDefinition::writeEnvironmentalData()
@@ -113,6 +116,19 @@ void TelemetryDefinition::writeEnvironmentalData()
   addVector<int16_t>(temperature);
   addVector<uint16_t>(humidity);
   addVector<uint16_t>(pressure);
+}
+
+void TelemetryDefinition::writeAccelerationData()
+{
+  const int buf_size = 3;
+  std::vector<int16_t> accel(buf_size);
+  std::vector<int16_t> gyro(buf_size);
+  std::vector<int16_t> magnet(buf_size);
+  for (int i=0; i<buf_size; i++) {
+    if (i<static_cast<int>(acceleration_.size())) accel[i] = static_cast<int16_t>(acceleration_[i]/0.01);
+    if (i<static_cast<int>(gyro_.size())) gyro[i] = static_cast<int16_t>(gyro_[i]/0.01);
+    if (i<static_cast<int>(magnet_.size())) magnet[i] = static_cast<int16_t>(magnet_[i]/0.01);
+  }
 }
 
 void TelemetryDefinition::writeCRC16()

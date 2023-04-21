@@ -33,6 +33,7 @@ public:
   void generateTelemetryStatus();
   void writeRTDTemperature();
   void writeEnvironmentalData();
+  void writeAccelerationData();
   void writeCRC16();
   void clear();
 
