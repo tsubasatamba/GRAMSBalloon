@@ -41,8 +41,8 @@ ANLStatus SendTelemetry::mod_initialize()
       measureTemperatureVec_.push_back(mt);
     }
   }
-  n = measureTemperatureVec_.size();
-  telemdef_->resizeRTDTemperatureADC(n);
+  const int ntemp = measureTemperatureVec_.size();
+  telemdef_->resizeRTDTemperatureADC(ntemp);
 
   const std::string get_raspi_status_md = "GetRaspiStatus";
   if (exist_module(get_raspi_status_md)) {
@@ -58,10 +58,10 @@ ANLStatus SendTelemetry::mod_initialize()
       getEnvironmentalDataVec_.push_back(ged);
     }
   }
-  int n = getEnvironmentalDataVec_.size();
-  telemdef_->resizeEnvTemperature(n);
-  telemdef_->resizeEnvHumidity(n);
-  telemdef_->resizeEnvPressure(n);
+  const int nenv = getEnvironmentalDataVec_.size();
+  telemdef_->resizeEnvTemperature(nenv);
+  telemdef_->resizeEnvHumidity(nenv);
+  telemdef_->resizeEnvPressure(nenv);
 
   const std::string receive_command_md = "ReceiveCommand";
   if (exist_module(receive_command_md)) {
