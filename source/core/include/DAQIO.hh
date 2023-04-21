@@ -28,7 +28,7 @@ enum class TriggerSrc {
 enum class TriggerSlope {
   RISE = 0,
   FALL = 1,
-  EITHER 2
+  EITHER = 2
 };
 
 class DAQIO
