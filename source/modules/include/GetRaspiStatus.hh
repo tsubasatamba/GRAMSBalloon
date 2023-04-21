@@ -33,12 +33,14 @@ public:
 
   int getCapacity();
 
-  int TemperatureADC() { return temperatureADC_; }
+  int CPUTemperatureADC() { return CPUTemperatureADC_; }
+  double CPUTemperature() { return CPUTemperature_; }
   uint64_t CapacityFree() { return capacityFree_; }
   uint64_t CapacityAll() { return capacityAll_; }
 
 private:
-  int temperatureADC_;
+  int CPUTemperatureADC_;
+  double CPUTemperature_;
   std::shared_ptr<std::ifstream> ifsTemp_;
   std::string tempFile_;
   std::string path_;

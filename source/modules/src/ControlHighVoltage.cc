@@ -42,12 +42,12 @@ ANLStatus ControlHighVoltage::mod_analyze()
   }
   # endif
 
-  nextVoltage_ = 2.0;
   
-  if (currentVoltage_!=nextVoltage_) {
+  if ((currentVoltage_!=nextVoltage_) && exec_) {
     AnalogDiscoveryIO* io = ADManager_->ADIO();
     io -> setVoltage(deviceID_, channel_, static_cast<double>(nextVoltage_), sleep_);
     currentVoltage_ = nextVoltage_;
+    exec_ = false;
   }
 
   std::this_thread::sleep_for(std::chrono::seconds(1));

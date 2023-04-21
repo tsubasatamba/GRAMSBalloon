@@ -48,9 +48,10 @@ public:
   uint32_t EventCount() { return daqio_->EventCount(); }
 
 private:
-  std::string ADManagerName_ = "AnalogDiscoveryManager";
+  std::string ADManagerName_ = "";
   AnalogDiscoveryManager* ADManager_ = nullptr;
   std::shared_ptr<DAQIO> daqio_ = nullptr;
+  bool triggerChanged_ = false;
   int trigDevice_ = 0;
   int trigChannel_ = 0;
   int trigMode_ = 2;
@@ -63,7 +64,7 @@ private:
 
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
-  std::string outputFilenameBase_ = "output";
+  std::string outputFilenameBase_ = "";
   int numEventsPerFile_ = 100;
   std::shared_ptr<std::ofstream> ofs_;
   int fileID_ = 0;

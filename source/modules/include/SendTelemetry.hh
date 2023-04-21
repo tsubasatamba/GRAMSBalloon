@@ -11,18 +11,26 @@
 
 #include <anlnext/BasicModule.hh>
 #include "TelemetryDefinition.hh"
-#include "GetEnvironmentalData.hh"
 #include "ReadWaveform.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
+#include "ControlHighVoltage.hh"
+#include "GetRaspiStatus.hh"
+#include "GetEnvironmentalData.hh"
+#include "MeasureAcceleration.hh"
 #include "SerialCommunication.hh"
 #include "ReceiveCommand.hh"
 
-class ReadWaveform;
-class GetEnvironmentalData;
-class MeasureTemperatureWithRTDSensor;
-class ReceiveCommand;
 
 namespace gramsballoon {
+
+class ReadWaveform;
+class MeasureTemperatureWithRTDSensor;
+class ControlHighVoltage;
+class GetRaspiStatus;
+class GetEnvironmentalData;
+class MeasureAcceleration;
+class ReceiveCommand;
+
 
 class SendTelemetry : public anlnext::BasicModule
 {
@@ -43,9 +51,8 @@ public:
 
   void inputInfo();
   void inputDetectorInfo();
-  void inputEnvironmentalData();
-  void inputTemperatureData();
-  void inputLastCommandInfo();
+  void inputHKVesselInfo();
+  void inputSoftwareInfo();
 
   void setTelemetryType(int v) { telemetryType_ = v; }
 
@@ -61,12 +68,17 @@ private:
   int telemetryType_ = 1;
 
   // access to other classes
-  std::vector<std::string> getEnvironmentalDataModuleNames_;
-  std::vector<GetEnvironmentalData*> getEnvironmentalDataVec_;
-  std::string readWaveformModuleName_;
   ReadWaveform* readWaveform_ = nullptr;
   std::vector<std::string> measureTemperatureModuleNames_;
   std::vector<MeasureTemperatureWithRTDSensor*> measureTemperatureVec_;
+  std::string TPCHVControllerModuleName_ = "";
+  ControlHighVoltage* TPCHVController_ = nullptr;
+  std::string PMTHVControllerModuleName_ = "";
+  ControlHighVoltage* PMTHVController_ = nullptr;
+  GetRaspiStatus* getRaspiStatus_ = nullptr;
+  std::vector<std::string> getEnvironmentalDataModuleNames_;
+  std::vector<GetEnvironmentalData*> getEnvironmentalDataVec_;
+  MeasureAcceleration* measureAcceleration_ = nullptr;
   ReceiveCommand* receiveCommand_ = nullptr;
 
   // communication

@@ -7,10 +7,12 @@ namespace gramsballoon {
 
 ReadWaveform::ReadWaveform()
 {
+  ADManagerName_ = "AnalogDiscoveryManager";
   daqio_ = std::make_shared<DAQIO>();
   adcRangeList_ = std::vector<double>(4, 1.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);
   ofs_ = std::make_shared<std::ofstream>();
+  outputFilenameBase_ = "output";
 }
 
 ReadWaveform::~ReadWaveform() = default;
@@ -56,7 +58,7 @@ ANLStatus ReadWaveform::mod_initialize()
   daqio_->setSampleParameters(sampleFreq_, timeWindow_);
   const int status = daqio_->setupTrigger();
   if (status!=0) {
-    std::cerr << "Trigger setup failed." << std::endl;
+    std::cerr << "Trigger setup failed in ReadWaveform::mod_initialize" << std::endl;
     return AS_QUIT_ERROR;
   }
   
@@ -65,6 +67,16 @@ ANLStatus ReadWaveform::mod_initialize()
 
 ANLStatus ReadWaveform::mod_analyze()
 {
+  if (triggerChanged_) {
+    daqio_->setTriggerParameters(trigDevice_, trigChannel_, trigMode_, trigLevel_, trigPosition_);
+    const int status = daqio_->setupTrigger();
+    if (status!=0) {
+      std::cerr << "Trigger setup failed in ReadWaveform::mod_analyze" << std::endl;
+      return AS_QUIT_ERROR;
+    }
+    triggerChanged_ = true;
+  }
+
   const int event_id = get_loop_index();
   if (event_id%numEventsPerFile_ == 0) {
     if (event_id != 0) {

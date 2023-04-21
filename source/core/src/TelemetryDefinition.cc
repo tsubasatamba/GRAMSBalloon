@@ -6,63 +6,68 @@ namespace gramsballoon {
 
 TelemetryDefinition::TelemetryDefinition()
 {
+  chamberTemperature_.resize(3);
+  envTemperature_.resize(5);
+  envHumidity_.resize(5);
+  envPressure_.resize(5);
+  acceleration_.resize(3);
+  gyro_.resize(3);
+  magnet_.resize(3);
 }
 
-void TelemetryDefinition::generateTelemetry(int telemetry_type)
+void TelemetryDefinition::generateTelemetry()
 {
   clear();
-  uint16_t start_code = 0xeb90;
-  addValue<uint16_t>(start_code);
-  addValue<uint16_t>(static_cast<uint16_t>(telemetry_type));
+  startCode_ = 0xeb90;
+  addValue<uint16_t>(startCode_);
+  addValue<uint16_t>(static_cast<uint16_t>(telemetryType_));
   gettimeofday(&timeNow_, NULL);
   addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_sec));
   addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_usec));
   addValue<uint32_t>(telemetryIndex_);
   telemetryIndex_++;
   
-  if (telemetry_type==static_cast<int>(TelemetryType::normal)) {
-    generateTelemetryNormal();
+  if (telemetryType_==static_cast<int>(TelemetryType::HK)) {
+    generateTelemetryHK();
   }
-  else if (telemetry_type==static_cast<int>(TelemetryType::wave)) {
-    generateTelemetryWave();
+  else if (telemetryType_==static_cast<int>(TelemetryType::WF)) {
+    generateTelemetryWF();
   }
-  else if (telemetry_type==static_cast<int>(TelemetryType::status)) {
+  else if (telemetryType_==static_cast<int>(TelemetryType::Status)) {
     generateTelemetryStatus();
   }
   else {
-    std::cerr << "telemetry type not set appropriately: telemetry_type = " << telemetry_type << std::endl;
+    std::cerr << "telemetry type not set appropriately: telemetry_type = " << telemetryType_ << std::endl;
     return;
   }
   writeCRC16();
-  uint16_t end_code = 0xc5c5;
-  addValue<uint16_t>(end_code);
+  stopCode_ = 0xc5c5;
+  addValue<uint16_t>(stopCode_);
 }
 
-void TelemetryDefinition::generateTelemetryNormal()
+void TelemetryDefinition::generateTelemetryHK()
 {
-  addValue<uint32_t>(eventCount_); // Event count
-  addValue<uint32_t>((uint32_t)0); // Trigger count
-  addValue<uint16_t>((uint16_t)0); // Chamber pressure
+  addValue<uint32_t>(eventCount_);
+  addValue<uint32_t>(triggerCount_);
+  addValue<uint16_t>(chamberPressure_);
   
   writeRTDTemperature();
-  addValue<int32_t>((int32_t)0); // TPC High Voltage Setting
-  addValue<int16_t>((int16_t)0); // TPC High Voltage measurement
-  addValue<int32_t>((int32_t)0); // PMT High Voltage Setting
-  addValue<int16_t>((int16_t)0); // PMT High Voltage measurement
-  addValue<int16_t>((int16_t)0); // CPU temperature
+  addValue<int32_t>(static_cast<int32_t>(TPCHVSetting_ / 1E-3));
+  addValue<int16_t>(TPCHVMeasure_);
+  addValue<int32_t>(static_cast<int32_t>(PMTHVSetting_ / 1E-3));
+  addValue<int16_t>(PMTHVMeasure_);
+  addValue<int16_t>(static_cast<int16_t>(CPUTemperature_ / 0.1));
   writeEnvironmentalData();
-  for (int i=0; i<9; i++) {
-    addValue<int16_t>((int16_t)0); // acceleration
-  }
-  addValue<int16_t>((int16_t)0); //main current
-  addValue<int16_t>((int16_t)0); //main voltage
-  addValue<uint32_t>((uint32_t)0); // last command index
+  writeAccelerationData();
+  addValue<int16_t>(mainCurrent_); //main current
+  addValue<int16_t>(mainVoltage_); //main voltage
+  addValue<uint32_t>(lastCommandIndex_); // last command index
   addValue<uint16_t>(lastCommandCode_); // last command code
-  addValue<uint16_t>((uint16_t)0); //command reject count
-  addValue<uint16_t>((uint16_t)0); //software error code
+  addValue<uint16_t>(commandRejectCount_); //command reject count
+  addValue<uint16_t>(softwareErrorCode_); //software error code
 }
 
-void TelemetryDefinition::generateTelemetryWave()
+void TelemetryDefinition::generateTelemetryWF()
 {
   addValue<uint32_t>(eventID_);
   addVector<int16_t>(eventHeader_);
@@ -87,6 +92,11 @@ void TelemetryDefinition::writeRTDTemperature()
     temperature[i] = RTDTemperatureADC_[i];
   }
   addVector<uint16_t>(temperature);
+  for (int i=0; i<3; i++) {
+    setChamberTemperature(i, temperature[i]);
+  }
+  setValveTemperature(temperature[3]);
+  setOuterTemperature(temperature[4]);
 }
 
 void TelemetryDefinition::writeEnvironmentalData()
@@ -99,13 +109,26 @@ void TelemetryDefinition::writeEnvironmentalData()
 
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int16_t>(envTemperature_[i] * 100.0);
-    humidity[i] = static_cast<uint16_t>(envHumidity_[i] * 100.0);
-    pressure[i] = static_cast<uint16_t>(envPressure_[i] * 10.0);
+    temperature[i] = static_cast<int16_t>(envTemperature_[i] / 0.01);
+    humidity[i] = static_cast<uint16_t>(envHumidity_[i] / 0.01);
+    pressure[i] = static_cast<uint16_t>(envPressure_[i] / 0.1);
   }
   addVector<int16_t>(temperature);
   addVector<uint16_t>(humidity);
   addVector<uint16_t>(pressure);
+}
+
+void TelemetryDefinition::writeAccelerationData()
+{
+  const int buf_size = 3;
+  std::vector<int16_t> accel(buf_size);
+  std::vector<int16_t> gyro(buf_size);
+  std::vector<int16_t> magnet(buf_size);
+  for (int i=0; i<buf_size; i++) {
+    if (i<static_cast<int>(acceleration_.size())) accel[i] = static_cast<int16_t>(acceleration_[i]/0.01);
+    if (i<static_cast<int>(gyro_.size())) gyro[i] = static_cast<int16_t>(gyro_[i]/0.01);
+    if (i<static_cast<int>(magnet_.size())) magnet[i] = static_cast<int16_t>(magnet_[i]/0.01);
+  }
 }
 
 void TelemetryDefinition::writeCRC16()
@@ -114,13 +137,69 @@ void TelemetryDefinition::writeCRC16()
   addValue<uint16_t>(crc);
 }
 
+bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
+{
+  const int n = v.size();
+  if (n<6) {
+    std::cerr << "Telemetry is too short!!: length = " << n << std::endl; 
+    return false;
+  }
+
+  if (v[0]!=0xeb || v[1]!=0x90) {
+    std::cerr << "start code incorect" << std::endl;
+    return false;
+  }
+  if (v[n-2]!=0xc5 || v[n-1]!=0xc5) {
+    std::cerr << "stop code incorrect" << std::endl;
+    return false;
+  }
+
+  telemetry_ = v;
+  std::vector<uint8_t> telem_without_fotter;
+  for (int i=0; i<n-4; i++) {
+    telem_without_fotter.push_back(v[i]);
+  }
+  
+  uint16_t crc_calc = calcCRC16(telem_without_fotter);
+  uint16_t crc_attached = getValue<uint16_t>(n-4);
+  if (crc_calc != crc_attached) {
+    std::cerr << "Invalid command: CRC16 not appropriate" << std::endl;
+    return false;
+  }
+
+  uint16_t type = getValue<uint16_t>(2);
+  if (type==1 && n!=116) {
+    std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
+    return false;
+  }
+
+  return true;
+}
+
 void TelemetryDefinition::interpret()
 {
+  startCode_ = getValue<uint16_t>(0);
   telemetryType_ = getValue<uint16_t>(2);
   std::cout << "telemetry type: " << telemetryType_ << std::endl;
   timeNow_.tv_sec = getValue<int32_t>(4);
   timeNow_.tv_usec = getValue<int32_t>(8);
   telemetryIndex_ = getValue<uint32_t>(12);
+  if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::HK)) {
+    interpretHK();
+  }
+  else if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::WF)) {
+    interpretWF();
+  }
+  else if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::Status)) {
+    interpretStatus();
+  }
+  else {
+    std::cerr << "could not interpret telemetry: telemetry_type = " << telemetryType_ << std::endl;
+  }
+}
+
+void TelemetryDefinition::interpretHK()
+{
   eventCount_ = getValue<uint32_t>(16);
   triggerCount_ = getValue<uint32_t>(20);
   chamberPressure_ = getValue<uint16_t>(24);
@@ -128,11 +207,11 @@ void TelemetryDefinition::interpret()
   getVector<uint16_t>(26, 3, chamberTemperature_);
   valveTemperature_ = getValue<uint16_t>(32);
   outerTemperature_ = getValue<uint16_t>(34);
-  TPCHVSetting_ = getValue<int32_t>(36);
+  TPCHVSetting_ = static_cast<double>(getValue<int32_t>(36))*1E-3;
   TPCHVMeasure_ = getValue<uint16_t>(40);
-  PMTHVSetting_ = getValue<int32_t>(42);
+  PMTHVSetting_ = static_cast<double>(getValue<int32_t>(42))*1E-3;
   PMTHVMeasure_ = getValue<uint16_t>(46);
-  CPUTemperature_ = getValue<int16_t>(48);
+  CPUTemperature_ = static_cast<double>(getValue<int16_t>(48)) * 0.1;
   
   envTemperature_.resize(5);
   envHumidity_.resize(5);
@@ -159,9 +238,9 @@ void TelemetryDefinition::interpret()
   getVector<int16_t>(86, 3, gyr);
   getVector<int16_t>(92, 3, mag);
   for (int i=0; i<3; i++) {
-    acceleration_[i] = static_cast<double>(acc[i]*0.01);
-    gyro_[i] = static_cast<double>(gyr[i]*0.01);
-    magnet_[i] = static_cast<double>(mag[i]*0.01);
+    acceleration_[i] = static_cast<float>(acc[i]) * 0.01;
+    gyro_[i] = static_cast<float>(gyr[i]) * 0.01;
+    magnet_[i] = static_cast<float>(mag[i]) * 0.01;
   }
 
   mainCurrent_ = getValue<int16_t>(98);
@@ -170,9 +249,15 @@ void TelemetryDefinition::interpret()
   lastCommandCode_ = getValue<uint16_t>(106);
   commandRejectCount_ = getValue<uint16_t>(108);
   softwareErrorCode_ = getValue<uint16_t>(110);
-
-
+  crc_ = getValue<uint16_t>(112);
+  stopCode_ = getValue<uint16_t>(114);
 }
+
+void TelemetryDefinition::interpretWF()
+{}
+
+void TelemetryDefinition::interpretStatus()
+{}
 
 void TelemetryDefinition::clear()
 {

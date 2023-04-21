@@ -7,7 +7,7 @@ using namespace anlnext;
 namespace gramsballoon {
 
 ReceiveCommand::ReceiveCommand()
-  :readWaveformModuleName_("ReadWaveform"), baudrate_(B9600), openMode_(O_RDWR)
+  : baudrate_(B9600), openMode_(O_RDWR)
 {
   serialPath_ = "/dev/null";
   for (int i=0; i<2; i++) {
@@ -23,22 +23,20 @@ ANLStatus ReceiveCommand::mod_define()
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("open_mode", &mod_class::openMode_);
-  define_parameter("ReadWaveform_module_name", &mod_class::readWaveformModuleName_);
 
   return AS_OK;
 }
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
-  if (exist_module(readWaveformModuleName_)) {
-    get_module_NC(readWaveformModuleName_, &readWaveform_);
+  const std::string read_wf_md = "ReadWaveform";
+  if (exist_module(read_wf_md)) {
+    get_module_NC(read_wf_md, &readWaveform_);
   }
 
   // communication
   sc_ = std::make_shared<SerialCommunication>(serialPath_, baudrate_, openMode_);
   sc_ -> initialize();
-
-  
 
   return AS_OK;
 }
@@ -127,9 +125,11 @@ void ReceiveCommand::applyCommand()
   }
   bool status = comdef_->interpret();
   if (!status) {
+    commandRejectCount_++;
     return;
   }
-
+  
+  commandIndex_++;
   const int code = comdef_->Code();
 
   if (code==210) {

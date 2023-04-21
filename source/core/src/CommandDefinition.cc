@@ -22,7 +22,7 @@ bool CommandDefinition::interpret()
     return false;
   }
   if (command_[n-2]!=0xc5 || command_[n-1]!=0xc5) {
-    std::cerr << "end code incorrect" << std::endl;
+    std::cerr << "stop code incorrect" << std::endl;
     return false;
   }
 
