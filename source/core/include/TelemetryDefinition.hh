@@ -79,7 +79,7 @@ public:
   void setTPCHVMeasure(uint16_t v) {TPCHVMeasure_ = v; }
   void setPMTHVSetting(int32_t v) { PMTHVSetting_ = v; }
   void setPMTHVMeasure(uint16_t v) {PMTHVMeasure_ = v; }
-  void setCPUTemperature(int16_t v) { CPUTemperature_ = v; }
+  void setCPUTemperature(double v) { CPUTemperature_ = v; }
   void setEnvTemperature(const std::vector<double>& v) { envTemperature_ = v; }
   void setEnvTemperature(int index, double v) { if (index<static_cast<int>(envTemperature_.size())) envTemperature_[index] = v; }
   void resizeEnvTemperature(int n) { envTemperature_.resize(n); }
@@ -124,7 +124,7 @@ public:
   uint16_t TPCHVMeasure() { return TPCHVMeasure_; }
   int32_t PMTHVSetting() { return PMTHVSetting_; }
   uint16_t PMTHVMeasure() { return PMTHVMeasure_; }
-  int16_t CPUTemperature() { return CPUTemperature_; }
+  double CPUTemperature() { return CPUTemperature_; }
   const std::vector<double>& EnvTemperature() const { return envTemperature_; }
   std::vector<double>& EnvTemperature() { return envTemperature_; }
   double EnvTemperature(int index) { return index<(int)envTemperature_.size() ? envTemperature_[index] : 0 ; }
@@ -172,7 +172,7 @@ private:
   uint16_t TPCHVMeasure_;
   int32_t PMTHVSetting_;
   uint16_t PMTHVMeasure_;
-  int16_t CPUTemperature_;
+  double CPUTemperature_;
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;

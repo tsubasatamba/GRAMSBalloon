@@ -29,7 +29,9 @@ ANLStatus GetRaspiStatus::mod_initialize()
 
 ANLStatus GetRaspiStatus::mod_analyze()
 {
-  (*ifsTemp_) >> temperatureADC_;
+  (*ifsTemp_) >> CPUTemperatureADC_;
+  CPMTemperature_ = CPUTemperatureADC_ / 1000.0;
+
   const int status = getCapacity();
   if (status != 0) {
     std::cerr << "Error in GetRaspiStatus::mod_analyze()" << std::endl;

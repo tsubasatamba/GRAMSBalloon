@@ -56,7 +56,7 @@ void TelemetryDefinition::generateTelemetryHK()
   addValue<int16_t>(TPCHVMeasure_);
   addValue<int32_t>(PMTHVSetting_);
   addValue<int16_t>(PMTHVMeasure_);
-  addValue<int16_t>(CPUTemperature_);
+  addValue<int16_t>(static_cast<int16_t>(CPUTemperature_ / 0.1));
   writeEnvironmentalData();
   writeAccelerationData();
   addValue<int16_t>(mainCurrent_); //main current
@@ -211,7 +211,7 @@ void TelemetryDefinition::interpretHK()
   TPCHVMeasure_ = getValue<uint16_t>(40);
   PMTHVSetting_ = getValue<int32_t>(42);
   PMTHVMeasure_ = getValue<uint16_t>(46);
-  CPUTemperature_ = getValue<int16_t>(48);
+  CPUTemperature_ = static_cast<double>(getValue<int16_t>(48)) * 0.1;
   
   envTemperature_.resize(5);
   envHumidity_.resize(5);
@@ -238,9 +238,9 @@ void TelemetryDefinition::interpretHK()
   getVector<int16_t>(86, 3, gyr);
   getVector<int16_t>(92, 3, mag);
   for (int i=0; i<3; i++) {
-    acceleration_[i] = static_cast<double>(acc[i]*0.01);
-    gyro_[i] = static_cast<double>(gyr[i]*0.01);
-    magnet_[i] = static_cast<double>(mag[i]*0.01);
+    acceleration_[i] = static_cast<float>(acc[i]) * 0.01;
+    gyro_[i] = static_cast<float>(gyr[i]) * 0.01;
+    magnet_[i] = static_cast<float>(mag[i]) * 0.01;
   }
 
   mainCurrent_ = getValue<int16_t>(98);

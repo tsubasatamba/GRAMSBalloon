@@ -10,7 +10,6 @@ SendTelemetry::SendTelemetry()
   serialPath_ = "/dev/null";
   baudrate_ = B9600;
   openMode_ = O_RDWR;
-  readWaveformModuleName_ = "ReadWaveform";
 }
 
 SendTelemetry::~SendTelemetry() = default;
@@ -19,7 +18,6 @@ ANLStatus SendTelemetry::mod_define()
 {
   define_parameter("GetEnvironmentalData_module_names", &mod_class::getEnvironmentalDataModuleNames_);
   define_parameter("MeasureTemperature_module_names", &mod_class::measureTemperatureModuleNames_);
-  define_parameter("ReadWaveform_module_name", &mod_class::readWaveformModuleName_);
   
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("baudrate", &mod_class::baudrate_);
@@ -29,22 +27,9 @@ ANLStatus SendTelemetry::mod_define()
 
 ANLStatus SendTelemetry::mod_initialize()
 {
-  const int num_modules_env = getEnvironmentalDataModuleNames_.size();
-  for (int i=0; i<num_modules_env; i++) {
-    const std::string module_name = getEnvironmentalDataModuleNames_[i];
-    if (exist_module(module_name)) {
-      GetEnvironmentalData* ged;
-      get_module_NC(module_name, &ged);
-      getEnvironmentalDataVec_.push_back(ged);
-    }
-  }
-  int n = getEnvironmentalDataVec_.size();
-  telemdef_->resizeEnvTemperature(n);
-  telemdef_->resizeEnvHumidity(n);
-  telemdef_->resizeEnvPressure(n);
-
-  if (exist_module(readWaveformModuleName_)) {
-    get_module_NC(readWaveformModuleName_, &readWaveform_);
+  const std::string read_wf_md = "ReadWaveform";
+  if (exist_module(read_wf_md)) {
+    get_module_NC(read_wf_md, &readWaveform_);
   }
 
   const int num_modules_temp = measureTemperatureModuleNames_.size();
@@ -59,8 +44,28 @@ ANLStatus SendTelemetry::mod_initialize()
   n = measureTemperatureVec_.size();
   telemdef_->resizeRTDTemperatureADC(n);
 
-  if (exist_module("ReceiveCommand")) {
-    get_module_NC("ReceiveCommand", &receiveCommand_);
+  const std::string get_raspi_status_md = "GetRaspiStatus";
+  if (exist_module(get_raspi_status_md)) {
+    get_module_NC(get_raspi_status_mod, &getRaspiStatus_);
+  }
+
+  const int num_modules_env = getEnvironmentalDataModuleNames_.size();
+  for (int i=0; i<num_modules_env; i++) {
+    const std::string module_name = getEnvironmentalDataModuleNames_[i];
+    if (exist_module(module_name)) {
+      GetEnvironmentalData* ged;
+      get_module_NC(module_name, &ged);
+      getEnvironmentalDataVec_.push_back(ged);
+    }
+  }
+  int n = getEnvironmentalDataVec_.size();
+  telemdef_->resizeEnvTemperature(n);
+  telemdef_->resizeEnvHumidity(n);
+  telemdef_->resizeEnvPressure(n);
+
+  const std::string receive_command_md = "ReceiveCommand";
+  if (exist_module(receive_command_md)) {
+    get_module_NC(receive_command_md, &receiveCommand_);
   }
 
 
@@ -75,10 +80,12 @@ ANLStatus SendTelemetry::mod_analyze()
 {
   inputInfo();
 
-  telemdef_->setTelemetryType(telemetryType_);
   telemdef_->generateTelemetry();
 
   if (telemetryType_==2) {
+    telemetryType_ = 1;
+  }
+  if (telemetryType_==3) {
     telemetryType_ = 1;
   }
 
@@ -94,12 +101,6 @@ ANLStatus SendTelemetry::mod_analyze()
 
   #if 1
   
-  // std::vector<char> dbg(telemetry.size()*2+1);
-  // for (int i=0; i<(int)telemetry.size(); i++) {
-  //   sprintf(&dbg[i * 2], "%02x", (unsigned int)telemetry[i]);
-  // }
-  // printf("md5 digest: %s\n", &dbg[0]);
-
   for (int i=0; i<(int)telemetry.size(); i++) {
     std::cout << i << " " << static_cast<int>(telemetry[i]) << std::endl;
   }
@@ -117,36 +118,53 @@ ANLStatus SendTelemetry::mod_finalize()
 
 void SendTelemetry::inputInfo()
 {
-  inputDetectorInfo();
-  inputEnvironmentalData();
-  inputTemperatureData();
-  inputLastCommandInfo();
+  telemdef_->setTelemetryType(telemetryType_);
+  if (telemetryType_==1) {
+    inputDetectorInfo();
+    inputHKVesselInfo();
+    inputLastCommandInfo();
+  }
+  else if (telemetryType_==2) {
+    ;
+  }
+  else if (telemetryType_==3) {
+    ;
+  }
+  else {
+    std::cerr << "Error in SendTelemetry::inputInfo(): wrong telemetry type " << telemetryType_ << std::endl;
+  }
 }
 
 void SendTelemetry::inputDetectorInfo()
 {
   uint32_t event_count = readWaveform_->EventCount();
   telemdef_->setEventCount(event_count);
+  // trigger count
+  // chamber pressure
+  const int n = measureTemperatureVec_.size();
+  for (int i=0; i<n; i++) {
+    telemdef_->setRTDTemperatureADC(i, measureTemperatureVec_[i]->TemperatureADC());
+  }
+  // TPCHV Setting
+  // TPCHV Measure
+  // PMTHV Setting
+  // PMTHV Measure
+  telemdef_->setCPUTemperature();
 }
 
-void SendTelemetry::inputEnvironmentalData()
+
+void SendTelemetry::inputHKVesselInfo()
 {
-  const int n = getEnvironmentalDataVec_.size();
-  
-  for (int i=0; i<n; i++) {
+  telemdef_->setCPUTemperature(getRaspiStatus_->CPUTemperature());
+
+  const int n_env = getEnvironmentalDataVec_.size();
+  for (int i=0; i<n_env; i++) {
     telemdef_->setEnvTemperature(i, getEnvironmentalDataVec_[i] -> Temperature());
     telemdef_->setEnvHumidity(i, getEnvironmentalDataVec_[i] -> Humidity());
     telemdef_->setEnvPressure(i, getEnvironmentalDataVec_[i] -> Pressure());
   }
 }
 
-void SendTelemetry::inputTemperatureData()
-{
-  const int n = measureTemperatureVec_.size();
-  for (int i=0; i<n; i++) {
-    telemdef_->setRTDTemperatureADC(i, measureTemperatureVec_[i]->TemperatureADC());
-  }
-}
 
 void SendTelemetry::inputLastCommandInfo()
 {
