@@ -30,10 +30,14 @@ public:
   anlnext::ANLStatus mod_finalize() override;
   void setReboot(bool v) { reboot_ = v; }
   void setShutdown(bool v) { shutdown_ = v; }
+  void setPrepareReboot(bool v) { prepareReboot_ = v; }
+  void setPrepareShutdown(bool v) { prepareShutdown_ = v; }
   
 private:
   bool reboot_ = false;
   bool shutdown_ = false;
+  bool prepareReboot_ = false;
+  bool prepareShutdown_ = false;
 };
 
 } /* namespace gramsballoon */

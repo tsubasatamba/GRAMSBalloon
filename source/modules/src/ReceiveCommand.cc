@@ -10,9 +10,6 @@ ReceiveCommand::ReceiveCommand()
   : baudrate_(B9600), openMode_(O_RDWR)
 {
   serialPath_ = "/dev/null";
-  for (int i=0; i<2; i++) {
-    que_.push(0);
-  }
   comdef_ = std::make_shared<CommandDefinition>(); 
 }
 
@@ -29,6 +26,16 @@ ANLStatus ReceiveCommand::mod_define()
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
+  const std::string send_telem_md = "SendTelemetry";
+  if (exist_module(send_telem_md)) {
+    get_module_NC(send_telem_md, &sendTelemetry_);
+  }
+
+  const std::string shutdown_system_md = "ShutdownSystem";
+  if (exist_module(shutdown_system_md)) {
+    get_module_NC(shutdown_system_md, &shutdownSystem_);
+  }
+
   const std::string read_wf_md = "ReadWaveform";
   if (exist_module(read_wf_md)) {
     get_module_NC(read_wf_md, &readWaveform_);
@@ -80,33 +87,17 @@ ANLStatus ReceiveCommand::mod_analyze()
   for (int i=0; i<status; i++) {
     command_.push_back(buffer[i]);
   }
+
+  #if 1
   for (int i=0; i<status; i++) {
     std::cout << "command[" << i << "] = " << static_cast<int>(command_[i]) << std::endl;
   }
-  applyCommand();                                    
-  
-/*
-  for (int i=0; i<status; i++) {
-    que_.push(buffer[i]);
-    que_.pop();
-    if (startReading_) {
-      command_.push_back(buffer[i]);
-      if (que_.front()==0xc5 && que_.back()==0xc5) {
-        startReading_ = false;
-        applyCommand();
-      }
-    }
-    else {
-      if (que_.front()==0xeb && que_.back()==0x90) {
-        startReading_ = true;
-        command_.clear();
-        command_.push_back(que_.front());
-        command_.push_back(que_.back());
-      }
-    }  
+  #endif
+
+  const bool applied = applyCommand();
+  if (!applied) {
+    commandRejectCount_++;
   }
-*/
-  
   
   return AS_OK;
 }
@@ -116,26 +107,85 @@ ANLStatus ReceiveCommand::mod_finalize()
   return AS_OK;
 }
 
-void ReceiveCommand::applyCommand()
+bool ReceiveCommand::applyCommand()
 {
-  comdef_ -> setCommand(command_);
+  commandIndex_++;
   std::cout << "command start" << std::endl;
   for (int i=0; i<(int)command_.size(); i++) {
     std::cout << static_cast<int>(command_[i]) << std::endl;
   }
-  bool status = comdef_->interpret();
+  bool status = comdef_ -> setCommand(command_);
   if (!status) {
-    commandRejectCount_++;
-    return;
+    return false;
   }
+  comdef_->interpret();
   
-  commandIndex_++;
   const int code = comdef_->Code();
 
-  if (code==210) {
-    readWaveform_->setOndemand(true);
+  if (code==100) {
+    if (sendTelemetry_!=nullptr) {
+      sendTelemetry_->setTelemetryType(3);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
+  if (code==101) {}
+
+  if (code==102) {
+    if (shutdownSystem_!=nullptr) {
+      shutdownSystem_->setShutdown(true);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  if (code==103) {
+    if (shutdownSystem_!=nullptr) {
+      shutdownSystem_->setReboot(true);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  if (code==104) {
+    if (shutdownSystem_!=nullptr) {
+      shutdownSystem_->setPrepareShutdown(true);
+    }
+    else {
+      return false;
+    }
+  }
+
+  if (code==105) {
+    if (shutdownSystem_!=nullptr) {
+      shutdownSystem_->setPrepareReboot(true);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  if (code==201) {}
+
+  if (code==210) {
+    if (readWaveform_!=nullptr) {
+      readWaveform_->setOndemand(true);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  return false;
 }
 
 } /* namespace gramsballoon */

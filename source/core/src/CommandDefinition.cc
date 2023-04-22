@@ -9,31 +9,26 @@ CommandDefinition::CommandDefinition()
 {
 }
 
-bool CommandDefinition::interpret()
+bool CommandDefinition::setCommand(const std::vector<uint8_t>& v)
 {
-  const int n = command_.size();
+  const int n = v.size();
   if (n<6) {
     std::cerr << "Command is too short!!: length = " << n << std::endl; 
     return false;
   }
 
-  if (command_[0]!=0xeb || command_[1]!=0x90) {
+  if (v[0]!=0xeb || cv1]!=0x90) {
     std::cerr << "start code incorect" << std::endl;
     return false;
   }
-  if (command_[n-2]!=0xc5 || command_[n-1]!=0xc5) {
+  if (v[n-2]!=0xc5 || v[n-1]!=0xc5) {
     std::cerr << "stop code incorrect" << std::endl;
     return false;
   }
 
-  std::cout << "--- command received start ---" << std::endl;
-  for (int i=0; i<(int)command_.size(); i++) {
-    std::cout << i << " " << std::hex << static_cast<int>(command_[i]) << std::dec << std::endl;
-  }
-  std::cout << "--- command received end ---" << std::endl;
-
-  code_ = getValue<uint16_t>(2);
-  argc_ = getValue<uint16_t>(4);
+  command_ = v;
+  uint16_t code = getValue<uint16_t>(2);
+  uint16_t argc = getValue<uint16_t>(4);
 
   if (n != 10 + 4 * static_cast<int>(argc_)) {
     std::cerr << "Invalid command: length not appropriate" << std::endl;
@@ -52,11 +47,17 @@ bool CommandDefinition::interpret()
     std::cerr << "Invalid command: CRC16 not appropriate" << std::endl;
     return false;
   }
+  
+  return true;
+}
+
+void CommandDefinition::interpret()
+{
+  code_ = getValue<uint16_t>(2);
+  argc_ = getValue<uint16_t>(4);
 
   arguments_.clear();
   getVector<int32_t>(6, static_cast<int>(argc_), arguments_);
-
-  return true;
 }
 
 template<typename T>
