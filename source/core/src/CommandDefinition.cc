@@ -17,7 +17,7 @@ bool CommandDefinition::setCommand(const std::vector<uint8_t>& v)
     return false;
   }
 
-  if (v[0]!=0xeb || cv1]!=0x90) {
+  if (v[0]!=0xeb || v[1]!=0x90) {
     std::cerr << "start code incorect" << std::endl;
     return false;
   }
@@ -27,19 +27,18 @@ bool CommandDefinition::setCommand(const std::vector<uint8_t>& v)
   }
 
   command_ = v;
-  uint16_t code = getValue<uint16_t>(2);
   uint16_t argc = getValue<uint16_t>(4);
 
-  if (n != 10 + 4 * static_cast<int>(argc_)) {
+  if (n != 10 + 4 * static_cast<int>(argc)) {
     std::cerr << "Invalid command: length not appropriate" << std::endl;
-    std::cerr << "The length of command should be " << 10+4*static_cast<int>(argc_) <<
+    std::cerr << "The length of command should be " << 10+4*static_cast<int>(argc) <<
       ", but now it is " << n << std::endl;
     return false;
   }
 
   std::vector<uint8_t> com_without_fotter;
   for (int i=0; i<n-4; i++) {
-    com_without_fotter.push_back(command_[i]);
+    com_without_fotter.push_back(v[i]);
   }
   uint16_t crc_calc = calcCRC16(com_without_fotter);
   uint16_t crc_attached = getValue<uint16_t>(n-4);
