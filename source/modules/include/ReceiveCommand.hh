@@ -14,12 +14,17 @@
 #include <sys/select.h>
 #include <sys/time.h>
 #include "CommandDefinition.hh"
-#include "ReadWaveform.hh"
 #include "SerialCommunication.hh"
+#include "SendTelemetry.hh"
+#include "ShutdownSystem.hh"
+#include "ReadWaveform.hh"
 
-class ReadWaveform;
 
 namespace gramsballoon {
+
+class SendTelemetry;
+class ShutdownSystem;
+class ReadWaveform;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -38,7 +43,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void applyCommand();
+  bool applyCommand();
 
   uint16_t CommandCode() { return comdef_->Code(); }
   uint32_t CommandIndex() { return commandIndex_; }
@@ -46,11 +51,14 @@ public:
 
 private:
   std::vector<uint8_t> command_;
-  std::queue<uint8_t> que_;
   std::shared_ptr<CommandDefinition> comdef_ = nullptr;
-  ReadWaveform* readWaveform_ = nullptr;
   uint32_t commandIndex_ = 0;
   uint16_t commandRejectCount_ = 0;
+
+  // access to other classes
+  SendTelemetry* sendTelemetry_ = nullptr;
+  ShutdownSystem* shutdownSystem_ = nullptr;
+  ReadWaveform* readWaveform_ = nullptr;
 
   //communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;

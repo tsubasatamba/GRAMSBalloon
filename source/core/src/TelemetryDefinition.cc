@@ -129,6 +129,9 @@ void TelemetryDefinition::writeAccelerationData()
     if (i<static_cast<int>(gyro_.size())) gyro[i] = static_cast<int16_t>(gyro_[i]/0.01);
     if (i<static_cast<int>(magnet_.size())) magnet[i] = static_cast<int16_t>(magnet_[i]/0.01);
   }
+  addVector<int16_t>(accel);
+  addVector<int16_t>(gyro);
+  addVector<int16_t>(magnet);
 }
 
 void TelemetryDefinition::writeCRC16()
