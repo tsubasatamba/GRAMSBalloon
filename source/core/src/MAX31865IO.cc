@@ -146,6 +146,7 @@ int16_t MAX31865IO::getData()
     std::cout << "MAX31865IO::getData() deteted fault." << std::endl;
     getFaultStatus();
     faultStatusClear();
+    std::cout << "Fault detection: "<< static_cast<int>(getFaultDetection()) << std::endl;
     return MAX31865_BAD;
   }
   temperatureADC_ = data;
