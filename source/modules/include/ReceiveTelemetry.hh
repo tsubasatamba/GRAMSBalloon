@@ -18,7 +18,7 @@ public:
 
 protected:
   ReceiveTelemetry(const ReceiveTelemetry &r) = default;
-  
+
 public:
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
@@ -26,17 +26,17 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
-  
+
 private:
   std::vector<uint8_t> telemetry_;
   std::shared_ptr<TelemetryDefinition> teldef_ = nullptr;
   int maxTelemetry_ = 32000;
-  
+
   // communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;
   speed_t baudrate_;
   std::string serialPath_;
-  char openMode_ = O_RDWR;
+  mode_t openMode_ = O_RDWR;
 };
 
 } // namespace gramsballoon

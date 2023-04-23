@@ -9,7 +9,7 @@ SerialCommunication::SerialCommunication()
   tio_ = std::make_unique<termios>();
 }
 
-SerialCommunication::SerialCommunication(const std::string& serial_path, speed_t baudrate, int open_mode)
+SerialCommunication::SerialCommunication(const std::string& serial_path, speed_t baudrate, mode_t open_mode)
 {
   tio_ = std::make_unique<termios>();
   serialPath_ = serial_path;
@@ -27,10 +27,10 @@ int SerialCommunication::initialize()
   cfsetospeed(tio_.get(), baudrate_);
   cfsetispeed(tio_.get(), baudrate_);
   std::cout << "BAUDRATE was set to " << baudrate_ << std::endl;
-  
+
   cfmakeraw(tio_.get());
   std::cerr << "Set to raw mode" << std::endl;
-  
+
   fd_ = open(serialPath_.c_str(), openMode_);
   if (fd_ < 0) {
     std::cout << "Open Error" << std::endl;
@@ -48,7 +48,7 @@ int SerialCommunication::initialize()
     std::cerr << "tcsetattr failed" << std::endl;
     return -1;
   }
-  
+
   status = ioctl(fd_, TCSETS, tio_.get());
   if (status!=0) {
     std::cout << "ioctl failed" << std::endl;
@@ -74,10 +74,8 @@ int SerialCommunication::swrite(const std::vector<uint8_t>& buf)
 {
   const int length = buf.size();
   const int status = write(fd_, &buf[0], length);
-  
+
   return status;
 }
 
 } /* namespace gramsballoon */
-
-
