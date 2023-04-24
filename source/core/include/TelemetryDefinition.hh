@@ -49,15 +49,6 @@ public:
   template<typename T> void getVector(int index, int num, std::vector<T>& vec);
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
-  
-
-  // daq
-  void setEventID(uint32_t v) { eventID_ = v; }
-  void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
-  void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
-  int EventID() { return eventID_; }
-  const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
-  const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
 
   // rtd
   void setRTDTemperatureADC(int index, int16_t v) { RTDTemperatureADC_[index] = v; }
@@ -104,6 +95,9 @@ public:
   void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
   void setCommandRejectCount(uint16_t v) { commandRejectCount_ = v; }
   void setSoftwareErrorCode(uint16_t v) { softwareErrorCode_ = v; }
+  void setEventID(uint32_t v) { eventID_ = v; }
+  void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
+  void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
   
   // getter
   uint16_t StartCode() { return startCode_; }
@@ -149,6 +143,9 @@ public:
   uint16_t LastCommandCode() { return lastCommandCode_; }
   uint16_t CommandRejectCount() { return commandRejectCount_; }
   uint16_t SoftwareErrorCode() { return softwareErrorCode_; }
+  uint32_t EventID() { return eventID_; }
+  const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
+  const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
 
 private:
   std::vector<uint8_t> telemetry_;
@@ -186,9 +183,12 @@ private:
   uint16_t commandRejectCount_ = 0;
   uint16_t softwareErrorCode_ = 0;
   
+  // WF
   uint32_t eventID_ = 0;
+  timeval eventTime_;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
+
   std::vector<int16_t> RTDTemperatureADC_;
   
 };
