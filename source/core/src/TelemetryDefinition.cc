@@ -257,7 +257,30 @@ void TelemetryDefinition::interpretHK()
 }
 
 void TelemetryDefinition::interpretWF()
-{}
+{
+  const int total_size = telemetry_.size();
+  const int header_size = 16;
+  const int footer_size = 4;
+  const int event_header_size = 12;
+  const int event_size = (total_size-header_size-footer_size-event_header_size)/4;
+
+  int index = header_size;
+  eventHeader_.resize(event_header_size/sizeof(int16_t));
+  getVector<int16_t>(index, event_header_size, eventHeader_);
+  eventID_ = getValue<uint32_t>(index);
+  eventTime_.tv_sec = getValue<int32_t>(index+4);
+  eventTime_.tv_usec = getValue<int32_t>(index+8);
+  index += event_header_size;
+  
+  eventData_.resize(4);
+  for (int i=0; i<4; i++) {
+    eventData_[i].resize(event_size/sizeof(int16_t));
+    getVector<int16_t>(index, event_size, eventData_[i]);
+    index += event_size;
+  }
+  crc_ = getValue<uint16_t>(index);
+  stopCode_ = getValue<uint16_t>(index+2);
+}
 
 void TelemetryDefinition::interpretStatus()
 {}
