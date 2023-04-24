@@ -42,14 +42,14 @@ public:
   void interpretHK();
   void interpretWF();
   void interpretStatus();
-  
+
   template<typename T> void addValue(T input);
   template<typename T> void addVector(std::vector<T>& input);
   template<typename T> T getValue(int index);
   template<typename T> void getVector(int index, int num, std::vector<T>& vec);
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
-  
+
 
   // daq
   void setEventID(uint32_t v) { eventID_ = v; }
@@ -104,7 +104,7 @@ public:
   void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
   void setCommandRejectCount(uint16_t v) { commandRejectCount_ = v; }
   void setSoftwareErrorCode(uint16_t v) { softwareErrorCode_ = v; }
-  
+
   // getter
   uint16_t StartCode() { return startCode_; }
   uint16_t TelemetryType() { return telemetryType_; }
@@ -153,44 +153,44 @@ public:
 private:
   std::vector<uint8_t> telemetry_;
   // header
-  uint16_t startCode_;
-  uint16_t telemetryType_;
+  uint16_t startCode_ = 0;
+  uint16_t telemetryType_ = 0;
   timeval timeNow_;
-  uint32_t telemetryIndex_;
+  uint32_t telemetryIndex_ = 0;
   // footer
   uint16_t crc_;
   uint16_t stopCode_;
 
   // HK
-  uint32_t eventCount_;
-  uint32_t triggerCount_;
-  uint16_t chamberPressure_;
+  uint32_t eventCount_ = 0;
+  uint32_t triggerCount_ = 0;
+  uint16_t chamberPressure_ = 0;
   std::vector<uint16_t> chamberTemperature_;
-  uint16_t valveTemperature_;
-  uint16_t outerTemperature_;
-  double TPCHVSetting_;
-  uint16_t TPCHVMeasure_;
-  double PMTHVSetting_;
-  uint16_t PMTHVMeasure_;
-  double CPUTemperature_;
+  uint16_t valveTemperature_ = 0;
+  uint16_t outerTemperature_ = 0;
+  double TPCHVSetting_ = 0.;
+  uint16_t TPCHVMeasure_ = 0;
+  double PMTHVSetting_ = 0;
+  uint16_t PMTHVMeasure_ = 0;
+  double CPUTemperature_ = 0;
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
   std::vector<float> acceleration_;
   std::vector<float> gyro_;
   std::vector<float> magnet_;
-  int16_t mainCurrent_;
-  int16_t mainVoltage_;
-  uint32_t lastCommandIndex_;
-  uint16_t lastCommandCode_;
-  uint16_t commandRejectCount_;
-  uint16_t softwareErrorCode_;
-  
-  uint32_t eventID_;
+  int16_t mainCurrent_ = 0;
+  int16_t mainVoltage_ = 0;
+  uint32_t lastCommandIndex_ = 0;
+  uint16_t lastCommandCode_ = 0;
+  uint16_t commandRejectCount_ = 0;
+  uint16_t softwareErrorCode_ = 0;
+
+  uint32_t eventID_ = 0;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
   std::vector<int16_t> RTDTemperatureADC_;
-  
+
 };
 
 } /* namespace gramsballoon */
