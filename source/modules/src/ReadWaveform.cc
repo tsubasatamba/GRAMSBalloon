@@ -134,8 +134,17 @@ void ReadWaveform::createNewOutputFile()
 
   std::vector<int16_t> file_header;
   daqio_->generateFileHeader(file_header, numEventsPerFile_);
-  const int size = sizeof(int16_t) * static_cast<int>(file_header.size());
-  ofs_->write(reinterpret_cast<char*>(&file_header[0]), size);
+  const int n = file_header.size();
+  for (int i=0; i<n; i++) {
+    const int byte = sizeof(int16_t);
+    for (int j=0; j<byte; j++) {
+      const int shift = 8 * (byte-1-j);
+      char c = static_cast<char>((file_header[i]>>shift) & 0xff);
+      ofs_->write(&c, 1);
+    }
+  }
+  //const int size = sizeof(int16_t) * static_cast<int>(file_header.size());
+  //ofs_->write(reinterpret_cast<char*>(&file_header[0]), size);
 }
 
 void ReadWaveform::closeOutputFile()
