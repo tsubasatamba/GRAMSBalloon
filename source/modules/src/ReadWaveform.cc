@@ -134,37 +134,65 @@ void ReadWaveform::createNewOutputFile()
 
   std::vector<int16_t> file_header;
   daqio_->generateFileHeader(file_header, numEventsPerFile_);
+  std::vector<char> vec;
   const int n = file_header.size();
   for (int i=0; i<n; i++) {
     const int byte = sizeof(int16_t);
     for (int j=0; j<byte; j++) {
       const int shift = 8 * (byte-1-j);
-      char c = static_cast<char>((file_header[i]>>shift) & 0xff);
-      ofs_->write(&c, 1);
+      char c = static_cast<char>((file_header[i]>>shift) & 0xff));
+      vec.push_back(c);
     }
   }
-  //const int size = sizeof(int16_t) * static_cast<int>(file_header.size());
-  //ofs_->write(reinterpret_cast<char*>(&file_header[0]), size);
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
 }
 
 void ReadWaveform::closeOutputFile()
 {
   std::vector<int16_t> file_footer;
   daqio_->generateFileFooter(file_footer);
-  const int size = sizeof(int16_t) * static_cast<int>(file_footer.size());
-  ofs_->write(reinterpret_cast<char*>(&file_footer[0]), size);
+  std::vector<char> vec;
+  const int n = file_footer.size();
+  for (int i=0; i<n; i++) {
+    const int byte = sizeof(int16_t);
+    for (int j=0; j<byte; j++) {
+      const int shift = 8 * (byte-1-j);
+      char c = static_cast<char>((file_footer[i]>>shift) & 0xff);
+      vec.push_back(c);
+    }
+  }
+
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
   ofs_->close();
 }
 
 void ReadWaveform::writeData()
 {
-  const int header_size = sizeof(int16_t) * static_cast<int>(eventHeader_.size());
-  ofs_->write(reinterpret_cast<char*>(&eventHeader_[0]), header_size);
-
-  for (int i=0; i<static_cast<int>(eventData_.size()); i++) {
-    const int data_size = sizeof(int16_t) * static_cast<int>(eventData_[i].size());
-    ofs_->write(reinterpret_cast<char*>(&eventData_[i][0]), data_size);
+  std::vector<char> vec;
+  
+  const int n1 = eventHeader_.size();
+  for (int i=0; i<n1; i++) {
+    const int byte = sizeof(int16_t);
+    for (int j=0; j<byte; j++) {
+      const int shift = 8 * (byte-1-j);
+      char c = static_cast<char>((eventHeader_[i]>>shift) & 0xff);
+      vec.push_back(c);
+    }
   }
+
+  const int n2 = eventData_.size();
+  for (int i=0; i<n2; i++) {
+    const int byte = sizeof(int16_t);
+    for (int16_t ph: eventData_[i]) {
+      for (int j=0; j<byte; j++) {
+        const int shift = 8 * (byte-1-j);
+        char c = static_cast<char>((ph>>shift) & 0xff);
+        vec.push_back(c);
+      }
+    }
+  }
+  
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
 }
 
 } /* namespace gramsballoon */
