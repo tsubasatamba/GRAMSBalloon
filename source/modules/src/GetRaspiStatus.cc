@@ -8,7 +8,6 @@ namespace gramsballoon {
 GetRaspiStatus::GetRaspiStatus()
 {
   tempFile_ = "/sys/class/thermal/thermal_zone0/temp";
-  ifsTemp_ = std::make_shared<std::ifstream>(tempFile_);
   path_ = "/";
 }
 
@@ -29,6 +28,7 @@ ANLStatus GetRaspiStatus::mod_initialize()
 
 ANLStatus GetRaspiStatus::mod_analyze()
 {
+   ifsTemp_ = std::make_shared<std::ifstream>(tempFile_);
   (*ifsTemp_) >> CPUTemperatureADC_;
   CPUTemperature_ = CPUTemperatureADC_ / 1000.0;
 
@@ -37,13 +37,13 @@ ANLStatus GetRaspiStatus::mod_analyze()
     std::cerr << "Error in GetRaspiStatus::mod_analyze()" << std::endl;
     return AS_QUIT_ERROR;
   }
-  
+
   #if 1
   uint64_t one = 1;
   std::cout << "free size(MB): " << capacityFree_ / (one<<20) << std::endl;
   std::cout << "all size(MB): " << capacityAll_ / (one<<20) << std::endl;
   #endif
-
+  ifsTemp_.reset();
   return AS_OK;
 }
 
