@@ -201,7 +201,7 @@ bool ReceiveCommand::applyCommand()
 
   if (code==205 && argc==3) {
     if (readWaveform_!=nullptr) {
-      const int device = static_cast<int>arguments[0];
+      const int device = static_cast<int>(arguments[0]);
       const int channel = static_cast<int>(arguments[1]);
       const double v = static_cast<double>(arguments[2]) * 1E-3;
       const int index = device*2 + channel;
