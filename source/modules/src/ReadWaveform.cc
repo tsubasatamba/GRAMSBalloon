@@ -74,7 +74,7 @@ ANLStatus ReadWaveform::mod_analyze()
 
   if (analogInSettingChanged_) {
     setupAnalogIn();
-    analogInChanged_ = false;
+    analogInSettingChanged_ = false;
   }
 
   if (!startReading_) {
