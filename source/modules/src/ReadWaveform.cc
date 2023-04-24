@@ -140,7 +140,7 @@ void ReadWaveform::createNewOutputFile()
     const int byte = sizeof(int16_t);
     for (int j=0; j<byte; j++) {
       const int shift = 8 * (byte-1-j);
-      char c = static_cast<char>((file_header[i]>>shift) & 0xff));
+      char c = static_cast<char>((file_header[i]>>shift) & 0xff);
       vec.push_back(c);
     }
   }
