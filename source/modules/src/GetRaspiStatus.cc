@@ -1,5 +1,6 @@
-#include <sys/vfs.h>
 #include "GetRaspiStatus.hh"
+#include <sys/vfs.h>
+#include <fstream>
 
 using namespace anlnext;
 
@@ -8,7 +9,6 @@ namespace gramsballoon {
 GetRaspiStatus::GetRaspiStatus()
 {
   tempFile_ = "/sys/class/thermal/thermal_zone0/temp";
-  ifsTemp_ = std::make_shared<std::ifstream>(tempFile_);
   path_ = "/";
 }
 
@@ -29,8 +29,10 @@ ANLStatus GetRaspiStatus::mod_initialize()
 
 ANLStatus GetRaspiStatus::mod_analyze()
 {
-  (*ifsTemp_) >> CPUTemperatureADC_;
+  std::ifstream ifstemp(tempFile_);
+  ifstemp >> CPUTemperatureADC_;
   CPUTemperature_ = CPUTemperatureADC_ / 1000.0;
+  ifstemp.close();
 
   const int status = getCapacity();
   if (status != 0) {
@@ -50,7 +52,6 @@ ANLStatus GetRaspiStatus::mod_analyze()
 
 ANLStatus GetRaspiStatus::mod_finalize()
 {
-  ifsTemp_->close();
   return AS_OK;
 }
 

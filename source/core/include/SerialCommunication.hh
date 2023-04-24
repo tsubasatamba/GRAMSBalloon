@@ -29,7 +29,7 @@ class SerialCommunication
 {
 public:
   SerialCommunication();
-  SerialCommunication(const std::string& serial_path, speed_t baudrate, int open_mode);
+  SerialCommunication(const std::string& serial_path, speed_t baudrate, mode_t open_mode);
   ~SerialCommunication();
   int initialize();
   int sreadSingle(uint8_t& buf);
@@ -38,7 +38,7 @@ public:
 
   void setBaudrate(speed_t v) { baudrate_ = v; }
   void setSerialPath(const std::string& s) { serialPath_ = s; }
-  void setOpenMode(char c) { openMode_ = c; }
+  void setOpenMode(mode_t c) { openMode_ = c; }
 
   int FD() { return fd_; }
 
@@ -48,7 +48,7 @@ private:
   int fd_ = 0;
   speed_t baudrate_ = B9600;
   std::string serialPath_;
-  char openMode_;
+  mode_t openMode_;
 };
 
 } /* namespace gramsballoon */

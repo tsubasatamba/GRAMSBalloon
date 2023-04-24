@@ -41,7 +41,6 @@ public:
 private:
   int CPUTemperatureADC_;
   double CPUTemperature_;
-  std::shared_ptr<std::ifstream> ifsTemp_;
   std::string tempFile_;
   std::string path_;
   uint64_t capacityFree_ = 0;

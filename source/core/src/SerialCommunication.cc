@@ -9,7 +9,7 @@ SerialCommunication::SerialCommunication()
   tio_ = std::make_unique<termios>();
 }
 
-SerialCommunication::SerialCommunication(const std::string& serial_path, speed_t baudrate, int open_mode)
+SerialCommunication::SerialCommunication(const std::string& serial_path, speed_t baudrate, mode_t open_mode)
 {
   tio_ = std::make_unique<termios>();
   serialPath_ = serial_path;
