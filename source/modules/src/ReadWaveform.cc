@@ -39,20 +39,14 @@ ANLStatus ReadWaveform::mod_define()
 ANLStatus ReadWaveform::mod_initialize()
 {
   get_module_NC(ADManagerName_, &ADManager_);
-  AnalogDiscoveryIO* adio = ADManager_->ADIO();
-  const int num_devices = adio->NumDevices();
-  const int num_sample = static_cast<int>(sampleFreq_*timeWindow_);
-
-  get_module_NC("SendTelemetry", &sendTelemetry_);
-
-  int k = 0;
-  for (int i=0; i<num_devices; i++) {
-    for (int j=0; j<2; j++) {
-      adio -> setupAnalogIn(i, j, sampleFreq_*1.0E6, num_sample, adcRangeList_[k], adcOffsetList_[k]);
-      k++;
-    }
+  setupAnalogIn();
+  
+  const std::string send_telemetry_md = "SendTelemetry";
+  if (exist_module(send_telemetry_md)) {
+    get_module_NC(send_telemetry_md, &sendTelemetry_);
   }
 
+  AnalogDiscoveryIO* adio = ADManager_->ADIO();
   daqio_->setAnalogDiscoveryIO(adio);
   daqio_->initialize();
   daqio_->setTriggerParameters(trigDevice_, trigChannel_, trigMode_, trigLevel_, trigPosition_);
@@ -76,6 +70,11 @@ ANLStatus ReadWaveform::mod_analyze()
       return AS_QUIT_ERROR;
     }
     triggerChanged_ = false;
+  }
+
+  if (analogInSettingChanged_) {
+    setupAnalogIn();
+    analogInSettingChanged_ = false;
   }
 
   if (!startReading_) {
@@ -107,6 +106,21 @@ ANLStatus ReadWaveform::mod_finalize()
 {
   closeOutputFile();
   return AS_OK;
+}
+
+void ReadWaveform::setupAnalogIn()
+{
+  AnalogDiscoveryIO* adio = ADManager_->ADIO();
+  const int num_devices = adio->NumDevices();
+  const int num_sample = static_cast<int>(sampleFreq_*timeWindow_);
+
+  int k = 0;
+  for (int i=0; i<num_devices; i++) {
+    for (int j=0; j<2; j++) {
+      adio -> setupAnalogIn(i, j, sampleFreq_*1.0E6, num_sample, adcRangeList_[k], adcOffsetList_[k]);
+      k++;
+    }
+  }
 }
 
 void ReadWaveform::createNewOutputFile()
