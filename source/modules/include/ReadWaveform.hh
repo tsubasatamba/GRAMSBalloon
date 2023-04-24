@@ -54,7 +54,7 @@ public:
   void setTrigMode(int v) { trigMode_ = v; triggerChanged_ = true; }
   void setADCOffset(int index, double v) {
     if (index<static_cast<int>(adcOffsetList_.size())) adcOffsetList_[index] = v;
-    analogInChanged_ = true;
+    analogInSettingChanged_ = true;
   }
 
 private:
@@ -62,7 +62,7 @@ private:
   AnalogDiscoveryManager* ADManager_ = nullptr;
   std::shared_ptr<DAQIO> daqio_ = nullptr;
   bool triggerChanged_ = false;
-  bool analogInChanged_ = false;
+  bool analogInSettingChanged_ = false;
   int trigDevice_ = 0;
   int trigChannel_ = 0;
   int trigMode_ = 2;
