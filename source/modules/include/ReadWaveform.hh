@@ -37,6 +37,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  void setupAnalogIn();
   void createNewOutputFile();
   void closeOutputFile();
   void writeData();
@@ -50,13 +51,18 @@ public:
 
   void setTrigDevice(int v) { trigDevice_ = v; triggerChanged_ = true; }
   void setTrigChannel(int v) { trigChannel_ = v; triggerChanged_ = true; }
-  void setTrigMode(int v) { trigMode_ = v; triggerChanged_ = true; }  
+  void setTrigMode(int v) { trigMode_ = v; triggerChanged_ = true; }
+  void setADCOffset(int index, double v) {
+    if (index<static_cast<int>(adcOffsetList_.size())) adcOffsetList_[index] = v;
+    analogInChanged_ = true;
+  }
 
 private:
   std::string ADManagerName_ = "";
   AnalogDiscoveryManager* ADManager_ = nullptr;
   std::shared_ptr<DAQIO> daqio_ = nullptr;
   bool triggerChanged_ = false;
+  bool analogInChanged_ = false;
   int trigDevice_ = 0;
   int trigChannel_ = 0;
   int trigMode_ = 2;
