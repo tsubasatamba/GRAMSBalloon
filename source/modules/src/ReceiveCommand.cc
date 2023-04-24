@@ -136,7 +136,7 @@ bool ReceiveCommand::applyCommand()
 
   if (code==100 && argc==0) {
     if (sendTelemetry_!=nullptr) {
-      sendTelemetry_->setTelemetryType(TelemetryType::Status);
+      sendTelemetry_->setTelemetryType(static_cast<int>(TelemetryType::Status));
       return true;
     }
   }

@@ -98,7 +98,7 @@ ANLStatus ReadWaveform::mod_analyze()
     ondemand_ = false;
   }
   writeData();
-  evenID_++;
+  eventID_++;
 
   return AS_OK;
 }
