@@ -199,6 +199,8 @@
   波形データを保存するバイナリーファイルの名前のベース。バイナリーファイルは"output_000000.dat", "output_000001.dat"... と順次生成されていく。
 - <modpar>num_events_per_file</modpar> (default: 100)<br>
   1つのバイナリーファイルに格納するイベントの数を入力する。
+- <modpar>start_reading</modpar> (default: false)<br>
+  はじめから波形読み出しを行うかどうかをboolean で入力する。
 
 #### 仕様
 

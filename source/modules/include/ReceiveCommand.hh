@@ -15,16 +15,18 @@
 #include <sys/time.h>
 #include "CommandDefinition.hh"
 #include "SerialCommunication.hh"
-#include "SendTelemetry.hh"
 #include "ShutdownSystem.hh"
+#include "SendTelemetry.hh"
 #include "ReadWaveform.hh"
+#include "ControlHighVoltage.hh"
 
 
 namespace gramsballoon {
 
-class SendTelemetry;
 class ShutdownSystem;
+class SendTelemetry;
 class ReadWaveform;
+class CotrolHighVoltage;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -59,6 +61,10 @@ private:
   SendTelemetry* sendTelemetry_ = nullptr;
   ShutdownSystem* shutdownSystem_ = nullptr;
   ReadWaveform* readWaveform_ = nullptr;
+  ControlHighVoltage* TPCHVController_ = nullptr;
+  std::string TPCHVControllerModuleName_ = "";
+  ControlHighVoltage* PMTHVController_ = nullptr;
+  std::string PMTHVControllerModuleName_ = "";
 
   //communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;

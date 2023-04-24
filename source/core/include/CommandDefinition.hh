@@ -30,7 +30,8 @@ public:
 
   const std::vector<uint8_t>& Command() const { return command_; }
   uint16_t Code() { return code_; }
-  const std::vector<int32_t>& Arguments() const {return arguments_; }
+  uint16_t Argc() { return argc_; }
+  const std::vector<int32_t>& Arguments() const { return arguments_; }
 
   
 private:

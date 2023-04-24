@@ -46,6 +46,11 @@ public:
   DAQIO* getDAQIO() { return daqio_.get(); }
 
   uint32_t EventCount() { return daqio_->EventCount(); }
+  void setStartReading(bool v) { startReading_ = v; }
+
+  void setTrigDevice(int v) { trigDevice_ = v; triggerChanged_ = true; }
+  void setTrigChannel(int v) { trigChannel_ = v; triggerChanged_ = true; }
+  void setTrigMode(int v) { trigMode_ = v; triggerChanged_ = true; }  
 
 private:
   std::string ADManagerName_ = "";
@@ -70,6 +75,8 @@ private:
   int fileID_ = 0;
   bool ondemand_ = false;
   SendTelemetry* sendTelemetry_;
+  bool startReading_ = false;
+  uint32_t eventID_ = 0;
 };
 
 } /* namespace gramsballoon */
