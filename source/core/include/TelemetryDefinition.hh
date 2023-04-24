@@ -153,40 +153,40 @@ public:
 private:
   std::vector<uint8_t> telemetry_;
   // header
-  uint16_t startCode_;
-  uint16_t telemetryType_;
+  uint16_t startCode_ = 0xeb90;
+  uint16_t telemetryType_ = 0;
   timeval timeNow_;
-  uint32_t telemetryIndex_;
+  uint32_t telemetryIndex_ = 0;
   // footer
-  uint16_t crc_;
-  uint16_t stopCode_;
+  uint16_t crc_ = 0;
+  uint16_t stopCode_ = 0xc5c5;
 
   // HK
-  uint32_t eventCount_;
-  uint32_t triggerCount_;
-  uint16_t chamberPressure_;
+  uint32_t eventCount_ = 0;
+  uint32_t triggerCount_ = 0;
+  uint16_t chamberPressure_ = 0;
   std::vector<uint16_t> chamberTemperature_;
-  uint16_t valveTemperature_;
-  uint16_t outerTemperature_;
-  double TPCHVSetting_;
-  uint16_t TPCHVMeasure_;
-  double PMTHVSetting_;
-  uint16_t PMTHVMeasure_;
-  double CPUTemperature_;
+  uint16_t valveTemperature_ = 0;
+  uint16_t outerTemperature_ = 0;
+  double TPCHVSetting_ = 0.0;
+  uint16_t TPCHVMeasure_ = 0;
+  double PMTHVSetting_ = 0.0;
+  uint16_t PMTHVMeasure_ = 0;
+  double CPUTemperature_ = 0.0;
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
   std::vector<float> acceleration_;
   std::vector<float> gyro_;
   std::vector<float> magnet_;
-  int16_t mainCurrent_;
-  int16_t mainVoltage_;
-  uint32_t lastCommandIndex_;
-  uint16_t lastCommandCode_;
-  uint16_t commandRejectCount_;
-  uint16_t softwareErrorCode_;
+  int16_t mainCurrent_ = 0;
+  int16_t mainVoltage_ = 0;
+  uint32_t lastCommandIndex_ = 0;
+  uint16_t lastCommandCode_ = 0;
+  uint16_t commandRejectCount_ = 0;
+  uint16_t softwareErrorCode_ = 0;
   
-  uint32_t eventID_;
+  uint32_t eventID_ = 0;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
   std::vector<int16_t> RTDTemperatureADC_;
