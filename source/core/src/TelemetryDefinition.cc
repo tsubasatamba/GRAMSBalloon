@@ -13,6 +13,8 @@ TelemetryDefinition::TelemetryDefinition()
   acceleration_.resize(3);
   gyro_.resize(3);
   magnet_.resize(3);
+  ADCOffset_.resize(4);
+  ADCRange_.resize(4);
 }
 
 void TelemetryDefinition::generateTelemetry()
@@ -79,7 +81,21 @@ void TelemetryDefinition::generateTelemetryWF()
 
 void TelemetryDefinition::generateTelemetryStatus()
 {
-
+  addValue<uint16_t>(triggerMode_);
+  addValue<uint16_t>(triggerDevice_);
+  addValue<uint16_t>(triggerChannel_);
+  addValue<int32_t>(static_cast<int32_t>(triggerLevel_/1E-3));
+  addValue<int32_t>(static_cast<int32_t>(triggerPosition_/1E-3));
+  addValue<uint16_t>(channelMask_);
+  const int n_offset = ADCOffset_.size();
+  for (int i=0; i<n_offset; i++) {
+    addValue<int32_t>(static_cast<int32_t>(ADCOffset_[i]/1E-3));
+  }
+  const int n_range = ADCRange_.size();
+  for (int i=0; i<n_range; i++) {
+    addValue<int32_t>(static_cast<int32_t>(ADCRange_[i]/1E-3));
+  }
+  addValue<uint64_t>(SDCapacity_);
 }
 
 void TelemetryDefinition::writeRTDTemperature()
@@ -278,12 +294,36 @@ void TelemetryDefinition::interpretWF()
     getVector<int16_t>(index, event_size, eventData_[i]);
     index += event_size;
   }
+
   crc_ = getValue<uint16_t>(index);
   stopCode_ = getValue<uint16_t>(index+2);
 }
 
 void TelemetryDefinition::interpretStatus()
-{}
+{
+  triggerMode_ = getValue<uint16_t>(16);
+  triggerDevice_ = getValue<uint16_t>(18);
+  triggerChannel_ = getValue<uint16_t>(20);
+  triggerLevel_ = getValue<int32_t>(22) * 1E-3;
+  triggerPosition_ = getValue<int32_t>(26) * 1E-3;
+  channelMask_ = getValue<uint16_t>(30);
+
+  std::vector<int32_t> offset(4);
+  std::vector<int32_t> range(4);
+  getVector<int32_t>(32, 4, offset);
+  getVector<int32_t>(48, 4, range);
+  ADCOffset_.resize(4);
+  ADCRange_.resize(4);
+  for (int i=0; i<4; i++) {
+    ADCOffset_[i] = static_cast<double>(offset[i]) * 1E-3;
+    ADCRange_[i] = static_cast<double>(range[i]) * 1E-3;
+  }
+  
+  SDCapacity_ = getValue<uint64_t>(64);
+
+  crc_ = getValue<uint16_t>(68);
+  stopCode_ = getValue<uint16_t>(70);
+}
 
 void TelemetryDefinition::clear()
 {

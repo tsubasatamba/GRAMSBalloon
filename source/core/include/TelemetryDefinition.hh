@@ -98,6 +98,15 @@ public:
   void setEventID(uint32_t v) { eventID_ = v; }
   void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
   void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
+  void setTriggerMode(uint16_t v) { triggerMode_ = v; }
+  void setTriggerDevice(uint16_t v) { triggerDevice_ = v; }
+  void setTriggerChannel(uint16_t v) { triggerChannel_ = v; }
+  void setTriggerLevel(double v) { triggerLevel_ = v; }
+  void setTriggerPosition(double v) { triggerPosition_ = v; }
+  void setChannelMask(uint16_t v) { channelMask_ = v; }
+  void setADCOffset(const std::vector<double>& v) { ADCOffset_ = v; }
+  void setADCRange(const std::vector<double>& v) { ADCRange_ = v; }
+  void setSDCapacity(uint64_t v) { SDCapacity_ = v; }
   
   // getter
   uint16_t StartCode() { return startCode_; }
@@ -146,6 +155,15 @@ public:
   uint32_t EventID() { return eventID_; }
   const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
   const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
+  uint16_t TriggerMode() { return triggerMode_; }
+  uint16_t TriggerDevice() { return triggerDevice_; }
+  uint16_t TriggerChannel() { return triggerChannel_; }
+  double TriggerLevel() { return triggerLevel_; }
+  double TriggerPosition() { return triggerPosition_; }
+  uint16_t ChannelMask() { return channelMask_; }
+  const std::vector<double>& ADCOffset() const {return ADCOffset_; }
+  const std::vector<double>& ADCRange() const { return ADCRange_; }
+  uint64_t SDCapacity() { return SDCapacity_; }
 
 private:
   std::vector<uint8_t> telemetry_;
@@ -188,6 +206,18 @@ private:
   timeval eventTime_;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
+
+  // Status
+  uint16_t triggerMode_ = 0;
+  uint16_t triggerDevice_ = 0;
+  uint16_t triggerChannel_ = 0;
+  double triggerLevel_ = 0.0; // volt
+  double triggerPosition_ = 0.0; // us
+  uint16_t channelMask_ = 0;
+  std::vector<double> ADCOffset_; // volt
+  std::vector<double> ADCRange_; // volt
+  uint64_t SDCapacity_ = 0;
+
 
   std::vector<int16_t> RTDTemperatureADC_;
   
