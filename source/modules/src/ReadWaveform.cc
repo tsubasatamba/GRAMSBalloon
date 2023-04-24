@@ -31,6 +31,7 @@ ANLStatus ReadWaveform::mod_define()
   define_parameter("adc_offset_list", &mod_class::adcOffsetList_);
   define_parameter("output_filename_base", &mod_class::outputFilenameBase_);
   define_parameter("num_events_per_file", &mod_class::numEventsPerFile_);
+  define_parameter("start_reading", &mod_class::startReading_);
 
   return AS_OK;
 }
@@ -74,25 +75,30 @@ ANLStatus ReadWaveform::mod_analyze()
       std::cerr << "Trigger setup failed in ReadWaveform::mod_analyze" << std::endl;
       return AS_QUIT_ERROR;
     }
-    triggerChanged_ = true;
+    triggerChanged_ = false;
   }
 
-  const int event_id = get_loop_index();
-  if (event_id%numEventsPerFile_ == 0) {
-    if (event_id != 0) {
+  if (!startReading_) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    return AS_OK;
+  }
+
+  if (eventID_%numEventsPerFile_ == 0) {
+    if (eventID_ != 0) {
       closeOutputFile();
     }
     createNewOutputFile();
   }
-  daqio_->getData(event_id, eventHeader_, eventData_);
+  daqio_->getData(eventID_, eventHeader_, eventData_);
   if (ondemand_) {
-    sendTelemetry_->setEventID(event_id);
+    sendTelemetry_->setEventID(eventID_);
     sendTelemetry_->setEventHeader(eventHeader_);
     sendTelemetry_->setEventData(eventData_);
     sendTelemetry_->setTelemetryType(2);
     ondemand_ = false;
   }
   writeData();
+  evenID_++;
 
   return AS_OK;
 }
