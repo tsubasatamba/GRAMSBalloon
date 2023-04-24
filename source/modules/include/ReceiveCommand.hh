@@ -64,7 +64,7 @@ private:
   std::shared_ptr<SerialCommunication> sc_ = nullptr;
   speed_t baudrate_;
   std::string serialPath_;
-  char openMode_ = O_RDWR;
+  mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
   
 };
