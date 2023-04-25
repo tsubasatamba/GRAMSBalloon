@@ -18,66 +18,103 @@
 namespace gramsballoon {
 
 enum class TelemetryType {
-  normal = 1,
-  wave = 2,
-  status = 3
+  HK = 1,
+  WF = 2,
+  Status = 3
 };
 
 class TelemetryDefinition
 {
 public:
   TelemetryDefinition();
-  void generateTelemetry(int telem_type);
-  void generateTelemetryNormal();
-  void generateTelemetryWave();
+  void generateTelemetry();
+  void generateTelemetryHK();
+  void generateTelemetryWF();
   void generateTelemetryStatus();
   void writeRTDTemperature();
   void writeEnvironmentalData();
+  void writeAccelerationData();
   void writeCRC16();
   void clear();
 
+  bool setTelemetry(const std::vector<uint8_t>& v);
   void interpret();
+  void interpretHK();
+  void interpretWF();
+  void interpretStatus();
   
   template<typename T> void addValue(T input);
   template<typename T> void addVector(std::vector<T>& input);
   template<typename T> T getValue(int index);
   template<typename T> void getVector(int index, int num, std::vector<T>& vec);
 
-  void setTelemetry(const std::vector<uint8_t>& v) { telemetry_ = v; }
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
-
-  // detector
-  void setEventCount(uint32_t v) { eventCount_ = v; } 
-
-  // env data
-  void setEnvTemperature(int index, double v) { envTemperature_[index] = v; }
-  void setEnvHumidity(int index, double v) { envTemperature_[index] = v; }
-  void setEnvPressure(int index, double v) { envPressure_[index] = v; }
-  void resizeEnvTemperature(int n) { envTemperature_.resize(n); }
-  void resizeEnvHumidity(int n) { envHumidity_.resize(n); }
-  void resizeEnvPressure(int n) { envPressure_.resize(n); }
-
-  // daq
-  void setEventID(uint32_t v) { eventID_ = v; }
-  void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
-  void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
-  int EventID() { return eventID_; }
-  const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
-  const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
 
   // rtd
   void setRTDTemperatureADC(int index, int16_t v) { RTDTemperatureADC_[index] = v; }
   void resizeRTDTemperatureADC(int n) { RTDTemperatureADC_.resize(n); }
   std::vector<int16_t>& RTDTemperatureADC() { return RTDTemperatureADC_; }
 
-  // command
-  void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
 
+  // setter
+  void setTelemetryType(uint16_t v) { telemetryType_ = v; }
+  void setEventCount(uint32_t v) { eventCount_ = v; }
+  void setTriggerCount(uint32_t v) { triggerCount_ = v; }
+  void setChamberPressure(uint16_t v) { chamberPressure_ = v; }
+  void setChamberTemperature(const std::vector<uint16_t>& v) { chamberTemperature_ = v; } //should be fixed
+  void setChamberTemperature(int index, uint16_t v) { if (index<static_cast<int>(chamberTemperature_.size())) chamberTemperature_[index] = v; }
+  void resizeChamberTemperature(int n) { chamberTemperature_.resize(n); }
+  void setValveTemperature(uint16_t v) { valveTemperature_ = v; }
+  void setOuterTemperature(uint16_t v) { outerTemperature_ = v; }
+  void setTPCHVSetting(double v) { TPCHVSetting_ = v; }
+  void setTPCHVMeasure(uint16_t v) {TPCHVMeasure_ = v; }
+  void setPMTHVSetting(double v) { PMTHVSetting_ = v; }
+  void setPMTHVMeasure(uint16_t v) {PMTHVMeasure_ = v; }
+  void setCPUTemperature(double v) { CPUTemperature_ = v; }
+  void setEnvTemperature(const std::vector<double>& v) { envTemperature_ = v; }
+  void setEnvTemperature(int index, double v) { if (index<static_cast<int>(envTemperature_.size())) envTemperature_[index] = v; }
+  void resizeEnvTemperature(int n) { envTemperature_.resize(n); }
+  void setEnvHumidity(const std::vector<double>& v) { envHumidity_ = v; }
+  void setEnvHumidity(int index, double v) { if (index<static_cast<int>(envHumidity_.size())) envTemperature_[index] = v; }
+  void resizeEnvHumidity(int n) { envHumidity_.resize(n); }
+  void setEnvPressure(const std::vector<double>& v) { envPressure_ = v; }
+  void setEnvPressure(int index, double v) { if (index<static_cast<int>(envPressure_.size())) envPressure_[index] = v; }
+  void resizeEnvPressure(int n) { envPressure_.resize(n); }
+  void setAcceleration(const std::vector<float>& v) { acceleration_ = v; }
+  void setAcceleration(int index, float v) { if (index<static_cast<int>(acceleration_.size())) acceleration_[index] = v; }
+  void resizeAcceleration(int n) { acceleration_.resize(n); }
+  void setGyro(const std::vector<float>& v) { gyro_ = v; }
+  void setGyro(int index, float v) { if (index<static_cast<int>(gyro_.size())) gyro_[index] = v; }
+  void resizeGyro(int n) { gyro_.resize(n); }
+  void setMagnet(const std::vector<float>& v) { magnet_ = v; }
+  void setMagnet(int index, float v) { if (index<static_cast<int>(magnet_.size())) magnet_[index] = v; }
+  void resizeMagnet(int n) { magnet_.resize(n); }
+  void setMainCurrent(int16_t v) { mainCurrent_ = v; }
+  void setMainVoltage(int16_t v) { mainVoltage_ = v; }
+  void setLastCommandIndex(uint32_t v) { lastCommandIndex_ = v; }
+  void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
+  void setCommandRejectCount(uint16_t v) { commandRejectCount_ = v; }
+  void setSoftwareErrorCode(uint16_t v) { softwareErrorCode_ = v; }
+  void setEventID(uint32_t v) { eventID_ = v; }
+  void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
+  void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
+  void setTriggerMode(uint16_t v) { triggerMode_ = v; }
+  void setTriggerDevice(uint16_t v) { triggerDevice_ = v; }
+  void setTriggerChannel(uint16_t v) { triggerChannel_ = v; }
+  void setTriggerLevel(double v) { triggerLevel_ = v; }
+  void setTriggerPosition(double v) { triggerPosition_ = v; }
+  void setChannelMask(uint16_t v) { channelMask_ = v; }
+  void setADCOffset(const std::vector<double>& v) { ADCOffset_ = v; }
+  void setADCRange(const std::vector<double>& v) { ADCRange_ = v; }
+  void setSDCapacity(uint64_t v) { SDCapacity_ = v; }
   
   // getter
+  uint16_t StartCode() { return startCode_; }
   uint16_t TelemetryType() { return telemetryType_; }
   timeval TimeNow() { return timeNow_; }
   uint32_t TelemetryIndex() { return telemetryIndex_; }
+  uint16_t CRC() { return crc_; }
+  uint16_t StopCode() { return stopCode_; }
   uint32_t EventCount() { return eventCount_; }
   uint32_t TriggerCount() { return triggerCount_; }
   uint16_t ChamberPressure() { return chamberPressure_; }
@@ -86,11 +123,11 @@ public:
   uint16_t ChamberTemperature(int index) { return (index<(int)chamberTemperature_.size()) ? chamberTemperature_[index] : 0 ; }
   uint16_t ValveTemperature() { return valveTemperature_; }
   uint16_t OuterTemperature() { return outerTemperature_; }
-  int32_t TPCHVSetting() { return TPCHVSetting_; }
+  double TPCHVSetting() { return TPCHVSetting_; }
   uint16_t TPCHVMeasure() { return TPCHVMeasure_; }
-  int32_t PMTHVSetting() { return PMTHVSetting_; }
+  double PMTHVSetting() { return PMTHVSetting_; }
   uint16_t PMTHVMeasure() { return PMTHVMeasure_; }
-  int16_t CPUTemperature() { return CPUTemperature_; }
+  double CPUTemperature() { return CPUTemperature_; }
   const std::vector<double>& EnvTemperature() const { return envTemperature_; }
   std::vector<double>& EnvTemperature() { return envTemperature_; }
   double EnvTemperature(int index) { return index<(int)envTemperature_.size() ? envTemperature_[index] : 0 ; }
@@ -115,40 +152,73 @@ public:
   uint16_t LastCommandCode() { return lastCommandCode_; }
   uint16_t CommandRejectCount() { return commandRejectCount_; }
   uint16_t SoftwareErrorCode() { return softwareErrorCode_; }
+  uint32_t EventID() { return eventID_; }
+  const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
+  const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
+  uint16_t TriggerMode() { return triggerMode_; }
+  uint16_t TriggerDevice() { return triggerDevice_; }
+  uint16_t TriggerChannel() { return triggerChannel_; }
+  double TriggerLevel() { return triggerLevel_; }
+  double TriggerPosition() { return triggerPosition_; }
+  uint16_t ChannelMask() { return channelMask_; }
+  const std::vector<double>& ADCOffset() const {return ADCOffset_; }
+  const std::vector<double>& ADCRange() const { return ADCRange_; }
+  uint64_t SDCapacity() { return SDCapacity_; }
 
 private:
   std::vector<uint8_t> telemetry_;
-  uint16_t telemetryType_;
+  // header
+  uint16_t startCode_ = 0xeb90;
+  uint16_t telemetryType_ = 0;
   timeval timeNow_;
   uint32_t telemetryIndex_ = 0;
-  // info
-  uint32_t eventCount_;
-  uint32_t triggerCount_;
-  uint16_t chamberPressure_;
+  // footer
+  uint16_t crc_ = 0;
+  uint16_t stopCode_ = 0xc5c5;
+
+  // HK
+  uint32_t eventCount_ = 0;
+  uint32_t triggerCount_ = 0;
+  uint16_t chamberPressure_ = 0;
   std::vector<uint16_t> chamberTemperature_;
-  uint16_t valveTemperature_;
-  uint16_t outerTemperature_;
-  int32_t TPCHVSetting_;
-  uint16_t TPCHVMeasure_;
-  int32_t PMTHVSetting_;
-  uint16_t PMTHVMeasure_;
-  int16_t CPUTemperature_;
+  uint16_t valveTemperature_ = 0;
+  uint16_t outerTemperature_ = 0;
+  double TPCHVSetting_ = 0.0;
+  uint16_t TPCHVMeasure_ = 0;
+  double PMTHVSetting_ = 0.0;
+  uint16_t PMTHVMeasure_ = 0;
+  double CPUTemperature_ = 0.0;
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
   std::vector<double> envPressure_;
   std::vector<float> acceleration_;
   std::vector<float> gyro_;
   std::vector<float> magnet_;
-  int16_t mainCurrent_;
-  int16_t mainVoltage_;
-  uint32_t lastCommandIndex_;
-  uint16_t lastCommandCode_;
-  uint16_t commandRejectCount_;
-  uint16_t softwareErrorCode_;
+  int16_t mainCurrent_ = 0;
+  int16_t mainVoltage_ = 0;
+  uint32_t lastCommandIndex_ = 0;
+  uint16_t lastCommandCode_ = 0;
+  uint16_t commandRejectCount_ = 0;
+  uint16_t softwareErrorCode_ = 0;
   
-  uint32_t eventID_;
+  // WF
+  uint32_t eventID_ = 0;
+  timeval eventTime_;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
+
+  // Status
+  uint16_t triggerMode_ = 0;
+  uint16_t triggerDevice_ = 0;
+  uint16_t triggerChannel_ = 0;
+  double triggerLevel_ = 0.0; // volt
+  double triggerPosition_ = 0.0; // us
+  uint16_t channelMask_ = 0;
+  std::vector<double> ADCOffset_; // volt
+  std::vector<double> ADCRange_; // volt
+  uint64_t SDCapacity_ = 0;
+
+
   std::vector<int16_t> RTDTemperatureADC_;
   
 };

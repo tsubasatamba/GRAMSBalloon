@@ -37,6 +37,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  void setupAnalogIn();
   void createNewOutputFile();
   void closeOutputFile();
   void writeData();
@@ -46,11 +47,22 @@ public:
   DAQIO* getDAQIO() { return daqio_.get(); }
 
   uint32_t EventCount() { return daqio_->EventCount(); }
+  void setStartReading(bool v) { startReading_ = v; }
+
+  void setTrigDevice(int v) { trigDevice_ = v; triggerChanged_ = true; }
+  void setTrigChannel(int v) { trigChannel_ = v; triggerChanged_ = true; }
+  void setTrigMode(int v) { trigMode_ = v; triggerChanged_ = true; }
+  void setADCOffset(int index, double v) {
+    if (index<static_cast<int>(adcOffsetList_.size())) adcOffsetList_[index] = v;
+    analogInSettingChanged_ = true;
+  }
 
 private:
-  std::string ADManagerName_ = "AnalogDiscoveryManager";
+  std::string ADManagerName_ = "";
   AnalogDiscoveryManager* ADManager_ = nullptr;
   std::shared_ptr<DAQIO> daqio_ = nullptr;
+  bool triggerChanged_ = false;
+  bool analogInSettingChanged_ = false;
   int trigDevice_ = 0;
   int trigChannel_ = 0;
   int trigMode_ = 2;
@@ -63,12 +75,14 @@ private:
 
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
-  std::string outputFilenameBase_ = "output";
+  std::string outputFilenameBase_ = "";
   int numEventsPerFile_ = 100;
   std::shared_ptr<std::ofstream> ofs_;
   int fileID_ = 0;
   bool ondemand_ = false;
   SendTelemetry* sendTelemetry_;
+  bool startReading_ = false;
+  uint32_t eventID_ = 0;
 };
 
 } /* namespace gramsballoon */

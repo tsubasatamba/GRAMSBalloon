@@ -49,7 +49,6 @@ private:
   double pressure_;
   double humidity_;
   double temperature_;
-  std::chrono::system_clock::time_point lastUpdateTime_;
 };
 
 } /* namespace gramsballoon */

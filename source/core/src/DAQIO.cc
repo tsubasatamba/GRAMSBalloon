@@ -46,7 +46,7 @@ int DAQIO::setupTrigger()
   const int num_devices = ADIO_ -> NumDevices();
   const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
 
-  if (trigSrc_==RANDOM_TRIGGER) {
+  if (trigSrc_==static_cast<int>(TriggerSrc::RANDOM_TRIGGER)) {
     FDwfDeviceTriggerSet(handler_list[trigDevice_], 0, trigsrcNone);
     for(int i=0; i<num_devices; i++) {
       if(i==trigDevice_) {
@@ -57,13 +57,13 @@ int DAQIO::setupTrigger()
       }
     }
   }
-  else if (trigSrc_==PERIODIC_TRIGGER) {
+  else if (trigSrc_==static_cast<int>(TriggerSrc::PERIODIC_TRIGGER)) {
     for(int i=0; i<num_devices; i++) {
       FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcPC);
       FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcPC);
     }
   }
-  else if (trigSrc_==SELF_TRIGGER) {
+  else if (trigSrc_==static_cast<int>(TriggerSrc::SELF_TRIGGER)) {
     for(int i=0; i<num_devices; i++) {
       if (i==trigDevice_) {
 	      FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
@@ -73,13 +73,13 @@ int DAQIO::setupTrigger()
           if (j==trigChannel_) {
             FDwfAnalogInTriggerChannelSet(handler_list[i], j);
             FDwfAnalogInTriggerLevelSet(handler_list[i], trigLevel_); // Volt
-            if (trigSlope_==TRIGGER_SLOPE_RISE) {
+            if (trigSlope_==static_cast<int>(TriggerSlope::RISE)) {
               FDwfAnalogInTriggerConditionSet(handler_list[i], DwfTriggerSlopeRise);
             }
-            else if (trigSlope_==TRIGGER_SLOPE_FALL) {
+            else if (trigSlope_==static_cast<int>(TriggerSlope::FALL)) {
               FDwfAnalogInTriggerConditionSet(handler_list[i], DwfTriggerSlopeFall);
             }
-            else if (trigSlope_==TRIGGER_SLOPE_EITHER){
+            else if (trigSlope_==static_cast<int>(TriggerSlope::EITHER)){
               FDwfAnalogInTriggerConditionSet(handler_list[i], DwfTriggerSlopeEither);
             }
             else {
@@ -94,7 +94,7 @@ int DAQIO::setupTrigger()
       }
     }
   }
-  else if (trigSrc_==EXTERNAL_TRIGGER) {
+  else if (trigSrc_==static_cast<int>(TriggerSrc::EXTERNAL_TRIGGER)) {
     for(int i=0; i<num_devices; i++){
       FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcExternal1);
     }
@@ -146,7 +146,7 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
       break;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    if (trigSrc_==PERIODIC_TRIGGER) {
+    if (trigSrc_==static_cast<int>(TriggerSrc::PERIODIC_TRIGGER)) {
       std::this_thread::sleep_for(std::chrono::milliseconds(PERIODIC_TRIGGER_MS));
       for (int i=0; i<num_devices; i++) {
         FDwfDeviceTriggerPC(handler_list[i]);
@@ -176,10 +176,10 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
     }
   }
 
-  header[1] = static_cast<int16_t>(event_time.tv_sec&(0xffff));
-  header[2] = static_cast<int16_t>((event_time.tv_sec>>16)&(0xffff));
-  header[3] = static_cast<int16_t>(event_time.tv_usec&(0xffff));
-  header[4] = static_cast<int16_t>((event_time.tv_usec>>16)&(0xffff));
+  header[1] = static_cast<int16_t>((event_time.tv_sec>>16)&(0xffff));
+  header[2] = static_cast<int16_t>((event_time.tv_sec)&(0xffff));
+  header[3] = static_cast<int16_t>((event_time.tv_usec>>16)&(0xffff));
+  header[4] = static_cast<int16_t>((event_time.tv_usec)&(0xffff));
 
   for (int i=0; i<num_devices; i++) {
     if (!detected[i]) continue;
@@ -213,10 +213,10 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
   header[8] = static_cast<int16_t>(numSample_);
   header[9] = static_cast<int16_t>(num_event);
 
-  header[10] = static_cast<int16_t>(time_now.tv_sec&(0xffff));
-  header[11] = static_cast<int16_t>((time_now.tv_sec>>16)&(0xffff));
-  header[12] = static_cast<int16_t>(time_now.tv_usec&(0xffff));
-  header[13] = static_cast<int16_t>((time_now.tv_usec>>16)&(0xffff));
+  header[10] = static_cast<int16_t>((time_now.tv_sec>>16)&(0xffff));
+  header[11] = static_cast<int16_t>((time_now.tv_sec)&(0xffff));
+  header[12] = static_cast<int16_t>((time_now.tv_usec>>16)&(0xffff));
+  header[13] = static_cast<int16_t>((time_now.tv_usec)&(0xffff));
 
   int index = 14;
   for (int i=0; i<num_devices; i++) {
@@ -224,8 +224,8 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
       double range = 0.0;
       FDwfAnalogInChannelRangeGet(handler_list[i], j, &range);
       const double scale = 1.0E3;
-      header[index] = static_cast<int16_t>((static_cast<int>(range*scale)) & (0xffff));
-      header[index+1] = static_cast<int16_t>(((static_cast<int>(range*scale))>>16) & (0xffff));
+      header[index] = static_cast<int16_t>(((static_cast<int>(range*scale))>>16) & (0xffff));
+      header[index+1] = static_cast<int16_t>((static_cast<int>(range*scale)) & (0xffff));
       index += 2;
     }
   }
@@ -235,8 +235,8 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
       double offset = 0.0;
       FDwfAnalogInChannelOffsetGet(handler_list[i], j, &offset);
       const double scale = 1.0E3;
-      header[index] = static_cast<int16_t>((static_cast<int>(offset*scale)) & (0xffff));
-      header[index+1] = static_cast<int16_t>(((static_cast<int>(offset*scale))>>16) & (0xffff));
+      header[index] = static_cast<int16_t>(((static_cast<int>(offset*scale))>>16) & (0xffff));
+      header[index+1] = static_cast<int16_t>((static_cast<int>(offset*scale)) & (0xffff));
       index += 2;
     }
   }
@@ -248,10 +248,10 @@ void DAQIO::generateFileFooter(std::vector<int16_t>& footer)
   footer.resize(sz_footer);
   timeval time_now;
   gettimeofday(&time_now, NULL);
-  footer[0] = static_cast<int16_t>(time_now.tv_sec&(0xffff));
-  footer[1] = static_cast<int16_t>((time_now.tv_sec>>16)&(0xffff));
-  footer[2] = static_cast<int16_t>(time_now.tv_usec&(0xffff));
-  footer[3] = static_cast<int16_t>((time_now.tv_usec>>16)&(0xffff));
+  footer[0] = static_cast<int16_t>((time_now.tv_sec>>16)&(0xffff));
+  footer[1] = static_cast<int16_t>((time_now.tv_sec)&(0xffff));
+  footer[2] = static_cast<int16_t>((time_now.tv_usec>>16)&(0xffff));
+  footer[3] = static_cast<int16_t>((time_now.tv_usec)&(0xffff));
 }
 
 } /* namespace gramsballoon */

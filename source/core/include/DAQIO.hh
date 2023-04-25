@@ -6,15 +6,7 @@
 #include <vector>
 #include "AnalogDiscoveryIO.hh"
 
-#define RANDOM_TRIGGER 0
-#define PERIODIC_TRIGGER 1
-#define SELF_TRIGGER 2
-#define EXTERNAL_TRIGGER 11
 #define PERIODIC_TRIGGER_MS 500
-
-#define TRIGGER_SLOPE_RISE 0
-#define TRIGGER_SLOPE_FALL 1
-#define TRIGGER_SLOPE_EITHER 2
 
 
 /**
@@ -25,6 +17,19 @@
  */
 
 namespace gramsballoon {
+
+enum class TriggerSrc {
+  RANDOM_TRIGGER = 0,
+  PERIODIC_TRIGGER = 1,
+  SELF_TRIGGER = 2,
+  EXTERNAL_TRIGGER = 11
+};
+
+enum class TriggerSlope {
+  RISE = 0,
+  FALL = 1,
+  EITHER = 2
+};
 
 class DAQIO
 {

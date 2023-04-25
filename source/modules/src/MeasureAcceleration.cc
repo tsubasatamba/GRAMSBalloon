@@ -15,7 +15,7 @@ MeasureAcceleration::~MeasureAcceleration() = default;
 ANLStatus MeasureAcceleration::mod_define()
 {
   define_parameter("device_path", &mod_class::devicePath_);
-  define_parameter("calibrateGyro", &mod_class::calibrateGyro_);
+  define_parameter("calibrate_gyro", &mod_class::calibrateGyro_);
   return AS_OK;
 }
 

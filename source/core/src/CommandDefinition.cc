@@ -9,42 +9,36 @@ CommandDefinition::CommandDefinition()
 {
 }
 
-bool CommandDefinition::interpret()
+bool CommandDefinition::setCommand(const std::vector<uint8_t>& v)
 {
-  const int n = command_.size();
+  const int n = v.size();
   if (n<6) {
     std::cerr << "Command is too short!!: length = " << n << std::endl; 
     return false;
   }
 
-  if (command_[0]!=0xeb || command_[1]!=0x90) {
+  if (v[0]!=0xeb || v[1]!=0x90) {
     std::cerr << "start code incorect" << std::endl;
     return false;
   }
-  if (command_[n-2]!=0xc5 || command_[n-1]!=0xc5) {
-    std::cerr << "end code incorrect" << std::endl;
+  if (v[n-2]!=0xc5 || v[n-1]!=0xc5) {
+    std::cerr << "stop code incorrect" << std::endl;
     return false;
   }
 
-  std::cout << "--- command received start ---" << std::endl;
-  for (int i=0; i<(int)command_.size(); i++) {
-    std::cout << i << " " << std::hex << static_cast<int>(command_[i]) << std::dec << std::endl;
-  }
-  std::cout << "--- command received end ---" << std::endl;
+  command_ = v;
+  uint16_t argc = getValue<uint16_t>(4);
 
-  code_ = getValue<uint16_t>(2);
-  argc_ = getValue<uint16_t>(4);
-
-  if (n != 10 + 4 * static_cast<int>(argc_)) {
+  if (n != 10 + 4 * static_cast<int>(argc)) {
     std::cerr << "Invalid command: length not appropriate" << std::endl;
-    std::cerr << "The length of command should be " << 10+4*static_cast<int>(argc_) <<
+    std::cerr << "The length of command should be " << 10+4*static_cast<int>(argc) <<
       ", but now it is " << n << std::endl;
     return false;
   }
 
   std::vector<uint8_t> com_without_fotter;
   for (int i=0; i<n-4; i++) {
-    com_without_fotter.push_back(command_[i]);
+    com_without_fotter.push_back(v[i]);
   }
   uint16_t crc_calc = calcCRC16(com_without_fotter);
   uint16_t crc_attached = getValue<uint16_t>(n-4);
@@ -52,11 +46,17 @@ bool CommandDefinition::interpret()
     std::cerr << "Invalid command: CRC16 not appropriate" << std::endl;
     return false;
   }
+  
+  return true;
+}
+
+void CommandDefinition::interpret()
+{
+  code_ = getValue<uint16_t>(2);
+  argc_ = getValue<uint16_t>(4);
 
   arguments_.clear();
   getVector<int32_t>(6, static_cast<int>(argc_), arguments_);
-
-  return true;
 }
 
 template<typename T>

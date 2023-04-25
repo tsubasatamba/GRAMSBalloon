@@ -7,10 +7,12 @@ namespace gramsballoon {
 
 ReadWaveform::ReadWaveform()
 {
+  ADManagerName_ = "AnalogDiscoveryManager";
   daqio_ = std::make_shared<DAQIO>();
   adcRangeList_ = std::vector<double>(4, 1.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);
   ofs_ = std::make_shared<std::ofstream>();
+  outputFilenameBase_ = "output";
 }
 
 ReadWaveform::~ReadWaveform() = default;
@@ -29,6 +31,7 @@ ANLStatus ReadWaveform::mod_define()
   define_parameter("adc_offset_list", &mod_class::adcOffsetList_);
   define_parameter("output_filename_base", &mod_class::outputFilenameBase_);
   define_parameter("num_events_per_file", &mod_class::numEventsPerFile_);
+  define_parameter("start_reading", &mod_class::startReading_);
 
   return AS_OK;
 }
@@ -36,27 +39,21 @@ ANLStatus ReadWaveform::mod_define()
 ANLStatus ReadWaveform::mod_initialize()
 {
   get_module_NC(ADManagerName_, &ADManager_);
-  AnalogDiscoveryIO* adio = ADManager_->ADIO();
-  const int num_devices = adio->NumDevices();
-  const int num_sample = static_cast<int>(sampleFreq_*timeWindow_);
-
-  get_module_NC("SendTelemetry", &sendTelemetry_);
-
-  int k = 0;
-  for (int i=0; i<num_devices; i++) {
-    for (int j=0; j<2; j++) {
-      adio -> setupAnalogIn(i, j, sampleFreq_*1.0E6, num_sample, adcRangeList_[k], adcOffsetList_[k]);
-      k++;
-    }
+  setupAnalogIn();
+  
+  const std::string send_telemetry_md = "SendTelemetry";
+  if (exist_module(send_telemetry_md)) {
+    get_module_NC(send_telemetry_md, &sendTelemetry_);
   }
 
+  AnalogDiscoveryIO* adio = ADManager_->ADIO();
   daqio_->setAnalogDiscoveryIO(adio);
   daqio_->initialize();
   daqio_->setTriggerParameters(trigDevice_, trigChannel_, trigMode_, trigLevel_, trigPosition_);
   daqio_->setSampleParameters(sampleFreq_, timeWindow_);
   const int status = daqio_->setupTrigger();
   if (status!=0) {
-    std::cerr << "Trigger setup failed." << std::endl;
+    std::cerr << "Trigger setup failed in ReadWaveform::mod_initialize" << std::endl;
     return AS_QUIT_ERROR;
   }
   
@@ -65,22 +62,42 @@ ANLStatus ReadWaveform::mod_initialize()
 
 ANLStatus ReadWaveform::mod_analyze()
 {
-  const int event_id = get_loop_index();
-  if (event_id%numEventsPerFile_ == 0) {
-    if (event_id != 0) {
+  if (triggerChanged_) {
+    daqio_->setTriggerParameters(trigDevice_, trigChannel_, trigMode_, trigLevel_, trigPosition_);
+    const int status = daqio_->setupTrigger();
+    if (status!=0) {
+      std::cerr << "Trigger setup failed in ReadWaveform::mod_analyze" << std::endl;
+      return AS_QUIT_ERROR;
+    }
+    triggerChanged_ = false;
+  }
+
+  if (analogInSettingChanged_) {
+    setupAnalogIn();
+    analogInSettingChanged_ = false;
+  }
+
+  if (!startReading_) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    return AS_OK;
+  }
+
+  if (eventID_%numEventsPerFile_ == 0) {
+    if (eventID_ != 0) {
       closeOutputFile();
     }
     createNewOutputFile();
   }
-  daqio_->getData(event_id, eventHeader_, eventData_);
+  daqio_->getData(eventID_, eventHeader_, eventData_);
   if (ondemand_) {
-    sendTelemetry_->setEventID(event_id);
+    sendTelemetry_->setEventID(eventID_);
     sendTelemetry_->setEventHeader(eventHeader_);
     sendTelemetry_->setEventData(eventData_);
     sendTelemetry_->setTelemetryType(2);
     ondemand_ = false;
   }
   writeData();
+  eventID_++;
 
   return AS_OK;
 }
@@ -89,6 +106,21 @@ ANLStatus ReadWaveform::mod_finalize()
 {
   closeOutputFile();
   return AS_OK;
+}
+
+void ReadWaveform::setupAnalogIn()
+{
+  AnalogDiscoveryIO* adio = ADManager_->ADIO();
+  const int num_devices = adio->NumDevices();
+  const int num_sample = static_cast<int>(sampleFreq_*timeWindow_);
+
+  int k = 0;
+  for (int i=0; i<num_devices; i++) {
+    for (int j=0; j<2; j++) {
+      adio -> setupAnalogIn(i, j, sampleFreq_*1.0E6, num_sample, adcRangeList_[k], adcOffsetList_[k]);
+      k++;
+    }
+  }
 }
 
 void ReadWaveform::createNewOutputFile()
@@ -102,28 +134,65 @@ void ReadWaveform::createNewOutputFile()
 
   std::vector<int16_t> file_header;
   daqio_->generateFileHeader(file_header, numEventsPerFile_);
-  const int size = sizeof(int16_t) * static_cast<int>(file_header.size());
-  ofs_->write(reinterpret_cast<char*>(&file_header[0]), size);
+  std::vector<char> vec;
+  const int n = file_header.size();
+  for (int i=0; i<n; i++) {
+    const int byte = sizeof(int16_t);
+    for (int j=0; j<byte; j++) {
+      const int shift = 8 * (byte-1-j);
+      char c = static_cast<char>((file_header[i]>>shift) & 0xff);
+      vec.push_back(c);
+    }
+  }
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
 }
 
 void ReadWaveform::closeOutputFile()
 {
   std::vector<int16_t> file_footer;
   daqio_->generateFileFooter(file_footer);
-  const int size = sizeof(int16_t) * static_cast<int>(file_footer.size());
-  ofs_->write(reinterpret_cast<char*>(&file_footer[0]), size);
+  std::vector<char> vec;
+  const int n = file_footer.size();
+  for (int i=0; i<n; i++) {
+    const int byte = sizeof(int16_t);
+    for (int j=0; j<byte; j++) {
+      const int shift = 8 * (byte-1-j);
+      char c = static_cast<char>((file_footer[i]>>shift) & 0xff);
+      vec.push_back(c);
+    }
+  }
+
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
   ofs_->close();
 }
 
 void ReadWaveform::writeData()
 {
-  const int header_size = sizeof(int16_t) * static_cast<int>(eventHeader_.size());
-  ofs_->write(reinterpret_cast<char*>(&eventHeader_[0]), header_size);
-
-  for (int i=0; i<static_cast<int>(eventData_.size()); i++) {
-    const int data_size = sizeof(int16_t) * static_cast<int>(eventData_[i].size());
-    ofs_->write(reinterpret_cast<char*>(&eventData_[i][0]), data_size);
+  std::vector<char> vec;
+  
+  const int n1 = eventHeader_.size();
+  for (int i=0; i<n1; i++) {
+    const int byte = sizeof(int16_t);
+    for (int j=0; j<byte; j++) {
+      const int shift = 8 * (byte-1-j);
+      char c = static_cast<char>((eventHeader_[i]>>shift) & 0xff);
+      vec.push_back(c);
+    }
   }
+
+  const int n2 = eventData_.size();
+  for (int i=0; i<n2; i++) {
+    const int byte = sizeof(int16_t);
+    for (int16_t ph: eventData_[i]) {
+      for (int j=0; j<byte; j++) {
+        const int shift = 8 * (byte-1-j);
+        char c = static_cast<char>((ph>>shift) & 0xff);
+        vec.push_back(c);
+      }
+    }
+  }
+  
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
 }
 
 } /* namespace gramsballoon */

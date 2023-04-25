@@ -14,12 +14,19 @@
 #include <sys/select.h>
 #include <sys/time.h>
 #include "CommandDefinition.hh"
-#include "ReadWaveform.hh"
 #include "SerialCommunication.hh"
+#include "ShutdownSystem.hh"
+#include "SendTelemetry.hh"
+#include "ReadWaveform.hh"
+#include "ControlHighVoltage.hh"
 
-class ReadWaveform;
 
 namespace gramsballoon {
+
+class ShutdownSystem;
+class SendTelemetry;
+class ReadWaveform;
+class CotrolHighVoltage;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -38,22 +45,32 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void applyCommand();
+  bool applyCommand();
 
-  uint16_t LastCommandCode() { return comdef_->Code(); }
+  uint16_t CommandCode() { return comdef_->Code(); }
+  uint32_t CommandIndex() { return commandIndex_; }
+  uint16_t CommandRejectCount() { return commandRejectCount_; }
 
 private:
   std::vector<uint8_t> command_;
-  std::queue<uint8_t> que_;
   std::shared_ptr<CommandDefinition> comdef_ = nullptr;
+  uint32_t commandIndex_ = 0;
+  uint16_t commandRejectCount_ = 0;
+
+  // access to other classes
+  SendTelemetry* sendTelemetry_ = nullptr;
+  ShutdownSystem* shutdownSystem_ = nullptr;
   ReadWaveform* readWaveform_ = nullptr;
-  std::string readWaveformModuleName_ = "ReadWaveform";
+  ControlHighVoltage* TPCHVController_ = nullptr;
+  std::string TPCHVControllerModuleName_ = "";
+  ControlHighVoltage* PMTHVController_ = nullptr;
+  std::string PMTHVControllerModuleName_ = "";
 
   //communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;
   speed_t baudrate_;
   std::string serialPath_;
-  char openMode_ = O_RDWR;
+  mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
   
 };
