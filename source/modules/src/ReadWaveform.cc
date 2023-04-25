@@ -125,6 +125,7 @@ void ReadWaveform::setupAnalogIn()
 
 void ReadWaveform::createNewOutputFile()
 {
+  std::cout << "create" << std::endl;
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileID_;
   const std::string id_str = sout.str();
@@ -155,6 +156,7 @@ void ReadWaveform::createNewOutputFile()
 
 void ReadWaveform::closeOutputFile()
 {
+  std::cout << "close" << std::endl;
   std::vector<int16_t> file_footer;
   daqio_->generateFileFooter(file_footer);
   std::vector<char> vec;
@@ -179,6 +181,8 @@ void ReadWaveform::closeOutputFile()
 
 void ReadWaveform::writeData()
 {
+  std::cout << "write" << std::endl;
+
   std::vector<char> vec;
   
   const int n1 = eventHeader_.size();
