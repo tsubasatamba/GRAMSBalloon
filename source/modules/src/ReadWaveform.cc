@@ -131,7 +131,7 @@ void ReadWaveform::createNewOutputFile()
   //const std::string filename = outputFilenameBase_ + "_" + id_str + ".dat";
   filename_ = outputFilenameBase_ + "_" + id_str + ".dat";
   //ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
-  std::ofstream ofs(filename, std::ios::out|std::ios::binary);
+  std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
   fileID_++;
 
   std::vector<int16_t> file_header;
@@ -171,7 +171,7 @@ void ReadWaveform::closeOutputFile()
   // ofs_->write(&vec[0], static_cast<int>(vec.size()));
   // ofs_->flush();
   // ofs_->close();
-  std::ofstream ofs(filename_);
+  std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
   ofs.write(&vec[0], static_cast<int>(vec.size()));
   ofs.flush();
   ofs.close();
@@ -205,7 +205,7 @@ void ReadWaveform::writeData()
   
   // ofs_->write(&vec[0], static_cast<int>(vec.size()));
   // ofs_->flush();
-  std::ofstream ofs(filename_);
+  std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
   ofs.write(&vec[0], static_cast<int>(vec.size()));
   ofs.flush();
   ofs.close();
