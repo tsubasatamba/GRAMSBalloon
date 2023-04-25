@@ -66,6 +66,7 @@ class MyApp < ANL::ANLApp
         with_parameters(
             serial_path: "/dev/ttyAMA1",
             MeasureTemperature_module_names: ["RTD1","RTD2","RTD3","RTD4","RTD5"]
+            GetEnvironmentalData_module_names: ["GetBME680Data1","GetBME680Data2","GetBME680Data3","GetBME680Data4","GetBME680Data5"]
         )
     end
 end
