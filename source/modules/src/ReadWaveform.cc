@@ -11,7 +11,7 @@ ReadWaveform::ReadWaveform()
   daqio_ = std::make_shared<DAQIO>();
   adcRangeList_ = std::vector<double>(4, 1.0);
   adcOffsetList_ = std::vector<double>(4, 0.0);
-  //ofs_ = std::make_shared<std::ofstream>();
+  ofs_ = std::make_shared<std::ofstream>();
   outputFilenameBase_ = "output";
 }
 
@@ -129,10 +129,10 @@ void ReadWaveform::createNewOutputFile()
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileID_;
   const std::string id_str = sout.str();
-  //const std::string filename = outputFilenameBase_ + "_" + id_str + ".dat";
-  filename_ = outputFilenameBase_ + "_" + id_str + ".dat";
-  //ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
-  std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
+  const std::string filename = outputFilenameBase_ + "_" + id_str + ".dat";
+  //filename_ = outputFilenameBase_ + "_" + id_str + ".dat";
+  ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
+  //std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
   fileID_++;
 
   std::vector<int16_t> file_header;
@@ -147,11 +147,11 @@ void ReadWaveform::createNewOutputFile()
       vec.push_back(c);
     }
   }
-  // ofs_->write(&vec[0], static_cast<int>(vec.size()));
-  // ofs_->flush();
-  ofs.write(&vec[0], static_cast<int>(vec.size()));
-  ofs.flush();
-  ofs.close();
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
+  ofs_->flush();
+  //ofs.write(&vec[0], static_cast<int>(vec.size()));
+  //ofs.flush();
+  //ofs.close();
 }
 
 void ReadWaveform::closeOutputFile()
@@ -170,13 +170,13 @@ void ReadWaveform::closeOutputFile()
     }
   }
 
-  // ofs_->write(&vec[0], static_cast<int>(vec.size()));
-  // ofs_->flush();
-  // ofs_->close();
-  std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
-  ofs.write(&vec[0], static_cast<int>(vec.size()));
-  ofs.flush();
-  ofs.close();
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
+  ofs_->flush();
+  ofs_->close();
+  // std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
+  // ofs.write(&vec[0], static_cast<int>(vec.size()));
+  // ofs.flush();
+  // ofs.close();
 }
 
 void ReadWaveform::writeData()
@@ -207,12 +207,12 @@ void ReadWaveform::writeData()
     }
   }
   
-  // ofs_->write(&vec[0], static_cast<int>(vec.size()));
-  // ofs_->flush();
-  std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
-  ofs.write(&vec[0], static_cast<int>(vec.size()));
-  ofs.flush();
-  ofs.close();
+  ofs_->write(&vec[0], static_cast<int>(vec.size()));
+  ofs_->flush();
+  // std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
+  // ofs.write(&vec[0], static_cast<int>(vec.size()));
+  // ofs.flush();
+  // ofs.close();
 }
 
 } /* namespace gramsballoon */
