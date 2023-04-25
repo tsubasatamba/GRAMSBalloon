@@ -125,7 +125,6 @@ void ReadWaveform::setupAnalogIn()
 
 void ReadWaveform::createNewOutputFile()
 {
-  std::cout << "create" << std::endl;
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileID_;
   const std::string id_str = sout.str();
@@ -149,14 +148,10 @@ void ReadWaveform::createNewOutputFile()
   }
   ofs_->write(&vec[0], static_cast<int>(vec.size()));
   ofs_->flush();
-  //ofs.write(&vec[0], static_cast<int>(vec.size()));
-  //ofs.flush();
-  //ofs.close();
 }
 
 void ReadWaveform::closeOutputFile()
 {
-  std::cout << "close" << std::endl;
   std::vector<int16_t> file_footer;
   daqio_->generateFileFooter(file_footer);
   std::vector<char> vec;
@@ -173,16 +168,10 @@ void ReadWaveform::closeOutputFile()
   ofs_->write(&vec[0], static_cast<int>(vec.size()));
   ofs_->flush();
   ofs_->close();
-  // std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
-  // ofs.write(&vec[0], static_cast<int>(vec.size()));
-  // ofs.flush();
-  // ofs.close();
 }
 
 void ReadWaveform::writeData()
 {
-  std::cout << "write" << std::endl;
-
   std::vector<char> vec;
   
   const int n1 = eventHeader_.size();
@@ -209,10 +198,6 @@ void ReadWaveform::writeData()
   
   ofs_->write(&vec[0], static_cast<int>(vec.size()));
   ofs_->flush();
-  // std::ofstream ofs(filename_, std::ios::out|std::ios::binary);
-  // ofs.write(&vec[0], static_cast<int>(vec.size()));
-  // ofs.flush();
-  // ofs.close();
 }
 
 } /* namespace gramsballoon */

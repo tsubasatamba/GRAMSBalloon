@@ -78,7 +78,6 @@ private:
   std::string outputFilenameBase_ = "";
   int numEventsPerFile_ = 100;
   std::shared_ptr<std::ofstream> ofs_;
-  //std::string filename_ = "";
   int fileID_ = 0;
   bool ondemand_ = false;
   SendTelemetry* sendTelemetry_;
