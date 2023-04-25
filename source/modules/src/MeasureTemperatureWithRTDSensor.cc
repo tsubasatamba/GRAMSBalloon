@@ -32,7 +32,7 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_pre_initialize()
   }
   get_module_NC(SPIManagerName_, &SPIManager_);
   SPIManager_->addChipSelect(chipSelect_);
-  
+
   return AS_OK;
 }
 
@@ -40,7 +40,7 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_initialize()
 {
   const unsigned int spihandler = SPIManager_ -> Interface() -> SPIHandler();
   const int pi = SPIManager_ -> Interface() -> GPIOHandler();
-  
+
   interface_ -> setSPIHandler(spihandler);
   interface_ -> setChipSelect(chipSelect_);
   interface_ -> setGPIOHandler(pi);
@@ -62,20 +62,21 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
   int status = max31865io_->getData();
   if (status!=MAX31865_OK) {
     std::cerr << "Failed to get data in MeasureTemperatureWithRTDSensor::mod_analyze: status = " << status << std::endl;
-    return AS_OK;
+    return AS_ERROR;
   }
 
   #if 0
   double temperature = max31865io_->Temperature();
   std::cout << "temperature ADC: " << TemperatureADC() << std::endl;
   std::cout << " temperature : " << temperature << std::endl;
+
   #endif
-  
+ 
   return AS_OK;
 }
 
 ANLStatus MeasureTemperatureWithRTDSensor::mod_finalize()
-{  
+{
   return AS_OK;
 }
 
