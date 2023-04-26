@@ -52,6 +52,10 @@ public:
   int TrigSlope() { return trigSlope_; }
   double TrigLevel() { return trigLevel_; }
   double TrigPosition() { return trigPosition_; }
+  const std::vector<double>& Offset() const { getOffset(); return offset_; }
+  const std::vector<double>& Range() const { getRange(); return range_; }
+  void getOffset();
+  void getRange();
 
 private:
   AnalogDiscoveryIO* ADIO_;
@@ -62,8 +66,8 @@ private:
   DwfTriggerSlope trigSlope_ = 0;
   double trigLevel_ = 0.0; // volt
   double trigPosition_ = 0.0; // us
-  //std::vector<double> range_;
-  //std::vector<double> offset_;
+  std::vector<double> range_;
+  std::vector<double> offset_;
 
   double timeWindow_ = 0.0; // us
   double sampleFreq_ = 2.0; //MHz

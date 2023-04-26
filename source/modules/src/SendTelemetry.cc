@@ -217,8 +217,8 @@ void SendTelemetry::inputStatusInfo()
     telemdef_->setTriggerLevel(readWaveform_->TrigLevel());
     telemdef_->setTriggerPosition(readWaveform_->TrigPosition());
     // chmask
-    // offset
-    // range
+    telemdef_->setADCOffset(readWaveform_->Offset());
+    telemdef_->setADCRange(readWaveform_->Range());
   }
   if (getRaspiStatus_!=nullptr) {
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());
