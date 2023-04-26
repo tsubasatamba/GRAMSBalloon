@@ -3,7 +3,7 @@
 namespace gramsballoon {
 
 SerialCommunication::SerialCommunication()
-  :baudrate_(B9600), openMode_(O_RDWR)
+  :baudrate_(B9600), openMode_(O_RDWR | O_NONBLOCK)
 {
   serialPath_ = "/dev/null";
   tio_ = std::make_unique<termios>();
@@ -31,7 +31,7 @@ int SerialCommunication::initialize()
   cfmakeraw(tio_.get());
   std::cerr << "Set to raw mode" << std::endl;
   
-  fd_ = open(serialPath_.c_str(), openMode_);
+  fd_ = open(serialPath_.c_str(), O_RDWR | O_NONBLOCK);
   if (fd_ < 0) {
     std::cout << "Open Error" << std::endl;
     return -1;
@@ -54,6 +54,12 @@ int SerialCommunication::initialize()
     std::cout << "ioctl failed" << std::endl;
     return -1;
   }
+  status = fcntl(fd_, F_SETFL, openMode_);
+  if (status!=0) {
+    std::cout << "fcntl failed" << std::endl;
+    return -1;
+  }
+  
   return 0;
 }
 
