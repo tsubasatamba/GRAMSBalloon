@@ -31,6 +31,7 @@ private:
   std::vector<uint8_t> telemetry_;
   std::shared_ptr<TelemetryDefinition> teldef_ = nullptr;
   int maxTelemetry_ = 32000;
+  std::vector<uint8_t> buffer_;
   
   // communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;

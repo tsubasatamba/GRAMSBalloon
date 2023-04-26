@@ -23,6 +23,7 @@ ANLStatus ReceiveTelemetry::mod_define()
 
 ANLStatus ReceiveTelemetry::mod_initialize()
 {
+  buffer_.resize(maxTelemetry_);
   sc_ = std::make_unique<SerialCommunication>(serialPath_, baudrate_, openMode_);
   sc_->initialize();
   
@@ -30,11 +31,7 @@ ANLStatus ReceiveTelemetry::mod_initialize()
 }
 
 ANLStatus ReceiveTelemetry::mod_analyze()
-{
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-
-  telemetry_.clear();
-  
+{  
   fd_set fdset;
   timeval timeout;
   timeout.tv_sec = 10;
@@ -52,19 +49,24 @@ ANLStatus ReceiveTelemetry::mod_analyze()
     return AS_OK;
   }
 
-  std::vector<uint8_t> buffer(maxTelemetry_);
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  const int status = sc_->sread(buffer, maxTelemetry_);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  const int status = sc_->sread(buffer_, maxTelemetry_);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveTelemetry::mod_analyze: status = " << status << std::endl;
     return AS_OK;
   }
   std::cout << "status: " << status << std::endl;
   for (int i = 0; i < status; i++) {
-    telemetry_.push_back(buffer[i]);
+    if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
+      telemetry_.clear();
+    }
+    telemetry_.push_back(buffer_[i]);
+    if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
+      break;
+    }
   }
   #if 1
-  for (int i = 0; i < status;i++) {
+  for (int i = 0; i < static_cast<int>(telemetry_.size());i++) {
     std::cout << "telemetry[" <<i<< "] = "<<static_cast<int>(telemetry_[i]) << std::endl;
   }
   #endif

@@ -27,7 +27,8 @@ class MyApp < ANL::ANLApp
             time_window: 1000.0, # us
             sample_frequency: 2.0, #MHz
             output_filename_base: "DAQ_output",
-            num_events_per_file: 100
+            num_events_per_file: 10,
+            start_reading: true
         )
 
 

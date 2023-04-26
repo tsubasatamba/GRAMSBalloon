@@ -145,6 +145,7 @@ void ReadWaveform::createNewOutputFile()
     }
   }
   ofs_->write(&vec[0], static_cast<int>(vec.size()));
+  ofs_->flush();
 }
 
 void ReadWaveform::closeOutputFile()
@@ -163,6 +164,7 @@ void ReadWaveform::closeOutputFile()
   }
 
   ofs_->write(&vec[0], static_cast<int>(vec.size()));
+  ofs_->flush();
   ofs_->close();
 }
 
@@ -193,6 +195,7 @@ void ReadWaveform::writeData()
   }
   
   ofs_->write(&vec[0], static_cast<int>(vec.size()));
+  ofs_->flush();
 }
 
 } /* namespace gramsballoon */

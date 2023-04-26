@@ -45,7 +45,14 @@ public:
   void generateFileFooter(std::vector<int16_t>& footer);
   
   uint32_t EventCount() { return eventCount_; }
-  
+  int TrigDevice() { return trigDevice_; }
+  int TrigChannel() { return trigChannel_; }
+  int TrigMode() { return trigMode_; }
+  int TrigSrc() { return trigSrc_; }
+  int TrigSlope() { return trigSlope_; }
+  double TrigLevel() { return trigLevel_; }
+  double TrigPosition() { return trigPosition_; }
+
 private:
   AnalogDiscoveryIO* ADIO_;
   int trigDevice_ = 0;
@@ -55,6 +62,8 @@ private:
   DwfTriggerSlope trigSlope_ = 0;
   double trigLevel_ = 0.0; // volt
   double trigPosition_ = 0.0; // us
+  //std::vector<double> range_;
+  //std::vector<double> offset_;
 
   double timeWindow_ = 0.0; // us
   double sampleFreq_ = 2.0; //MHz

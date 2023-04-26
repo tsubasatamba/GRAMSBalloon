@@ -75,7 +75,7 @@ public:
   void setEnvTemperature(int index, double v) { if (index<static_cast<int>(envTemperature_.size())) envTemperature_[index] = v; }
   void resizeEnvTemperature(int n) { envTemperature_.resize(n); }
   void setEnvHumidity(const std::vector<double>& v) { envHumidity_ = v; }
-  void setEnvHumidity(int index, double v) { if (index<static_cast<int>(envHumidity_.size())) envTemperature_[index] = v; }
+  void setEnvHumidity(int index, double v) { if (index<static_cast<int>(envHumidity_.size())) envHumidity_[index] = v; }
   void resizeEnvHumidity(int n) { envHumidity_.resize(n); }
   void setEnvPressure(const std::vector<double>& v) { envPressure_ = v; }
   void setEnvPressure(int index, double v) { if (index<static_cast<int>(envPressure_.size())) envPressure_[index] = v; }

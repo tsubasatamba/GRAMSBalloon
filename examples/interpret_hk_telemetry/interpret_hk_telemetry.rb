@@ -10,7 +10,7 @@ class MyApp < ANL::ANLApp
     with_parameters(database: "grams")
     #with_parameters(host: @host_name, database: @database_name, instantiation: false)
     chain GRAMSBalloon::ReceiveTelemetry
-    with_parameters(serial_path: "/dev/tty.usbserial-14210")
+    with_parameters(serial_path: "/dev/tty.usbserial-14110", open_mode: 2)
     chain GRAMSBalloon::InterpretHKTelemetry
     chain GRAMSBalloon::PushToMongoDB
   end
@@ -18,4 +18,4 @@ class MyApp < ANL::ANLApp
 end
 
 a = MyApp.new
-a.run(100, 1)
+a.run(:all, 1)

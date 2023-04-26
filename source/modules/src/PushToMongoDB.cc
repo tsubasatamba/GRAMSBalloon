@@ -41,7 +41,7 @@ ANLStatus PushToMongoDB::mod_analyze()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start"           << static_cast<int>(hk_telemdef->StartCode())
+      << "Start_Code"           << static_cast<int>(hk_telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(hk_telemdef->TelemetryType())
       << "Time"            << static_cast<int>((hk_telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((hk_telemdef->TimeNow()).tv_usec)
@@ -100,6 +100,8 @@ ANLStatus PushToMongoDB::mod_analyze()
       << "Last_Command_Code"    << static_cast<int>(hk_telemdef->LastCommandCode())
       << "Command_Reject_Count" << static_cast<int>(hk_telemdef->CommandRejectCount())
       << "Software_Error_Code"  << static_cast<int>(hk_telemdef->SoftwareErrorCode())
+      << "CRC"                  << static_cast<int>(hk_telemdef->CRC())
+      << "Stop_Code"            << static_cast<int>(hk_telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }

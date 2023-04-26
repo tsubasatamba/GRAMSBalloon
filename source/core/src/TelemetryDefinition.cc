@@ -125,9 +125,9 @@ void TelemetryDefinition::writeEnvironmentalData()
 
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int16_t>(envTemperature_[i] / 0.01);
-    humidity[i] = static_cast<uint16_t>(envHumidity_[i] / 0.01);
-    pressure[i] = static_cast<uint16_t>(envPressure_[i] / 0.1);
+    temperature[i] = static_cast<int16_t>(envTemperature_[i] / 0.1);
+    humidity[i] = static_cast<uint16_t>(envHumidity_[i] / 0.1);
+    pressure[i] = static_cast<uint16_t>(envPressure_[i] / 10.0);
   }
   addVector<int16_t>(temperature);
   addVector<uint16_t>(humidity);
@@ -244,7 +244,7 @@ void TelemetryDefinition::interpretHK()
   for (int i=0; i<5; i++) {
     envTemperature_[i] = static_cast<double>(temp[i])*0.1;
     envHumidity_[i] = static_cast<double>(hum[i])*0.1;
-    envPressure_[i] = static_cast<double>(pre[i])*0.1;
+    envPressure_[i] = static_cast<double>(pre[i])*10.0;
   }
 
   acceleration_.resize(3);

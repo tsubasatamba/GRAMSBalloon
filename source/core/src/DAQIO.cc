@@ -7,6 +7,8 @@ namespace gramsballoon {
 
 DAQIO::DAQIO()
 {
+  //range_.resize(4);
+  //offset_.resize(4);
 }
 
 void DAQIO::setAnalogDiscoveryIO(AnalogDiscoveryIO* io)
@@ -141,7 +143,6 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
     FDwfAnalogInStatus(handler_list[trigDevice_], true, &status);
     if (status==DwfStateDone) {
       data_acquired = true;
-      gettimeofday(&event_time, NULL);
       eventCount_++;
       break;
     }
@@ -160,6 +161,12 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
     }
   }
 
+  gettimeofday(&event_time, NULL);
+  header[1] = static_cast<int16_t>((event_time.tv_sec>>16)&(0xffff));
+  header[2] = static_cast<int16_t>((event_time.tv_sec)&(0xffff));
+  header[3] = static_cast<int16_t>((event_time.tv_usec>>16)&(0xffff));
+  header[4] = static_cast<int16_t>((event_time.tv_usec)&(0xffff));
+
   if (!data_acquired) {
     std::cout << "DAQ did not detect any events." << std::endl;
     return 0;
@@ -175,11 +182,6 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
       std::cout << "device " << i << " does not detect an event..." << std::endl;
     }
   }
-
-  header[1] = static_cast<int16_t>((event_time.tv_sec>>16)&(0xffff));
-  header[2] = static_cast<int16_t>((event_time.tv_sec)&(0xffff));
-  header[3] = static_cast<int16_t>((event_time.tv_usec>>16)&(0xffff));
-  header[4] = static_cast<int16_t>((event_time.tv_usec)&(0xffff));
 
   for (int i=0; i<num_devices; i++) {
     if (!detected[i]) continue;
@@ -206,10 +208,10 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
   header[1] = static_cast<int16_t>(trigChannel_);
   header[2] = static_cast<int16_t>(trigSrc_);
   header[3] = static_cast<int16_t>(trigSlope_);
-  header[4] = static_cast<int16_t>(trigLevel_*100);
-  header[5] = static_cast<int16_t>(trigPosition_);
-  header[6] = static_cast<int16_t>(sampleFreq_);
-  header[7] = static_cast<int16_t>(timeWindow_);
+  header[4] = static_cast<int16_t>(trigLevel_*1E3);
+  header[5] = static_cast<int16_t>(trigPosition_*1E3);
+  header[6] = static_cast<int16_t>(sampleFreq_*1E3);
+  header[7] = static_cast<int16_t>(timeWindow_*1E3);
   header[8] = static_cast<int16_t>(numSample_);
   header[9] = static_cast<int16_t>(num_event);
 
@@ -219,24 +221,28 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
   header[13] = static_cast<int16_t>((time_now.tv_usec)&(0xffff));
 
   int index = 14;
-  for (int i=0; i<num_devices; i++) {
+  for (int i=0; i<2; i++) {
     for (int j=0; j<2; j++) {
-      double range = 0.0;
-      FDwfAnalogInChannelRangeGet(handler_list[i], j, &range);
-      const double scale = 1.0E3;
-      header[index] = static_cast<int16_t>(((static_cast<int>(range*scale))>>16) & (0xffff));
-      header[index+1] = static_cast<int16_t>((static_cast<int>(range*scale)) & (0xffff));
+      if (i<num_devices) {
+        double range = 0.0;
+        FDwfAnalogInChannelRangeGet(handler_list[i], j, &range);
+        const double scale = 1.0E3;
+        header[index] = static_cast<int16_t>(((static_cast<int>(range*scale))>>16) & (0xffff));
+        header[index+1] = static_cast<int16_t>((static_cast<int>(range*scale)) & (0xffff));
+      }
       index += 2;
     }
   }
 
-  for (int i=0; i<num_devices; i++) {
+  for (int i=0; i<2; i++) {
     for (int j=0; j<2; j++) {
-      double offset = 0.0;
-      FDwfAnalogInChannelOffsetGet(handler_list[i], j, &offset);
-      const double scale = 1.0E3;
-      header[index] = static_cast<int16_t>(((static_cast<int>(offset*scale))>>16) & (0xffff));
-      header[index+1] = static_cast<int16_t>((static_cast<int>(offset*scale)) & (0xffff));
+      if (i<num_devices) {
+        double offset = 0.0;
+        FDwfAnalogInChannelOffsetGet(handler_list[i], j, &offset);
+        const double scale = 1.0E3;
+        header[index] = static_cast<int16_t>(((static_cast<int>(offset*scale))>>16) & (0xffff));
+        header[index+1] = static_cast<int16_t>((static_cast<int>(offset*scale)) & (0xffff));
+      }
       index += 2;
     }
   }

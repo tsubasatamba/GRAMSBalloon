@@ -7,7 +7,7 @@ HSQuickLook.main.schema =
 	      "period": 1,
 	      "section": "Header",
 	      "contents": {
-          "Start": {"type": "int", "format": "0x%04X"},
+          "Start_Code": {"type": "int", "format": "0x%04X"},
           "Telemetry_Type": {"type": "int"},
           "Time": {"type": "int"},
           "Time_us": {"type": "int"},
@@ -93,7 +93,9 @@ HSQuickLook.main.schema =
           "Last_Command_Index": {"type": "int"},
           "Last_Command_Code": {"type": "int"},
           "Command_Reject_Count": {"type": "int"},
-          "Software_Error_Code": {"type": "int"}
+          "Software_Error_Code": {"type": "int"},
+          "CRC": {"type": "int"},
+          "Stop_Code": {"type": "int", "format": "0x%04X"}
         }
       }      
     ];
