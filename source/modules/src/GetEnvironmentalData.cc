@@ -57,6 +57,7 @@ ANLStatus GetEnvironmentalData::mod_analyze()
   pressure_ = bme680io_ -> SensorData() -> pressure;
   humidity_ = bme680io_ -> SensorData() -> humidity;
   temperature_ = bme680io_ -> SensorData() -> temperature;
+
   
   return AS_OK;
 }
