@@ -7,8 +7,8 @@ namespace gramsballoon {
 
 DAQIO::DAQIO()
 {
-  //range_.resize(4);
-  //offset_.resize(4);
+  range_.resize(4);
+  offset_.resize(4);
 }
 
 void DAQIO::setAnalogDiscoveryIO(AnalogDiscoveryIO* io)
@@ -196,8 +196,8 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
 
 void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
 {
-  const int num_devices = ADIO_ -> NumDevices();
-  const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
+  // const int num_devices = ADIO_ -> NumDevices();
+  // const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
 
   const int sz_header = 32;
   header.resize(sz_header);
@@ -224,16 +224,16 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
   int index = 14;
   for (int i=0; i<4; i++) {
     const double scale = 1.0E3;
-    header[index] = static_cast<int16_t>(((static_cast<int>(range[i]*scale))>>16) & (0xffff));
-    header[index+1] = static_cast<int16_t>((static_cast<int>(range[i]*scale)) & (0xffff));
+    header[index] = static_cast<int16_t>(((static_cast<int>(range_[i]*scale))>>16) & (0xffff));
+    header[index+1] = static_cast<int16_t>((static_cast<int>(range_[i]*scale)) & (0xffff));
     index += 2;
   }
   
   getOffset();
   for (int i=0; i<4; i++) {
     const double scale = 1.0E3;
-    header[index] = static_cast<int16_t>(((static_cast<int>(offset*scale))>>16) & (0xffff));
-    header[index+1] = static_cast<int16_t>((static_cast<int>(offset*scale)) & (0xffff));
+    header[index] = static_cast<int16_t>(((static_cast<int>(offset_[i]*scale))>>16) & (0xffff));
+    header[index+1] = static_cast<int16_t>((static_cast<int>(offset_[i]*scale)) & (0xffff));
     index += 2;
   }
 }
@@ -253,6 +253,7 @@ void DAQIO::generateFileFooter(std::vector<int16_t>& footer)
 void DAQIO::getOffset()
 {
   const int num_devices = ADIO_ -> NumDevices();
+  const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
   offset_.resize(4, 0.0);
   
   for (int i=0; i<2; i++) {
@@ -271,6 +272,7 @@ void DAQIO::getOffset()
 void DAQIO::getRange()
 {
   const int num_devices = ADIO_ -> NumDevices();
+  const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
   range_.resize(4, 0.0);
   
   for (int i=0; i<2; i++) {

@@ -52,10 +52,10 @@ public:
   int TrigSlope() { return trigSlope_; }
   double TrigLevel() { return trigLevel_; }
   double TrigPosition() { return trigPosition_; }
-  const std::vector<double>& Offset() const { getOffset(); return offset_; }
-  const std::vector<double>& Range() const { getRange(); return range_; }
   void getOffset();
   void getRange();
+  const std::vector<double>& Offset() const { return offset_; }
+  const std::vector<double>& Range() const { return range_; }
 
 private:
   AnalogDiscoveryIO* ADIO_;
