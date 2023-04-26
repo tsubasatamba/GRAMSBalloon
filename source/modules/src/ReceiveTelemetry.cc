@@ -31,7 +31,7 @@ ANLStatus ReceiveTelemetry::mod_initialize()
 
 ANLStatus ReceiveTelemetry::mod_analyze()
 {
-  std::this_thread::sleep_for(std::chrono::seconds(1));
+  //std::this_thread::sleep_for(std::chrono::seconds(1));
 
   telemetry_.clear();
   
@@ -53,7 +53,7 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   }
 
   std::vector<uint8_t> buffer(maxTelemetry_);
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  //std::this_thread::sleep_for(std::chrono::milliseconds(10));
   const int status = sc_->sread(buffer, maxTelemetry_);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveTelemetry::mod_analyze: status = " << status << std::endl;
