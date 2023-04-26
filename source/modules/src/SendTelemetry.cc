@@ -221,7 +221,7 @@ void SendTelemetry::inputStatusInfo()
     // range
   }
   if (getRaspiStatus_!=nullptr) {
-    telemdef_->setSDCapacity(CapacityFree());
+    telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());
   }
 
 }
