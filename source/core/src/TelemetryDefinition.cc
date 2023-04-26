@@ -125,8 +125,8 @@ void TelemetryDefinition::writeEnvironmentalData()
 
   for (int i=0; i<n; i++) {
     if (i==buf_size) break;
-    temperature[i] = static_cast<int16_t>(envTemperature_[i] / 0.01);
-    humidity[i] = static_cast<uint16_t>(envHumidity_[i] / 0.01);
+    temperature[i] = static_cast<int16_t>(envTemperature_[i] / 0.1);
+    humidity[i] = static_cast<uint16_t>(envHumidity_[i] / 0.1);
     pressure[i] = static_cast<uint16_t>(envPressure_[i] / 0.1);
   }
   addVector<int16_t>(temperature);
