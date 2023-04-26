@@ -7,6 +7,8 @@ namespace gramsballoon {
 
 DAQIO::DAQIO()
 {
+  range_.resize(4);
+  offset_.resize(4);
 }
 
 void DAQIO::setAnalogDiscoveryIO(AnalogDiscoveryIO* io)

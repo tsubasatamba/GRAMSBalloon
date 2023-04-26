@@ -144,7 +144,7 @@ void SendTelemetry::inputInfo()
     ;
   }
   else if (telemetryType_==3) {
-    ;
+    inputStatusInfo();
   }
   else {
     std::cerr << "Error in SendTelemetry::inputInfo(): wrong telemetry type " << telemetryType_ << std::endl;
@@ -206,6 +206,24 @@ void SendTelemetry::inputSoftwareInfo()
     telemdef_->setCommandRejectCount(receiveCommand_->CommandRejectCount());
   }
   // software error code
+}
+
+void SendTelemetry::inputStatusInfo()
+{
+  if (readWaveform_!=nullptr) {
+    telemdef_->setTriggerMode(static_cast<uint16_t>(readWaveform_->TrigMode()));
+    telemdef_->setTriggerDevice(static_cast<uint16_t>(readWaveform_->TrigDevice()));
+    telemdef_->setTriggerChannel(static_cast<uint16_t>(readWaveform_->TrigChannel()));
+    telemdef_->setTriggerLevel(readWaveform_->TrigLevel());
+    telemdef_->setTriggerPosition(readWaveform_->TrigPosition());
+    // chmask
+    // offset
+    // range
+  }
+  if (getRaspiStatus_!=nullptr) {
+    telemdef_->setSDCapacity(CapacityFree());
+  }
+
 }
 
 } /* namespace gramsballoon */
