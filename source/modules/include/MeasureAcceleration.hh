@@ -36,6 +36,8 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  void debug();
+
   const IMUData* getData() const { return icmIO_->getData(); }
   const float* getAcceleration() const { return icmIO_->getData()->mAcc; }
   float getAcceleration(int index) { return (index>=0 && index<3) ? icmIO_->getData()->mAcc[index] : 0; }

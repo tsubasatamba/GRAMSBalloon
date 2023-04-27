@@ -30,7 +30,13 @@ ANLStatus GetEnvironmentalData::mod_pre_initialize()
     std::cerr << "Chip select must be non-negative and smaller than 27: CS=" << chipSelect_ << std::endl;
     return AS_QUIT_ERROR;
   }
-  get_module_NC(SPIManagerName_, &SPIManager_);
+  if (exist_module(SPIManagerName_)) {
+    get_module_NC(SPIManagerName_, &SPIManager_);
+  }
+  else {
+    std::cerr << "SPI manager does not exist. Module name = " << SPIManagerName_ << std::endl;
+    return AS_QUIT_ERROR;
+  }
   SPIManager_->addChipSelect(chipSelect_);
   
   return AS_OK;
@@ -52,7 +58,11 @@ ANLStatus GetEnvironmentalData::mod_initialize()
 
 ANLStatus GetEnvironmentalData::mod_analyze()
 {
-  bme680io_ -> getData();
+  const int status = bme680io_ -> getData();
+  if (status!=0) {
+    std::cerr << "Failed to get environmental data." << std::endl;
+    return AS_QUIT_ERROR;
+  }
   bme680io_ -> printData();
   pressure_ = bme680io_ -> SensorData() -> pressure;
   humidity_ = bme680io_ -> SensorData() -> humidity;

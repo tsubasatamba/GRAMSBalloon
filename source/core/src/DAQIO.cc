@@ -7,8 +7,8 @@ namespace gramsballoon {
 
 DAQIO::DAQIO()
 {
-  //range_.resize(4);
-  //offset_.resize(4);
+  range_.resize(4);
+  offset_.resize(4);
 }
 
 void DAQIO::setAnalogDiscoveryIO(AnalogDiscoveryIO* io)
@@ -196,8 +196,8 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
 
 void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
 {
-  const int num_devices = ADIO_ -> NumDevices();
-  const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
+  // const int num_devices = ADIO_ -> NumDevices();
+  // const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
 
   const int sz_header = 32;
   header.resize(sz_header);
@@ -220,31 +220,21 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
   header[12] = static_cast<int16_t>((time_now.tv_usec>>16)&(0xffff));
   header[13] = static_cast<int16_t>((time_now.tv_usec)&(0xffff));
 
+  getRange();
   int index = 14;
-  for (int i=0; i<2; i++) {
-    for (int j=0; j<2; j++) {
-      if (i<num_devices) {
-        double range = 0.0;
-        FDwfAnalogInChannelRangeGet(handler_list[i], j, &range);
-        const double scale = 1.0E3;
-        header[index] = static_cast<int16_t>(((static_cast<int>(range*scale))>>16) & (0xffff));
-        header[index+1] = static_cast<int16_t>((static_cast<int>(range*scale)) & (0xffff));
-      }
-      index += 2;
-    }
+  for (int i=0; i<4; i++) {
+    const double scale = 1.0E3;
+    header[index] = static_cast<int16_t>(((static_cast<int>(range_[i]*scale))>>16) & (0xffff));
+    header[index+1] = static_cast<int16_t>((static_cast<int>(range_[i]*scale)) & (0xffff));
+    index += 2;
   }
-
-  for (int i=0; i<2; i++) {
-    for (int j=0; j<2; j++) {
-      if (i<num_devices) {
-        double offset = 0.0;
-        FDwfAnalogInChannelOffsetGet(handler_list[i], j, &offset);
-        const double scale = 1.0E3;
-        header[index] = static_cast<int16_t>(((static_cast<int>(offset*scale))>>16) & (0xffff));
-        header[index+1] = static_cast<int16_t>((static_cast<int>(offset*scale)) & (0xffff));
-      }
-      index += 2;
-    }
+  
+  getOffset();
+  for (int i=0; i<4; i++) {
+    const double scale = 1.0E3;
+    header[index] = static_cast<int16_t>(((static_cast<int>(offset_[i]*scale))>>16) & (0xffff));
+    header[index+1] = static_cast<int16_t>((static_cast<int>(offset_[i]*scale)) & (0xffff));
+    index += 2;
   }
 }
 
@@ -258,6 +248,43 @@ void DAQIO::generateFileFooter(std::vector<int16_t>& footer)
   footer[1] = static_cast<int16_t>((time_now.tv_sec)&(0xffff));
   footer[2] = static_cast<int16_t>((time_now.tv_usec>>16)&(0xffff));
   footer[3] = static_cast<int16_t>((time_now.tv_usec)&(0xffff));
+}
+
+void DAQIO::getOffset()
+{
+  const int num_devices = ADIO_ -> NumDevices();
+  const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
+  offset_.resize(4, 0.0);
+  
+  for (int i=0; i<2; i++) {
+    for (int j=0; j<2; j++) {
+      const int k = i*2+j;
+      if (i<num_devices) {
+        double offset = 0.0;
+        FDwfAnalogInChannelOffsetGet(handler_list[i], j, &offset);
+        offset_[k] = offset;
+      }
+    }
+  }
+  
+}
+
+void DAQIO::getRange()
+{
+  const int num_devices = ADIO_ -> NumDevices();
+  const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
+  range_.resize(4, 0.0);
+  
+  for (int i=0; i<2; i++) {
+    for (int j=0; j<2; j++) {
+      const int k = i*2+j;
+      if (i<num_devices) {
+        double range = 0.0;
+        FDwfAnalogInChannelRangeGet(handler_list[i], j, &range);
+        range_[k] = range;
+      }
+    }
+  }
 }
 
 } /* namespace gramsballoon */

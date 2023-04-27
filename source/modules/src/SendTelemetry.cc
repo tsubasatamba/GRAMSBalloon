@@ -87,7 +87,11 @@ ANLStatus SendTelemetry::mod_initialize()
 
   // communication
   sc_ = std::make_shared<SerialCommunication>(serialPath_, baudrate_, openMode_);
-  sc_->initialize();
+  const int status = sc_ -> initialize();
+  if (status!=0) {
+    std::cerr << "Error in SendTelemetry::mod_initialize: Serial communication failed." << std::endl;
+    return AS_QUIT_ERROR;
+  }
   
   return AS_OK;
 }
@@ -217,8 +221,8 @@ void SendTelemetry::inputStatusInfo()
     telemdef_->setTriggerLevel(readWaveform_->TrigLevel());
     telemdef_->setTriggerPosition(readWaveform_->TrigPosition());
     // chmask
-    // offset
-    // range
+    telemdef_->setADCOffset(readWaveform_->Offset());
+    telemdef_->setADCRange(readWaveform_->Range());
   }
   if (getRaspiStatus_!=nullptr) {
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());

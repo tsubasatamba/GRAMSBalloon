@@ -52,6 +52,7 @@ public:
   uint16_t CommandRejectCount() { return commandRejectCount_; }
 
 private:
+  std::vector<uint8_t> buffer_;
   std::vector<uint8_t> command_;
   std::shared_ptr<CommandDefinition> comdef_ = nullptr;
   uint32_t commandIndex_ = 0;

@@ -42,8 +42,8 @@ ANLStatus GetRaspiStatus::mod_analyze()
   
   #if 1
   uint64_t one = 1;
-  std::cout << "free size(MB): " << capacityFree_ / (one<<20) << std::endl;
-  std::cout << "all size(MB): " << capacityAll_ / (one<<20) << std::endl;
+  std::cout << "Free size (MB): " << capacityFree_ / (one<<20) << std::endl;
+  std::cout << "All size (MB): " << capacityAll_ / (one<<20) << std::endl;
   #endif
 
   return AS_OK;

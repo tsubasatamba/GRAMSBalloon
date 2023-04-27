@@ -54,6 +54,8 @@ public:
   int TrigSlope() { return daqio_->TrigSlope(); }
   double TrigLevel() { return daqio_->TrigLevel(); }
   double TrigPosition() { return daqio_->TrigPosition(); }
+  const std::vector<double>& Offset() const { return daqio_->Offset(); }
+  const std::vector<double>& Range() const { return daqio_->Range(); }
 
   void setStartReading(bool v) { startReading_ = v; }
   void setTrigDevice(int v) { trigDevice_ = v; triggerChanged_ = true; }
