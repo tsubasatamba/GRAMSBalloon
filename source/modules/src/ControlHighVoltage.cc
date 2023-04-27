@@ -27,6 +27,7 @@ ANLStatus ControlHighVoltage::mod_initialize()
     get_module_NC(ADManagerName_, &ADManager_);
   }
   else {
+    std::cerr << "Error in ControlHighVoltage::mod_initialize." << std::endl;
     std::cerr << "Analog Discovery manager does not exist. Module name = " << ADManagerName_ << std::endl;
     return AS_QUIT_ERROR;
   }

@@ -38,7 +38,14 @@ ANLStatus ReadWaveform::mod_define()
 
 ANLStatus ReadWaveform::mod_initialize()
 {
-  get_module_NC(ADManagerName_, &ADManager_);
+  if (exist_module(ADManagerName_)) {
+    get_module_NC(ADManagerName_, &ADManager_);
+  }
+  else {
+    std::cerr << "Error in ReadWaveform::mod_initialize." << std::endl;
+    std::cerr << "Analog Discovery manager does not exist. Module name = " << ADManagerName_ << std::endl;
+    return AS_QUIT_ERROR;
+  }
   setupAnalogIn();
   
   const std::string send_telemetry_md = "SendTelemetry";
