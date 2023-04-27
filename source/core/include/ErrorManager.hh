@@ -15,7 +15,7 @@
 namespace gramsballoon {
 
 enum class ErrorType {
-  COMMAND_INVALID = 0
+  INVALID_COMMAND = 0
 };
 
 class ErrorManager

@@ -108,6 +108,7 @@ ANLStatus ReceiveCommand::mod_analyze()
 
   const bool applied = applyCommand();
   if (!applied) {
+    sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
     commandRejectCount_++;
   }
   
@@ -143,7 +144,12 @@ bool ReceiveCommand::applyCommand()
     }
   }
 
-  if (code==101 && argc==0) {}
+  if (code==101 && argc==0) {
+    if (sendTelemetry_!=nullptr) {
+      sendTelemetry_->getErrorManager()->resetError();
+      return true;
+    }
+  }
 
   if (code==102 && argc==0) {
     if (shutdownSystem_!=nullptr) {
@@ -162,6 +168,7 @@ bool ReceiveCommand::applyCommand()
   if (code==104 && argc==0) {
     if (shutdownSystem_!=nullptr) {
       shutdownSystem_->setPrepareShutdown(true);
+      return true;
     }
   }
 
