@@ -99,7 +99,7 @@ ANLStatus PushToMongoDB::mod_analyze()
       << "Last_Command_Index"   << static_cast<int>(hk_telemdef->LastCommandIndex())
       << "Last_Command_Code"    << static_cast<int>(hk_telemdef->LastCommandCode())
       << "Command_Reject_Count" << static_cast<int>(hk_telemdef->CommandRejectCount())
-      << "Software_Error_Code"  << static_cast<int>(hk_telemdef->SoftwareErrorCode())
+      << "Software_Error_Code"  << static_cast<long long>(hk_telemdef->SoftwareErrorCode())
       << "CRC"                  << static_cast<int>(hk_telemdef->CRC())
       << "Stop_Code"            << static_cast<int>(hk_telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;

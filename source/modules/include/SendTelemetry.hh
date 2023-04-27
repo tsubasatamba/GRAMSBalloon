@@ -11,6 +11,7 @@
 
 #include <anlnext/BasicModule.hh>
 #include "TelemetryDefinition.hh"
+#include "ErrorManager.hh"
 #include "ReadWaveform.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
 #include "ControlHighVoltage.hh"
@@ -63,10 +64,12 @@ public:
   int EventID() { return telemdef_->EventID(); }
   const std::vector<int16_t>& EventHeader() const { return telemdef_->EventHeader(); }
   const std::vector<std::vector<int16_t>>& EventData() const { return telemdef_->EventData(); }
+  ErrorManager* getErrorManager() { return errorManager_.get(); }
 
 private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
   int telemetryType_ = 1;
+  std::shared_ptr<ErrorManager> errorManager_ = nullptr;
 
   // access to other classes
   ReadWaveform* readWaveform_ = nullptr;
