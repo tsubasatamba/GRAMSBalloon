@@ -64,7 +64,7 @@ public:
   int EventID() { return telemdef_->EventID(); }
   const std::vector<int16_t>& EventHeader() const { return telemdef_->EventHeader(); }
   const std::vector<std::vector<int16_t>>& EventData() const { return telemdef_->EventData(); }
-  ErrorManager* ErrorManager() { return errorManager_.get(); }
+  ErrorManager* getErrorManager() { return errorManager_.get(); }
 
 private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
