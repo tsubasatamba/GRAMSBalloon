@@ -23,7 +23,8 @@ ANLStatus MeasureAcceleration::mod_initialize()
 {
   const bool status = icmIO_->initialize();
   if (!status) {
-    return AS_ERROR;
+    std::cerr << "Error in MeasureAcceleration::mod_initialize: Device not found." << std::endl;
+    return AS_QUIT_ERROR;
   }
   if (calibrateGyro_) {
     icmIO_->calibrateGyro();
@@ -36,6 +37,19 @@ ANLStatus MeasureAcceleration::mod_analyze()
   icmIO_->measure();
 
   #if 1
+  debug();
+  #endif
+
+  return AS_OK;
+}
+
+ANLStatus MeasureAcceleration::mod_finalize()
+{
+  return AS_OK;
+}
+
+void MeasureAcceleration::debug()
+{
   const IMUData* data = getData();
   std::cout << "Accel (g): ";
   for (int j = 0; j < 3; j++) {
@@ -52,15 +66,6 @@ ANLStatus MeasureAcceleration::mod_analyze()
     std::cout << data->mMag[j] << " ";
   }
   std::cout << std::endl;
-  #endif
-
-
-  return AS_OK;
-}
-
-ANLStatus MeasureAcceleration::mod_finalize()
-{
-  return AS_OK;
 }
 
 } /* namespace gramsballoon */

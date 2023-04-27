@@ -23,7 +23,13 @@ ANLStatus ControlHighVoltage::mod_define()
 
 ANLStatus ControlHighVoltage::mod_initialize()
 {
-  get_module_NC(ADManagerName_, &ADManager_);
+  if (exist_module(ADManagerName_)) {
+    get_module_NC(ADManagerName_, &ADManager_);
+  }
+  else {
+    std::cerr << "SPI manager does not exist. Module name = " << SPIManagerName_ << std::endl;
+    return AS_QUIT_ERROR;
+  }
   AnalogDiscoveryIO* io = ADManager_->ADIO();
   io -> setupAnalogOut(deviceID_, channel_);
   
@@ -48,9 +54,8 @@ ANLStatus ControlHighVoltage::mod_analyze()
     io -> setVoltage(deviceID_, channel_, static_cast<double>(nextVoltage_), sleep_);
     currentVoltage_ = nextVoltage_;
     exec_ = false;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
-
-  std::this_thread::sleep_for(std::chrono::seconds(1));
   
   return AS_OK;
 }
