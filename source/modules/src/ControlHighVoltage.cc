@@ -27,7 +27,7 @@ ANLStatus ControlHighVoltage::mod_initialize()
     get_module_NC(ADManagerName_, &ADManager_);
   }
   else {
-    std::cerr << "SPI manager does not exist. Module name = " << SPIManagerName_ << std::endl;
+    std::cerr << "Analog Discovery manager does not exist. Module name = " << ADManagerName_ << std::endl;
     return AS_QUIT_ERROR;
   }
   AnalogDiscoveryIO* io = ADManager_->ADIO();
