@@ -13,6 +13,7 @@ ReceiveCommand::ReceiveCommand()
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   serialPath_ = "/dev/null";
   comdef_ = std::make_shared<CommandDefinition>(); 
+  buffer_.resize(200);
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
@@ -60,11 +61,6 @@ ANLStatus ReceiveCommand::mod_initialize()
 
 ANLStatus ReceiveCommand::mod_analyze()
 {
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-  const int max_trial = 26;
-
-  command_.clear();
-
   fd_set fdset;
   timeval timeout;
   timeout.tv_sec = 10;
@@ -72,9 +68,6 @@ ANLStatus ReceiveCommand::mod_analyze()
   FD_ZERO(&fdset);
   FD_SET(sc_->FD(), &fdset);
   int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
-
-  std::cout << "rv: " << rv << std::endl;
-
   if (rv == -1) {
     std::cerr << "Error in ReceiveCommand::mod_analyze: rv = -1" << std::endl;
     return AS_ERROR;
@@ -85,9 +78,8 @@ ANLStatus ReceiveCommand::mod_analyze()
     return AS_OK;
   }
 
-  std::vector<uint8_t> buffer(max_trial);
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  const int status = sc_->sread(buffer, max_trial);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  const int status = sc_->sread(buffer_, 200);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
     return AS_OK;
@@ -95,7 +87,13 @@ ANLStatus ReceiveCommand::mod_analyze()
 
   std::cout << "status: " << status << std::endl;
   for (int i=0; i<status; i++) {
-    command_.push_back(buffer[i]);
+    if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
+      command_.clear();
+    }
+    command_.push_back(buffer_[i]);
+    if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
+      break;
+    }
   }
 
   #if 1
