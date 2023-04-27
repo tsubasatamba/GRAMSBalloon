@@ -7,6 +7,7 @@ namespace gramsballoon {
 SendTelemetry::SendTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
+  errorManager_ = std::make_shared<ErrorManager>();
   TPCHVControllerModuleName_ = "ControlHighVoltage_TPC";
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   serialPath_ = "/dev/null";
@@ -209,7 +210,7 @@ void SendTelemetry::inputSoftwareInfo()
     telemdef_->setLastCommandCode(receiveCommand_ -> CommandCode());
     telemdef_->setCommandRejectCount(receiveCommand_->CommandRejectCount());
   }
-  // software error code
+  telemdef_->setSoftwareErrorCode(errorManager_->ErrorCode());
 }
 
 void SendTelemetry::inputStatusInfo()

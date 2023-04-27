@@ -66,7 +66,7 @@ void TelemetryDefinition::generateTelemetryHK()
   addValue<uint32_t>(lastCommandIndex_); // last command index
   addValue<uint16_t>(lastCommandCode_); // last command code
   addValue<uint16_t>(commandRejectCount_); //command reject count
-  addValue<uint16_t>(softwareErrorCode_); //software error code
+  addValue<uint64_t>(softwareErrorCode_); //software error code
 }
 
 void TelemetryDefinition::generateTelemetryWF()
@@ -267,9 +267,9 @@ void TelemetryDefinition::interpretHK()
   lastCommandIndex_ = getValue<uint32_t>(102);
   lastCommandCode_ = getValue<uint16_t>(106);
   commandRejectCount_ = getValue<uint16_t>(108);
-  softwareErrorCode_ = getValue<uint16_t>(110);
-  crc_ = getValue<uint16_t>(112);
-  stopCode_ = getValue<uint16_t>(114);
+  softwareErrorCode_ = getValue<uint64_t>(110);
+  crc_ = getValue<uint16_t>(118);
+  stopCode_ = getValue<uint16_t>(120);
 }
 
 void TelemetryDefinition::interpretWF()

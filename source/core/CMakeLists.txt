@@ -19,6 +19,7 @@ set(GB_CORE_CLASSES
   src/TelemetryDefinition.cc
   src/CommandDefinition.cc
   src/CRC16.cc
+  src/ErrorManager.cc
   )
 
 if(GB_USE_PIGPIO)

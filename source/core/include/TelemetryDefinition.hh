@@ -94,7 +94,7 @@ public:
   void setLastCommandIndex(uint32_t v) { lastCommandIndex_ = v; }
   void setLastCommandCode(uint16_t v) { lastCommandCode_ = v; }
   void setCommandRejectCount(uint16_t v) { commandRejectCount_ = v; }
-  void setSoftwareErrorCode(uint16_t v) { softwareErrorCode_ = v; }
+  void setSoftwareErrorCode(uint64_t v) { softwareErrorCode_ = v; }
   void setEventID(uint32_t v) { eventID_ = v; }
   void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
   void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
@@ -151,7 +151,7 @@ public:
   uint32_t LastCommandIndex() { return lastCommandIndex_; }
   uint16_t LastCommandCode() { return lastCommandCode_; }
   uint16_t CommandRejectCount() { return commandRejectCount_; }
-  uint16_t SoftwareErrorCode() { return softwareErrorCode_; }
+  uint64_t SoftwareErrorCode() { return softwareErrorCode_; }
   uint32_t EventID() { return eventID_; }
   const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
   const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
@@ -199,7 +199,7 @@ private:
   uint32_t lastCommandIndex_ = 0;
   uint16_t lastCommandCode_ = 0;
   uint16_t commandRejectCount_ = 0;
-  uint16_t softwareErrorCode_ = 0;
+  uint64_t softwareErrorCode_ = 0;
   
   // WF
   uint32_t eventID_ = 0;
