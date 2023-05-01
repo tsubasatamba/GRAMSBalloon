@@ -45,7 +45,7 @@ ANLStatus SPIManager::mod_initialize()
   for (int i=0; i<n; i++) {
     set_mode(pi, chipSelectArray_[i], PI_OUTPUT);
     set_pull_up_down(pi, chipSelectArray_[i], PI_PUD_UP);
-    gpio_write(pi, chipSelectArray_[i], CS_DISABLE);
+    gpio_write(pi, chipSelectArray_[i], PI_HIGH);
   }
    
   return AS_OK;

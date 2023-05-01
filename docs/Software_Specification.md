@@ -221,6 +221,43 @@
 
 ### ReceiveCommand
 
+#### 機能
+
+- 地上からのコマンドをシリアル通信を介して受け取る。
+- コマンドを解釈した後、適切な指令を各モジュールに配分する。
+- コマンド一覧は以下を参照<br>
+  https://docs.google.com/spreadsheets/d/149plbWC4adAmXE9alBa7HCU7ituWycGj6gzw1qqyXyk/edit#gid=2044691227
+
+#### 入力パラメータ
+
+- <modpar>baudrate</modpar> (default: B9600)<br>
+  通信のbaudrate を入力する。基本的に、Bの後の数字を整数で入力すれば良い。
+- <modpar>serial_path</modpar> (default: "/dev/null")<br>
+  シリアル通信に用いるデバイススペシャルファイルのパス。Raspi でシリアル通信を行う際、"/dev/ttyAMA0" などである。
+- <modpar>open_mode</modpar> (default: O_RDWR=2)<br>
+  シリアル通信のオプションであるopen_mode を入力する。READONLY=0, WRITEONLY=1, READWRITE=2, NONBLOCK=4 である。READWRITE and NONBLOCK としたい場合は6と指定する。Raspi でコマンドを受け取る際はREADWRITE=2 を指定するのが良い。
+- <modpar>TPC_HVController_module_name</modpar> (default: "ControlHighVoltage_TPC")<br>
+  ControlHighVoltage モジュールのうち、TPC をコントロールするモジュールの名前。基本的に変更しない。
+- <modpar>PMT_HVController_module_name</modpar> (default: "ControlHighVoltage_PMT")<br>
+  ControlHighVoltage モジュールのうち、PMT をコントロールするモジュールの名前。基本的に変更しない。
+
+#### 仕様
+
+- <b>mod_initialize</b><br>
+  他モジュールへのアクセスを確立するとともに、シリアル通信の初期設定を行う。
+- <b>mod_analyze</b><br>
+  1ループごとにコマンド受け取りの試みる。シリアル通信を介して信号が何も来ない場合、一定時間 (10秒)を経てからタイムアウトとなり、次のループに移行する。信号が来た場合、その文字列を解釈する。開始コード、終了コード、CRC、コマンドコード が正常であることを確認した後、意図された指示を対象となる他モジュールへ反映する。コマンドの受信が途中で途切れた場合、次のループでその続きを受信することを試みる。また、1ループの処理でコマンドが複数個連なって受信されてしまった場合、1個目のコマンドのみ有効になる。そのため、地上からコマンドを複数送信する際、ある程度の間隔 (1秒あれば問題ない)をあけなければならない。
+
+#### Core class
+
+- CommandDefinition.cc<br>
+  コマンドの解釈方法が記されている。
+- SerialCommunication.cc<br>
+  シリアル通信の操作が記されている。
+
+
+
+
 ### ReceiveTelemetry
 
 
@@ -229,10 +266,29 @@
 
 ### ShutdownSystem
 
+#### 機能
+
+- Raspi のシャットダウン、再起動を制御する。
+
+#### 入力パラメータ
+
+- なし。
+
+#### 仕様
+
+- <b>mod_analyze</b><br>
+  シャットダウンもしくは再起動の操作を行うかどうか判断し、実行する。
+  これらの操作は重大な影響を及ぼすため、二段階認証を採用している。
+  たとえば、シャットダウンの際には、<tt>prepareShutdown_</tt> というboolean 変数と<tt>shutDown_</tt> というboolean 変数が両方ともtrue になっていなければ実行されない。再起動の場合も同様である。これらの変数は地上からコマンドを送ることで書き換えることができる。(つまり、2種類のコマンドを送らないと実行されない)
+
+#### Core class
+
+- なし。
+
 ### SPIManager
 
 #### 機能
-SPI通信を確立する。他のSPI通信を用いるmoduleは必ず本moduleを参照する。
+- SPI通信を確立する。他のSPI通信を用いるmoduleは必ず本moduleを参照する。
 
 #### 入力パラメータ
 - <modpar>channel</modpar> (default: 0)
