@@ -81,7 +81,7 @@ ANLStatus SendTelemetry::mod_initialize()
     get_module_NC(measure_acceleration_md, &measureAcceleration_);
   }
 
-  const std::string get_slowADC_data_md = "getSlowADCData";
+  const std::string get_slowADC_data_md = "GetSlowADCData";
   if (exist_module(get_slowADC_data_md)) {
     get_module_NC(get_slowADC_data_md, &getSlowADCData_);
   }

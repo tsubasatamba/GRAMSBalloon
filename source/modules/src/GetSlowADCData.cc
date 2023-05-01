@@ -10,6 +10,7 @@ GetSlowADCData::GetSlowADCData()
 {
   slowADCio_ = std::make_shared<SlowADCIO>();
   interface_ = std::make_shared<SPIInterface>();
+  channels_ = {0};
 }
 
 GetSlowADCData::~GetSlowADCData() = default;
@@ -44,6 +45,9 @@ ANLStatus GetSlowADCData::mod_pre_initialize()
     numTrials_ = 2;
   }
 
+  std::sort(channels_.begin(), channels_.end());
+  channels_.erase(std::unique(channels_.begin(), channels_.end()), channels_.end());
+
   return AS_OK;
 }
 
@@ -64,6 +68,11 @@ ANLStatus GetSlowADCData::mod_initialize()
 
 ANLStatus GetSlowADCData::mod_analyze()
 {
+  {
+    uint16_t adc = 0;
+    double voltage = 0.0;
+    slowADCio_->getData(0, adc, voltage, numTrials_);
+  }
   for (int channel: channels_) {
     uint16_t adc = 0;
     double voltage = 0.0;

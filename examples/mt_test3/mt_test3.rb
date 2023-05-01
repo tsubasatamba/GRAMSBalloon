@@ -4,16 +4,18 @@ require 'GRAMSBalloon'
 
 class MyApp < ANL::ANLApp
     def setup()
+
         chain GRAMSBalloon::ReceiveCommand
         with_parameters(serial_path: "/dev/ttyAMA0")
 
         chain GRAMSBalloon::SPIManager, "SPIManager_RTD"
-        with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 1)
-
-        chain GRAMSBalloon::SPIManager, "SPIManager_slowADC"
-        with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 3)
+        with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 1, baudrate: 1000000)
 
         chain GRAMSBalloon::SPIManager, "SPIManager_Env"
+        with_parameters(baudrate: 1000000)
+
+        chain GRAMSBalloon::SPIManager, "SPIManager_slowADC"
+        with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 3, baudrate: 1000000)
 
         rtd_cs_array = [7, 8, 16, 20, 21]
         rtd_cs_array.each_with_index do |cs, i|
@@ -31,7 +33,7 @@ class MyApp < ANL::ANLApp
 
         chain GRAMSBalloon::GetSlowADCData
         with_parameters(chip_select: 17, SPI_manager_name: "SPIManager_slowADC", Va: 5.026,
-        channels: [0, 1], num_trials: 100)
+        channels: [0, 1, 2, 3, 4], num_trials: 100)
 
         chain GRAMSBalloon::GetRaspiStatus
 
@@ -73,6 +75,7 @@ class MyApp < ANL::ANLApp
           TPCHVController_module_name: "ControlHighVoltage_TPC",
           PMTHVController_module_name: "ControlHighVoltage_PMT"
         )
+
     end
 end
 
@@ -91,6 +94,9 @@ main_modules << "ControlHighVoltage_TPC" << "ControlHighVoltage_PMT" << "SendTel
 daq_modules = ["ReadWaveform"]
 command_modules = ["ReceiveCommand"]
 
+#main_modules = ["SPIManager_Env", "SPIManager_slowADC", "GetSlowADCData"]
+#daq_modules = []
+#command_modules = []
 a = MyApp.new
 
 
