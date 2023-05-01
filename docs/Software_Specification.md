@@ -48,6 +48,8 @@
   対象となるAnalog Discovery の channel。前項と合わせて、出力するDAC端子が一意に決まる。
 - <modpar>sleep</modpar> (default: 500)<br>
   電圧を出力した後、sleep する時間。単位は${\rm ms}$。
+- <modpar>voltages</modpar> (default: [])<br>
+  コマンドに頼らずに、最初からDAC出力にある変遷を辿らせたいときに入力する。単位は$V$。たとえば、0V から5Vまで1Vずつ上げたいときは、[0.0, 1.0, 2.0, 3.0, 4.0, 5.0] を入力する。
 
 #### 仕様
 
