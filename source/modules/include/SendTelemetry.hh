@@ -18,6 +18,7 @@
 #include "GetRaspiStatus.hh"
 #include "GetEnvironmentalData.hh"
 #include "MeasureAcceleration.hh"
+#include "GetSlowADCData.hh"
 #include "SerialCommunication.hh"
 #include "ReceiveCommand.hh"
 
@@ -83,6 +84,7 @@ private:
   std::vector<std::string> getEnvironmentalDataModuleNames_;
   std::vector<GetEnvironmentalData*> getEnvironmentalDataVec_;
   MeasureAcceleration* measureAcceleration_ = nullptr;
+  GetSlowADCData* getSlowADCData_ = nullptr;
   ReceiveCommand* receiveCommand_ = nullptr;
 
   // communication

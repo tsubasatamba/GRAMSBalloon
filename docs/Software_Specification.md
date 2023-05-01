@@ -48,6 +48,8 @@
   対象となるAnalog Discovery の channel。前項と合わせて、出力するDAC端子が一意に決まる。
 - <modpar>sleep</modpar> (default: 500)<br>
   電圧を出力した後、sleep する時間。単位は${\rm ms}$。
+- <modpar>voltages</modpar> (default: [])<br>
+  コマンドに頼らずに、最初からDAC出力にある変遷を辿らせたいときに入力する。単位は$V$。たとえば、0V から5Vまで1Vずつ上げたいときは、[0.0, 1.0, 2.0, 3.0, 4.0, 5.0] を入力する。
 
 #### 仕様
 
@@ -105,6 +107,40 @@
 
 #### Core class
 - なし。
+
+
+### GetSlowADCData
+
+#### 機能
+- Slow ADC (ADC128S102) からデータを読み出す。運用上は、電源ボードの電圧・電流、チャンバーの圧力、HV の監視を行う。
+
+#### 入力パラメータ
+
+- <modpar>chip_select</modpar> (default: 8)<br>
+  対応するpinのchip selectを入力する。
+- <modpar>SPI_manager_name</modpar> (default: "SPIManager")<br>
+  対応するSPIManager module の名前を入力する。
+- <modpar>Va</modpar> (default: 5.0)<br>
+  ADC 変換に用いる電圧を浮動小数店で入力する。ADC の変換公式は、<br>
+  $V_{\rm measure}=V_{\rm A}\times (ADC-0.5)/4096$<br>
+  で表される。
+- <modpar>channels</modpar> (default: [0])<br>
+  測定するチャンネルを整数配列で入力する。ADC128S102は8チャンネルあるので、0から7の値を入力することができる。
+- <modpar>num_trials</modpar> (default: 2)<br>
+  ADC の値を取得するとき、複数回データをとってその平均を計算するようにしている。その試行回数が<tt>num_trials</tt> である。ただし、最初の1回の試行で得られたデータは捨てているので、実際には、num_trials-1 回の平均をとっている。2未満の整数を入力することはできない。
+
+#### 仕様
+
+- <b>mod_pre_initialize</b><br>
+  <tt>chip_select</tt>の値をSPIManagerに渡す。
+- <b>mod_initialize</b><br>
+  GPIO および SPI のハンドラーをSPIManagerからもらう。<tt>slowADCIO</tt> にVa の設定を読み込ませる。
+- <b>mod_analyze</b><br>
+  <tt>channels</tt> に格納されたチャンネルのADC の値を取得する。
+
+#### Core class
+
+- SlowADCIO.cc
 
 ### InterpretTelemetry
 
@@ -221,6 +257,43 @@
 
 ### ReceiveCommand
 
+#### 機能
+
+- 地上からのコマンドをシリアル通信を介して受け取る。
+- コマンドを解釈した後、適切な指令を各モジュールに配分する。
+- コマンド一覧は以下を参照<br>
+  https://docs.google.com/spreadsheets/d/149plbWC4adAmXE9alBa7HCU7ituWycGj6gzw1qqyXyk/edit#gid=2044691227
+
+#### 入力パラメータ
+
+- <modpar>baudrate</modpar> (default: B9600)<br>
+  通信のbaudrate を入力する。基本的に、Bの後の数字を整数で入力すれば良い。
+- <modpar>serial_path</modpar> (default: "/dev/null")<br>
+  シリアル通信に用いるデバイススペシャルファイルのパス。Raspi でシリアル通信を行う際、"/dev/ttyAMA0" などである。
+- <modpar>open_mode</modpar> (default: O_RDWR=2)<br>
+  シリアル通信のオプションであるopen_mode を入力する。READONLY=0, WRITEONLY=1, READWRITE=2, NONBLOCK=4 である。READWRITE and NONBLOCK としたい場合は6と指定する。Raspi でコマンドを受け取る際はREADWRITE=2 を指定するのが良い。
+- <modpar>TPC_HVController_module_name</modpar> (default: "ControlHighVoltage_TPC")<br>
+  ControlHighVoltage モジュールのうち、TPC をコントロールするモジュールの名前。基本的に変更しない。
+- <modpar>PMT_HVController_module_name</modpar> (default: "ControlHighVoltage_PMT")<br>
+  ControlHighVoltage モジュールのうち、PMT をコントロールするモジュールの名前。基本的に変更しない。
+
+#### 仕様
+
+- <b>mod_initialize</b><br>
+  他モジュールへのアクセスを確立するとともに、シリアル通信の初期設定を行う。
+- <b>mod_analyze</b><br>
+  1ループごとにコマンド受け取りの試みる。シリアル通信を介して信号が何も来ない場合、一定時間 (10秒)を経てからタイムアウトとなり、次のループに移行する。信号が来た場合、その文字列を解釈する。開始コード、終了コード、CRC、コマンドコード が正常であることを確認した後、意図された指示を対象となる他モジュールへ反映する。コマンドの受信が途中で途切れた場合、次のループでその続きを受信することを試みる。また、1ループの処理でコマンドが複数個連なって受信されてしまった場合、1個目のコマンドのみ有効になる。そのため、地上からコマンドを複数送信する際、ある程度の間隔 (1秒あれば問題ない)をあけなければならない。
+
+#### Core class
+
+- CommandDefinition.cc<br>
+  コマンドの解釈方法が記されている。
+- SerialCommunication.cc<br>
+  シリアル通信の操作が記されている。
+
+
+
+
 ### ReceiveTelemetry
 
 
@@ -229,10 +302,29 @@
 
 ### ShutdownSystem
 
+#### 機能
+
+- Raspi のシャットダウン、再起動を制御する。
+
+#### 入力パラメータ
+
+- なし。
+
+#### 仕様
+
+- <b>mod_analyze</b><br>
+  シャットダウンもしくは再起動の操作を行うかどうか判断し、実行する。
+  これらの操作は重大な影響を及ぼすため、二段階認証を採用している。
+  たとえば、シャットダウンの際には、<tt>prepareShutdown_</tt> というboolean 変数と<tt>shutDown_</tt> というboolean 変数が両方ともtrue になっていなければ実行されない。再起動の場合も同様である。これらの変数は地上からコマンドを送ることで書き換えることができる。(つまり、2種類のコマンドを送らないと実行されない)
+
+#### Core class
+
+- なし。
+
 ### SPIManager
 
 #### 機能
-SPI通信を確立する。他のSPI通信を用いるmoduleは必ず本moduleを参照する。
+- SPI通信を確立する。他のSPI通信を用いるmoduleは必ず本moduleを参照する。
 
 #### 入力パラメータ
 - <modpar>channel</modpar> (default: 0)

@@ -39,13 +39,13 @@ ANLStatus SPIManager::mod_initialize()
   interface_ -> setGPIOHandler(pi);
   interface_ -> setChipSelect(8);
   interface_ -> setSPIHandler(spi_handler);
+  std::cout << "spi_handler: " << spi_handler << std::endl;
 
   const int n = chipSelectArray_.size();
-  std::cout << "number of chip select inputted: " << n << std::endl;
   for (int i=0; i<n; i++) {
     set_mode(pi, chipSelectArray_[i], PI_OUTPUT);
     set_pull_up_down(pi, chipSelectArray_[i], PI_PUD_UP);
-    gpio_write(pi, chipSelectArray_[i], CS_DISABLE);
+    gpio_write(pi, chipSelectArray_[i], PI_HIGH);
   }
    
   return AS_OK;

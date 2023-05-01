@@ -23,6 +23,8 @@ ANLStatus ReceiveCommand::mod_define()
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("open_mode", &mod_class::openMode_);
+  define_parameter("TPC_HVController_module_name", &mod_class::TPCHVControllerModuleName_);
+  define_parameter("PMT_HVController_module_name", &mod_class::PMTHVControllerModuleName_);
 
   return AS_OK;
 }

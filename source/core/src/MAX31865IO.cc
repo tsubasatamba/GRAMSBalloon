@@ -19,7 +19,7 @@ int MAX31865IO::readReg(uint8_t reg, char *value, unsigned int length)
   const int pi = intf_->GPIOHandler();
   const int cs = intf_->ChipSelect();
   const unsigned int spihandler = intf_->SPIHandler();
-  gpio_write(pi, cs, PI_OFF);
+  gpio_write(pi, cs, PI_LOW);
   reg &= ~MAX31865_WRITE_MSK;
   int rslt = MAX31865_OK;
   const int rslt_write = spi_write(pi, spihandler, reinterpret_cast<char *>(&reg), 1);
@@ -31,7 +31,7 @@ int MAX31865IO::readReg(uint8_t reg, char *value, unsigned int length)
       std::cerr << "read_reg failed in writing data: rslt_write = " << rslt_write << std::endl;
     }
     rslt = rslt_write;
-    gpio_write(pi, cs, PI_ON);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   } 
   const int rslt_read = spi_read(pi, spihandler, value, length);
@@ -44,11 +44,11 @@ int MAX31865IO::readReg(uint8_t reg, char *value, unsigned int length)
       std::cerr << "read_reg failed in writing data: rslt_read = " << rslt_read << std::endl;
     }
     rslt = rslt_read;
-    gpio_write(pi, cs, PI_ON);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   }
     
-  gpio_write(pi, cs, PI_ON);
+  gpio_write(pi, cs, PI_HIGH);
   return rslt_read;
 }
 
@@ -58,7 +58,7 @@ int MAX31865IO::writeReg(uint8_t reg, char *value, unsigned int length)
   const int cs = intf_->ChipSelect();
   const unsigned int spihandler = intf_->SPIHandler();
 
-  gpio_write(pi, cs, PI_OFF);
+  gpio_write(pi, cs, PI_LOW);
   reg |= MAX31865_WRITE_MSK;
   int rslt = MAX31865_OK;
   int rslt_write = spi_write(pi, spihandler, reinterpret_cast<char *>(&reg), 1);
@@ -70,7 +70,7 @@ int MAX31865IO::writeReg(uint8_t reg, char *value, unsigned int length)
       std::cerr << "write_reg failed in writing data: rslt_write = " << rslt_write << std::endl;
     }
     rslt = rslt_write;
-    gpio_write(pi, cs, PI_ON);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   }
   
@@ -83,11 +83,11 @@ int MAX31865IO::writeReg(uint8_t reg, char *value, unsigned int length)
       std::cerr << "write_reg failed in writing data: rslt_write = " << rslt_write << std::endl;
     }
     rslt = rslt_write;
-    gpio_write(pi, cs, PI_ON);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   }
     
-  gpio_write(pi, cs, PI_ON);
+  gpio_write(pi, cs, PI_HIGH);
   return rslt_write;
 }
 

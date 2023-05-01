@@ -19,8 +19,7 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
   const int cs = intf->ChipSelect();
   const unsigned int spihandler = intf->SPIHandler();
   
-  set_mode(pi, cs, PI_OUTPUT);
-  gpio_write(pi, cs, CS_ENABLE);
+  gpio_write(pi, cs, PI_LOW);
   #if 0
   int dbg = gpio_read(pi, cs);
   std::cout << "gpio_read: " << dbg << std::endl;
@@ -34,7 +33,7 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
     }
     std::cerr << "spi_write error: write_status = " << write_status << ", BME_REGISTER_BYTES = " << BME_REGISTER_BYTES << std::endl;
     rslt = static_cast<int8_t>(write_status);
-    gpio_write(pi, cs, CS_DISABLE);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   }
 
@@ -47,7 +46,7 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
     }
     std::cerr << "spi_read error: read_status = " << read_status << ", length = " << length << std::endl;
     rslt = static_cast<int8_t>(read_status);
-    gpio_write(pi, cs, CS_DISABLE);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   }
     
@@ -66,7 +65,7 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
   std::cout << std::dec << std::endl;
   #endif
 
-  gpio_write(pi, cs, CS_DISABLE);
+  gpio_write(pi, cs, PI_HIGH);
   #if 0
   int dbg2 = gpio_read(pi, cs);
   std::cout << "gpio_read: " << dbg2 << std::endl;
@@ -83,7 +82,7 @@ int8_t BME680IO::writeReg(uint8_t reg_addr, const uint8_t *reg_data, uint32_t le
   const int cs = intf->ChipSelect();
   const unsigned int spihandler = intf->SPIHandler();
   
-  gpio_write(pi, cs, CS_ENABLE);
+  gpio_write(pi, cs, PI_LOW);
   int write_status = spi_write(pi, spihandler, reinterpret_cast<char *>(&reg_addr), BME_REGISTER_BYTES);
   if (write_status != BME_REGISTER_BYTES) {
     if (write_status==0) {
@@ -91,7 +90,7 @@ int8_t BME680IO::writeReg(uint8_t reg_addr, const uint8_t *reg_data, uint32_t le
     }
     std::cerr << "spi_write error: write_status = " << write_status << ", BME_REGISTER_BYTES = " << BME_REGISTER_BYTES << std::endl;
     rslt = static_cast<int8_t>(write_status);
-    gpio_write(pi, cs, CS_DISABLE);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   }
   
@@ -102,11 +101,11 @@ int8_t BME680IO::writeReg(uint8_t reg_addr, const uint8_t *reg_data, uint32_t le
     }
     std::cerr << "spi_write error: write_status = " << write_status << ", length = " << length << std::endl;
     rslt = static_cast<int8_t>(write_status);
-    gpio_write(pi, cs, CS_DISABLE);
+    gpio_write(pi, cs, PI_HIGH);
     return rslt;
   }
   
-  gpio_write(pi, cs, CS_DISABLE);
+  gpio_write(pi, cs, PI_HIGH);
   
   return rslt;
 }

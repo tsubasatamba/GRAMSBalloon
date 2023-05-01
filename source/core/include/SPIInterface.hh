@@ -10,15 +10,6 @@
  * @date 2023-03-01
  */
 
-#define SPI_CS_ENABLE 0
-
-#if SPI_CS_ENABLE == 0
-#define CS_ENABLE PI_OFF
-#define CS_DISABLE PI_ON
-#elif SPI_CS_ENABLE == 1
-#define CS_ENABLE PI_ON
-#define CS_DISABLE PI_OFF
-#endif
 
 namespace gramsballoon {
 

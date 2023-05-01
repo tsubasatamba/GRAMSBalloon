@@ -31,15 +31,12 @@ ANLStatus InterpretHKTelemetry::mod_analyze()
 {
   const std::vector<uint8_t>& telemetry = receiver_->Telemetry();
 
-  // length is valid or not
-
   bool status = telemdef_->setTelemetry(telemetry);
   if (!status) {
     std::cerr << "InterpretHKTelemetry::mod_analyze Failed to set telemetry..." << std::endl;
     return AS_OK;
   }
   telemdef_->interpret();
-  std::cout << "event id: " << telemdef_->EventID() << std::endl;
   
   return AS_OK;
 }

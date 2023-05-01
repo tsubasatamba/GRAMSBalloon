@@ -81,6 +81,11 @@ ANLStatus SendTelemetry::mod_initialize()
     get_module_NC(measure_acceleration_md, &measureAcceleration_);
   }
 
+  const std::string get_slowADC_data_md = "GetSlowADCData";
+  if (exist_module(get_slowADC_data_md)) {
+    get_module_NC(get_slowADC_data_md, &getSlowADCData_);
+  }
+
   const std::string receive_command_md = "ReceiveCommand";
   if (exist_module(receive_command_md)) {
     get_module_NC(receive_command_md, &receiveCommand_);
@@ -163,7 +168,9 @@ void SendTelemetry::inputDetectorInfo()
     telemdef_->setEventCount(event_count);
   }
   // trigger count
-  // chamber pressure
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setChamberPressure(getSlowADCData_->getADC(2));
+  }
   const int n = measureTemperatureVec_.size();
   for (int i=0; i<n; i++) {
     telemdef_->setRTDTemperatureADC(i, measureTemperatureVec_[i]->TemperatureADC());
@@ -172,11 +179,15 @@ void SendTelemetry::inputDetectorInfo()
   if (TPCHVController_!=nullptr) {
     telemdef_->setTPCHVSetting(TPCHVController_->NextVoltage());
   }
-  // TPCHV Measure
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setTPCHVMeasure(getSlowADCData_->getADC(3));
+  }
   if (PMTHVController_!=nullptr) {
     telemdef_->setPMTHVSetting(PMTHVController_->NextVoltage());
   }
-  // PMTHV Measure
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setPMTHVMeasure(getSlowADCData_->getADC(4));
+  }
 }
 
 
@@ -199,6 +210,10 @@ void SendTelemetry::inputHKVesselInfo()
       telemdef_->setGyro(i, measureAcceleration_->getGyro(i));
       telemdef_->setMagnet(i, measureAcceleration_->getMagnet(i));
     }
+  }
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setMainCurrent(getSlowADCData_->getADC(1));
+    telemdef_->setMainVoltage(getSlowADCData_->getADC(0));
   }
 }
 

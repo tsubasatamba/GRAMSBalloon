@@ -61,14 +61,13 @@ ANLStatus GetEnvironmentalData::mod_analyze()
   const int status = bme680io_ -> getData();
   if (status!=0) {
     std::cerr << "Failed to get environmental data." << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
   bme680io_ -> printData();
   pressure_ = bme680io_ -> SensorData() -> pressure;
   humidity_ = bme680io_ -> SensorData() -> humidity;
   temperature_ = bme680io_ -> SensorData() -> temperature;
 
-  
   return AS_OK;
 }
 
