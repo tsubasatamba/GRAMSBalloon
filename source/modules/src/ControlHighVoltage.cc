@@ -17,6 +17,7 @@ ANLStatus ControlHighVoltage::mod_define()
   define_parameter("device_id", &mod_class::deviceID_);
   define_parameter("channel", &mod_class::channel_);
   define_parameter("sleep", &mod_class::sleep_);
+  define_parameter("voltages", &mod_class::voltages_);
 
   return AS_OK;
 }
@@ -39,23 +40,17 @@ ANLStatus ControlHighVoltage::mod_initialize()
 
 ANLStatus ControlHighVoltage::mod_analyze()
 {
-  # if 0
-  const int index = get_loop_index();
-  if (index==1) {
-    nextVoltage_ = 2.0;
+  if (voltageIndex_<voltages_.size()) {
+    exec_ = true;
+    nextVoltage_ = voltages_[voltageIndex_];
+    voltageIndex_++;
   }
-  if (index==6) {
-    nextVoltage_ = 4.0;
-  }
-  # endif
-
   
   if ((currentVoltage_!=nextVoltage_) && exec_) {
     AnalogDiscoveryIO* io = ADManager_->ADIO();
     io -> setVoltage(deviceID_, channel_, static_cast<double>(nextVoltage_), sleep_);
     currentVoltage_ = nextVoltage_;
     exec_ = false;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
   
   return AS_OK;

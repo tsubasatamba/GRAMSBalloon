@@ -46,6 +46,8 @@ private:
   double currentVoltage_ = 0.0; // volt
   double nextVoltage_ = 0.0; // volt
   bool exec_ = false;
+  std::vector<double> voltages_;
+  int voltageIndex_ = 0;
 };
 
 } /* namespace gramsballoon */
