@@ -26,6 +26,7 @@ if(GB_USE_PIGPIO)
   set(GB_PIGPIO_CORE_CLASSES
     src/BME680IO.cc
     src/MAX31865IO.cc
+    src/SlowADCIO.cc
     )
 endif(GB_USE_PIGPIO)
 

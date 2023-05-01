@@ -81,6 +81,11 @@ ANLStatus SendTelemetry::mod_initialize()
     get_module_NC(measure_acceleration_md, &measureAcceleration_);
   }
 
+  const std::string get_slowADC_data_md = "getSlowADCData";
+  if (exist_module(get_slowADC_data_md)) {
+    get_module_NC(get_slowADC_data_md, &getSlowADCData_);
+  }
+
   const std::string receive_command_md = "ReceiveCommand";
   if (exist_module(receive_command_md)) {
     get_module_NC(receive_command_md, &receiveCommand_);
@@ -199,6 +204,10 @@ void SendTelemetry::inputHKVesselInfo()
       telemdef_->setGyro(i, measureAcceleration_->getGyro(i));
       telemdef_->setMagnet(i, measureAcceleration_->getMagnet(i));
     }
+  }
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setMainCurrent(getSlowADCData_->getADC(1));
+    telemdef_->setMainVoltage(getSlowADCData_->getADC(0));
   }
 }
 

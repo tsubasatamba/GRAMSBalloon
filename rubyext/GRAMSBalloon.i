@@ -41,6 +41,9 @@
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
 #endif
+#ifdef USE_PIGPIO
+#include "GetSlowADCData.hh"
+#endif
 %}
 
 %include "std_vector.i"
@@ -161,6 +164,14 @@ class PushToMongoDB : public anlnext::BasicModule
 {
 public:
   PushToMongoDB();
+};
+#endif
+
+#ifdef USE_PIGPIO
+class GetSlowADCData : public anlnext::BasicModule
+{
+public:
+  GetSlowADCData();
 };
 #endif
 } // namespace GRAMSBalloon

@@ -33,6 +33,7 @@ if(GB_USE_PIGPIO)
     src/SPIManager.cc
     src/GetEnvironmentalData.cc
     src/MeasureTemperatureWithRTDSensor.cc
+    src/GetSlowADCData.cc
     )
 endif(GB_USE_PIGPIO)
 
