@@ -46,6 +46,7 @@ private:
   std::vector<int> channels_;
   std::map<int, uint16_t> adcList_;
   std::map<int, double> voltageList_;
+  int numTrials_ = 2;
 };
 
 } /* namespace gramsballoon */

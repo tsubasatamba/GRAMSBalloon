@@ -168,7 +168,9 @@ void SendTelemetry::inputDetectorInfo()
     telemdef_->setEventCount(event_count);
   }
   // trigger count
-  // chamber pressure
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setChamberPressure(getSlowADCData_->getADC(2));
+  }
   const int n = measureTemperatureVec_.size();
   for (int i=0; i<n; i++) {
     telemdef_->setRTDTemperatureADC(i, measureTemperatureVec_[i]->TemperatureADC());
@@ -177,11 +179,15 @@ void SendTelemetry::inputDetectorInfo()
   if (TPCHVController_!=nullptr) {
     telemdef_->setTPCHVSetting(TPCHVController_->NextVoltage());
   }
-  // TPCHV Measure
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setTPCHVMeasure(getSlowADCData_->getADC(3));
+  }
   if (PMTHVController_!=nullptr) {
     telemdef_->setPMTHVSetting(PMTHVController_->NextVoltage());
   }
-  // PMTHV Measure
+  if (getSlowADCData_!=nullptr) {
+    telemdef_->setPMTHVMeasure(getSlowADCData_->getADC(4));
+  }
 }
 
 

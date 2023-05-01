@@ -20,6 +20,7 @@ ANLStatus GetSlowADCData::mod_define()
   define_parameter("SPI_manager_name", &mod_class::SPIManagerName_);
   define_parameter("Va", &mod_class::va_);
   define_parameter("channels", &mod_class::channels_);
+  define_parameter("num_trials", &mod_class::numTrials_);
 
   return AS_OK;
 }
@@ -38,6 +39,10 @@ ANLStatus GetSlowADCData::mod_pre_initialize()
     return AS_QUIT_ERROR;
   }
   SPIManager_->addChipSelect(chipSelect_);
+
+  if (numTrials_<2) {
+    numTrials_ = 2;
+  }
 
   return AS_OK;
 }
@@ -62,7 +67,7 @@ ANLStatus GetSlowADCData::mod_analyze()
   for (int channel: channels_) {
     uint16_t adc = 0;
     double voltage = 0.0;
-    const bool status = slowADCio_->getData(channel, adc, voltage);
+    const bool status = slowADCio_->getData(channel, adc, voltage, numTrials_);
     if (status) {
       adcList_[channel] = adc;
       voltageList_[channel] = voltage;
@@ -82,8 +87,6 @@ ANLStatus GetSlowADCData::mod_analyze()
     std::cout << m.first << " " << m.second << std::endl;
   }
   #endif
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
  
   return AS_OK;
 }
