@@ -106,6 +106,40 @@
 #### Core class
 - なし。
 
+
+### GetSlowADCData
+
+#### 機能
+- Slow ADC (ADC128S102) からデータを読み出す。運用上は、電源ボードの電圧・電流、チャンバーの圧力、HV の監視を行う。
+
+#### 入力パラメータ
+
+- <modpar>chip_select</modpar> (default: 8)<br>
+  対応するpinのchip selectを入力する。
+- <modpar>SPI_manager_name</modpar> (default: "SPIManager")<br>
+  対応するSPIManager module の名前を入力する。
+- <modpar>Va</modpar> (default: 5.0)<br>
+  ADC 変換に用いる電圧を浮動小数店で入力する。ADC の変換公式は、<br>
+  $V_{\rm measure}=V_{\rm A}\times (ADC-0.5)/4096$<br>
+  で表される。
+- <modpar>channels</modpar> (default: [0])<br>
+  測定するチャンネルを整数配列で入力する。ADC128S102は8チャンネルあるので、0から7の値を入力することができる。
+- <modpar>num_trials</modpar> (default: 2)<br>
+  ADC の値を取得するとき、複数回データをとってその平均を計算するようにしている。その試行回数が<tt>num_trials</tt> である。ただし、最初の1回の試行で得られたデータは捨てているので、実際には、num_trials-1 回の平均をとっている。2未満の整数を入力することはできない。
+
+#### 仕様
+
+- <b>mod_pre_initialize</b><br>
+  <tt>chip_select</tt>の値をSPIManagerに渡す。
+- <b>mod_initialize</b><br>
+  GPIO および SPI のハンドラーをSPIManagerからもらう。<tt>slowADCIO</tt> にVa の設定を読み込ませる。
+- <b>mod_analyze</b><br>
+  <tt>channels</tt> に格納されたチャンネルのADC の値を取得する。
+
+#### Core class
+
+- SlowADCIO.cc
+
 ### InterpretTelemetry
 
 
