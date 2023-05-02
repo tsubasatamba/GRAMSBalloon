@@ -296,7 +296,30 @@
 
 ### ReceiveTelemetry
 
+#### 機能
+- Raspi からのテレメトリーを地上で受け取る。
+- 地上のMac で実行することを想定したモジュールである。
 
+#### 入力パラメータ
+
+- <modpar>baudrate</modpar> (default: B9600)<br>
+  通信のbaudrate を入力する。基本的に、Bの後の数字を整数で入力すれば良い。
+- <modpar>serial_path</modpar> (default: "/dev/null")<br>
+  シリアル通信に用いるデバイススペシャルファイルのパス。Mac で受信する場合、"/dev/tty.usbserial-14110" などである。
+- <modpar>open_mode</modpar> (default: O_RDWR=6)<br>
+  シリアル通信のオプションであるopen_mode を入力する。READONLY=0, WRITEONLY=1, READWRITE=2, NONBLOCK=4 である。READWRITE and NONBLOCK としたい場合は6と指定する。Mac でテレメトリーを受け取る際はREADWRITE=2 を指定するのが良い。
+
+#### 仕様
+
+- <b>mod_initialize</b><br>
+  シリアル通信の初期設定を行う。
+- <b>mod_analyze</b><br>
+  シリアル通信を介してテレメトリーを行う。開始コードと終了コードの判断のみを行い、その他の解釈はInterpretTelemetry モジュールに委ねる。テレメトリーの受信が途中で途切れた場合、次のループでその続きを受信することを試みる。また、1ループの処理でテレメトリーが複数個連なって受信されてしまった場合、1個目のテレメトリーのみ有効になる。
+
+#### Core class
+
+- SerialCommunication.cc<br>
+  シリアル通信の操作が記されている。
 
 ### SendTelemetry
 
@@ -331,7 +354,7 @@
   テレメトリーを送信する。通常はHK Telemetry を
 
 #### Core class
-- CommandDefinition.cc<br>
+- TelemetryDefinition.cc<br>
   テレメトリーの生成方法が記されている。
 - SerialCommunication.cc<br>
   シリアル通信の操作が記されている。
