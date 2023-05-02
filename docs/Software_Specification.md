@@ -304,10 +304,25 @@
 
 - 他のモジュールから情報を集め、テレメトリーを作成する。
 - その後、Raspi から地上にテレメトリーを送信する。
-- テレメトリーの詳細は以下を参照。
+- テレメトリーの詳細は以下を参照。<br>
   https://docs.google.com/spreadsheets/d/149plbWC4adAmXE9alBa7HCU7ituWycGj6gzw1qqyXyk/edit#gid=32632668
 
 #### 入力パラメータ
+- <modpar>MeasureTemperature_module_names</modpar> (default: [])<br>
+  MeasureTemperatureWithRTDSensor のモジュール名を入れる。モジュールは通常複数あるので、["MeasureTemperatureWithRTDSensor_1", "MeasureTemperatureWithRTDSensor_2", ...] などである。
+- <modpar>TPCHVController_module_name</modpar> (default: "ControlHighVoltage_TPC")<br>
+  TPC 用のControlHighVoltage のモジュール名。基本デフォルト値のままでよい。
+- <modpar>PMTHVController_module_name</modpar> (default: "ControlHighVoltage_PMT")<br>
+  PMT 用のControlHighVoltage のモジュール名。基本デフォルト値のままでよい。
+- <modpar>GetEnvironmentalData_module_names</modpar> (default: [])<br>
+  GetEnvironmentalData のモジュール名を入れる。モジュールは通常複数あるので、["GetEnvironmentalData_1", "GetEnvironmentalData_2", ...] などである。
+- <modpar>serial_path</modpar> (default: "/dev/null")<br>
+  シリアル通信に用いるデバイススペシャルファイルのパス。Raspi でシリアル通信を行う際、"/dev/ttyAMA0" などである。
+- <modpar>baudrate</modpar> (default: B9600)<br>
+  通信のbaudrate を入力する。基本的に、Bの後の数字を整数で入力すれば良い。
+- <modpar>open_mode</modpar> (default: O_RDWR=2)<br>
+  シリアル通信のオプションであるopen_mode を入力する。READONLY=0, WRITEONLY=1, READWRITE=2, NONBLOCK=4 である。READWRITE and NONBLOCK としたい場合は6と指定する。Raspi でコマンドを受け取る際はREADWRITE=2 を指定するのが良い。
+
 #### 仕様
 
 - <b>mod_initialize</b><br>
@@ -320,6 +335,7 @@
   テレメトリーの生成方法が記されている。
 - SerialCommunication.cc<br>
   シリアル通信の操作が記されている。
+
 
 ### ShutdownSystem
 
