@@ -3,7 +3,6 @@
 
 #include <anlnext/BasicModule.hh>
 #include "SerialCommunication.hh"
-#include <TelemetryDefinition.hh>
 #include <thread>
 #include <chrono>
 
@@ -29,7 +28,6 @@ public:
   
 private:
   std::vector<uint8_t> telemetry_;
-  std::shared_ptr<TelemetryDefinition> teldef_ = nullptr;
   int maxTelemetry_ = 32000;
   std::vector<uint8_t> buffer_;
   

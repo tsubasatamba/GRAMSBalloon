@@ -4,10 +4,9 @@ using namespace anlnext;
 namespace gramsballoon {
 
 ReceiveTelemetry::ReceiveTelemetry()
-  : maxTelemetry_(32000), baudrate_(B9600), openMode_(O_RDWR | O_NONBLOCK)
+  : maxTelemetry_(32000), baudrate_(B9600), openMode_(O_RDWR)
 {
   serialPath_ = "/dev/null";
-  teldef_ = std::make_unique<TelemetryDefinition>();
 }
 
 ReceiveTelemetry::~ReceiveTelemetry() = default;
