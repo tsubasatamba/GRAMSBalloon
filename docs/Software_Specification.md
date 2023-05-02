@@ -300,6 +300,27 @@
 
 ### SendTelemetry
 
+#### 機能
+
+- 他のモジュールから情報を集め、テレメトリーを作成する。
+- その後、Raspi から地上にテレメトリーを送信する。
+- テレメトリーの詳細は以下を参照。
+  https://docs.google.com/spreadsheets/d/149plbWC4adAmXE9alBa7HCU7ituWycGj6gzw1qqyXyk/edit#gid=32632668
+
+#### 入力パラメータ
+#### 仕様
+
+- <b>mod_initialize</b><br>
+  他モジュールへのアクセスを確立するとともに、シリアル通信の初期設定を行う。
+- <b>mod_analyze</b><br>
+  テレメトリーを送信する。通常はHK Telemetry を
+
+#### Core class
+- CommandDefinition.cc<br>
+  テレメトリーの生成方法が記されている。
+- SerialCommunication.cc<br>
+  シリアル通信の操作が記されている。
+
 ### ShutdownSystem
 
 #### 機能
