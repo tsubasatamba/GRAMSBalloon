@@ -199,11 +199,11 @@ void PushToMongoDB::pushStatusTelemetry()
       << "ADC_Offset_2"         << (telemdef->ADCOffset())[1]
       << "ADC_Offset_3"         << (telemdef->ADCOffset())[2]
       << "ADC_Offset_4"         << (telemdef->ADCOffset())[3]
-      << "ADC_Range_1"         << (telemdef->ADCRange())[0]
-      << "ADC_Range_2"         << (telemdef->ADCRange())[1]
-      << "ADC_Range_3"         << (telemdef->ADCRange())[2]
-      << "ADC_Range_4"         << (telemdef->ADCRange())[3]
-      << "SD_Capacity"         << static_cast<int>(telemdef->SDCapacity())
+      << "ADC_Range_1"          << (telemdef->ADCRange())[0]
+      << "ADC_Range_2"          << (telemdef->ADCRange())[1]
+      << "ADC_Range_3"          << (telemdef->ADCRange())[2]
+      << "ADC_Range_4"          << (telemdef->ADCRange())[3]
+      << "SD_Capacity"          << static_cast<int>(telemdef->SDCapacity())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
