@@ -5,7 +5,9 @@
   "ti_scaling": 64,
   "schema_list": {
     "Main": {
-      "HK": "user_data/schema/HK/hk.js"
+        "HK": "user_data/schema/HK/hk.js",
+        "WF": "user_data/schema/WF/wf.js",
+        "Status": "user_data/schema/Status/status.js"
     }
   }
 }

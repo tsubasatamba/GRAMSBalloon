@@ -1,5 +1,5 @@
-#ifndef InterpretHKTelemetry_H
-#define InterpretHKTelemetry_H 1
+#ifndef InterpretTelemetry_H
+#define InterpretTelemetry_H 1
 
 #include <anlnext/BasicModule.hh>
 #include <thread>
@@ -9,15 +9,15 @@
 
 namespace gramsballoon {
 
-class InterpretHKTelemetry : public anlnext::BasicModule {
-  DEFINE_ANL_MODULE(InterpretHKTelemetry, 1.0);
+class InterpretTelemetry : public anlnext::BasicModule {
+  DEFINE_ANL_MODULE(InterpretTelemetry, 1.0);
 
 public:
-  InterpretHKTelemetry();
-  virtual ~InterpretHKTelemetry();
+  InterpretTelemetry();
+  virtual ~InterpretTelemetry();
 
 protected:
-  InterpretHKTelemetry(const InterpretHKTelemetry &r) = default;
+  InterpretTelemetry(const InterpretTelemetry &r) = default;
   
 public:
   anlnext::ANLStatus mod_define() override;
@@ -26,12 +26,14 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   TelemetryDefinition* Telemdef() { return telemdef_.get(); }
+  int CurrentTelemetryType() { return currentTelemetryType_; }
   
 private:
   std::shared_ptr<TelemetryDefinition> telemdef_;
   ReceiveTelemetry* receiver_;
+  int currentTelemetryType_ = 0;
 
 };
 
 } // namespace gramsballoon
-#endif // InterpretHKTelemetry_H
+#endif // InterpretTelemetry_H

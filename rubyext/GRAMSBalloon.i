@@ -37,7 +37,7 @@
 #ifdef USE_RASPISYS
 #include "ShutdownSystem.hh"
 #endif
-#include "InterpretHKTelemetry.hh"
+#include "InterpretTelemetry.hh"
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
 #endif
@@ -153,10 +153,10 @@ public:
 };
 #endif
 
-class InterpretHKTelemetry : public anlnext::BasicModule
+class InterpretTelemetry : public anlnext::BasicModule
 {
 public:
-  InterpretHKTelemetry();
+  InterpretTelemetry();
 };
 
 #ifdef USE_HSQUICKLOOK

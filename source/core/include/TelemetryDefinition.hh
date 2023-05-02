@@ -153,6 +153,7 @@ public:
   uint16_t CommandRejectCount() { return commandRejectCount_; }
   uint64_t SoftwareErrorCode() { return softwareErrorCode_; }
   uint32_t EventID() { return eventID_; }
+  timeval EventTime() { return eventTime_; }
   const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
   const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
   uint16_t TriggerMode() { return triggerMode_; }

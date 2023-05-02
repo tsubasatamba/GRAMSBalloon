@@ -1,23 +1,23 @@
-#include "InterpretHKTelemetry.hh"
+#include "InterpretTelemetry.hh"
 using namespace anlnext;
 
 namespace gramsballoon {
 
-InterpretHKTelemetry::InterpretHKTelemetry()
+InterpretTelemetry::InterpretTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
 }
 
-InterpretHKTelemetry::~InterpretHKTelemetry() = default;
+InterpretTelemetry::~InterpretTelemetry() = default;
 
-ANLStatus InterpretHKTelemetry::mod_define()
+ANLStatus InterpretTelemetry::mod_define()
 {
   //define_parameter("baudrate", &mod_class::baudrate_);
   
   return AS_OK;
 }
 
-ANLStatus InterpretHKTelemetry::mod_initialize()
+ANLStatus InterpretTelemetry::mod_initialize()
 {
   const std::string receiver_module_name = "ReceiveTelemetry";
   if (exist_module(receiver_module_name)) {
@@ -27,21 +27,23 @@ ANLStatus InterpretHKTelemetry::mod_initialize()
   return AS_OK;
 }
 
-ANLStatus InterpretHKTelemetry::mod_analyze()
+ANLStatus InterpretTelemetry::mod_analyze()
 {
+  currentTelemetryType_ = 0;
   const std::vector<uint8_t>& telemetry = receiver_->Telemetry();
 
   bool status = telemdef_->setTelemetry(telemetry);
   if (!status) {
-    std::cerr << "InterpretHKTelemetry::mod_analyze Failed to set telemetry..." << std::endl;
+    std::cerr << "InterpretTelemetry::mod_analyze Failed to set telemetry..." << std::endl;
     return AS_OK;
   }
   telemdef_->interpret();
+  currentTelemetryType_ = telemdef_->TelemetryType();
   
   return AS_OK;
 }
 
-ANLStatus InterpretHKTelemetry::mod_finalize()
+ANLStatus InterpretTelemetry::mod_finalize()
 {
   return AS_OK;
 }
