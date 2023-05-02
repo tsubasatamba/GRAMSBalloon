@@ -22,11 +22,11 @@ ANLStatus AnalogDiscoveryManager::mod_initialize()
   if (status!=0) {
     std::cerr << "Analog Discovery initialize failed." << std::endl;
     std::cerr << "status = " << status << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
   if (ADIO_->NumDevices()==0) {
     std::cerr << "Analog Discovery not connected." << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
 
   return AS_OK;

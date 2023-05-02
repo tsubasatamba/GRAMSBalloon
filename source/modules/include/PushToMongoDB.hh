@@ -3,7 +3,7 @@
 
 #include <anlnext/BasicModule.hh>
 #include <hsquicklook/MongoDBClient.hh>
-#include "InterpretHKTelemetry.hh"
+#include "InterpretTelemetry.hh"
 #include "TelemetryDefinition.hh"
 
 
@@ -21,9 +21,13 @@ public:
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
 
+  void pushHKTelemetry();
+  void pushWFTelemetry();
+  void pushStatusTelemetry();
+
 private:
   hsquicklook::MongoDBClient* mongodbClient_ = nullptr;
-  InterpretHKTelemetry* hkInterpreter_ = nullptr;
+  InterpretTelemetry* interpreter_ = nullptr;
 };
 
 } /* namespace gramsballoon */
