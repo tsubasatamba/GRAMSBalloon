@@ -33,7 +33,7 @@ class MyApp < ANL::ANLApp
 
         chain GRAMSBalloon::GetSlowADCData
         with_parameters(chip_select: 17, SPI_manager_name: "SPIManager_slowADC", Va: 5.026,
-        channels: [0, 1, 2, 3, 4], num_trials: 100)
+        channels: [1], num_trials: 2)
 
         chain GRAMSBalloon::GetRaspiStatus
 
