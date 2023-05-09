@@ -360,9 +360,9 @@ T TelemetryDefinition::getValue(int index)
     std::cerr << "telemetry_.size() = " << n << ", index = " << index << ", byte = " << byte << std::endl;
     return static_cast<T>(0);
   }
-  if (byte > 4) {
+  if (byte > 8) {
     std::cerr << "TelemetryDefinition::getValue error: typename error" << std::endl;
-    std::cerr << "byte should be equal to or less than 4: byte = " << byte << std::endl;
+    std::cerr << "byte should be equal to or less than 8: byte = " << byte << std::endl;
     return static_cast<T>(0);
   }
 
@@ -386,9 +386,9 @@ void TelemetryDefinition::getVector(int index, int num, std::vector<T>& vec)
     << ", num = " << num << std::endl;
     return;
   }
-  if (byte > 4) {
+  if (byte > 8) {
     std::cerr << "TelemetryDefinition::getVector error: typename error" << std::endl;
-    std::cerr << "byte should be equal to or less than 4: byte = " << byte << std::endl;
+    std::cerr << "byte should be equal to or less than 8: byte = " << byte << std::endl;
     return;
   }
   vec.clear();
