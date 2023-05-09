@@ -72,7 +72,10 @@ void TelemetryDefinition::generateTelemetryHK()
 void TelemetryDefinition::generateTelemetryWF()
 {
   addValue<uint32_t>(eventID_);
-  addVector<int16_t>(eventHeader_);
+  for (int i=0; i<5; i++) {
+    if (i==0) continue;
+    addValue<int16_t>(eventHeader_[i]);
+  }
   const int n = eventData_.size();
   for (int i=0; i<n; i++) {
     addVector<int16_t>(eventData_[i]);
@@ -187,7 +190,7 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   }
 
   uint16_t type = getValue<uint16_t>(2);
-  if (type==1 && n!=116) {
+  if (type==1 && n!=122) {
     std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
     return false;
   }
@@ -360,9 +363,9 @@ T TelemetryDefinition::getValue(int index)
     std::cerr << "telemetry_.size() = " << n << ", index = " << index << ", byte = " << byte << std::endl;
     return static_cast<T>(0);
   }
-  if (byte > 4) {
+  if (byte > 8) {
     std::cerr << "TelemetryDefinition::getValue error: typename error" << std::endl;
-    std::cerr << "byte should be equal to or less than 4: byte = " << byte << std::endl;
+    std::cerr << "byte should be equal to or less than 8: byte = " << byte << std::endl;
     return static_cast<T>(0);
   }
 
@@ -386,9 +389,9 @@ void TelemetryDefinition::getVector(int index, int num, std::vector<T>& vec)
     << ", num = " << num << std::endl;
     return;
   }
-  if (byte > 4) {
+  if (byte > 8) {
     std::cerr << "TelemetryDefinition::getVector error: typename error" << std::endl;
-    std::cerr << "byte should be equal to or less than 4: byte = " << byte << std::endl;
+    std::cerr << "byte should be equal to or less than 8: byte = " << byte << std::endl;
     return;
   }
   vec.clear();

@@ -133,7 +133,9 @@ ANLStatus SendTelemetry::mod_analyze()
 
   #endif
 
+
   std::this_thread::sleep_for(std::chrono::seconds(1));
+
   return AS_OK;
 }
 
@@ -220,7 +222,9 @@ void SendTelemetry::inputHKVesselInfo()
 
 void SendTelemetry::inputSoftwareInfo()
 {
+  std::cout << "software info" << std::endl;
   if (receiveCommand_!=nullptr) {
+    std::cout << "command index: " << receiveCommand_->CommandIndex() << std::endl;
     telemdef_->setLastCommandIndex(receiveCommand_->CommandIndex());
     telemdef_->setLastCommandCode(receiveCommand_ -> CommandCode());
     telemdef_->setCommandRejectCount(receiveCommand_->CommandRejectCount());

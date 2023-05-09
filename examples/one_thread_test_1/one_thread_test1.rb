@@ -79,41 +79,7 @@ class MyApp < ANL::ANLApp
     end
 end
 
-main_modules = ["SPIManager_RTD", "SPIManager_Env", "SPIManager_slowADC"]
-for i in 1..5 do
-  main_modules << "MeasureTemperatureWithRTDSensor_#{i}"
-end
 
-for i in 1..5 do
-  main_modules << "GetEnvironmentalData_#{i}"
-end
-
-main_modules << "MeasureAcceleration" << "GetSlowADCData" << "GetRaspiStatus" << "AnalogDiscoveryManager"
-main_modules << "ControlHighVoltage_TPC" << "ControlHighVoltage_PMT" << "SendTelemetry"
-
-daq_modules = ["ReadWaveform"]
-command_modules = ["ReceiveCommand"]
-
-#main_modules = ["SPIManager_Env", "SPIManager_slowADC", "GetSlowADCData"]
-#daq_modules = []
-#command_modules = []
 a = MyApp.new
-
-
-a.num_parallels = 3
-a.modify do |m|
-  main_modules.each do |mod|
-    m.get_parallel_module(1, mod).off
-    m.get_parallel_module(2, mod).off
-  end
-  daq_modules.each do |mod|
-    m.get_parallel_module(0, mod).off
-    m.get_parallel_module(2, mod).off
-  end
-  command_modules.each do |mod|
-    m.get_parallel_module(0, mod).off
-    m.get_parallel_module(1, mod).off
-  end
-end
 
 a.run(10000, 1)
