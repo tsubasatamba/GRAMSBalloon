@@ -3,8 +3,12 @@
 #include <string>
 #include <iostream>
 #include <sys/time.h>
+#include <sstream>
+#include <algorithm>
+#include <utility>
 #include <TCanvas.h>
 #include <TGraph.h>
+#include <TAxis.h>
 
 template<typename T>
 T getValue(int index, const std::vector<uint8_t>& vec)
@@ -69,8 +73,15 @@ void plotWaveform(const std::vector<std::vector<double> >& wf, double dt, const 
     for (int j=0; j<n; j++) {
       const double t = dt * j;
       graph[i]->SetPoint(j, t, wf[i][j]);
+      //std::cout << j << " " << t << " " << wf[i][j] << std::endl;
     }
-    graph[i]->Draw();
+    graph[i]->Draw("AP");
+    const double min_y = *std::min_element(wf[i].begin(), wf[i].end());
+    const double max_y = *std::max_element(wf[i].begin(), wf[i].end());
+    std::cout << "min max" << min_y << " " << max_y << std::endl;
+    graph[i]->GetYaxis()->SetRangeUser(min_y, max_y);
+    const std::string title = "channel " + std::to_string(i+1);
+    graph[i]->SetTitle(title.c_str());
   }
   canv->SaveAs(filename.c_str());
   delete(canv);
@@ -153,48 +164,22 @@ int main(int argc, char **argv)
     for (int j=0; j<4; j++) {
       for (int k=0; k<num_sample; k++) {
         int16_t val = getValue<int16_t>(index, arr);
+        //std::cout << "arr: " << (int)arr[index] << " " << (int)arr[index+1] << std::endl;
+        //std::cout << "val: " << val << std::endl;
         wf[j][k] = static_cast<double>(val) * range[j] / 65536;
+        //std::cout << "wf: " << wf[j][k] << std::endl;
         index += sizeof(int16_t);
       }
     }
     const double dt = 1.0 / sample_frequency;
-    const std::string image_filename = "test.png";
+    std::ostringstream sout;
+    sout << std::setfill('0') << std::right << std::setw(6) << i;
+    const std::string id_str = sout.str();
+    const std::string image_filename = "test_" + id_str + ".png";
     plotWaveform(wf, dt, image_filename);
   }
   std::cout << "index: " << index << std::endl;
 
-  
-
-    // int index = 0;
-    // while (index<64) {
-    //     short val = ((static_cast<int16_t>(temp[index]))<<8) + (static_cast<short>(temp[index+1]));
-    //     std::cout << index/2 << " " << (int)temp[index] << " " << (int)temp[index+1] << " " <<  val << std::endl;
-    //     index += 2;
-    // }
-
-    // const int num_events = 5;
-    // const int num_channels = 4;
-    // const int num_bins = 180;
-    // for (int i=0; i<num_events; i++) {
-    //     const int ev_header_size = 5;
-    //     for (int j=0; j<ev_header_size; j++) {
-    //         index += 2;
-    //     }
-    //     for (int j=0; j<num_channels; j++) {
-    //         std::cout << "channel " << j << std::endl;
-    //         std::vector<short> data;
-    //         for (int k=0; k<num_bins; k++) {
-    //             int16_t val = ((static_cast<short>(temp[index]))<<8) + (static_cast<short>(temp[index+1]));
-    //             data.push_back(val);
-    //             index += 2;
-    //         }
-    //         std::cout << "size: " << num_bins << std::endl;
-    //         for (int k=0; k<num_bins; k++) {
-    //             std::cout << data[k] << " ";
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    // }
     
     return 0;
 }
