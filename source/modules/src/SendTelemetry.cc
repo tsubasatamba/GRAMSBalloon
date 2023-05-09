@@ -133,7 +133,9 @@ ANLStatus SendTelemetry::mod_analyze()
 
   #endif
 
+
   std::this_thread::sleep_for(std::chrono::seconds(1));
+
   return AS_OK;
 }
 
