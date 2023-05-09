@@ -187,7 +187,7 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   }
 
   uint16_t type = getValue<uint16_t>(2);
-  if (type==1 && n!=116) {
+  if (type==1 && n!=122) {
     std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
     return false;
   }

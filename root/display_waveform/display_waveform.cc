@@ -6,9 +6,12 @@
 #include <sstream>
 #include <algorithm>
 #include <utility>
+#include <regex>
 #include <TCanvas.h>
 #include <TGraph.h>
 #include <TAxis.h>
+#include <TFile.h>
+#include <TTree.h>
 
 template<typename T>
 T getValue(int index, const std::vector<uint8_t>& vec)
@@ -90,8 +93,8 @@ void plotWaveform(const std::vector<std::vector<double> >& wf, double dt, const 
 int main(int argc, char **argv)
 {
   std::vector<int16_t> data;
-  const std::string filename = argv[1];
-  std::ifstream ifs(filename, std::ios::binary);
+  const std::string input_filename = argv[1];
+  std::ifstream ifs(input_filename, std::ios::binary);
   std::vector<uint8_t> arr;
 
   while (!ifs.eof()) {
@@ -106,20 +109,28 @@ int main(int argc, char **argv)
   std::vector<int16_t> file_header;
   getVector<int16_t>(0, 32, arr, file_header);
 
+  // open root
+  const std::string root_filename = std::regex_replace(input_filename, std::regex(".dat"), ".root");
+  TFile* rootfile = TFile::Open(root_filename.c_str(), "recreate");
+  TTree* header = new TTree("header", "header");
+  TTree* tree = new TTree("tree", "tree");
+
+  // read header
+
   for (int i=0; i<static_cast<int>(file_header.size()); i++) {
     std::cout << i << " " << file_header[i] << std::endl;
   }
 
-  const int trigger_device = static_cast<int>(file_header[0]);
-  const int trigger_channel = static_cast<int>(file_header[1]);
-  const int trigger_src = static_cast<int>(file_header[2]);
-  const int trigger_slope = static_cast<int>(file_header[3]);
-  const double trigger_level = static_cast<double>(file_header[4]) / 1E3;
-  const double trigger_position = static_cast<double>(file_header[5])/1E3;
-  const double sample_frequency = static_cast<double>(file_header[6])/1E3;
-  const double time_window = static_cast<double>(file_header[7])/1E3;
-  const int num_sample = static_cast<int>(file_header[8]);
-  const int num_event_per_file = static_cast<int>(file_header[9]);
+  int trigger_device = static_cast<int>(file_header[0]);
+  int trigger_channel = static_cast<int>(file_header[1]);
+  int trigger_src = static_cast<int>(file_header[2]);
+  int trigger_slope = static_cast<int>(file_header[3]);
+  double trigger_level = static_cast<double>(file_header[4]) / 1E3;
+  double trigger_position = static_cast<double>(file_header[5])/1E3;
+  double sample_frequency = static_cast<double>(file_header[6])/1E3;
+  double time_window = static_cast<double>(file_header[7])/1E3;
+  int num_sample = static_cast<int>(file_header[8]);
+  int num_event_per_file = static_cast<int>(file_header[9]);
   timeval header_time;
   header_time.tv_sec = ((static_cast<int>(file_header[10]))<<16) + static_cast<int>(file_header[11]);
   header_time.tv_usec = ((static_cast<int>(file_header[12]))<<16) + static_cast<int>(file_header[13]);
@@ -154,6 +165,24 @@ int main(int argc, char **argv)
   std::cout << "range: [" << range[0]  << ", " << range[1] << ", " << range[2] << ", " << range[3] << "]" << std::endl;
   std::cout << "range: [" << offset[0]  << ", " << offset[1] << ", " << offset[2] << ", " << offset[3] << "]" << std::endl;
 
+  header->Branch("trigger_device", &trigger_device, "trigger_device/I");
+  header->Branch("trigger_channel", &trigger_channel, "trigger_channel/I");
+  header->Branch("trigger_src", &trigger_src, "trigger_src/I");
+  header->Branch("trigger_slope", &trigger_slope, "trigger_slope/I");
+  header->Branch("trigger_level", &trigger_level, "trigger_level/D");
+  header->Branch("trigger_position", &trigger_position, "trigger_position/D");
+  header->Branch("sample_frequency", &sample_frequency, "sample_frequency/D");
+  header->Branch("time_window", &time_window, "time_window/D");
+  header->Branch("num_sample", &num_sample, "num_sample/I");
+  header->Branch("num_event_per_file", &num_event_per_file, "num_event_per_file/I");
+  header->Branch("time_sec", &header_time.tv_sec, "time_sec/I");
+  header->Branch("time_usec", &header_time.tv_usec, "time_usec/I");
+  for (int i=0; i<4; i++) {
+    //header->Branch("range", &range[i]);
+  }
+
+
+
   index = 64;
   for (int i=0; i<num_event_per_file; i++) {
     std::vector<int16_t> event_header(5);
@@ -180,6 +209,12 @@ int main(int argc, char **argv)
   }
   std::cout << "index: " << index << std::endl;
 
+
+  rootfile->cd();
+  header->Write();
+  tree->Write();
+  rootfile->Close();
+
     
-    return 0;
+  return 0;
 }
