@@ -72,7 +72,10 @@ void TelemetryDefinition::generateTelemetryHK()
 void TelemetryDefinition::generateTelemetryWF()
 {
   addValue<uint32_t>(eventID_);
-  addVector<int16_t>(eventHeader_);
+  for (int i=0; i<5; i++) {
+    if (i==0) continue;
+    addValue<int16_t>(eventHeader_[i]);
+  }
   const int n = eventData_.size();
   for (int i=0; i<n; i++) {
     addVector<int16_t>(eventData_[i]);

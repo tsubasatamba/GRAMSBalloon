@@ -110,7 +110,9 @@ ANLStatus ReceiveCommand::mod_analyze()
 
   const bool applied = applyCommand();
   if (!applied) {
-    sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
+    if (exist_module("SendTelemetry")) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
+    }
     commandRejectCount_++;
   }
   
@@ -126,6 +128,7 @@ bool ReceiveCommand::applyCommand()
 {
   commandIndex_++;
   std::cout << "command start" << std::endl;
+  std::cout << "command index: " << commandIndex_ << std::endl;
   for (int i=0; i<(int)command_.size(); i++) {
     std::cout << static_cast<int>(command_[i]) << std::endl;
   }
