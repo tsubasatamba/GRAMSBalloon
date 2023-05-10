@@ -10,6 +10,7 @@
 #include <anlnext/BasicModule.hh>
 #include <sys/reboot.h>
 #include <linux/reboot.h>
+#include <sys/time.h>
 
 namespace gramsballoon {
 
@@ -26,18 +27,22 @@ protected:
   ShutdownSystem(const ShutdownSystem &r) = default;
 
 public:
+  anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
   void setReboot(bool v) { reboot_ = v; }
   void setShutdown(bool v) { shutdown_ = v; }
-  void setPrepareReboot(bool v) { prepareReboot_ = v; }
-  void setPrepareShutdown(bool v) { prepareShutdown_ = v; }
+  void setPrepareReboot(bool v);
+  void setPrepareShutdown(bool v);
   
 private:
   bool reboot_ = false;
   bool shutdown_ = false;
   bool prepareReboot_ = false;
   bool prepareShutdown_ = false;
+  int bufferTimeSec_ = 60;
+  timeval prepareRebootTime_;
+  timeval prepareShutdownTime_;
 };
 
 } /* namespace gramsballoon */
