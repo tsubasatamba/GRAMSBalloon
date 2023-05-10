@@ -38,6 +38,14 @@ int AnalogDiscoveryIO::initialize()
 
 void AnalogDiscoveryIO::setupAnalogOut(int device_id, int channel, double init_value /*=0.0*/)
 {
+  if (device_id<0 || device_id>=NumDevices()) {
+    std::cerr << "Device ID " << device_id << " not connected"<< std::endl;
+    return;
+  }
+  if (channel<0 || channel>=2) {
+    std::cerr << "Channel " << channel << " is inappropriate." << std::endl;
+    return;
+  }
   FDwfAnalogOutNodeEnableSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, true);
   FDwfAnalogOutNodeFunctionSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, funcDC);
   FDwfAnalogOutNodeOffsetSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, init_value);
@@ -46,6 +54,15 @@ void AnalogDiscoveryIO::setupAnalogOut(int device_id, int channel, double init_v
 
 void AnalogDiscoveryIO::setupAnalogIn(int device_id, int channel, double freq, int buf_size, double range, double offset)
 {
+  if (device_id<0 || device_id>=NumDevices()) {
+    std::cerr << "Device ID " << device_id << " not connected"<< std::endl;
+    return;
+  }
+  if (channel<0 || channel>=2) {
+    std::cerr << "Channel " << channel << " is inappropriate." << std::endl;
+    return;
+  }
+
   FDwfAnalogInFrequencySet(handlerList_[device_id], freq);
   FDwfAnalogInBufferSizeSet(handlerList_[device_id], buf_size);
   FDwfAnalogInChannelEnableSet(handlerList_[device_id], channel, true);
@@ -77,6 +94,15 @@ void AnalogDiscoveryIO::setupAnalogIn(int device_id, int channel, double freq, i
 
 void AnalogDiscoveryIO::setVoltage(int device_id, int channel, double voltage, int sleep)
 {
+  if (device_id<0 || device_id>=NumDevices()) {
+    std::cerr << "Device ID " << device_id << " not connected"<< std::endl;
+    return;
+  }
+  if (channel<0 || channel>=2) {
+    std::cerr << "Channel " << channel << " is inappropriate." << std::endl;
+    return;
+  }
+
   FDwfAnalogOutNodeOffsetSet(handlerList_[device_id], channel, AnalogOutNodeCarrier, voltage);
   FDwfAnalogOutConfigure(handlerList_[device_id], channel, ANALOG_OUT_APPLY);
   std::this_thread::sleep_for(std::chrono::milliseconds(sleep));

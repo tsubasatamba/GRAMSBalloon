@@ -69,6 +69,12 @@ ANLStatus ReadWaveform::mod_initialize()
 
 ANLStatus ReadWaveform::mod_analyze()
 {
+  AnalogDiscoveryIO* adio = ADManager_->ADIO();
+  const int num_devices = adio->NumDevices();
+  if (num_devices<=0) {
+    return AS_OK;
+  }
+
   if (triggerChanged_) {
     daqio_->setTriggerParameters(trigDevice_, trigChannel_, trigMode_, trigLevel_, trigPosition_);
     const int status = daqio_->setupTrigger();
@@ -95,7 +101,9 @@ ANLStatus ReadWaveform::mod_analyze()
     }
     createNewOutputFile();
   }
+
   daqio_->getData(eventID_, eventHeader_, eventData_);
+
   if (ondemand_) {
     sendTelemetry_->setEventID(eventID_);
     sendTelemetry_->setEventHeader(eventHeader_);

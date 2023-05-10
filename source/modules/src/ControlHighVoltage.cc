@@ -40,6 +40,12 @@ ANLStatus ControlHighVoltage::mod_initialize()
 
 ANLStatus ControlHighVoltage::mod_analyze()
 {
+  AnalogDiscoveryIO* adio = ADManager_->ADIO();
+  const int num_devices = adio->NumDevices();
+  if (num_devices<=0) {
+    return AS_OK;
+  }
+  
   if (voltageIndex_<voltages_.size()) {
     exec_ = true;
     nextVoltage_ = voltages_[voltageIndex_];
