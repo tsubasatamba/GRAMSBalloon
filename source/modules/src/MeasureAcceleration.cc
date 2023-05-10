@@ -24,7 +24,7 @@ ANLStatus MeasureAcceleration::mod_initialize()
   const bool status = icmIO_->initialize();
   if (!status) {
     std::cerr << "Error in MeasureAcceleration::mod_initialize: Device not found." << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
   if (calibrateGyro_) {
     icmIO_->calibrateGyro();

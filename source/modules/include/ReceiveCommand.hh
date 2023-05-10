@@ -48,7 +48,7 @@ public:
   bool applyCommand();
 
   uint16_t CommandCode() { return comdef_->Code(); }
-  uint32_t CommandIndex() { return commandIndex_; }
+  uint32_t CommandIndex() { return singleton_self()->commandIndex_; }
   uint16_t CommandRejectCount() { return commandRejectCount_; }
 
 private:
