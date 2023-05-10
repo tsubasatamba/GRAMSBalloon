@@ -73,7 +73,8 @@ private:
   std::string serialPath_;
   mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
-  
+
+  std::shared_ptr<ReceiveCommand*> self_ = nullptr;  
 };
 
 } /* namespace gramsballoon */
