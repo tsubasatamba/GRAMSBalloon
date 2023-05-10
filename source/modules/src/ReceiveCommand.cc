@@ -14,7 +14,6 @@ ReceiveCommand::ReceiveCommand()
   serialPath_ = "/dev/null";
   comdef_ = std::make_shared<CommandDefinition>(); 
   buffer_.resize(200);
-  self_ = std::make_shared<ReceiveCommand*>(this);
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
