@@ -33,8 +33,8 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  uint16_t getADC(int channel) { return adcList_[channel]; }
-  double getVoltage(int channel) { return voltageList_[channel]; }
+  uint16_t getADC(int channel) { return singleton_self()->adcList_[channel]; }
+  double getVoltage(int channel) { return singleton_self()->voltageList_[channel]; }
 
 private:
   int chipSelect_ = 8;

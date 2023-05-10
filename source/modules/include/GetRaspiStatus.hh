@@ -33,10 +33,10 @@ public:
 
   int getCapacity();
 
-  int CPUTemperatureADC() { return CPUTemperatureADC_; }
-  double CPUTemperature() { return CPUTemperature_; }
-  uint64_t CapacityFree() { return capacityFree_; }
-  uint64_t CapacityAll() { return capacityAll_; }
+  int CPUTemperatureADC() { return singleton_self()->CPUTemperatureADC_; }
+  double CPUTemperature() { return singleton_self()->CPUTemperature_; }
+  uint64_t CapacityFree() { return singleton_self()->capacityFree_; }
+  uint64_t CapacityAll() { return singleton_self()->capacityAll_; }
 
 private:
   int CPUTemperatureADC_;

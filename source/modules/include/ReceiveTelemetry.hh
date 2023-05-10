@@ -24,7 +24,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
+  const std::vector<uint8_t>& Telemetry() const { return singleton_self()->telemetry_; }
   
 private:
   std::vector<uint8_t> telemetry_;

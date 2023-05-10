@@ -35,10 +35,10 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  BME680IO* GetBME680IO() { return bme680io_.get(); }
-  double Temperature() { return temperature_; }
-  double Humidity() { return humidity_; }
-  double Pressure() { return pressure_; }
+  BME680IO* GetBME680IO() { return (singleton_self()->bme680io_).get(); }
+  double Temperature() { return singleton_self()->temperature_; }
+  double Humidity() { return singleton_self()->humidity_; }
+  double Pressure() { return singleton_self()->pressure_; }
 
 private:
   int chipSelect_ = 8;

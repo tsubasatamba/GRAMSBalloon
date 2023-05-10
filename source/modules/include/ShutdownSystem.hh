@@ -30,8 +30,8 @@ public:
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
-  void setReboot(bool v) { reboot_ = v; }
-  void setShutdown(bool v) { shutdown_ = v; }
+  void setReboot(bool v) { singleton_self()->reboot_ = v; }
+  void setShutdown(bool v) { singleton_self()->shutdown_ = v; }
   void setPrepareReboot(bool v);
   void setPrepareShutdown(bool v);
   

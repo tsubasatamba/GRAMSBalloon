@@ -64,7 +64,7 @@ ANLStatus ShutdownSystem::mod_finalize()
 
 void ShutdownSystem::setPrepareReboot(bool v)
 {
-  prepareReboot_ = v;
+  singleton_self()->prepareReboot_ = v;
   if (v) {
     gettimeofday(&prepareRebootTime_, NULL);
   }
@@ -72,7 +72,7 @@ void ShutdownSystem::setPrepareReboot(bool v)
 
 void ShutdownSystem::setPrepareShutdown(bool v)
 {
-  prepareShutdown_ = v;
+  singleton_self()->prepareShutdown_ = v;
   if (v) {
     gettimeofday(&prepareShutdownTime_, NULL);
   }
