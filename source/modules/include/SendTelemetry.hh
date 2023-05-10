@@ -57,7 +57,7 @@ public:
   void inputSoftwareInfo();
   void inputStatusInfo();
 
-  void setTelemetryType(int v) { telemetryType_ = v; }
+  void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
 
   void setEventID(int v) { telemdef_->setEventID(v); };
   void setEventHeader(const std::vector<int16_t>& v) { telemdef_->setEventHeader(v); }
@@ -65,7 +65,7 @@ public:
   int EventID() { return telemdef_->EventID(); }
   const std::vector<int16_t>& EventHeader() const { return telemdef_->EventHeader(); }
   const std::vector<std::vector<int16_t>>& EventData() const { return telemdef_->EventData(); }
-  ErrorManager* getErrorManager() { return errorManager_.get(); }
+  ErrorManager* getErrorManager() { return (singleton_self()->errorManager_).get(); }
 
 private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;

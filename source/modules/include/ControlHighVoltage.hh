@@ -31,10 +31,10 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void setNextVoltage(double v) { nextVoltage_ = v; }
-  void setExec(bool v) { exec_ = v; }
-  double CurrentVoltage() { return currentVoltage_; }
-  double NextVoltage() { return nextVoltage_; }
+  void setNextVoltage(double v) { singleton_self()->nextVoltage_ = v; }
+  void setExec(bool v) { singleton_self()->exec_ = v; }
+  double CurrentVoltage() { return singleton_self()->currentVoltage_; }
+  double NextVoltage() { return singleton_self()->nextVoltage_; }
 
 
 private:

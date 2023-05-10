@@ -32,7 +32,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  SPIInterface* Interface() { return interface_.get(); }
+  SPIInterface* Interface() { return (singleton_self()->interface_).get(); }
   void addChipSelect(int v);
 
 private:

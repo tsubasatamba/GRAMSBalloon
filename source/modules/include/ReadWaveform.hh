@@ -42,9 +42,9 @@ public:
   void closeOutputFile();
   void writeData();
 
-  const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
-  void setOndemand(bool v) { ondemand_ = v; }
-  DAQIO* getDAQIO() { return daqio_.get(); }
+  const std::vector<std::vector<int16_t>>& EventData() const { return singleton_self()->eventData_; }
+  void setOndemand(bool v) { singleton_self()->ondemand_ = v; }
+  DAQIO* getDAQIO() { return (singleton_self()->daqio_).get(); }
 
   uint32_t EventCount() { return daqio_->EventCount(); }
   int TrigDevice() { return daqio_->TrigDevice(); }
@@ -57,13 +57,13 @@ public:
   const std::vector<double>& Offset() const { return daqio_->Offset(); }
   const std::vector<double>& Range() const { return daqio_->Range(); }
 
-  void setStartReading(bool v) { startReading_ = v; }
-  void setTrigDevice(int v) { trigDevice_ = v; triggerChanged_ = true; }
-  void setTrigChannel(int v) { trigChannel_ = v; triggerChanged_ = true; }
-  void setTrigMode(int v) { trigMode_ = v; triggerChanged_ = true; }
+  void setStartReading(bool v) { singleton_self()->startReading_ = v; }
+  void setTrigDevice(int v) { singleton_self()->trigDevice_ = v; singleton_self()->triggerChanged_ = true; }
+  void setTrigChannel(int v) { singleton_self()->trigChannel_ = v; singleton_self()->triggerChanged_ = true; }
+  void setTrigMode(int v) { singleton_self()->trigMode_ = v; singleton_self()->triggerChanged_ = true; }
   void setADCOffset(int index, double v) {
-    if (index<static_cast<int>(adcOffsetList_.size())) adcOffsetList_[index] = v;
-    analogInSettingChanged_ = true;
+    if (index<static_cast<int>((singleton_self()->adcOffsetList_).size())) singleton_self()->adcOffsetList_[index] = v;
+    singleton_self()->analogInSettingChanged_ = true;
   }
 
 private:

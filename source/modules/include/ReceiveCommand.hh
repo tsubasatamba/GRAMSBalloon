@@ -47,9 +47,9 @@ public:
 
   bool applyCommand();
 
-  uint16_t CommandCode() { return comdef_->Code(); }
-  uint32_t CommandIndex() { return commandIndex_; }
-  uint16_t CommandRejectCount() { return commandRejectCount_; }
+  uint16_t CommandCode() { return (singleton_self()->comdef_)->Code(); }
+  uint32_t CommandIndex() { return singleton_self()->commandIndex_; }
+  uint16_t CommandRejectCount() { return singleton_self()->commandRejectCount_; }
 
 private:
   std::vector<uint8_t> buffer_;
@@ -73,7 +73,6 @@ private:
   std::string serialPath_;
   mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
-  
 };
 
 } /* namespace gramsballoon */

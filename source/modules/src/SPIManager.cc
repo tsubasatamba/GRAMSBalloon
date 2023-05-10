@@ -66,7 +66,7 @@ ANLStatus SPIManager::mod_finalize()
 
 void SPIManager::addChipSelect(int v)
 {
-  chipSelectArray_.push_back(v);
+  (singleton_self()->chipSelectArray_).push_back(v);
 }
 
 } /* namespace gramsballoon */
