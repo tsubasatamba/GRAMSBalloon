@@ -324,8 +324,8 @@ void TelemetryDefinition::interpretStatus()
   
   SDCapacity_ = getValue<uint64_t>(64);
 
-  crc_ = getValue<uint16_t>(68);
-  stopCode_ = getValue<uint16_t>(70);
+  crc_ = getValue<uint16_t>(72);
+  stopCode_ = getValue<uint16_t>(74);
 }
 
 void TelemetryDefinition::clear()

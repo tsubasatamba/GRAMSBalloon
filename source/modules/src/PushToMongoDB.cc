@@ -163,6 +163,9 @@ void PushToMongoDB::pushWFTelemetry()
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
+  
+  auto doc = builder.generate();
+  mongodbClient_->push("grams", doc);
 
 }
 
@@ -216,6 +219,10 @@ void PushToMongoDB::pushStatusTelemetry()
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
+
+  auto doc = builder.generate();
+  mongodbClient_->push("grams", doc);
+
 
 }
 
