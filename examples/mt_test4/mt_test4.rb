@@ -16,7 +16,7 @@ class MyApp < ANL::ANLApp
         end
 
 
-        rtd_cs_array = [7, 8, 16, 20, 21]
+        rtd_cs_array = [8, 7, 16, 20, 21]
         rtd_cs_array.each_with_index do |cs, i|
           chain GRAMSBalloon::MeasureTemperatureWithRTDSensor, "MeasureTemperatureWithRTDSensor_#{i+1}"
           with_parameters(chip_select: cs) do |m|
@@ -24,7 +24,7 @@ class MyApp < ANL::ANLApp
           end
         end
 
-        env_cs_array = [22, 5, 6, 19, 26]
+        env_cs_array = [26, 19, 6, 5, 22]
         env_cs_array.each_with_index do |cs, i|
           chain GRAMSBalloon::GetEnvironmentalData,"GetEnvironmentalData_#{i+1}"
           with_parameters(chip_select: cs) do |m|
@@ -115,7 +115,7 @@ for i in 1..5 do
 end
 
 main_modules << "MeasureAcceleration" << "GetSlowADCData" << "GetRaspiStatus"
-main_modules << "AnalogDiscoveryManager" << "ControlHighVoltage_TPC" << "ControlHighVoltage_PMT" << "ReadWaveform"
+main_modules << "AnalogDiscoveryManager" << "ControlHighVoltage_TPC" << "ControlHighVoltage_PMT"
 main_modules << "SendTelemetry" << "ShutdownSystem"
 
 daq_modules = ["ReadWaveform"]
@@ -132,11 +132,11 @@ a.modify do |m|
     m.get_parallel_module(1, mod).off
     m.get_parallel_module(2, mod).off
   end
-  daq_modules.each do |mod|
+  command_modules.each do |mod|
     m.get_parallel_module(0, mod).off
     m.get_parallel_module(2, mod).off
   end
-  command_modules.each do |mod|
+  daq_modules.each do |mod|
     m.get_parallel_module(0, mod).off
     m.get_parallel_module(1, mod).off
   end

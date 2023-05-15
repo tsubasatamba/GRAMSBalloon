@@ -59,7 +59,7 @@ ANLStatus ReceiveCommand::mod_initialize()
   const int status = sc_ -> initialize();
   if (status!=0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Serial communication failed." << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
 
   return AS_OK;
