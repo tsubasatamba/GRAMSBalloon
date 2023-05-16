@@ -9,9 +9,9 @@ class MyApp < ANL::ANLApp
     with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 3, baudrate: MHz*1)
     chain GRAMSBalloon::GetSlowADCData
     with_parameters(chip_select: 17, SPI_manager_name: "SPIManager_slowADC", Va: 5.026,
-                    channels: [1], num_trials: 2)
+                    channels: [0,1,2], num_trials: 2)
   end
 end
 
 a = MyApp.new
-a.run(10, 1)
+a.run(100, 1)

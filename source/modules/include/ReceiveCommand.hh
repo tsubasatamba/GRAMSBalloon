@@ -73,6 +73,7 @@ private:
   std::string serialPath_;
   mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
+  int timeoutSec_ = 10;
 };
 
 } /* namespace gramsballoon */

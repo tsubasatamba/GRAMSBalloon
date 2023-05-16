@@ -75,9 +75,9 @@ void PushToMongoDB::pushHKTelemetry()
       << "Chamber_Temperature_3"        << static_cast<int>(telemdef->ChamberTemperature(2))
       << "Valve_Temperature"            << static_cast<int>(telemdef->ValveTemperature())
       << "Outer_Temperature"            << static_cast<int>(telemdef->OuterTemperature())
-      << "TPC_High_Voltage_Setting"     << static_cast<int>(telemdef->TPCHVSetting())
+      << "TPC_High_Voltage_Setting"     << static_cast<double>(telemdef->TPCHVSetting())
       << "TPC_High_Voltage_Measurement" << static_cast<int>(telemdef->TPCHVMeasure())
-      << "PMT_High_Voltage_Setting"     << static_cast<int>(telemdef->PMTHVSetting())
+      << "PMT_High_Voltage_Setting"     << static_cast<double>(telemdef->PMTHVSetting())
       << "PMT_High_Voltage_Measurement" << static_cast<int>(telemdef->PMTHVMeasure())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
@@ -163,6 +163,9 @@ void PushToMongoDB::pushWFTelemetry()
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
+  
+  auto doc = builder.generate();
+  mongodbClient_->push("grams", doc);
 
 }
 
@@ -216,6 +219,10 @@ void PushToMongoDB::pushStatusTelemetry()
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
+
+  auto doc = builder.generate();
+  mongodbClient_->push("grams", doc);
+
 
 }
 

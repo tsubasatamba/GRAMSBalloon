@@ -25,6 +25,7 @@ ANLStatus ReceiveCommand::mod_define()
   define_parameter("open_mode", &mod_class::openMode_);
   define_parameter("TPC_HVController_module_name", &mod_class::TPCHVControllerModuleName_);
   define_parameter("PMT_HVController_module_name", &mod_class::PMTHVControllerModuleName_);
+  define_parameter("timeout_sec", &mod_class::timeoutSec_);
 
   return AS_OK;
 }
@@ -59,7 +60,7 @@ ANLStatus ReceiveCommand::mod_initialize()
   const int status = sc_ -> initialize();
   if (status!=0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Serial communication failed." << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
 
   return AS_OK;
@@ -69,7 +70,7 @@ ANLStatus ReceiveCommand::mod_analyze()
 {
   fd_set fdset;
   timeval timeout;
-  timeout.tv_sec = 10;
+  timeout.tv_sec = timeoutSec_;
   timeout.tv_usec = 0;
   FD_ZERO(&fdset);
   FD_SET(sc_->FD(), &fdset);
@@ -257,6 +258,22 @@ bool ReceiveCommand::applyCommand()
   if (code==210 && argc==0) {
     if (readWaveform_!=nullptr) {
       readWaveform_->setOndemand(true);
+      return true;
+    }
+  }
+
+  if (code==211 && argc==1) {
+    if (readWaveform_!=nullptr) {
+      const double v = static_cast<double>(arguments[0]) * 1E-3;
+      readWaveform_->setTrigLevel(v);
+      return true;
+    }
+  }
+
+  if (code==212 && argc==1) {
+    if (readWaveform_!=nullptr) {
+      const double v = static_cast<double>(arguments[0]) * 1E-3;
+      readWaveform_->setTrigPosition(v);
       return true;
     }
   }

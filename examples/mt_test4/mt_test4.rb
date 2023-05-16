@@ -7,36 +7,27 @@ class MyApp < ANL::ANLApp
 
         chain GRAMSBalloon::ReceiveCommand
         with_parameters(serial_path: "/dev/ttyAMA1") do |m|
-            m.set_singleton(2)
+            m.set_singleton(1)
         end
 
-        chain GRAMSBalloon::SPIManager, "SPIManager_RTD"
-        with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 1, baudrate: 1000000) do |m|
-            m.set_singleton(0)
-        end
-
-        chain GRAMSBalloon::SPIManager, "SPIManager_Env"
-        with_parameters(baudrate: 1000000) do |m|
-            m.set_singleton(0)
-        end
-
-        chain GRAMSBalloon::SPIManager, "SPIManager_slowADC"
+        chain GRAMSBalloon::SPIManager
         with_parameters(spi_flags: (1<<5) + (1<<6) + (1<<7) + 3, baudrate: 1000000) do |m|
-            m.set_singleton(0)
+          m.set_singleton(0)
         end
 
-        rtd_cs_array = [7, 8, 16, 20, 21]
+
+        rtd_cs_array = [8, 7, 16, 20, 21]
         rtd_cs_array.each_with_index do |cs, i|
           chain GRAMSBalloon::MeasureTemperatureWithRTDSensor, "MeasureTemperatureWithRTDSensor_#{i+1}"
-          with_parameters(chip_select: cs, SPI_manager_name: "SPIManager_RTD") do |m|
+          with_parameters(chip_select: cs) do |m|
               m.set_singleton(0)
           end
         end
 
-        env_cs_array = [22, 5, 6, 19, 26]
+        env_cs_array = [26, 19, 6, 5, 22]
         env_cs_array.each_with_index do |cs, i|
           chain GRAMSBalloon::GetEnvironmentalData,"GetEnvironmentalData_#{i+1}"
-          with_parameters(chip_select: cs, SPI_manager_name: "SPIManager_Env") do |m|
+          with_parameters(chip_select: cs) do |m|
               m.set_singleton(0)
           end
         end
@@ -47,7 +38,7 @@ class MyApp < ANL::ANLApp
         end
 
         chain GRAMSBalloon::GetSlowADCData
-        with_parameters(chip_select: 17, SPI_manager_name: "SPIManager_slowADC", Va: 5.026,
+        with_parameters(chip_select: 17, Va: 5.026,
         channels: [0, 1, 2, 3], num_trials: 100) do |m|
             m.set_singleton(0)
         end
@@ -56,10 +47,37 @@ class MyApp < ANL::ANLApp
             m.set_singleton(0)
         end
 
-        chain GRAMSBalloon::ShutdownSystem do |m|
+        chain GRAMSBalloon::AnalogDiscoveryManager do |m|
             m.set_singleton(0)
         end
+
+        chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_TPC"
+        with_parameters(device_id: 0, channel: 0, voltages: [0.0, 1.0]) do |m|
+          m.set_singleton(0)
+        end
         
+        chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_PMT"
+        with_parameters(device_id: 0, channel: 1, voltages: [0.0, 2.0]) do |m|
+          m.set_singleton(0)
+        end
+                
+        chain GRAMSBalloon::ReadWaveform
+        with_parameters(
+            trig_device: 0,
+            trig_channel: 0,
+            trig_mode: 2,
+            trig_level: 0.1,
+            trig_position: 0.0,
+            time_window: 1000.0, # us
+            sample_frequency: 2.0, #MHz
+            output_filename_base: "DAQ_output",
+            num_events_per_file: 100,
+            start_reading: true
+        ) do |m|
+          m.set_singleton(2)
+        end
+
+
         chain GRAMSBalloon::SendTelemetry
         with_parameters(
           serial_path: "/dev/ttyAMA0",
@@ -79,10 +97,16 @@ class MyApp < ANL::ANLApp
             m.set_singleton(0)
         end
 
+        chain GRAMSBalloon::ShutdownSystem do |m|
+            m.set_singleton(0)
+        end
     end
 end
 
-main_modules = ["SPIManager_RTD", "SPIManager_Env", "SPIManager_slowADC"]
+
+
+
+main_modules = ["SPIManager"]
 for i in 1..5 do
   main_modules << "MeasureTemperatureWithRTDSensor_#{i}"
 end
@@ -92,31 +116,32 @@ for i in 1..5 do
 end
 
 main_modules << "MeasureAcceleration" << "GetSlowADCData" << "GetRaspiStatus"
-main_modules << "SendTelemetry"
+main_modules << "AnalogDiscoveryManager" << "ControlHighVoltage_TPC" << "ControlHighVoltage_PMT"
+main_modules << "SendTelemetry" << "ShutdownSystem"
 
-daq_modules = []
+daq_modules = ["ReadWaveform"]
 command_modules = ["ReceiveCommand"]
 
-#main_modules = ["SPIManager_Env", "SPIManager_slowADC", "GetSlowADCData"]
-#daq_modules = []
-#command_modules = []
+
 a = MyApp.new
 
 
 a.num_parallels = 3
+
 a.modify do |m|
   main_modules.each do |mod|
     m.get_parallel_module(1, mod).off
     m.get_parallel_module(2, mod).off
   end
-  daq_modules.each do |mod|
+  command_modules.each do |mod|
     m.get_parallel_module(0, mod).off
     m.get_parallel_module(2, mod).off
   end
-  command_modules.each do |mod|
+  daq_modules.each do |mod|
     m.get_parallel_module(0, mod).off
     m.get_parallel_module(1, mod).off
   end
 end
 
 a.run(10000, 1)
+

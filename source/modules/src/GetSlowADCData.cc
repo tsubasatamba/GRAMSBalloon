@@ -69,11 +69,11 @@ ANLStatus GetSlowADCData::mod_initialize()
 ANLStatus GetSlowADCData::mod_analyze()
 {
 
-  {
-    uint16_t adc = 0;
-    double voltage = 0.0;
-    slowADCio_->getData(0, adc, voltage, numTrials_);
-  }
+  // {
+  //   uint16_t adc = 0;
+  //   double voltage = 0.0;
+  //   slowADCio_->getData(0, adc, voltage, numTrials_);
+  // }
 
   for (int channel: channels_) {
     uint16_t adc = 0;
@@ -98,7 +98,7 @@ ANLStatus GetSlowADCData::mod_analyze()
     std::cout << m.first << " " << m.second << std::endl;
   }
   #endif
- 
+
   return AS_OK;
 }
 

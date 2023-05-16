@@ -27,4 +27,4 @@ class MyApp < ANL::ANLApp
 end
 
 a = MyApp.new
-a.run(2, 1)
+a.run(200, 1)
