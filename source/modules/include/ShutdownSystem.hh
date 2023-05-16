@@ -34,6 +34,7 @@ public:
   void setShutdown(bool v) { singleton_self()->shutdown_ = v; }
   void setPrepareReboot(bool v);
   void setPrepareShutdown(bool v);
+  void clearStatus();
   
 private:
   bool reboot_ = false;

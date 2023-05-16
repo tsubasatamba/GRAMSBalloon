@@ -21,7 +21,18 @@ ANLStatus ShutdownSystem::mod_analyze()
   else if (prepareShutdown_ && shutdown_) {
     return AS_QUIT;
   }
-
+  /*
+  if (reboot_) {
+    clearStatus();
+  }
+  if (shutdown_) {
+    clearStatus();
+  }
+  if (prepareReboot_ && prepareShutdown_) {
+    clearStatus();
+  }
+  */
+  /*
   if (prepareReboot_) {
     timeval now;
     gettimeofday(&now, NULL);
@@ -37,7 +48,8 @@ ANLStatus ShutdownSystem::mod_analyze()
       prepareShutdown_ = false;
     }
   }
-  
+  */
+    
   return AS_OK;
 }
 
@@ -45,7 +57,6 @@ ANLStatus ShutdownSystem::mod_finalize()
 {
   int rslt = 0;
   if (prepareReboot_ && reboot_) {
-    return AS_QUIT;
     sync();
     rslt = reboot(LINUX_REBOOT_CMD_RESTART);
   }
@@ -60,6 +71,14 @@ ANLStatus ShutdownSystem::mod_finalize()
   }
 
   return AS_OK;
+}
+
+void ShutdownSystem::clearStatus()
+{
+  setPrepareReboot(false);
+  setReboot(false);
+  setPrepareShutdown(false);
+  setShutdown(false);
 }
 
 void ShutdownSystem::setPrepareReboot(bool v)

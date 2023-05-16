@@ -53,7 +53,7 @@ void TelemetryDefinition::generateTelemetryHK()
   addValue<uint32_t>(triggerCount_);
   addValue<uint16_t>(chamberPressure_);
   
-  writeRTDTemperature();
+  writeRTDTemperature();  
   addValue<int32_t>(static_cast<int32_t>(TPCHVSetting_ / 1E-3));
   addValue<int16_t>(TPCHVMeasure_);
   addValue<int32_t>(static_cast<int32_t>(PMTHVSetting_ / 1E-3));

@@ -35,12 +35,10 @@ HSQuickLook.main.schema =
           "Valve_Temperature": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
           "Outer_Temperature_ADC": {"source": "Outer_Temperature", "type": "int"},
           "Outer_Temperature": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
-          "TPC_High_Voltage_Setting_ADC": {"source": "TPC_High_Voltage_Setting", "type": "int"},
-          "TPC_High_Voltage_Setting": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "TPC_High_Voltage_Setting": {"source": "TPC_High_Voltage_Setting", "type": "double"},
           "TPC_High_Voltage_Measurement_ADC": {"source": "TPC_High_Voltage_Measurement", "type": "int"},
-          "TPC_High_Voltage_Measurement": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
-          "PMT_High_Voltage_Setting_ADC": {"source": "PMT_High_Voltage_Setting", "type": "int"},
-          "PMT_High_Voltage_Setting": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "TPC_High_Voltage_Measurement": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "PMT_High_Voltage_Setting": {"source": "PMT_High_Voltage_Setting", "type": "double"},
           "PMT_High_Voltage_Measurement_ADC": {"source": "PMT_High_Voltage_Measurement", "type": "int"},
           "PMT_High_Voltage_Measurement": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }}
         }

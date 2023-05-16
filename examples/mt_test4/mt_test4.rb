@@ -70,7 +70,7 @@ class MyApp < ANL::ANLApp
             time_window: 1000.0, # us
             sample_frequency: 2.0, #MHz
             output_filename_base: "DAQ_output",
-            num_events_per_file: 10,
+            num_events_per_file: 100,
             start_reading: true
         ) do |m|
           m.set_singleton(2)
@@ -142,5 +142,5 @@ a.modify do |m|
   end
 end
 
-a.run(1000, 1)
+a.run(10000, 1)
 
