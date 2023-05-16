@@ -13,26 +13,35 @@ ANLStatus ShutdownSystem::mod_define()
   return AS_OK;
 }
 
+ANLStatus ShutdownSystem::mod_initialize()
+{
+  gettimeofday(&prepareRebootTime_, NULL);
+  gettimeofday(&prepareShutdownTime_, NULL);
+  
+  return AS_OK;
+}
+
 ANLStatus ShutdownSystem::mod_analyze()
 {
+  std::cout << "ShutdownSystem: " << prepareReboot_ << reboot_ << prepareShutdown_ << shutdown_ << std::endl;
   if (prepareReboot_ && reboot_) {
-    return AS_QUIT;
+    return AS_QUIT_ALL;
   }
   else if (prepareShutdown_ && shutdown_) {
-    return AS_QUIT;
+    return AS_QUIT_ALL;
   }
-  /*
-  if (reboot_) {
+    
+  if ((!prepareReboot_) && reboot_) {
     clearStatus();
   }
-  if (shutdown_) {
+  if ((!prepareShutdown_) && shutdown_) {
     clearStatus();
   }
   if (prepareReboot_ && prepareShutdown_) {
     clearStatus();
   }
-  */
-  /*
+  
+  
   if (prepareReboot_) {
     timeval now;
     gettimeofday(&now, NULL);
@@ -48,7 +57,7 @@ ANLStatus ShutdownSystem::mod_analyze()
       prepareShutdown_ = false;
     }
   }
-  */
+  
     
   return AS_OK;
 }

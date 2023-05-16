@@ -28,6 +28,7 @@ protected:
 
 public:
   anlnext::ANLStatus mod_define() override;
+  anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
   void setReboot(bool v) { singleton_self()->reboot_ = v; }

@@ -75,11 +75,12 @@ HSQuickLook.main.schema =
           "Magnet_x": {"type": "float"},
           "Magnet_y": {"type": "float"},
           "Magnet_z": {"type": "float"},
-          "Main_Current_ADC": {"source": "Main_Current", "type": "int"},
-          "Main_Current": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
-          "Main_Voltage_ADC": {"source": "Main_Voltage", "type": "int"},
-          "Main_Voltage": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }}
-        }
+          "Main_Current_ADC": { "source": "Main_Current", "type": "int" },
+          "Main_Current_ADC_Voltage": { "source": "Main_Current", "type": "int","format":"%7.3f", "conversion": convert_Slow_ADC},
+          "Main_Current": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (convert_Slow_ADC(v)-1)*0.8; }},
+          "Main_Voltage_ADC": { "source": "Main_Voltage", "type": "int" },
+          "Main_Voltage_ADC_Voltage":{"source":"Main_Voltage","type":"int","format":"%7.3f","conversion":convert_Slow_ADC},
+          "Main_Voltage": { "type": "int", "format": "%7.3f", "conversion": function (v) { return (convert_Slow_ADC(v))*24/3.34; } }},
       },
       {
 	      "collection": "grams",
@@ -95,5 +96,7 @@ HSQuickLook.main.schema =
           "CRC": {"type": "int"},
           "Stop_Code": {"type": "int", "format": "0x%04X"}
         }
-      }      
+      }
     ];
+
+function convert_Slow_ADC(v) { return (v / 4096 * 5.026) }

@@ -23,8 +23,8 @@ public:
   ~SlowADCIO() = default;
 
   void setInterface(SPIInterface* intf);
-  bool getData(int channel, uint16_t& adc, double& voltage, int num_trials=2);
-  int readReg(int channel, std::vector<char>& buf, int num_trials=2);
+  bool getData(int channel, uint16_t& adc, double& voltage, int num_trials);
+  int readReg(int channel, std::vector<char>& buf, int num_read=1);
   double conversion(uint16_t adc);
 
   void setVa(double v) { va_ = v; }

@@ -39,7 +39,7 @@ class MyApp < ANL::ANLApp
 
         chain GRAMSBalloon::GetSlowADCData
         with_parameters(chip_select: 17, Va: 5.026,
-        channels: [0, 1, 2, 3], num_trials: 2) do |m|
+        channels: [0, 1, 2, 3], num_trials: 100) do |m|
             m.set_singleton(0)
         end
 
@@ -51,14 +51,15 @@ class MyApp < ANL::ANLApp
             m.set_singleton(0)
         end
 
-        chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_TPC" do |m|
+        chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_TPC"
+        with_parameters(device_id: 0, channel: 0, voltages: [0.0, 1.0]) do |m|
           m.set_singleton(0)
         end
         
-        chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_PMT" do |m|
+        chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_PMT"
+        with_parameters(device_id: 0, channel: 1, voltages: [0.0, 2.0]) do |m|
           m.set_singleton(0)
         end
-
                 
         chain GRAMSBalloon::ReadWaveform
         with_parameters(
