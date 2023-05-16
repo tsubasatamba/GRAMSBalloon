@@ -23,24 +23,17 @@ ANLStatus ShutdownSystem::mod_initialize()
 
 ANLStatus ShutdownSystem::mod_analyze()
 {
-  std::cout << "ShutdownSystem: " << prepareReboot_ << reboot_ << prepareShutdown_ << shutdown_ << std::endl;
-  if (prepareReboot_ && reboot_) {
+  if (reboot_) {
     return AS_QUIT_ALL;
   }
-  else if (prepareShutdown_ && shutdown_) {
+  else if (shutdown_) {
     return AS_QUIT_ALL;
   }
     
-  if ((!prepareReboot_) && reboot_) {
-    clearStatus();
-  }
-  if ((!prepareShutdown_) && shutdown_) {
-    clearStatus();
-  }
   if (prepareReboot_ && prepareShutdown_) {
     clearStatus();
+    return AS_OK;
   }
-  
   
   if (prepareReboot_) {
     timeval now;
@@ -57,7 +50,6 @@ ANLStatus ShutdownSystem::mod_analyze()
       prepareShutdown_ = false;
     }
   }
-  
     
   return AS_OK;
 }
@@ -65,11 +57,11 @@ ANLStatus ShutdownSystem::mod_analyze()
 ANLStatus ShutdownSystem::mod_finalize()
 {
   int rslt = 0;
-  if (prepareReboot_ && reboot_) {
+  if (reboot_) {
     sync();
     rslt = reboot(LINUX_REBOOT_CMD_RESTART);
   }
-  else if (prepareShutdown_ && shutdown_) {
+  else if (shutdown_) {
     sync();
     rslt = reboot(LINUX_REBOOT_CMD_HALT);
   }
@@ -94,7 +86,7 @@ void ShutdownSystem::setPrepareReboot(bool v)
 {
   singleton_self()->prepareReboot_ = v;
   if (v) {
-    gettimeofday(&prepareRebootTime_, NULL);
+    gettimeofday(&(singleton_self()->prepareRebootTime_), NULL);
   }
 }
 
@@ -102,7 +94,7 @@ void ShutdownSystem::setPrepareShutdown(bool v)
 {
   singleton_self()->prepareShutdown_ = v;
   if (v) {
-    gettimeofday(&prepareShutdownTime_, NULL);
+    gettimeofday(&(singleton_self()->prepareShutdownTime_), NULL);
   }
 }
 
