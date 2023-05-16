@@ -62,6 +62,7 @@ public:
   void setTrigChannel(int v) { singleton_self()->trigChannel_ = v; singleton_self()->triggerChanged_ = true; }
   void setTrigMode(int v) { singleton_self()->trigMode_ = v; singleton_self()->triggerChanged_ = true; }
   void setTrigLevel(double v) { singleton_self()->trigLevel_ = v; singleton_self()->triggerChanged_ = true; }
+  void setTrigPosition(double v) { singleton_self()->trigPosition_ = v; singleton_self()->triggerChanged_ = true; }
   void setADCOffset(int index, double v) {
     if (index<static_cast<int>((singleton_self()->adcOffsetList_).size())) singleton_self()->adcOffsetList_[index] = v;
     singleton_self()->analogInSettingChanged_ = true;

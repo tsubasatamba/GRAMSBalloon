@@ -24,17 +24,17 @@ HSQuickLook.main.schema =
           "Trigger_Mode": {"type": "int"},
           "Trigger_Device": {"type": "int"},
           "Trigger_Channel": {"type": "int"},
-          "Trigger_Level": {"type": "double"},
-          "Trigger_Position": {"type": "double"},
+          "Trigger_Level": {"type": "double","format": "%7.3f"},
+          "Trigger_Position": {"type": "double","format": "%7.3f"},
           "Channel_Mask": {"type": "int"},
-          "ADC_Offset_1": {"type": "double"},
-          "ADC_Offset_2": {"type": "double"},
-          "ADC_Offset_3": {"type": "double"},
-          "ADC_Offset_4": {"type": "double"},
-          "ADC_Range_1": {"type": "double"},
-          "ADC_Range_2": {"type": "double"},
-          "ADC_Range_3": {"type": "double"},
-          "ADC_Range_4": {"type": "double"},
+          "ADC_Offset_1": {"type": "double","format": "%7.3f"},
+          "ADC_Offset_2": {"type": "double","format": "%7.3f"},
+          "ADC_Offset_3": {"type": "double","format": "%7.3f"},
+          "ADC_Offset_4": {"type": "double","format": "%7.3f"},
+          "ADC_Range_1": {"type": "double","format": "%7.3f"},
+          "ADC_Range_2": {"type": "double","format": "%7.3f"},
+          "ADC_Range_3": {"type": "double","format": "%7.3f"},
+          "ADC_Range_4": {"type": "double","format": "%7.3f"},
           "SD_Capacity": {"type": "int"}
         }
       },
@@ -48,5 +48,5 @@ HSQuickLook.main.schema =
           "CRC": {"type": "int"},
           "Stop_Code": {"type": "int", "format": "0x%04X"}
         }
-      }      
+      }
     ];

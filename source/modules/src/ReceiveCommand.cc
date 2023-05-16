@@ -270,6 +270,14 @@ bool ReceiveCommand::applyCommand()
     }
   }
 
+  if (code==212 && argc==1) {
+    if (readWaveform_!=nullptr) {
+      const double v = static_cast<double>(arguments[0]) * 1E-3;
+      readWaveform_->setTrigPosition(v);
+      return true;
+    }
+  }
+
   if (code==900 && argc==0) {
     return true;
   }
