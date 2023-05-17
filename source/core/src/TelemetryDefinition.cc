@@ -342,7 +342,7 @@ void TelemetryDefinition::writeFile(const std::string& filename)
     return;
   }
   const int size = telemetry_.size();
-  ofs.write(&telemetry_[0], size);
+  ofs.write(reinterpret_cast<char*>(&telemetry_[0]), size);
   ofs.flush();
   ofs.close();
 }
