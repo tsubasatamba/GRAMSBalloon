@@ -1,6 +1,7 @@
 #include "TelemetryDefinition.hh"
 #include <thread>
 #include <chrono>
+#include <fstream>
 
 namespace gramsballoon {
 
@@ -331,6 +332,19 @@ void TelemetryDefinition::interpretStatus()
 void TelemetryDefinition::clear()
 {
   telemetry_.clear();
+}
+
+void TelemetryDefinition::writeFile(const std::string& filename)
+{
+  std::ofstream ofs(filename, std::ios::app|std::ios::binary);
+  if (!ofs) {
+    std::cerr << "File open error." << std::endl;
+    return;
+  }
+  const int size = telemetry_.size();
+  ofs.write(&telemetry_[0], size);
+  ofs.flush();
+  ofs.close();
 }
 
 template<typename T>
