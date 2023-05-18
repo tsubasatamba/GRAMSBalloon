@@ -113,13 +113,13 @@ ANLStatus SendTelemetry::mod_analyze()
 
   const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
   const int status = sc_->swrite(telemetry);
-  if (status != static_cast<int>(telemetry.size())) {
+  const bool failed = (status != static_cast<int>(telemetry.size()));
+  if (failed) {
     std::cerr << "Sending telemetry failed: status = " << status << std::endl;
   }
-  else {
-    if (saveTelemetry_) {
-      writeTelemetryToFile();
-    }
+  
+  if (saveTelemetry_) {
+    writeTelemetryToFile(failed);
   }
 
   std::cout << (int)telemetry.size() << std::endl;
@@ -258,15 +258,20 @@ void SendTelemetry::inputStatusInfo()
 
 }
 
-void SendTelemetry::writeTelemetryToFile()
+void SendTelemetry::writeTelemetryToFile(bool failed)
 {
-  const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
-  std::string type_str = "HK";
+  std::string type_str = "";
+  if (telemetryType_==2) {
+    type_str = "HK";
+  }
   if (telemetryType_==2) {
     type_str = "WF";
   }
   if (telemetryType_==3) {
     type_str = "Status";
+  }
+  if (failed) {
+    type_str = "failed";
   }
   const bool app = (fileIDmp_.find(telemetryType_)!=fileIDmp_.end());
   std::ostringstream sout;

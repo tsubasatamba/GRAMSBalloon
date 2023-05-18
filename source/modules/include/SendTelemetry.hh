@@ -56,7 +56,7 @@ public:
   void inputHKVesselInfo();
   void inputSoftwareInfo();
   void inputStatusInfo();
-  void writeTelemetryToFile();
+  void writeTelemetryToFile(bool failed);
 
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
 
