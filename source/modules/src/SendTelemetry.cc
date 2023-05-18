@@ -1,4 +1,5 @@
 #include "SendTelemetry.hh"
+#include "DateManager.hh"
 
 using namespace anlnext;
 
@@ -125,10 +126,6 @@ ANLStatus SendTelemetry::mod_analyze()
     writeTelemetryToFile(failed);
   }
 
-  
-
-  //debug
-
   if (chatter_>=1) {
     std::cout << (int)telemetry.size() << std::endl;
     for (int i=0; i<(int)telemetry.size(); i++) {
@@ -228,7 +225,6 @@ void SendTelemetry::inputHKVesselInfo()
 
 void SendTelemetry::inputSoftwareInfo()
 {
-  std::cout << "software info" << std::endl;
   if (receiveCommand_!=nullptr) {
     std::cout << "command index: " << receiveCommand_->CommandIndex() << std::endl;
     telemdef_->setLastCommandIndex(receiveCommand_->CommandIndex());
@@ -271,13 +267,11 @@ void SendTelemetry::writeTelemetryToFile(bool failed)
   if (failed) {
     type_str = "failed";
   }
-  bool app = true;
+  const bool app = true;
   if (fileIDmp_.find(telemetryType_)==fileIDmp_.end()) {
-    app = false;
     fileIDmp_[telemetryType_] = std::pair<int, int>(0, 0);
   }
   else if (fileIDmp_[telemetryType_].second==numTelemPerFile_) {
-    app = false;
     fileIDmp_[telemetryType_].first++;
     fileIDmp_[telemetryType_].second = 0;
   }

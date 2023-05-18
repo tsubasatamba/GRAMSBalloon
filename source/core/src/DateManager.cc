@@ -21,7 +21,7 @@ std::string getTimeStr()
   min = now->tm_min;
   sec = now->tm_sec;
 
-  std::string s = (boost::format("%d/%02d/%02d %02d:%02d:%02d\n")%year%month%day%hour%min%sec).str();
+  std::string s = (boost::format("%04d%02d%02d%02d%02d%02d")%year%month%day%hour%min%sec).str();
   return s;
 }
 /* https://qiita.com/gitcho/items/d0b375586a9b447d28c1 */
