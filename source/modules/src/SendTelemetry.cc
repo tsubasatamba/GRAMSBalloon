@@ -40,6 +40,7 @@ ANLStatus SendTelemetry::mod_define()
 ANLStatus SendTelemetry::mod_initialize()
 {
   timeStampStr_ = getTimeStr();
+
   const std::string read_wf_md = "ReadWaveform";
   if (exist_module(read_wf_md)) {
     get_module_NC(read_wf_md, &readWaveform_);
@@ -254,35 +255,32 @@ void SendTelemetry::inputStatusInfo()
 
 void SendTelemetry::writeTelemetryToFile(bool failed)
 {
-  std::string type_str = "";
-  if (telemetryType_==1) {
-    type_str = "HK";
-  }
-  if (telemetryType_==2) {
-    type_str = "WF";
-  }
-  if (telemetryType_==3) {
-    type_str = "Status";
-  }
+  int type = telemetryType_;
   if (failed) {
-    type_str = "failed";
+    type = 0;
   }
+  std::string type_str = "";
+  if (type==1) type_str = "HK";
+  if (type==2) type_str = "WF";
+  if (type==3) type_str = "Status";
+  if (type==0) type_str = "failed";
+
   const bool app = true;
-  if (fileIDmp_.find(telemetryType_)==fileIDmp_.end()) {
-    fileIDmp_[telemetryType_] = std::pair<int, int>(0, 0);
+  if (fileIDmp_.find(type)==fileIDmp_.end()) {
+    fileIDmp_[type] = std::pair<int, int>(0, 0);
   }
-  else if (fileIDmp_[telemetryType_].second==numTelemPerFile_) {
-    fileIDmp_[telemetryType_].first++;
-    fileIDmp_[telemetryType_].second = 0;
+  else if (fileIDmp_[type].second==numTelemPerFile_) {
+    fileIDmp_[type].first++;
+    fileIDmp_[type_].second = 0;
   }
 
   std::ostringstream sout;
-  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[telemetryType_].first;
+  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
   const std::string id_str = sout.str();
   const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
   
   telemdef_->writeFile(filename, app);
-  fileIDmp_[telemetryType_].second++;
+  fileIDmp_[type].second++;
 }
 
 } /* namespace gramsballoon */

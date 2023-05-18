@@ -1,4 +1,6 @@
 #include "InterpretTelemetry.hh"
+#include "DateManager.hh"
+
 using namespace anlnext;
 
 namespace gramsballoon {
@@ -14,12 +16,15 @@ InterpretTelemetry::~InterpretTelemetry() = default;
 ANLStatus InterpretTelemetry::mod_define()
 {
   define_parameter("save_telemetry", &mod_class::saveTelemetry_);
+  define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
   
   return AS_OK;
 }
 
 ANLStatus InterpretTelemetry::mod_initialize()
 {
+  timeStampStr_ = getTimeStr();
+
   const std::string receiver_module_name = "ReceiveTelemetry";
   if (exist_module(receiver_module_name)) {
     get_module_NC(receiver_module_name, &receiver_);
@@ -48,5 +53,6 @@ ANLStatus InterpretTelemetry::mod_finalize()
 {
   return AS_OK;
 }
+
 
 } // namespace gramsballoon

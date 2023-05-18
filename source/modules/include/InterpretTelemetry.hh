@@ -35,6 +35,7 @@ private:
   bool saveTelemetry_ = true;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 100;
+  std::string timeStampStr_;
 };
 
 } // namespace gramsballoon
