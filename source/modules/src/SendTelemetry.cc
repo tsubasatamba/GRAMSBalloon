@@ -271,7 +271,7 @@ void SendTelemetry::writeTelemetryToFile(bool failed)
   }
   else if (fileIDmp_[type].second==numTelemPerFile_) {
     fileIDmp_[type].first++;
-    fileIDmp_[type_].second = 0;
+    fileIDmp_[type].second = 0;
   }
 
   std::ostringstream sout;
