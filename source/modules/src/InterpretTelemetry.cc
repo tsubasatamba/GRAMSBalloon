@@ -6,13 +6,14 @@ namespace gramsballoon {
 InterpretTelemetry::InterpretTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
+  binaryFilenameBase_ = "Telemetry";
 }
 
 InterpretTelemetry::~InterpretTelemetry() = default;
 
 ANLStatus InterpretTelemetry::mod_define()
 {
-  //define_parameter("baudrate", &mod_class::baudrate_);
+  define_parameter("save_telemetry", &mod_class::saveTelemetry_);
   
   return AS_OK;
 }

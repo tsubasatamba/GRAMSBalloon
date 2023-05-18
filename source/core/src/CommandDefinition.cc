@@ -2,6 +2,7 @@
 #include <thread>
 #include <chrono>
 #include <iomanip>
+#include <fstream>
 
 namespace gramsballoon {
 
@@ -57,6 +58,25 @@ void CommandDefinition::interpret()
 
   arguments_.clear();
   getVector<int32_t>(6, static_cast<int>(argc_), arguments_);
+}
+
+void CommandDefinition::writeFile(const std::string& filename, bool append)
+{
+  std::ofstream ofs;
+  if (append) {
+    ofs = std::ofstream(filename, std::ios::app|std::ios::binary);
+  }
+  else {
+    ofs = std::ofstream(filename, std::ios::out|std::ios::binary);
+  }
+  if (!ofs) {
+    std::cerr << "File open error." << std::endl;
+    return;
+  }
+  const int size = command_.size();
+  ofs.write(reinterpret_cast<char*>(&command_[0]), size);
+  ofs.flush();
+  ofs.close();
 }
 
 template<typename T>

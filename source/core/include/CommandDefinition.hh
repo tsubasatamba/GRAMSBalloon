@@ -23,10 +23,9 @@ public:
 
   bool setCommand(const std::vector<uint8_t>& v);
   void interpret();
+  void writeFile(const std::string& filename, bool append);
   template<typename T> T getValue(int index);
-  template<typename T> void getVector(int index, int num, std::vector<T>& vec);
-  
-  
+  template<typename T> void getVector(int index, int num, std::vector<T>& vec);  
 
   const std::vector<uint8_t>& Command() const { return command_; }
   uint16_t Code() { return code_; }

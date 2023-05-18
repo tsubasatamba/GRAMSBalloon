@@ -31,12 +31,14 @@ ANLStatus SendTelemetry::mod_define()
   define_parameter("save_telemetry", &mod_class::saveTelemetry_);
   define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
   define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
+  define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
 }
 
 ANLStatus SendTelemetry::mod_initialize()
 {
+  timeStampStr_ = getTimeStr();
   const std::string read_wf_md = "ReadWaveform";
   if (exist_module(read_wf_md)) {
     get_module_NC(read_wf_md, &readWaveform_);
@@ -101,7 +103,7 @@ ANLStatus SendTelemetry::mod_initialize()
   const int status = sc_ -> initialize();
   if (status!=0) {
     std::cerr << "Error in SendTelemetry::mod_initialize: Serial communication failed." << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
   
   return AS_OK;
@@ -123,25 +125,20 @@ ANLStatus SendTelemetry::mod_analyze()
     writeTelemetryToFile(failed);
   }
 
-  std::cout << (int)telemetry.size() << std::endl;
+  
 
   //debug
 
-  #if 1
-  
-  for (int i=0; i<(int)telemetry.size(); i++) {
-    std::cout << i << " " << static_cast<int>(telemetry[i]) << std::endl;
+  if (chatter_>=1) {
+    std::cout << (int)telemetry.size() << std::endl;
+    for (int i=0; i<(int)telemetry.size(); i++) {
+      std::cout << i << " " << static_cast<int>(telemetry[i]) << std::endl;
+    }
   }
 
-  #endif
-
-  if (telemetryType_==2) {
+  if (telemetryType_!=1) {
     telemetryType_ = 1;
   }
-  if (telemetryType_==3) {
-    telemetryType_ = 1;
-  }
-
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
@@ -288,7 +285,7 @@ void SendTelemetry::writeTelemetryToFile(bool failed)
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[telemetryType_].first;
   const std::string id_str = sout.str();
-  const std::string filename = binaryFilenameBase_ + "_" + type_str + "_" + id_str + ".dat";
+  const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
   
   telemdef_->writeFile(filename, app);
   fileIDmp_[telemetryType_].second++;

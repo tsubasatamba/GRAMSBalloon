@@ -32,7 +32,9 @@ private:
   std::shared_ptr<TelemetryDefinition> telemdef_;
   ReceiveTelemetry* receiver_;
   int currentTelemetryType_ = 0;
-
+  bool saveTelemetry_ = true;
+  std::string binaryFilenameBase_ = "";
+  int numTelemPerFile_ = 100;
 };
 
 } // namespace gramsballoon

@@ -76,6 +76,8 @@ private:
   bool saveTelemetry_ = true;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 100;
+  int chatter_ = 0;
+  std::string timeStampStr_;
 
   // access to other classes
   ReadWaveform* readWaveform_ = nullptr;
