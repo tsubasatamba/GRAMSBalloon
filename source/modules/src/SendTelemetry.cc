@@ -8,6 +8,7 @@ SendTelemetry::SendTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
   errorManager_ = std::make_shared<ErrorManager>();
+  binaryFilenameBase_ = "Telemetry";
   TPCHVControllerModuleName_ = "ControlHighVoltage_TPC";
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   serialPath_ = "/dev/null";
@@ -27,6 +28,9 @@ ANLStatus SendTelemetry::mod_define()
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("open_mode", &mod_class::openMode_);
+  define_parameter("save_telemetry", &mod_class::saveTelemetry_);
+  define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
+
   return AS_OK;
 }
 
@@ -105,20 +109,17 @@ ANLStatus SendTelemetry::mod_initialize()
 ANLStatus SendTelemetry::mod_analyze()
 {
   inputInfo();
-
   telemdef_->generateTelemetry();
-
-  if (telemetryType_==2) {
-    telemetryType_ = 1;
-  }
-  if (telemetryType_==3) {
-    telemetryType_ = 1;
-  }
 
   const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
   const int status = sc_->swrite(telemetry);
   if (status != static_cast<int>(telemetry.size())) {
     std::cerr << "Sending telemetry failed: status = " << status << std::endl;
+  }
+  else {
+    if (saveTelemetry_) {
+      writeTelemetryToFile();
+    }
   }
 
   std::cout << (int)telemetry.size() << std::endl;
@@ -132,6 +133,13 @@ ANLStatus SendTelemetry::mod_analyze()
   }
 
   #endif
+
+  if (telemetryType_==2) {
+    telemetryType_ = 1;
+  }
+  if (telemetryType_==3) {
+    telemetryType_ = 1;
+  }
 
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -248,6 +256,26 @@ void SendTelemetry::inputStatusInfo()
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());
   }
 
+}
+
+void SendTelemetry::writeTelemetryToFile()
+{
+  const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
+  std::string type_str = "HK";
+  if (telemetryType_==2) {
+    type_str = "WF";
+  }
+  if (telemetryType_==3) {
+    type_str = "Status";
+  }
+  const bool app = (fileIDmp_.find(telemetryType_)!=fileIDmp_.end());
+  std::ostringstream sout;
+  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[telemetryType_];
+  const std::string id_str = sout.str();
+  const std::string filename = binaryFilenameBase_ + "_" + type_str + "_" + id_str + ".dat";
+  
+  telemdef_->writeFile(filename, app);
+  fileIDmp_[telemetryType_]++;
 }
 
 } /* namespace gramsballoon */

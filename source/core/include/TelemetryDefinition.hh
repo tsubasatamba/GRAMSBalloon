@@ -36,7 +36,7 @@ public:
   void writeAccelerationData();
   void writeCRC16();
   void clear();
-  void writeFile(const std::string& filename);
+  void writeFile(const std::string& filename, bool append);
 
   bool setTelemetry(const std::vector<uint8_t>& v);
   void interpret();

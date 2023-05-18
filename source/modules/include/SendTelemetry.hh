@@ -56,6 +56,7 @@ public:
   void inputHKVesselInfo();
   void inputSoftwareInfo();
   void inputStatusInfo();
+  void writeTelemetryToFile();
 
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
 
@@ -71,6 +72,9 @@ private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
   int telemetryType_ = 1;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
+  std::map<int, int> fileIDmp_;
+  bool saveTelemetry_ = true;
+  std::string binaryFilenameBase_ = ""
 
   // access to other classes
   ReadWaveform* readWaveform_ = nullptr;

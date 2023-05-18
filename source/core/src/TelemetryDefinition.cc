@@ -334,9 +334,15 @@ void TelemetryDefinition::clear()
   telemetry_.clear();
 }
 
-void TelemetryDefinition::writeFile(const std::string& filename)
+void TelemetryDefinition::writeFile(const std::string& filename, bool append)
 {
-  std::ofstream ofs(filename, std::ios::app|std::ios::binary);
+  std::ofstream ofs;
+  if (append) {
+    ofs = std::ofstream(filename, std::ios::app|std::ios::binary);
+  }
+  else {
+    ofs = std::ofstream(filename, std::ios::out|std::ios::binary);
+  }
   if (!ofs) {
     std::cerr << "File open error." << std::endl;
     return;
