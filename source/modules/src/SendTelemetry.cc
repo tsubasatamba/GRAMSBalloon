@@ -275,7 +275,7 @@ void SendTelemetry::writeTelemetryToFile(bool failed)
     type_str = "failed";
   }
   bool app = true;
-  if (fileIDmp_.find(telemetryType_)!=fileIDmp_.end()) {
+  if (fileIDmp_.find(telemetryType_)==fileIDmp_.end()) {
     app = false;
     fileIDmp_[telemetryType_] = std::pair<int, int>(0, 0);
   }
@@ -284,6 +284,7 @@ void SendTelemetry::writeTelemetryToFile(bool failed)
     fileIDmp_[telemetryType_].first++;
     fileIDmp_[telemetryType_].second = 0;
   }
+
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[telemetryType_].first;
   const std::string id_str = sout.str();
