@@ -262,7 +262,7 @@ void SendTelemetry::inputStatusInfo()
 void SendTelemetry::writeTelemetryToFile(bool failed)
 {
   std::string type_str = "";
-  if (telemetryType_==2) {
+  if (telemetryType_==1) {
     type_str = "HK";
   }
   if (telemetryType_==2) {
