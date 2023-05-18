@@ -72,9 +72,10 @@ private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
   int telemetryType_ = 1;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
-  std::map<int, int> fileIDmp_;
+  std::map<int, std::pair<int, int>> fileIDmp_;
   bool saveTelemetry_ = true;
   std::string binaryFilenameBase_ = "";
+  int numTelemPerFile_ = 100;
 
   // access to other classes
   ReadWaveform* readWaveform_ = nullptr;

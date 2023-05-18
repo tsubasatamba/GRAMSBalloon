@@ -348,11 +348,7 @@ void TelemetryDefinition::writeFile(const std::string& filename, bool append)
     return;
   }
   const int size = telemetry_.size();
-  //ofs.write(reinterpret_cast<char*>(&telemetry_[0]), size);
-  for (int i=0; i<size; i++) {
-    char c = static_cast<char>(telemetry_[i]);
-    ofs.write(&c, 1);
-  }
+  ofs.write(reinterpret_cast<char*>(&telemetry_[0]), size);
   ofs.flush();
   ofs.close();
 }

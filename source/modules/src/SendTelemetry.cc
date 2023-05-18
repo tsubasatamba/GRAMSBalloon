@@ -30,6 +30,7 @@ ANLStatus SendTelemetry::mod_define()
   define_parameter("open_mode", &mod_class::openMode_);
   define_parameter("save_telemetry", &mod_class::saveTelemetry_);
   define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
+  define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
 
   return AS_OK;
 }
@@ -273,14 +274,23 @@ void SendTelemetry::writeTelemetryToFile(bool failed)
   if (failed) {
     type_str = "failed";
   }
-  const bool app = (fileIDmp_.find(telemetryType_)!=fileIDmp_.end());
+  bool app = true;
+  if (fileIDmp_.find(telemetryType_)!=fileIDmp_.end()) {
+    app = false;
+    fileIDmp_[telemetryType_] = std::pair<int, int>(0, 0);
+  }
+  else if (fileIDmp_[telemetryType_].second==numTelemPerFile_) {
+    app = false;
+    fileIDmp_[telemetryType_].first++;
+    fileIDmp_[telemetryType_].second = 0;
+  }
   std::ostringstream sout;
-  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[telemetryType_];
+  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[telemetryType_].first;
   const std::string id_str = sout.str();
   const std::string filename = binaryFilenameBase_ + "_" + type_str + "_" + id_str + ".dat";
   
   telemdef_->writeFile(filename, app);
-  fileIDmp_[telemetryType_]++;
+  fileIDmp_[telemetryType_].second++;
 }
 
 } /* namespace gramsballoon */
