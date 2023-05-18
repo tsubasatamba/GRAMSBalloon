@@ -74,7 +74,7 @@ private:
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
   std::map<int, int> fileIDmp_;
   bool saveTelemetry_ = true;
-  std::string binaryFilenameBase_ = ""
+  std::string binaryFilenameBase_ = "";
 
   // access to other classes
   ReadWaveform* readWaveform_ = nullptr;
