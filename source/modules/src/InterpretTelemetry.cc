@@ -45,6 +45,8 @@ ANLStatus InterpretTelemetry::mod_analyze()
   }
   telemdef_->interpret();
   currentTelemetryType_ = telemdef_->TelemetryType();
+
+  writeTelemetryToFile();
   
   return AS_OK;
 }
@@ -54,5 +56,30 @@ ANLStatus InterpretTelemetry::mod_finalize()
   return AS_OK;
 }
 
+void InterpretTelemetry::writeTelemetryToFile()
+{
+  int type = currentTelemetryType_;
+  std::string type_str = "";
+  if (type==1) type_str = "HK";
+  if (type==2) type_str = "WF";
+  if (type==3) type_str = "Status";
+
+  const bool app = true;
+  if (fileIDmp_.find(type)==fileIDmp_.end()) {
+    fileIDmp_[type] = std::pair<int, int>(0, 0);
+  }
+  else if (fileIDmp_[type].second==numTelemPerFile_) {
+    fileIDmp_[type].first++;
+    fileIDmp_[type].second = 0;
+  }
+
+  std::ostringstream sout;
+  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
+  const std::string id_str = sout.str();
+  const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
+  
+  telemdef_->writeFile(filename, app);
+  fileIDmp_[type].second++;
+}
 
 } // namespace gramsballoon

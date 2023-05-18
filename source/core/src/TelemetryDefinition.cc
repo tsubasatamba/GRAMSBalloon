@@ -2,6 +2,7 @@
 #include <thread>
 #include <chrono>
 #include <fstream>
+#include "BinaryFileManipulater.hh"
 
 namespace gramsballoon {
 
@@ -336,21 +337,7 @@ void TelemetryDefinition::clear()
 
 void TelemetryDefinition::writeFile(const std::string& filename, bool append)
 {
-  std::ofstream ofs;
-  if (append) {
-    ofs = std::ofstream(filename, std::ios::app|std::ios::binary);
-  }
-  else {
-    ofs = std::ofstream(filename, std::ios::out|std::ios::binary);
-  }
-  if (!ofs) {
-    std::cerr << "File open error." << std::endl;
-    return;
-  }
-  const int size = telemetry_.size();
-  ofs.write(reinterpret_cast<char*>(&telemetry_[0]), size);
-  ofs.flush();
-  ofs.close();
+  writeVectorToBinaryFile<uint8_t>(filename, append, telemetry_);
 }
 
 template<typename T>
