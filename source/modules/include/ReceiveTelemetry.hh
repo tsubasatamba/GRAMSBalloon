@@ -25,11 +25,13 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
+  bool Valid() { return valid_; }
   
 private:
   std::vector<uint8_t> telemetry_;
   int maxTelemetry_ = 32000;
   std::vector<uint8_t> buffer_;
+  bool valid_;
   
   // communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;

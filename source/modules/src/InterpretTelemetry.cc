@@ -35,18 +35,24 @@ ANLStatus InterpretTelemetry::mod_initialize()
 
 ANLStatus InterpretTelemetry::mod_analyze()
 {
+  if (!receiver_->Valid()) {
+    return AS_OK;
+  }
+
   currentTelemetryType_ = 0;
   const std::vector<uint8_t>& telemetry = receiver_->Telemetry();
 
   bool status = telemdef_->setTelemetry(telemetry);
+  const bool failed = !status;
   if (!status) {
     std::cerr << "InterpretTelemetry::mod_analyze Failed to set telemetry..." << std::endl;
+    writeTelemetryToFile(failed);
     return AS_OK;
   }
   telemdef_->interpret();
   currentTelemetryType_ = telemdef_->TelemetryType();
 
-  writeTelemetryToFile();
+  writeTelemetryToFile(failed);
   
   return AS_OK;
 }
@@ -56,13 +62,17 @@ ANLStatus InterpretTelemetry::mod_finalize()
   return AS_OK;
 }
 
-void InterpretTelemetry::writeTelemetryToFile()
+void InterpretTelemetry::writeTelemetryToFile(bool failed)
 {
   int type = currentTelemetryType_;
   std::string type_str = "";
   if (type==1) type_str = "HK";
   if (type==2) type_str = "WF";
   if (type==3) type_str = "Status";
+  if (failed) {
+    type = 0;
+    type_str = "failed";
+  }
 
   const bool app = true;
   if (fileIDmp_.find(type)==fileIDmp_.end()) {
@@ -78,7 +88,12 @@ void InterpretTelemetry::writeTelemetryToFile()
   const std::string id_str = sout.str();
   const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
   
-  telemdef_->writeFile(filename, app);
+  if (!failed) {
+    telemdef_->writeFile(filename, app);
+  }
+  else {
+    writeVectorToBinaryFile(filename, app, receiver_->Telemetry());
+  }
   fileIDmp_[type].second++;
 }
 

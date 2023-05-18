@@ -56,11 +56,13 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   }
   std::cout << "status: " << status << std::endl;
   for (int i = 0; i < status; i++) {
+    valid_ = false;
     if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
       telemetry_.clear();
     }
     telemetry_.push_back(buffer_[i]);
     if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
+      valid_ = true;
       break;
     }
   }

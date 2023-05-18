@@ -25,7 +25,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void writeTelemetryToFile();
+  void writeTelemetryToFile(bool failed);
 
   TelemetryDefinition* Telemdef() { return telemdef_.get(); }
   int CurrentTelemetryType() { return currentTelemetryType_; }
