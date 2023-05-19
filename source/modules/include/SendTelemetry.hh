@@ -31,6 +31,7 @@ class ControlHighVoltage;
 class GetRaspiStatus;
 class GetEnvironmentalData;
 class MeasureAcceleration;
+class GetSlowADCData;
 class ReceiveCommand;
 
 
