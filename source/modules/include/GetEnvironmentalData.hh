@@ -13,9 +13,13 @@
 #include "SPIInterface.hh"
 #include "BME680IO.hh"
 #include "SPIManager.hh"
+#include "SendTelemetry.hh"
 #include <chrono>
 
 namespace gramsballoon {
+
+class SPIManager;
+class SendTelemetry;
 
 class GetEnvironmentalData : public anlnext::BasicModule
 {
@@ -35,6 +39,8 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  void setDataAquisitionError();
+
   BME680IO* GetBME680IO() { return (singleton_self()->bme680io_).get(); }
   double Temperature() { return singleton_self()->temperature_; }
   double Humidity() { return singleton_self()->humidity_; }
@@ -44,11 +50,13 @@ private:
   int chipSelect_ = 8;
   std::string SPIManagerName_ = "SPIManager";
   SPIManager* SPIManager_ = nullptr;
+  SendTelemetry* sendTelemetry_ = nullptr;
   std::shared_ptr<BME680IO> bme680io_ = nullptr;
   std::shared_ptr<SPIInterface> interface_ = nullptr;
   double pressure_;
   double humidity_;
   double temperature_;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */

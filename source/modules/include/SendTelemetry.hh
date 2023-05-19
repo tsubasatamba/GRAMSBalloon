@@ -31,6 +31,7 @@ class ControlHighVoltage;
 class GetRaspiStatus;
 class GetEnvironmentalData;
 class MeasureAcceleration;
+class GetSlowADCData;
 class ReceiveCommand;
 
 
@@ -56,6 +57,7 @@ public:
   void inputHKVesselInfo();
   void inputSoftwareInfo();
   void inputStatusInfo();
+  void writeTelemetryToFile(bool failed);
 
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
 
@@ -71,6 +73,12 @@ private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
   int telemetryType_ = 1;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
+  std::map<int, std::pair<int, int>> fileIDmp_;
+  bool saveTelemetry_ = true;
+  std::string binaryFilenameBase_ = "";
+  int numTelemPerFile_ = 100;
+  int chatter_ = 0;
+  std::string timeStampStr_;
 
   // access to other classes
   ReadWaveform* readWaveform_ = nullptr;

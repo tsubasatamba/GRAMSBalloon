@@ -25,17 +25,20 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
+  bool Valid() { return valid_; }
   
 private:
   std::vector<uint8_t> telemetry_;
   int maxTelemetry_ = 32000;
   std::vector<uint8_t> buffer_;
+  bool valid_;
   
   // communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;
   speed_t baudrate_;
   std::string serialPath_;
   mode_t openMode_ = O_RDWR;
+  int chatter_ = 0;
 };
 
 } // namespace gramsballoon

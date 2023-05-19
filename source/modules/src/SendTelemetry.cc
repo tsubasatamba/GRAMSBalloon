@@ -1,4 +1,5 @@
 #include "SendTelemetry.hh"
+#include "DateManager.hh"
 
 using namespace anlnext;
 
@@ -8,6 +9,7 @@ SendTelemetry::SendTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
   errorManager_ = std::make_shared<ErrorManager>();
+  binaryFilenameBase_ = "Telemetry";
   TPCHVControllerModuleName_ = "ControlHighVoltage_TPC";
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   serialPath_ = "/dev/null";
@@ -27,11 +29,18 @@ ANLStatus SendTelemetry::mod_define()
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("open_mode", &mod_class::openMode_);
+  define_parameter("save_telemetry", &mod_class::saveTelemetry_);
+  define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
+  define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
+  define_parameter("chatter", &mod_class::chatter_);
+
   return AS_OK;
 }
 
 ANLStatus SendTelemetry::mod_initialize()
 {
+  timeStampStr_ = getTimeStr();
+
   const std::string read_wf_md = "ReadWaveform";
   if (exist_module(read_wf_md)) {
     get_module_NC(read_wf_md, &readWaveform_);
@@ -96,7 +105,7 @@ ANLStatus SendTelemetry::mod_initialize()
   const int status = sc_ -> initialize();
   if (status!=0) {
     std::cerr << "Error in SendTelemetry::mod_initialize: Serial communication failed." << std::endl;
-    return AS_QUIT_ERROR;
+    getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR);
   }
   
   return AS_OK;
@@ -105,34 +114,30 @@ ANLStatus SendTelemetry::mod_initialize()
 ANLStatus SendTelemetry::mod_analyze()
 {
   inputInfo();
-
   telemdef_->generateTelemetry();
-
-  if (telemetryType_==2) {
-    telemetryType_ = 1;
-  }
-  if (telemetryType_==3) {
-    telemetryType_ = 1;
-  }
 
   const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
   const int status = sc_->swrite(telemetry);
-  if (status != static_cast<int>(telemetry.size())) {
+  const bool failed = (status != static_cast<int>(telemetry.size()));
+  if (failed) {
     std::cerr << "Sending telemetry failed: status = " << status << std::endl;
+    getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SWRITE_ERROR);
   }
-
-  std::cout << (int)telemetry.size() << std::endl;
-
-  //debug
-
-  #if 1
   
-  for (int i=0; i<(int)telemetry.size(); i++) {
-    std::cout << i << " " << static_cast<int>(telemetry[i]) << std::endl;
+  if (saveTelemetry_) {
+    writeTelemetryToFile(failed);
   }
 
-  #endif
+  if (chatter_>=1) {
+    std::cout << (int)telemetry.size() << std::endl;
+    for (int i=0; i<(int)telemetry.size(); i++) {
+      std::cout << i << " " << static_cast<int>(telemetry[i]) << std::endl;
+    }
+  }
 
+  if (telemetryType_!=1) {
+    telemetryType_ = 1;
+  }
 
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
@@ -222,7 +227,6 @@ void SendTelemetry::inputHKVesselInfo()
 
 void SendTelemetry::inputSoftwareInfo()
 {
-  std::cout << "software info" << std::endl;
   if (receiveCommand_!=nullptr) {
     std::cout << "command index: " << receiveCommand_->CommandIndex() << std::endl;
     telemdef_->setLastCommandIndex(receiveCommand_->CommandIndex());
@@ -248,6 +252,36 @@ void SendTelemetry::inputStatusInfo()
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());
   }
 
+}
+
+void SendTelemetry::writeTelemetryToFile(bool failed)
+{
+  int type = telemetryType_;
+  if (failed) {
+    type = 0;
+  }
+  std::string type_str = "";
+  if (type==1) type_str = "HK";
+  if (type==2) type_str = "WF";
+  if (type==3) type_str = "Status";
+  if (type==0) type_str = "failed";
+
+  const bool app = true;
+  if (fileIDmp_.find(type)==fileIDmp_.end()) {
+    fileIDmp_[type] = std::pair<int, int>(0, 0);
+  }
+  else if (fileIDmp_[type].second==numTelemPerFile_) {
+    fileIDmp_[type].first++;
+    fileIDmp_[type].second = 0;
+  }
+
+  std::ostringstream sout;
+  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
+  const std::string id_str = sout.str();
+  const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
+  
+  telemdef_->writeFile(filename, app);
+  fileIDmp_[type].second++;
 }
 
 } /* namespace gramsballoon */

@@ -9,12 +9,18 @@ namespace gramsballoon {
 ANLStatus ShutdownSystem::mod_define()
 {
   define_parameter("buffer_time_sec", &mod_class::bufferTimeSec_);
+  define_parameter("chatter", &mod_class::chatter_);
   
   return AS_OK;
 }
 
 ANLStatus ShutdownSystem::mod_initialize()
 {
+  const std::string send_telem_md = "SendTelemetry";
+  if (exist_module(send_telem_md)) {
+    get_module_NC(send_telem_md, &sendTelemetry_);
+  }
+
   gettimeofday(&prepareRebootTime_, NULL);
   gettimeofday(&prepareShutdownTime_, NULL);
   
@@ -95,6 +101,30 @@ void ShutdownSystem::setPrepareShutdown(bool v)
   singleton_self()->prepareShutdown_ = v;
   if (v) {
     gettimeofday(&(singleton_self()->prepareShutdownTime_), NULL);
+  }
+}
+
+void ShutdownSystem::setReboot(bool v)
+{
+  if (singleton_self()->prepareReboot_) {
+    singleton_self()->reboot_ = v;
+  }
+  else {
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::REBOOT_REJECTED);
+    }
+  }
+}
+
+void ShutdownSystem::setShutdown(bool v)
+{
+  if (singleton_self()->prepareShutdown_) {
+    singleton_self()->shutdown_ = v;
+  }
+  else {
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::SHUTDOWN_REJECTED);
+    }
   }
 }
 

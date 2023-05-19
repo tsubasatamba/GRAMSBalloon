@@ -11,8 +11,11 @@
 #include <sys/reboot.h>
 #include <linux/reboot.h>
 #include <sys/time.h>
+#include "SendTelemetry.hh"
 
 namespace gramsballoon {
+
+class SendTelemetry;
 
 class ShutdownSystem : public anlnext::BasicModule
 {
@@ -31,8 +34,8 @@ public:
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
-  void setReboot(bool v) { if (singleton_self()->prepareReboot_) singleton_self()->reboot_ = v; }
-  void setShutdown(bool v) { if (singleton_self()->prepareShutdown_) singleton_self()->shutdown_ = v; }
+  void setReboot(bool v);
+  void setShutdown(bool v);
   void setPrepareReboot(bool v);
   void setPrepareShutdown(bool v);
   void clearStatus();
@@ -45,6 +48,8 @@ private:
   int bufferTimeSec_ = 60;
   timeval prepareRebootTime_;
   timeval prepareShutdownTime_;
+  SendTelemetry* sendTelemetry_ = nullptr;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */

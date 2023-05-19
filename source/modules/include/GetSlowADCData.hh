@@ -12,8 +12,12 @@
 #include <anlnext/BasicModule.hh>
 #include "SlowADCIO.hh"
 #include "SPIManager.hh"
+#include "SendTelemetry.hh"
 
 namespace gramsballoon {
+
+class SPIManager;
+class SendTelemetry;
 
 class GetSlowADCData : public anlnext::BasicModule
 {
@@ -40,6 +44,7 @@ private:
   int chipSelect_ = 8;
   std::string SPIManagerName_ = "SPIManager";
   SPIManager* SPIManager_ = nullptr;
+  SendTelemetry* sendTelemetry_ = nullptr;
   std::shared_ptr<SlowADCIO> slowADCio_ = nullptr;
   std::shared_ptr<SPIInterface> interface_ = nullptr;
   double va_ = 5.0;
@@ -47,6 +52,7 @@ private:
   std::map<int, uint16_t> adcList_;
   std::map<int, double> voltageList_;
   int numTrials_ = 2;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */

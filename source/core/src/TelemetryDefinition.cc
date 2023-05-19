@@ -1,6 +1,8 @@
 #include "TelemetryDefinition.hh"
 #include <thread>
 #include <chrono>
+#include <fstream>
+#include "BinaryFileManipulater.hh"
 
 namespace gramsballoon {
 
@@ -331,6 +333,11 @@ void TelemetryDefinition::interpretStatus()
 void TelemetryDefinition::clear()
 {
   telemetry_.clear();
+}
+
+void TelemetryDefinition::writeFile(const std::string& filename, bool append)
+{
+  writeVectorToBinaryFile<uint8_t>(filename, append, telemetry_);
 }
 
 template<typename T>

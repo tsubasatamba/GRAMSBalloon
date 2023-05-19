@@ -25,6 +25,8 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  void writeTelemetryToFile(bool failed);
+
   TelemetryDefinition* Telemdef() { return telemdef_.get(); }
   int CurrentTelemetryType() { return currentTelemetryType_; }
   
@@ -32,7 +34,12 @@ private:
   std::shared_ptr<TelemetryDefinition> telemdef_;
   ReceiveTelemetry* receiver_;
   int currentTelemetryType_ = 0;
-
+  std::map<int, std::pair<int, int>> fileIDmp_;
+  bool saveTelemetry_ = true;
+  std::string binaryFilenameBase_ = "";
+  int numTelemPerFile_ = 100;
+  std::string timeStampStr_;
+  int chatter_ = 0;
 };
 
 } // namespace gramsballoon

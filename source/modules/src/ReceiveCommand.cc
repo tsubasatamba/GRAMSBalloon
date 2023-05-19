@@ -12,6 +12,7 @@ ReceiveCommand::ReceiveCommand()
   TPCHVControllerModuleName_ = "ControlHighVoltage_TPC";
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   serialPath_ = "/dev/null";
+  binaryFilenameBase_ = "Command";
   comdef_ = std::make_shared<CommandDefinition>(); 
   buffer_.resize(200);
 }
@@ -26,6 +27,10 @@ ANLStatus ReceiveCommand::mod_define()
   define_parameter("TPC_HVController_module_name", &mod_class::TPCHVControllerModuleName_);
   define_parameter("PMT_HVController_module_name", &mod_class::PMTHVControllerModuleName_);
   define_parameter("timeout_sec", &mod_class::timeoutSec_);
+  define_parameter("save_command", &mod_class::saveCommand_);
+  define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
+  define_parameter("num_command_per_file", &mod_class::numCommandPerFile_);
+  define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
 }
@@ -60,7 +65,9 @@ ANLStatus ReceiveCommand::mod_initialize()
   const int status = sc_ -> initialize();
   if (status!=0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Serial communication failed." << std::endl;
-    return AS_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SERIAL_COMMUNICATION_ERROR);
+    }
   }
 
   return AS_OK;
@@ -77,7 +84,10 @@ ANLStatus ReceiveCommand::mod_analyze()
   int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
   if (rv == -1) {
     std::cerr << "Error in ReceiveCommand::mod_analyze: rv = -1" << std::endl;
-    return AS_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SELECT_ERROR);
+    }
+    return AS_OK;
   }
   
   if (rv==0) {
@@ -89,10 +99,12 @@ ANLStatus ReceiveCommand::mod_analyze()
   const int status = sc_->sread(buffer_, 200);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SREAD_ERROR);
+    }
     return AS_OK;
   }
 
-  std::cout << "status: " << status << std::endl;
   for (int i=0; i<status; i++) {
     if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
       command_.clear();
@@ -103,15 +115,17 @@ ANLStatus ReceiveCommand::mod_analyze()
     }
   }
 
-  #if 1
-  for (int i=0; i<status; i++) {
-    std::cout << "command[" << i << "] = " << static_cast<int>(command_[i]) << std::endl;
+  if (chatter_>=1) {
+    std::cout << "ReceiveCommand status: " << status << std::endl;
+    for (int i=0; i<status; i++) {
+      std::cout << "command[" << i << "] = " << static_cast<int>(command_[i]) << std::endl;
+    }
   }
-  #endif
 
   const bool applied = applyCommand();
+  writeCommandToFile(!applied);
   if (!applied) {
-    if (exist_module("SendTelemetry")) {
+    if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
     }
     commandRejectCount_++;
@@ -292,5 +306,39 @@ bool ReceiveCommand::applyCommand()
 
   return false;
 }
+
+void ReceiveCommand::writeCommandToFile(bool failed)
+{
+  int type = 1;
+  std::string type_str = "";
+  if (failed) {
+    type = 0;
+  }
+  if (type==1) type_str = "normal";
+  if (type==0) type_str = "failed";
+
+  const bool app = true;
+  if (fileIDmp_.find(type)==fileIDmp_.end()) {
+    fileIDmp_[type] = std::pair<int, int>(0, 0);
+  }
+  else if (fileIDmp_[type].second==numCommandPerFile_) {
+    fileIDmp_[type].first++;
+    fileIDmp_[type].second = 0;
+  }
+
+  std::ostringstream sout;
+  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
+  const std::string id_str = sout.str();
+  const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
+  
+  if (!failed) {
+    comdef_->writeFile(filename, app);
+  }
+  else {
+    writeVectorToBinaryFile(filename, app, command_);
+  }
+  fileIDmp_[type].second++;
+}
+
 
 } /* namespace gramsballoon */

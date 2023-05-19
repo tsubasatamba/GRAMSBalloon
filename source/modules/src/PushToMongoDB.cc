@@ -17,6 +17,8 @@ PushToMongoDB::PushToMongoDB()
 
 ANLStatus PushToMongoDB::mod_define()
 {
+  define_parameter("chatter", &mod_class::chatter_);
+  
   return AS_OK;
 }
 

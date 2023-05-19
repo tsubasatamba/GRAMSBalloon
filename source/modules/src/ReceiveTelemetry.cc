@@ -16,6 +16,7 @@ ANLStatus ReceiveTelemetry::mod_define()
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("open_mode", &mod_class::openMode_);
+  define_parameter("chatter", &mod_class::chatter_);
   
   return AS_OK;
 }
@@ -56,11 +57,13 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   }
   std::cout << "status: " << status << std::endl;
   for (int i = 0; i < status; i++) {
+    valid_ = false;
     if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
       telemetry_.clear();
     }
     telemetry_.push_back(buffer_[i]);
     if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
+      valid_ = true;
       break;
     }
   }

@@ -22,22 +22,32 @@ ANLStatus GetSlowADCData::mod_define()
   define_parameter("Va", &mod_class::va_);
   define_parameter("channels", &mod_class::channels_);
   define_parameter("num_trials", &mod_class::numTrials_);
+  define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
 }
 
 ANLStatus GetSlowADCData::mod_pre_initialize()
 {
+  const std::string send_telem_md = "SendTelemetry";
+  if (exist_module(send_telem_md)) {
+    get_module_NC(send_telem_md, &sendTelemetry_);
+  }
+
   if (chipSelect_<0 || chipSelect_>=27) {
     std::cerr << "Chip select must be non-negative and smaller than 27: CS=" << chipSelect_ << std::endl;
-    return AS_QUIT_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::OTHER_ERRORS);
+    }
   }
   if (exist_module(SPIManagerName_)) {
     get_module_NC(SPIManagerName_, &SPIManager_);
   }
   else {
     std::cerr << "SPI manager does not exist. Module name = " << SPIManagerName_ << std::endl;
-    return AS_QUIT_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
+    }
   }
   SPIManager_->addChipSelect(chipSelect_);
 
@@ -68,7 +78,6 @@ ANLStatus GetSlowADCData::mod_initialize()
 
 ANLStatus GetSlowADCData::mod_analyze()
 {
-
   // {
   //   uint16_t adc = 0;
   //   double voltage = 0.0;
@@ -85,19 +94,22 @@ ANLStatus GetSlowADCData::mod_analyze()
     }
     else {
       std::cerr << "Error in GetSlowADCData::mod_analyze. Failed to get data." << std::endl;
+      if (sendTelemetry_) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::SLOW_ADC_DATA_AQUISITION_ERROR);
+      }
     }
   }
 
-  #if 1
-  std::cout << "channel adc" << std::endl;
-  for (auto m: adcList_) {
-    std::cout << m.first << " " << m.second << std::endl;
+  if (chatter_>=1) {
+    std::cout << "channel adc" << std::endl;
+    for (auto m: adcList_) {
+      std::cout << m.first << " " << m.second << std::endl;
+    }
+    std::cout << "channel voltage" << std::endl;
+    for (auto m: voltageList_) {
+      std::cout << m.first << " " << m.second << std::endl;
+    }
   }
-  std::cout << "channel voltage" << std::endl;
-  for (auto m: voltageList_) {
-    std::cout << m.first << " " << m.second << std::endl;
-  }
-  #endif
 
   return AS_OK;
 }

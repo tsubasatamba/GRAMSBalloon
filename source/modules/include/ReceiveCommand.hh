@@ -26,7 +26,7 @@ namespace gramsballoon {
 class ShutdownSystem;
 class SendTelemetry;
 class ReadWaveform;
-class CotrolHighVoltage;
+class ControlHighVoltage;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -46,6 +46,7 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   bool applyCommand();
+  void writeCommandToFile(bool failed);
 
   uint16_t CommandCode() { return (singleton_self()->comdef_)->Code(); }
   uint32_t CommandIndex() { return singleton_self()->commandIndex_; }
@@ -57,6 +58,12 @@ private:
   std::shared_ptr<CommandDefinition> comdef_ = nullptr;
   uint32_t commandIndex_ = 0;
   uint16_t commandRejectCount_ = 0;
+  std::map<int, std::pair<int, int>> fileIDmp_;
+  bool saveCommand_ = true;
+  std::string binaryFilenameBase_ = "";
+  int numCommandPerFile_ = 100;
+  int chatter_ = 0;
+  std::string timeStampStr_;
 
   // access to other classes
   SendTelemetry* sendTelemetry_ = nullptr;

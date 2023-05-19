@@ -11,9 +11,11 @@
 
 #include <anlnext/BasicModule.hh>
 #include <cstdint>
-
+#include "SendTelemetry.hh"
 
 namespace gramsballoon {
+
+class SendTelemetry;
 
 class GetRaspiStatus : public anlnext::BasicModule
 {
@@ -45,6 +47,8 @@ private:
   std::string path_;
   uint64_t capacityFree_ = 0;
   uint64_t capacityAll_ = 0;
+  SendTelemetry* sendTelemetry_ = nullptr;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */
