@@ -26,7 +26,7 @@ namespace gramsballoon {
 class ShutdownSystem;
 class SendTelemetry;
 class ReadWaveform;
-class CotrolHighVoltage;
+class ControlHighVoltage;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
