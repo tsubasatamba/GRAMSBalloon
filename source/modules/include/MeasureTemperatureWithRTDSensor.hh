@@ -13,11 +13,13 @@
 #include "SPIInterface.hh"
 #include "MAX31865IO.hh"
 #include "SPIManager.hh"
+#include "SendTelemetry.hh"
 #include <chrono>
 
 namespace gramsballoon {
 
 class SPIManager;
+class SendTelemetry;
 
 class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
 {
@@ -44,8 +46,10 @@ private:
   int chipSelect_ = 8;
   std::string SPIManagerName_ = "SPIManager";
   SPIManager* SPIManager_ = nullptr;
+  SendTelemetry* sendTelemetry_ = nullptr;
   std::shared_ptr<MAX31865IO> max31865io_ = nullptr;
   std::shared_ptr<SPIInterface> interface_ = nullptr;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */
