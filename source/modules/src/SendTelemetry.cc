@@ -105,7 +105,7 @@ ANLStatus SendTelemetry::mod_initialize()
   const int status = sc_ -> initialize();
   if (status!=0) {
     std::cerr << "Error in SendTelemetry::mod_initialize: Serial communication failed." << std::endl;
-    return AS_ERROR;
+    getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR);
   }
   
   return AS_OK;
@@ -121,6 +121,7 @@ ANLStatus SendTelemetry::mod_analyze()
   const bool failed = (status != static_cast<int>(telemetry.size()));
   if (failed) {
     std::cerr << "Sending telemetry failed: status = " << status << std::endl;
+    getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SWRITE_ERROR);
   }
   
   if (saveTelemetry_) {
