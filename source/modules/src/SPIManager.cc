@@ -35,7 +35,6 @@ ANLStatus SPIManager::mod_initialize()
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::PIGPIO_START_ERROR);
     }
-    return AS_OK;
   }
 
   unsigned int spi_handler = spi_open(pi, channel_, baudrate_, spiFlags_);
@@ -44,7 +43,6 @@ ANLStatus SPIManager::mod_initialize()
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::SPI_OPEN_ERROR);
     }
-    return AS_OK;
   }
 
   interface_ -> setGPIOHandler(pi);
