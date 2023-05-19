@@ -127,7 +127,6 @@ ANLStatus ReadWaveform::mod_analyze()
     nonDetectionCounter_ = 0;
   }
   
-
   if (ondemand_) {
     sendTelemetry_->setEventID(eventID_);
     sendTelemetry_->setEventHeader(eventHeader_);

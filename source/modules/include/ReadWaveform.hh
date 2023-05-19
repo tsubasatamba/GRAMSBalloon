@@ -20,6 +20,7 @@ class SendTelemetry;
 
 namespace gramsballoon {
 
+class AnalogDiscoveryManager;
 class SendTelemetry;
 
 class ReadWaveform : public anlnext::BasicModule
@@ -97,7 +98,7 @@ private:
   bool startReading_ = false;
   uint32_t eventID_ = 0;
   int nonDetectionCounter_ = 0;
-  int maxNonDetection_ = 100;
+  int maxNonDetectionCount_ = 100;
   int chatter_ = 0;
 };
 
