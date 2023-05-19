@@ -124,7 +124,7 @@ int DAQIO::setupTrigger()
   return 0;
 }
 
-int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::vector<int16_t>>& data)
+DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::vector<int16_t>>& data)
 {
   const int num_devices = ADIO_ -> NumDevices();
   const int num_channels = num_devices * 2;
@@ -169,7 +169,7 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
 
   if (!data_acquired) {
     std::cout << "DAQ did not detect any events." << std::endl;
-    return 0;
+    return DAQResult::NON_DETECTION;
   }
 
   std::vector<bool> detected(num_devices, true);
@@ -191,14 +191,11 @@ int DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector<std::
     }
   }
 
-  return 0;
+  return DAQResult::TRIGGERED;
 }
 
 void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
 {
-  // const int num_devices = ADIO_ -> NumDevices();
-  // const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
-
   const int sz_header = 32;
   header.resize(sz_header);
   timeval time_now;

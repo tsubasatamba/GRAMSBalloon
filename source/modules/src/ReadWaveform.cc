@@ -32,26 +32,30 @@ ANLStatus ReadWaveform::mod_define()
   define_parameter("output_filename_base", &mod_class::outputFilenameBase_);
   define_parameter("num_events_per_file", &mod_class::numEventsPerFile_);
   define_parameter("start_reading", &mod_class::startReading_);
+  define_parameter("max_non_detection_count", &mod_class::maxNonDetectionCount_);
+  define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
 }
 
 ANLStatus ReadWaveform::mod_initialize()
 {
+  const std::string send_telemetry_md = "SendTelemetry";
+  if (exist_module(send_telemetry_md)) {
+    get_module_NC(send_telemetry_md, &sendTelemetry_);
+  }
+
   if (exist_module(ADManagerName_)) {
     get_module_NC(ADManagerName_, &ADManager_);
   }
   else {
     std::cerr << "Error in ReadWaveform::mod_initialize." << std::endl;
     std::cerr << "Analog Discovery manager does not exist. Module name = " << ADManagerName_ << std::endl;
-    return AS_QUIT_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
+    }
   }
   setupAnalogIn();
-  
-  const std::string send_telemetry_md = "SendTelemetry";
-  if (exist_module(send_telemetry_md)) {
-    get_module_NC(send_telemetry_md, &sendTelemetry_);
-  }
 
   AnalogDiscoveryIO* adio = ADManager_->ADIO();
   daqio_->setAnalogDiscoveryIO(adio);
@@ -61,7 +65,9 @@ ANLStatus ReadWaveform::mod_initialize()
   const int status = daqio_->setupTrigger();
   if (status!=0) {
     std::cerr << "Trigger setup failed in ReadWaveform::mod_initialize" << std::endl;
-    return AS_QUIT_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::TRIGGER_SETUP_ERROR);
+    }
   }
   
   return AS_OK;
@@ -80,7 +86,9 @@ ANLStatus ReadWaveform::mod_analyze()
     const int status = daqio_->setupTrigger();
     if (status!=0) {
       std::cerr << "Trigger setup failed in ReadWaveform::mod_analyze" << std::endl;
-      return AS_QUIT_ERROR;
+      if (sendTelemetry_) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::TRIGGER_SETUP_ERROR);
+      }
     }
     triggerChanged_ = false;
   }
@@ -102,7 +110,23 @@ ANLStatus ReadWaveform::mod_analyze()
     createNewOutputFile();
   }
 
-  daqio_->getData(eventID_, eventHeader_, eventData_);
+  DAQResult res = daqio_->getData(eventID_, eventHeader_, eventData_);
+  if (res==DAQResult::NON_DETECTION) {
+    nonDetectionCounter_++;
+  }
+  if (res==DAQResult::TRIGGERED) {
+    nonDetectionCounter_ = 0;
+  }
+
+  if (nonDetectionCounter_>=maxNonDetectionCount_) {
+    std::cout << "Failed to detect events " << nonDetectionCounter_ << "times in a row." << std::endl;
+    std::cout << "Probably trigger level is too high." << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::TOO_FEW_EVENTS_DETECTED);
+    }
+    nonDetectionCounter_ = 0;
+  }
+  
 
   if (ondemand_) {
     sendTelemetry_->setEventID(eventID_);

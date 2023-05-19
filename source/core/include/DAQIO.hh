@@ -31,6 +31,10 @@ enum class TriggerSlope {
   EITHER = 2
 };
 
+enum class DAQResult {
+  TRIGGERED, NON_DETECTION
+};
+
 class DAQIO
 {
 public:
@@ -40,7 +44,7 @@ public:
   void setTriggerParameters(int device, int channel, int mode, double level, double position);
   void setSampleParameters(double freq, double tw);
   int setupTrigger();
-  int getData(int event_id, std::vector<int16_t>& header, std::vector<std::vector<int16_t>>& data);
+  DAQResult getData(int event_id, std::vector<int16_t>& header, std::vector<std::vector<int16_t>>& data);
   void generateFileHeader(std::vector<int16_t>& header, int16_t num_event);
   void generateFileFooter(std::vector<int16_t>& footer);
   
