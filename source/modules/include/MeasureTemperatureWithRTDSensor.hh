@@ -17,7 +17,7 @@
 
 namespace gramsballoon {
 
-class SPIManager
+class SPIManager;
 
 class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
 {
