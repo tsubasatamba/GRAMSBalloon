@@ -18,12 +18,18 @@ ANLStatus GetRaspiStatus::mod_define()
 {
   define_parameter("temperature_filename", &mod_class::tempFile_);
   define_parameter("path", &mod_class::path_);
+  define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
 }
 
 ANLStatus GetRaspiStatus::mod_initialize()
 {
+  const std::string send_telem_md = "SendTelemetry";
+  if (exist_module(send_telem_md)) {
+    get_module_NC(send_telem_md, &sendTelemetry_);
+  }
+
   return AS_OK;
 }
 
@@ -37,14 +43,16 @@ ANLStatus GetRaspiStatus::mod_analyze()
   const int status = getCapacity();
   if (status != 0) {
     std::cerr << "Error in GetRaspiStatus::mod_analyze()" << std::endl;
-    return AS_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::GET_SD_CAPACITY_ERROR);
+    }
   }
   
-  #if 1
-  uint64_t one = 1;
-  std::cout << "Free size (MB): " << capacityFree_ / (one<<20) << std::endl;
-  std::cout << "All size (MB): " << capacityAll_ / (one<<20) << std::endl;
-  #endif
+  if (chatter_>=1) {
+    uint64_t one = 1;
+    std::cout << "Free size (MB): " << capacityFree_ / (one<<20) << std::endl;
+    std::cout << "All size (MB): " << capacityAll_ / (one<<20) << std::endl;
+  }
 
   return AS_OK;
 }
