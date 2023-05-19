@@ -24,16 +24,27 @@ ANLStatus SPIManager::mod_define()
 
 ANLStatus SPIManager::mod_initialize()
 {
+  const std::string send_telem_md = "SendTelemetry";
+  if (exist_module(send_telem_md)) {
+    get_module_NC(send_telem_md, &sendTelemetry_);
+  }
+
   int pi = pigpio_start(NULL, portNumber_.c_str());
   if (pi<0) {
     std::cerr << "pigpio daemon connection failed: pi =  " << pi << std::endl;
-    return AS_QUIT_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(Errortype::PIGPIO_START_ERROR);
+    }
+    return AS_OK;
   }
 
   unsigned int spi_handler = spi_open(pi, channel_, baudrate_, spiFlags_);
   if (static_cast<int>(spi_handler)<0) {
     std::cerr << "spi open failed: spi_handler = " << spi_handler << std::endl;
-    return AS_QUIT_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(Errortype::SPI_OPEN_ERROR);
+    }
+    return AS_OK;
   }
 
   interface_ -> setGPIOHandler(pi);
