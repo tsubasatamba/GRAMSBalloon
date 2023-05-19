@@ -75,17 +75,10 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_initialize()
 
 ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
 {
-  std::cout << "module_name: " << module_name() << std::endl;
-  std::cout << "module_version: " << module_version() << std::endl;
-  std::cout << "module_description: " << module_description() << std::endl;
-  std::cout << "get_aliases_string.size(): " << get_aliases_string().size() << std::endl;
-  std::cout << "module_id() " << module_id() << std::endl;
   int status = max31865io_->getData();
   if (status!=MAX31865_OK) {
     std::cerr << "Failed to get data in MeasureTemperatureWithRTDSensor::mod_analyze: status = " << status << std::endl;
-    if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR_1);
-    }
+    setDataAquisitionError();
   }
 
   if (chatter_>=1) {
@@ -100,6 +93,31 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
 ANLStatus MeasureTemperatureWithRTDSensor::mod_finalize()
 {
   return AS_OK;
+}
+
+void MeasureTemperatureWithRTDSensor::setDataAquisitionError()
+{
+  if (sendTelemetry_==nullptr) return;
+
+  const std::string name = module_id();
+  if (name=="MeasureTemperatureWithRTDSensor_1") {
+    sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR_1);
+  }
+  else if (name=="MeasureTemperatureWithRTDSensor_2") {
+    sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR_2);
+  }
+  else if (name=="MeasureTemperatureWithRTDSensor_3") {
+    sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR_3);
+  }
+  else if (name=="MeasureTemperatureWithRTDSensor_4") {
+    sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR_4);
+  }
+  else if (name=="MeasureTemperatureWithRTDSensor_5") {
+    sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR_5);
+  }
+  else {
+    sendTelemetry_->getErrorManager()->setError(ErrorType::OTHER_ERRORS);
+  }
 }
 
 } /* namespace gramsballoon */

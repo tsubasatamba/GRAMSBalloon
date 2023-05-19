@@ -39,6 +39,8 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
+  void setDataAquisitionError();
+
   MAX31865IO* GetMAX31865IO() { return (singleton_self()->max31865io_).get(); }
   int16_t TemperatureADC() { return (singleton_self()->max31865io_)->TemperatureADC(); }
 
