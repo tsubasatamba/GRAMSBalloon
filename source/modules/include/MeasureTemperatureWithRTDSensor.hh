@@ -17,6 +17,8 @@
 
 namespace gramsballoon {
 
+class SPIManager
+
 class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(MeasureTemperatureWithRTDSensor, 1.0);
