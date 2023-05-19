@@ -80,7 +80,7 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
   if (status!=MAX31865_OK) {
     std::cerr << "Failed to get data in MeasureTemperatureWithRTDSensor::mod_analyze: status = " << status << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR);
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_DATA_AQUISITION_ERROR_1);
     }
   }
 
