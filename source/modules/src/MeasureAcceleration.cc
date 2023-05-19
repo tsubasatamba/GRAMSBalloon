@@ -32,7 +32,7 @@ ANLStatus MeasureAcceleration::mod_initialize()
   if (!status) {
     std::cerr << "Error in MeasureAcceleration::mod_initialize: Device not found." << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::ACCEL_DEICE_NOT_FOUND);
+      sendTelemetry_->getErrorManager()->setError(ErrorType::ACCEL_DEVICE_NOT_FOUND);
     }
   }
   if (calibrateGyro_) {
