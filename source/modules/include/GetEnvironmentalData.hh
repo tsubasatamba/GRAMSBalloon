@@ -56,7 +56,7 @@ private:
   double pressure_;
   double humidity_;
   double temperature_;
-  int chatter = 0;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */
