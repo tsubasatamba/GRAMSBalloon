@@ -42,11 +42,11 @@ ANLStatus ControlHighVoltage::mod_analyze()
 {
   AnalogDiscoveryIO* adio = ADManager_->ADIO();
   const int num_devices = adio->NumDevices();
-  if (num_devices<=device_id) {
+  if (num_devices<=deviceID_) {
     return AS_OK;
   }
   
-  if (voltageIndex_<voltages_.size()) {
+  if (voltageIndex_<static_cast<int>(voltages_.size())) {
     exec_ = true;
     nextVoltage_ = voltages_[voltageIndex_];
     voltageIndex_++;
