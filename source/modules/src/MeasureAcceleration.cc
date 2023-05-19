@@ -16,15 +16,24 @@ ANLStatus MeasureAcceleration::mod_define()
 {
   define_parameter("device_path", &mod_class::devicePath_);
   define_parameter("calibrate_gyro", &mod_class::calibrateGyro_);
+  define_parameter("chatter", &mod_class::chatter_);
+
   return AS_OK;
 }
 
 ANLStatus MeasureAcceleration::mod_initialize()
 {
+  const std::string send_telem_md = "SendTelemetry";
+  if (exist_module(send_telem_md)) {
+    get_module_NC(send_telem_md, &sendTelemetry_);
+  }
+
   const bool status = icmIO_->initialize();
   if (!status) {
     std::cerr << "Error in MeasureAcceleration::mod_initialize: Device not found." << std::endl;
-    return AS_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::ACCEL_DEICE_NOT_FOUND);
+    }
   }
   if (calibrateGyro_) {
     icmIO_->calibrateGyro();
@@ -36,9 +45,9 @@ ANLStatus MeasureAcceleration::mod_analyze()
 {
   icmIO_->measure();
 
-  #if 1
-  debug();
-  #endif
+  if (chatter_>=1) {
+    debug();
+  }
 
   return AS_OK;
 }

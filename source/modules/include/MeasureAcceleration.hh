@@ -11,12 +11,15 @@
 
 #include <anlnext/BasicModule.hh>
 #include "ICM20948IO.hh"
+#include "SendTelemetry.hh"
 #include <string.h>
 #include <thread>
 #include <chrono>
 #include <string>
 
 namespace gramsballoon {
+
+class SendTelemetry;
 
 class MeasureAcceleration : public anlnext::BasicModule
 {
@@ -50,6 +53,8 @@ private:
   std::shared_ptr<ICM20948IO> icmIO_;
   std::string devicePath_ = "";
   bool calibrateGyro_ = false;
+  int chatter_ = 0;
+  SendTelemetry* sendTelemetry_ = nullptr;
 };
 
 } /* namespace gramsballoon */
