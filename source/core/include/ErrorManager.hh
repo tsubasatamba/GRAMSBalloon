@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
+#include "magic_enum.hpp"
 
 /**
  * A class to handle software error
@@ -56,6 +58,8 @@ public:
   ErrorManager();
   void resetError();
   void setError(ErrorType v);
+  int strToBit(const std::string& s);
+  std::string bitToStr(int v);
   
   uint64_t ErrorCode() { return errorCode_; }
 
