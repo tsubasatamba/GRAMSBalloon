@@ -79,7 +79,7 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
   std::cout << "module_version: " << module_version() << std::endl;
   std::cout << "module_description: " << module_description() << std::endl;
   std::cout << "get_aliases_string.size(): " << get_aliases_string().size() << std::endl;
-  std::cout << "get_module_id " << get_module_id() << std::endl;
+  std::cout << "module_id() " << module_id() << std::endl;
   int status = max31865io_->getData();
   if (status!=MAX31865_OK) {
     std::cerr << "Failed to get data in MeasureTemperatureWithRTDSensor::mod_analyze: status = " << status << std::endl;
