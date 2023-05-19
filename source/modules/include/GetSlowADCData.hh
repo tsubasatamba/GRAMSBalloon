@@ -15,6 +15,8 @@
 
 namespace gramsballoon {
 
+class SPIManager;
+
 class GetSlowADCData : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(GetSlowADCData, 1.0);

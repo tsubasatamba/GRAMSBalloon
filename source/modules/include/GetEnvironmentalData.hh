@@ -17,6 +17,8 @@
 
 namespace gramsballoon {
 
+class SPIManager;
+
 class GetEnvironmentalData : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(GetEnvironmentalData, 1.0);
