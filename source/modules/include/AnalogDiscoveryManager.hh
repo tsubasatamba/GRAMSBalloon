@@ -11,8 +11,11 @@
 
 #include <anlnext/BasicModule.hh>
 #include "AnalogDiscoveryIO.hh"
+#include "SendTelemetry.hh"
 
 namespace gramsballoon{
+
+class SendTelemetry;
 
 class AnalogDiscoveryManager : public anlnext::BasicModule
 {
@@ -37,6 +40,8 @@ public:
 
 private:
   std::shared_ptr<AnalogDiscoveryIO> ADIO_ = nullptr;
+  SendTelemetry* sendTelemetry_ = nullptr;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */
