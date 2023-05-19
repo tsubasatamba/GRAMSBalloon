@@ -33,7 +33,7 @@ ANLStatus SPIManager::mod_initialize()
   if (pi<0) {
     std::cerr << "pigpio daemon connection failed: pi =  " << pi << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(Errortype::PIGPIO_START_ERROR);
+      sendTelemetry_->getErrorManager()->setError(ErrorType::PIGPIO_START_ERROR);
     }
     return AS_OK;
   }
@@ -42,7 +42,7 @@ ANLStatus SPIManager::mod_initialize()
   if (static_cast<int>(spi_handler)<0) {
     std::cerr << "spi open failed: spi_handler = " << spi_handler << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(Errortype::SPI_OPEN_ERROR);
+      sendTelemetry_->getErrorManager()->setError(ErrorType::SPI_OPEN_ERROR);
     }
     return AS_OK;
   }
