@@ -11,8 +11,11 @@
 #include <sys/reboot.h>
 #include <linux/reboot.h>
 #include <sys/time.h>
+#include "SendTelemetry.hh"
 
 namespace gramsballoon {
+
+class SendTelemetry;
 
 class ShutdownSystem : public anlnext::BasicModule
 {
@@ -45,6 +48,8 @@ private:
   int bufferTimeSec_ = 60;
   timeval prepareRebootTime_;
   timeval prepareShutdownTime_;
+  SendTelemetry* sendTelemetry_ = nullptr;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */
