@@ -16,6 +16,7 @@ ANLStatus ReceiveTelemetry::mod_define()
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("serial_path", &mod_class::serialPath_);
   define_parameter("open_mode", &mod_class::openMode_);
+  define_parameter("chatter", &mod_class::chatter_);
   
   return AS_OK;
 }

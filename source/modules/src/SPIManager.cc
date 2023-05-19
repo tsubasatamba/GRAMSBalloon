@@ -18,6 +18,7 @@ ANLStatus SPIManager::mod_define()
   define_parameter("channel", &mod_class::channel_);
   define_parameter("baudrate", &mod_class::baudrate_);
   define_parameter("spi_flags", &mod_class::spiFlags_);
+  define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
 }
@@ -48,7 +49,9 @@ ANLStatus SPIManager::mod_initialize()
   interface_ -> setGPIOHandler(pi);
   interface_ -> setChipSelect(8);
   interface_ -> setSPIHandler(spi_handler);
-  std::cout << "spi_handler: " << spi_handler << std::endl;
+  if (chatter_>=1) {
+    std::cout << "spi_handler: " << spi_handler << std::endl;
+  }
 
   const int n = chipSelectArray_.size();
   for (int i=0; i<n; i++) {

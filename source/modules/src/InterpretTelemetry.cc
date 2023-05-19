@@ -17,6 +17,7 @@ ANLStatus InterpretTelemetry::mod_define()
 {
   define_parameter("save_telemetry", &mod_class::saveTelemetry_);
   define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
+  define_parameter("chatter", &mod_class::chatter_);
   
   return AS_OK;
 }

@@ -28,6 +28,7 @@ public:
 private:
   hsquicklook::MongoDBClient* mongodbClient_ = nullptr;
   InterpretTelemetry* interpreter_ = nullptr;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */

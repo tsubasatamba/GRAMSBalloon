@@ -20,6 +20,7 @@ ANLStatus GetEnvironmentalData::mod_define()
 {
   define_parameter("chip_select", &mod_class::chipSelect_);
   define_parameter("SPI_manager_name", &mod_class::SPIManagerName_);
+  define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
 }

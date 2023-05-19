@@ -45,6 +45,7 @@ private:
   const std::string portNumber_ = "8888";
   std::vector<int> chipSelectArray_;
   SendTelemetry* sendTelemetry_ = nullptr;
+  int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */

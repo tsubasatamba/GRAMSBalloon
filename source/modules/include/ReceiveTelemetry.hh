@@ -38,6 +38,7 @@ private:
   speed_t baudrate_;
   std::string serialPath_;
   mode_t openMode_ = O_RDWR;
+  int chatter_ = 0;
 };
 
 } // namespace gramsballoon
