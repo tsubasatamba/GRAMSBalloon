@@ -5,6 +5,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <hsquicklook/DocumentBuilder.hh>
+#include "ErrorManager.hh"
 
 
 using namespace anlnext;
@@ -119,6 +120,21 @@ void PushToMongoDB::pushHKTelemetry()
       << "CRC"                  << static_cast<int>(telemdef->CRC())
       << "Stop_Code"            << static_cast<int>(telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
+    builder.addSection(section_name, section);
+  }
+  {
+    const std::string section_name = "Software_Error";
+    auto section_stream = bsoncxx::builder::stream::document{};
+    uint64_t error_code = telemdef->SoftwareErrorCode();
+    for (int i=0; i<64; i++) {
+      if ((error_code>>i)&1) {
+        const std::string error_name = ErrorManager::bitToStr(i);
+        if (error_name!="") {
+          section_stream << error_name << "Error";
+        }
+      }
+    }
+    auto section = section_stream << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
 

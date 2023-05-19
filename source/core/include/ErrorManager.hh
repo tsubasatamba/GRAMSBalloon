@@ -58,8 +58,8 @@ public:
   ErrorManager();
   void resetError();
   void setError(ErrorType v);
-  int strToBit(const std::string& s);
-  std::string bitToStr(int v);
+  static int strToBit(const std::string& s);
+  static std::string bitToStr(int v);
   
   uint64_t ErrorCode() { return errorCode_; }
 
