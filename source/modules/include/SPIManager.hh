@@ -14,6 +14,7 @@
 #include "SendTelemetry.hh"
 
 namespace gramsballoon {
+class SendTelemetry;
 
 class SPIManager : public anlnext::BasicModule
 {
