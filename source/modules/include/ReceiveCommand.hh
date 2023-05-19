@@ -58,6 +58,7 @@ private:
   std::shared_ptr<CommandDefinition> comdef_ = nullptr;
   uint32_t commandIndex_ = 0;
   uint16_t commandRejectCount_ = 0;
+  std::map<int, std::pair<int, int>> fileIDmp_;
   bool saveCommand_ = true;
   std::string binaryFilenameBase_ = "";
   int numCommandPerFile_ = 100;

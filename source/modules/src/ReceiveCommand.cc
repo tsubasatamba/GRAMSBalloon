@@ -310,6 +310,7 @@ bool ReceiveCommand::applyCommand()
 void ReceiveCommand::writeCommandToFile(bool failed)
 {
   int type = 1;
+  std::string type_str = "";
   if (failed) {
     type = 0;
   }
