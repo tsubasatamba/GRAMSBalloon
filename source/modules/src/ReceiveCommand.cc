@@ -65,7 +65,9 @@ ANLStatus ReceiveCommand::mod_initialize()
   const int status = sc_ -> initialize();
   if (status!=0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Serial communication failed." << std::endl;
-    return AS_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SERIAL_COMMUNICATION_ERROR);
+    }
   }
 
   return AS_OK;
@@ -82,7 +84,10 @@ ANLStatus ReceiveCommand::mod_analyze()
   int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
   if (rv == -1) {
     std::cerr << "Error in ReceiveCommand::mod_analyze: rv = -1" << std::endl;
-    return AS_ERROR;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SELECT_ERROR);
+    }
+    return AS_OK;
   }
   
   if (rv==0) {
@@ -94,10 +99,12 @@ ANLStatus ReceiveCommand::mod_analyze()
   const int status = sc_->sread(buffer_, 200);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SREAD_ERROR);
+    }
     return AS_OK;
   }
 
-  std::cout << "status: " << status << std::endl;
   for (int i=0; i<status; i++) {
     if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
       command_.clear();
@@ -109,6 +116,7 @@ ANLStatus ReceiveCommand::mod_analyze()
   }
 
   if (chatter_>=1) {
+    std::cout << "ReceiveCommand status: " << status << std::endl;
     for (int i=0; i<status; i++) {
       std::cout << "command[" << i << "] = " << static_cast<int>(command_[i]) << std::endl;
     }
@@ -117,7 +125,7 @@ ANLStatus ReceiveCommand::mod_analyze()
   const bool applied = applyCommand();
   writeCommandToFile(!applied);
   if (!applied) {
-    if (exist_module("SendTelemetry")) {
+    if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
     }
     commandRejectCount_++;

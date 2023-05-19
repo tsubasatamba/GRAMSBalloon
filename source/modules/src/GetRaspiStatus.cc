@@ -37,7 +37,7 @@ ANLStatus GetRaspiStatus::mod_analyze()
   const int status = getCapacity();
   if (status != 0) {
     std::cerr << "Error in GetRaspiStatus::mod_analyze()" << std::endl;
-    return AS_QUIT_ERROR;
+    return AS_ERROR;
   }
   
   #if 1
