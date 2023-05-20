@@ -122,11 +122,11 @@ GRAMS-Balloon-test/sourceに移った後、
 
 直接Raspberry Piに接続する時はIPを固定する必要がある、root権限で/etc/dhcpcd.confを開き、
 
-`interface wlan0
+`interface eth0
 static ip_address=192.168.10.205/24
-static routers=192.168.10.305
-static domain_name_servers=192.168.10.205`
+static routers=192.168.10.1
+static domain_name_servers=192.168.10.1`
 
-として、再起動する。
+を最後に追加し、再起動する。
 
 Note：再起動するとIPが固定されるので今までのIPでは接続できなくなる。
