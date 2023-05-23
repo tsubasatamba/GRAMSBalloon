@@ -7,7 +7,7 @@ using namespace anlnext;
 namespace gramsballoon {
 
 ReceiveCommand::ReceiveCommand()
-  : baudrate_(B9600), openMode_(O_RDWR)
+  : baudrate_(B1200), openMode_(O_RDWR)
 {
   TPCHVControllerModuleName_ = "ControlHighVoltage_TPC";
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";

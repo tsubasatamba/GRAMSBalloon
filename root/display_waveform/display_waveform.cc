@@ -83,7 +83,7 @@ void plotWaveform(const std::vector<std::vector<double> >& wf, double dt, const 
     const double max_y = *std::max_element(wf[i].begin(), wf[i].end());
     std::cout << "min max" << min_y << " " << max_y << std::endl;
     graph[i]->GetYaxis()->SetRangeUser(min_y, max_y);
-    const std::string title = "channel " + std::to_string(i+1);
+    const std::string title = "channel " + std::to_string(i);
     graph[i]->SetTitle(title.c_str());
   }
   canv->SaveAs(filename.c_str());
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
   std::cout << "time sec: " << header_time.tv_sec << std::endl;
   std::cout << "time usec: " << header_time.tv_usec << std::endl;
   std::cout << "range: [" << range[0]  << ", " << range[1] << ", " << range[2] << ", " << range[3] << "]" << std::endl;
-  std::cout << "range: [" << offset[0]  << ", " << offset[1] << ", " << offset[2] << ", " << offset[3] << "]" << std::endl;
+  std::cout << "offset: [" << offset[0]  << ", " << offset[1] << ", " << offset[2] << ", " << offset[3] << "]" << std::endl;
 
   header->Branch("trigger_device", &trigger_device, "trigger_device/I");
   header->Branch("trigger_channel", &trigger_channel, "trigger_channel/I");
@@ -178,19 +178,35 @@ int main(int argc, char **argv)
   header->Branch("time_sec", &header_time.tv_sec, "time_sec/I");
   header->Branch("time_usec", &header_time.tv_usec, "time_usec/I");
   for (int i=0; i<4; i++) {
-    //header->Branch("range", &range[i]);
+    header->Branch(Form("range%d", i), &range[i]);
   }
+  for (int i=0; i<4; i++) {
+    header->Branch(Form("offset%d", i), &offset[i]);
+  }
+  header->Fill();
 
-
-
+  // Read each event
+  int event_id = 0;
+  timeval event_time;
+  std::vector<std::vector<double> > wf(4, std::vector<double>());
+  tree->Branch("event_id", &event_id, "event_id/I");
+  tree->Branch("event_time_sec", &event_time.tv_sec, "event_time_sec/I");
+  tree->Branch("event_time_usec", &event_time.tv_usec, "event_time_usec/I");
+  for (int i=0; i<4; i++) {
+    tree->Branch(Form("wf_channel%d", i), &wf[i]);
+  }
   index = 64;
   for (int i=0; i<num_event_per_file; i++) {
     std::vector<int16_t> event_header(5);
     getVector<int16_t>(index, 5, arr, event_header);
-    std::cout << "event ID: " << event_header[0] << std::endl;
+    event_id = event_header[0];
+    event_time.tv_sec = (static_cast<int>(event_header[1]))<<16 + static_cast<int>(event_header[2]);
+    event_time.tv_usec = (static_cast<int>(event_header[3]))<<16 + static_cast<int>(event_header[4]);
+    std::cout << "event ID: " << event_id << std::endl;
     index += sizeof(int16_t) * 5;
-    std::vector<std::vector<double> > wf(4, std::vector<double>(num_sample));
     for (int j=0; j<4; j++) {
+      wf[j].clear();
+      wf[j].resize(num_sample);
       for (int k=0; k<num_sample; k++) {
         int16_t val = getValue<int16_t>(index, arr);
         //std::cout << "arr: " << (int)arr[index] << " " << (int)arr[index+1] << std::endl;
@@ -199,6 +215,7 @@ int main(int argc, char **argv)
         //std::cout << "wf: " << wf[j][k] << std::endl;
         index += sizeof(int16_t);
       }
+      tree->Fill();
     }
     const double dt = 1.0 / sample_frequency;
     std::ostringstream sout;

@@ -13,7 +13,7 @@ SendTelemetry::SendTelemetry()
   TPCHVControllerModuleName_ = "ControlHighVoltage_TPC";
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   serialPath_ = "/dev/null";
-  baudrate_ = B9600;
+  baudrate_ = B57600;
   openMode_ = O_RDWR;
 }
 

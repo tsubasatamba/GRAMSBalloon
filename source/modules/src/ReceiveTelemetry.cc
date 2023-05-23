@@ -4,7 +4,7 @@ using namespace anlnext;
 namespace gramsballoon {
 
 ReceiveTelemetry::ReceiveTelemetry()
-  : maxTelemetry_(32000), baudrate_(B9600), openMode_(O_RDWR)
+  : maxTelemetry_(32000), baudrate_(B57600), openMode_(O_RDWR)
 {
   serialPath_ = "/dev/null";
 }
