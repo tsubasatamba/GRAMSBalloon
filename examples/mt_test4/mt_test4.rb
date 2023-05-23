@@ -72,7 +72,7 @@ class MyApp < ANL::ANLApp
             sample_frequency: 2.0, #MHz
             output_filename_base: "DAQ_output",
             num_events_per_file: 100,
-            start_reading: true
+            start_reading: false
         ) do |m|
           m.set_singleton(2)
         end
@@ -92,7 +92,8 @@ class MyApp < ANL::ANLApp
                                               "GetEnvironmentalData_4",
                                               "GetEnvironmentalData_5"],
           TPCHVController_module_name: "ControlHighVoltage_TPC",
-          PMTHVController_module_name: "ControlHighVoltage_PMT"
+          PMTHVController_module_name: "ControlHighVoltage_PMT",
+          chatter: 1
         ) do |m|
             m.set_singleton(0)
         end
@@ -143,5 +144,5 @@ a.modify do |m|
   end
 end
 
-a.run(100, 1)
+a.run(10000, 1)
 

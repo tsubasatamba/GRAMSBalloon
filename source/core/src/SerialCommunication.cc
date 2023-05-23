@@ -40,7 +40,8 @@ int SerialCommunication::initialize()
   tio_->c_cflag |= CREAD;
   tio_->c_cflag |= CS8;
   tio_->c_cflag |= CLOCAL;
-  tio_->c_cflag |= PARENB;
+  //tio_->c_cflag |= PARENB;
+  tio_->c_cflag &= (~PARENB);
   //tio_->c_cflag |= CSTOPB;
 
   int status = tcsetattr(fd_, TCSANOW, tio_.get());
