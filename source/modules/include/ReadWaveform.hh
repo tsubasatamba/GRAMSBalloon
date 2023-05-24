@@ -100,6 +100,7 @@ private:
   int nonDetectionCounter_ = 0;
   int maxNonDetectionCount_ = 100;
   int chatter_ = 0;
+  std::string timeStampStr_ = "";
 };
 
 } /* namespace gramsballoon */

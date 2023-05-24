@@ -38,7 +38,7 @@ private:
   bool saveTelemetry_ = true;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 100;
-  std::string timeStampStr_;
+  std::string timeStampStr_ = "";
   int chatter_ = 0;
 };
 
