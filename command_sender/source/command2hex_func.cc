@@ -5,50 +5,54 @@
 #include <sstream>
 
 
-//=================================== 以下、関数の定義 =================================================
+struct CommandException
+{
+};
 
-//---------------------- map と vector の定義 -------------------------
+struct CommandProperty
+{
+  uint16_t code = 0;
+  int argnum = 0;
+};
 
-std::map<std::string, int> mapdef(int flag){
-std::map<std::string, int> codemap;
-if (flag == 0){
-    codemap["Get_Status"] = 100; codemap["Reset_Error"] = 101; codemap["Exec_Shutdown"] = 102; codemap["Exec_Reboot"] = 103; 
-    codemap["Prepare_Shutdown"] = 104; codemap["Prepare_Reboot"] = 105; codemap["Start_Detector_Readout"] = 201;
-    codemap["Stop_Detector_Readout"] = 202; codemap["Set_Trigger_Mode"] = 203; codemap["Set_Trigger_Channel"] = 204; 
-    codemap["Set_ADC_Offset"] = 205; codemap["Exec_PMT_HV_Output"] = 206; codemap["Set_PMT_HV "] = 207; 
-    codemap["Exec_TPC_HV_Output"] = 208; codemap["Set_TPC_HV"] = 209; codemap["Get_Waveform"] = 210; codemap["Dummy_1"] = 900; 
-    codemap["Dummy_2"] = 901; codemap["Dummy_3"] = 902;
-    }
-else if (flag == 1){
-    codemap["Get_Status"] = 0; codemap["Reset_Error"] = 0; codemap["Exec_Shutdown"] = 0; codemap["Exec_Reboot"] = 0; 
-    codemap["Prepare_Shutdown"] = 0; codemap["Prepare_Reboot"] = 0; codemap["Start_Detector_Readout"] = 0; 
-    codemap["Stop_Detector_Readout"] = 0; codemap["Set_Trigger_Mode"] = 1; codemap["Set_Trigger_Channel"] = 4; 
-    codemap["Set_ADC_Offset"] = 3; codemap["Exec_PMT_HV_Output"] = 0; codemap["Set_PMT_HV "] = 1; codemap["Exec_TPC_HV_Output"] = 0; 
-    codemap["Set_TPC_HV"] = 1; codemap["Get_Waveform"] = 0; codemap["Dummy_1"] = 0; codemap["Dummy_2"] = 1; codemap["Dummy_3"] = 0;
-    }
+CommandProperty get_command_code(const std::string& command_name)
+{
+  static std::map<std::string, CommandProperty> code_map;
+  code_map["Get_Status"]             = CommandProperty{100, 0};
+  code_map["Reset_Error"]            = CommandProperty{101, 0};
+  code_map["Exec_Shutdown"]          = CommandProperty{102, 0};
+  code_map["Exec_Reboot"]            = CommandProperty{103, 0};
+  code_map["Prepare_Shutdown"]       = CommandProperty{104, 0};
+  code_map["Prepare_Reboot"]         = CommandProperty{105, 0};
+  code_map["Start_Detector_Readout"] = CommandProperty{201, 0};
+  code_map["Stop_Detector_Readout"]  = CommandProperty{202, 0};
+  code_map["Set_Trigger_Mode"]       = CommandProperty{203, 1};
+  code_map["Set_Trigger_Channel"]    = CommandProperty{204, 2}; 
+  code_map["Set_ADC_Offset"]         = CommandProperty{205, 3};
+  code_map["Exec_TPC_HV_Output"]     = CommandProperty{206, 0};
+  code_map["Set_TPC_HV "]            = CommandProperty{207, 1}; 
+  code_map["Exec_PMT_HV_Output"]     = CommandProperty{208, 0};
+  code_map["Set_PMT_HV"]             = CommandProperty{209, 1};
+  code_map["Get_Waveform"]           = CommandProperty{210, 0};
+  code_map["Set_Trigger_Level"]      = CommandProperty{211, 1};
+  code_map["Set_Trigger_Position"]   = CommandProperty{212, 1};
+  code_map["Dummy_1"]                = CommandProperty{900, 0}; 
+  code_map["Dummy_2"]                = CommandProperty{901, 1};
+  code_map["Dummy_3"]                = CommandProperty{902, 0};
 
-return codemap;
-
-}
-
-std::vector<std::string> comnames(){
-    std::vector<std::string> comvector{"Get_Status","Reset_Error","Exec_Shutdown","Exec_Reboot","Prepare_Shutdown",
-    "Prepare_Reboot","Start_Detector_Readout","Stop_Detector_Readout","Set_Trigger_Mode","Set_Trigger_Channel",
-    "Set_ADC_Offset","Exec_PMT_HV_Output","Set_PMT_HV ","Exec_TPC_HV_Output","Set_TPC_HV","Get_Waveform","Dummy_1",
-    "Dummy_2","Dummy_3"};
-
-    return comvector;
+  auto command = code_map.find(command_name);
+  if (command == code_map.end()) {
+    throw CommandException;
+  }
+  
+  return *command;
 }
 
 //---------------------- Error 判定 -------------------------
 int error(std::string com_input, int argc){
-    
-    int nameflg = 0;
-    int lenflg = 0;
-    
-    if (*find(comnames().begin(), comnames().end(), com_input) == com_input){
-        nameflg = 1;
-    }
+  if (*find(comnames().begin(), comnames().end(), com_input) == com_input){
+    nameflg = 1;
+  }
 
     if (argc-2 == mapdef(1)[com_input]){
         lenflg = 1;
@@ -129,44 +133,44 @@ int crc = 0;
     return std::make_tuple(crc_1, crc_0);
 }
 
-//---------------------- 16進数コードを出力 -------------------------
-std::string hex_output(std::string com_input, std::vector<int> arg_list){
-    std::vector<int> command;
-    // 開始コード
-    command.push_back(235);
-    command.push_back(144);
-    // コマンド ID
-    int command_ID = get_comid(com_input);
-    int comid_1, comid_0;
-    std::tie(comid_1, comid_0) = dec2byte_2byte(command_ID);
-    command.push_back(comid_1);
-    command.push_back(comid_0);
-    //引数の個数
-    int argument_len = get_argc(com_input);
-    int arglen_1, arglen_0;
-    std::tie(arglen_1, arglen_0) = dec2byte_2byte(argument_len);
-    command.push_back(arglen_1);
-    command.push_back(arglen_0);
-    //引数
-    std::vector<int> argd;
-    argd = add256(arg_list);
-    for (auto it = argd.begin(); it != argd.end(); ++it) {
-        command.push_back(*it);
-    }
-    //CRC
-    int crc_1, crc_0;
-    std::tie(crc_1, crc_0) = crc_calc(command);
-    command.push_back(crc_1);
-    command.push_back(crc_0);
-    //終端文字
-    for  (int j = 0; j < 2; j++) {
-        command.push_back(197);
-    }
+std::string make_byte_array(std::string command_name, const std::vector<int32_t>& arg_list)
+{
+  std::vector<uint8_t> command;
+  // 開始コード
+  command.push_back(0xEB);
+  command.push_back(0x90);
 
-    //16進数出力
-    std::ostringstream output;
-    for (auto it = command.begin(); it != command.end(); ++it) {
-        output << std::setfill('0') << std::right << std::setw(2) << std::hex << *it;
-    }
-    return output.str();
+  const CommandProperty property = get_command_code(command_name);
+  // コマンド ID
+  const int code = property.code;
+  command.push_back((code & 0xFF00u) >> 8);
+  command.push_back((code & 0x00FFu) >> 0);
+
+  //引数の個数
+  const int argnum = property.argnum;
+
+  // to be continued
+
+
+  int arglen_1, arglen_0;
+  std::tie(arglen_1, arglen_0) = dec2byte_2byte(argument_len);
+  command.push_back(arglen_1);
+  command.push_back(arglen_0);
+  //引数
+  std::vector<int> argd;
+  argd = add256(arg_list);
+  for (auto it = argd.begin(); it != argd.end(); ++it) {
+    command.push_back(*it);
+  }
+  //CRC
+  int crc_1, crc_0;
+  std::tie(crc_1, crc_0) = crc_calc(command);
+  command.push_back(crc_1);
+  command.push_back(crc_0);
+  //終端文字
+  for  (int j = 0; j < 2; j++) {
+    command.push_back(197);
+  }
+
+  return command;
 }
