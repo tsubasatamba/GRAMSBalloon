@@ -9,10 +9,10 @@ class MyApp < ANL::ANLApp
             serial_path: "/dev/ttyAMA0",
             save_telemetry: true,
             binary_filename_base: "telemetry_test",
-            num_telem_per_file: 10
+            num_telem_per_file: 1000
         )
     end
 end
 
 a = MyApp.new
-a.run(200, 1)
+a.run(1000, 1)

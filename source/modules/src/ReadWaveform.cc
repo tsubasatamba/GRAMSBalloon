@@ -1,5 +1,8 @@
 #include <sstream>
+#include <chrono>
+#include <thread>
 #include "ReadWaveform.hh"
+#include "DateManager.hh"
 
 using namespace anlnext;
 
@@ -40,6 +43,8 @@ ANLStatus ReadWaveform::mod_define()
 
 ANLStatus ReadWaveform::mod_initialize()
 {
+  timeStampStr_ = getTimeStr();
+
   const std::string send_telemetry_md = "SendTelemetry";
   if (exist_module(send_telemetry_md)) {
     get_module_NC(send_telemetry_md, &sendTelemetry_);
@@ -78,6 +83,7 @@ ANLStatus ReadWaveform::mod_analyze()
   AnalogDiscoveryIO* adio = ADManager_->ADIO();
   const int num_devices = adio->NumDevices();
   if (num_devices<=0) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     return AS_OK;
   }
 
@@ -166,7 +172,7 @@ void ReadWaveform::createNewOutputFile()
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileID_;
   const std::string id_str = sout.str();
-  const std::string filename = outputFilenameBase_ + "_" + id_str + ".dat";
+  const std::string filename = outputFilenameBase_ + "_" + timeStampStr_ + "_" + id_str + ".dat";
   ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
   fileID_++;
 

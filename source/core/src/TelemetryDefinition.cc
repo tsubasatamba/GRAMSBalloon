@@ -187,7 +187,7 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   uint16_t crc_calc = calcCRC16(telem_without_fotter);
   uint16_t crc_attached = getValue<uint16_t>(n-4);
   if (crc_calc != crc_attached) {
-    std::cerr << "Invalid command: CRC16 not appropriate" << std::endl;
+    std::cerr << "Invalid telemetry: CRC16 not appropriate" << std::endl;
     return false;
   }
 

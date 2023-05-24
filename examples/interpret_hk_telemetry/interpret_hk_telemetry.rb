@@ -12,6 +12,7 @@ class MyApp < ANL::ANLApp
     chain GRAMSBalloon::ReceiveTelemetry
     with_parameters(serial_path: "/dev/tty.usbserial-14410", open_mode: 2)
     chain GRAMSBalloon::InterpretTelemetry
+    with_parameters(save_telemetry: true, num_telem_per_file: 1000, chatter: 0)
     chain GRAMSBalloon::PushToMongoDB
   end
   attr_accessor :host_name, :database_name

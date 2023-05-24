@@ -41,11 +41,13 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
   if (rv == -1) {
     std::cerr << "Error in ReceiveTelemetry::mod_analyze: rv = -1" << std::endl;
+    valid_ = false;
     return AS_ERROR;
   }
 
   if (rv == 0) {
     std::cout << "Time out" << std::endl;
+    valid_ = false;
     return AS_OK;
   }
 
@@ -55,7 +57,7 @@ ANLStatus ReceiveTelemetry::mod_analyze()
     std::cerr << "Read command failed in ReceiveTelemetry::mod_analyze: status = " << status << std::endl;
     return AS_OK;
   }
-  std::cout << "status: " << status << std::endl;
+  
   for (int i = 0; i < status; i++) {
     valid_ = false;
     if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
@@ -67,13 +69,12 @@ ANLStatus ReceiveTelemetry::mod_analyze()
       break;
     }
   }
-  #if 1
-  for (int i = 0; i < static_cast<int>(telemetry_.size());i++) {
-    std::cout << "telemetry[" <<i<< "] = "<<static_cast<int>(telemetry_[i]) << std::endl;
+  if (chatter_>=1) {
+    std::cout << "status: " << status << std::endl;
+    for (int i = 0; i < static_cast<int>(telemetry_.size());i++) {
+      std::cout << "telemetry[" <<i<< "] = "<<static_cast<int>(telemetry_[i]) << std::endl;
+    }
   }
-  #endif
-
-  // determine if the telemetry is valid or not
 
   return AS_OK;
 }

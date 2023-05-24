@@ -40,6 +40,10 @@ ANLStatus InterpretTelemetry::mod_analyze()
     return AS_OK;
   }
 
+  if (!(receiver_->Valid())) {
+    return AS_OK;
+  }
+
   currentTelemetryType_ = 0;
   const std::vector<uint8_t>& telemetry = receiver_->Telemetry();
 
