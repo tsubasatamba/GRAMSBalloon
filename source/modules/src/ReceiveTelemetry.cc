@@ -41,11 +41,13 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   int rv = select(sc_->FD() + 1, &fdset, NULL, NULL, &timeout);
   if (rv == -1) {
     std::cerr << "Error in ReceiveTelemetry::mod_analyze: rv = -1" << std::endl;
+    valid_ = false;
     return AS_ERROR;
   }
 
   if (rv == 0) {
     std::cout << "Time out" << std::endl;
+    valid_ = false;
     return AS_OK;
   }
 
