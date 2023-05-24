@@ -1,4 +1,6 @@
 #include <sstream>
+#include <chrono>
+#include <thread>
 #include "ReadWaveform.hh"
 #include "DateManager.hh"
 
@@ -81,6 +83,7 @@ ANLStatus ReadWaveform::mod_analyze()
   AnalogDiscoveryIO* adio = ADManager_->ADIO();
   const int num_devices = adio->NumDevices();
   if (num_devices<=0) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     return AS_OK;
   }
 
