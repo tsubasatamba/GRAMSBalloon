@@ -1,4 +1,4 @@
-#include "CommandDefinition.hh"
+#include "CommandBuilder.hh"
 #include <tuple>
 
 namespace
@@ -25,7 +25,7 @@ uint16_t crc_calc(std::vector<uint8_t> byte_array)
 namespace gramsballoon
 {
 
-CommandDefinition::CommandDefinition()
+CommandBuilder::CommandBuilder()
 {
   code_map_["Get_Status"]             = CommandProperty{100, 0};
   code_map_["Reset_Error"]            = CommandProperty{101, 0};
@@ -50,7 +50,7 @@ CommandDefinition::CommandDefinition()
   code_map_["Dummy_3"]                = CommandProperty{902, 0};
 }
 
-CommandProperty CommandDefinition::get_command_property(const std::string& name) const
+CommandProperty CommandBuilder::get_command_property(const std::string& name) const
 {
   auto command = code_map_.find(name);
   if (command == code_map_.end()) {
@@ -60,39 +60,39 @@ CommandProperty CommandDefinition::get_command_property(const std::string& name)
   return command->second;
 }
 
-uint16_t CommandDefinition::get_command_code(const std::string& name) const
+uint16_t CommandBuilder::get_command_code(const std::string& name) const
 {
   return get_command_property(name).code;
 }
 
-int CommandDefinition::get_argnum(const std::string& name) const
+int CommandBuilder::get_argnum(const std::string& name) const
 {
   return get_command_property(name).argnum;
 }
 
-std::vector<uint8_t> CommandDefinition::make_byte_array(const std::string& name, const std::vector<int32_t>& arg_array) const
+std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string& name, const std::vector<int32_t>& arg_array) const
 {
   std::vector<uint8_t> command;
   command.push_back(0xEB);
   command.push_back(0x90);
 
   const CommandProperty property = get_command_property(name);
-  const int code = property.code;
+  const uint16_t code = property.code;
   const int argnum = property.argnum;
-  command.push_back((code & 0xFF00u) >> 8);
-  command.push_back((code & 0x00FFu) >> 0);
-  command.push_back((argnum & 0xFF00u) >> 8);
-  command.push_back((argnum & 0x00FFu) >> 0);
+  command.push_back((code & 0xFF00) >> 8);
+  command.push_back((code & 0x00FF) >> 0);
+  command.push_back((argnum & 0xFF00) >> 8);
+  command.push_back((argnum & 0x00FF) >> 0);
 
-  if (argnum != arg_array.size()) {
+  if (argnum != static_cast<int>(arg_array.size())) {
     throw CommandException("Invalid argument number");
   }
 
   for (const int32_t arg: arg_array) {
-    command.push_back((arg & 0xFF000000u) >> 24);
-    command.push_back((arg & 0x00FF0000u) >> 16);
-    command.push_back((arg & 0x0000FF00u) >>  8);
-    command.push_back((arg & 0x000000FFu) >>  0);
+    command.push_back((arg & 0xFF000000) >> 24);
+    command.push_back((arg & 0x00FF0000) >> 16);
+    command.push_back((arg & 0x0000FF00) >>  8);
+    command.push_back((arg & 0x000000FF) >>  0);
   }
 
   const uint16_t crc = crc_calc(command);

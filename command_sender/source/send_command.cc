@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "CommandSender.hh"
-#include "CommandDefinition.hh"
+#include "CommandBuilder.hh"
 
 int main(int argc, char *argv[])
 {
@@ -17,9 +17,9 @@ int main(int argc, char *argv[])
   }
 
   std::vector<uint8_t> command;
-  gramsballoon::CommandDefinition command_definition;
+  gramsballoon::CommandBuilder command_builder;
   try {
-    command = command_definition.make_byte_array(name, arg_array);
+    command = command_builder.make_byte_array(name, arg_array);
   }
   catch (gramsballoon::CommandException& e) {
     std::cout << "Command exception caught: " << e.print() << std::endl;

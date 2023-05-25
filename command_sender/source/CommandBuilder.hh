@@ -1,5 +1,5 @@
-#ifndef GRAMSBALOON_COMMANDDEFINITION_H
-#define GRAMSBALOON_COMMANDDEFINITION_H 1
+#ifndef GRAMSBALOON_COMMANDBUILDER_H
+#define GRAMSBALOON_COMMANDBUILDER_H 1
 
 #include <cstdint>
 #include <vector>
@@ -24,11 +24,11 @@ struct CommandProperty
   int argnum = 0;
 };
 
-class CommandDefinition
+class CommandBuilder
 {
 public:
-  CommandDefinition();
-  ~CommandDefinition() = default;
+  CommandBuilder();
+  ~CommandBuilder() = default;
 
   CommandProperty get_command_property(const std::string& name) const;
   uint16_t get_command_code(const std::string& name) const;
@@ -42,4 +42,4 @@ private:
 
 } /* namespace gramsballoon */
 
-#endif /* GRAMSBALOON_COMMANDDEFINITION_H */
+#endif /* GRAMSBALOON_COMMANDBUILDER_H */
