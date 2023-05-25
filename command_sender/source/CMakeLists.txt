@@ -7,4 +7,4 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(send_command send_command.cc)
+add_executable(send_command send_command.cc CommandSender.cc CommandDefinition.cc)
