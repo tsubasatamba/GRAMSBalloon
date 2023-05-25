@@ -37,3 +37,4 @@
 *.dat
 *.png
 *.root
+.DS_Store
