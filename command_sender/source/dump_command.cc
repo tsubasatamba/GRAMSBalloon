@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
   std::cout << std::hex << std::uppercase;
   for (const uint8_t c: command) {
-    std::cout << static_cast<int>(c) << " "; 
+    std::cout << std::setfill('0') << std::right << std::setw(2) << static_cast<int>(c) << " "; 
   }
   std::cout << std::endl;
   std::cout << std::dec << std::nouppercase;

@@ -39,7 +39,7 @@ CommandBuilder::CommandBuilder()
   code_map_["Set_Trigger_Channel"]    = CommandProperty{204, 2}; 
   code_map_["Set_ADC_Offset"]         = CommandProperty{205, 3};
   code_map_["Exec_TPC_HV_Output"]     = CommandProperty{206, 0};
-  code_map_["Set_TPC_HV "]            = CommandProperty{207, 1}; 
+  code_map_["Set_TPC_HV"]             = CommandProperty{207, 1}; 
   code_map_["Exec_PMT_HV_Output"]     = CommandProperty{208, 0};
   code_map_["Set_PMT_HV"]             = CommandProperty{209, 1};
   code_map_["Get_Waveform"]           = CommandProperty{210, 0};
