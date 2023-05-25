@@ -54,7 +54,7 @@ CommandProperty CommandDefinition::get_command_property(const std::string& name)
 {
   auto command = code_map_.find(name);
   if (command == code_map_.end()) {
-    throw CommandException();
+    throw CommandException("Invalid command name");
   }
   
   return command->second;
@@ -85,7 +85,7 @@ std::vector<uint8_t> CommandDefinition::make_byte_array(const std::string& name,
   command.push_back((argnum & 0x00FFu) >> 0);
 
   if (argnum != arg_array.size()) {
-    throw CommandException();
+    throw CommandException("Invalid argument number");
   }
 
   for (const int32_t arg: arg_array) {

@@ -8,3 +8,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(send_command send_command.cc CommandSender.cc CommandDefinition.cc)
+add_executable(dump_command dump_command.cc CommandDefinition.cc)

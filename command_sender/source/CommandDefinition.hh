@@ -11,6 +11,11 @@ namespace gramsballoon
 
 struct CommandException
 {
+  CommandException(const std::string& info) { info_ = info; }
+  std::string print() const { return info_; }
+  
+private:
+  std::string info_;
 };
 
 struct CommandProperty

@@ -1,6 +1,6 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
-#include "CommandSender.hh"
 #include "CommandDefinition.hh"
 
 int main(int argc, char *argv[])
@@ -25,18 +25,13 @@ int main(int argc, char *argv[])
     std::cout << "Command exception caught: " << e.print() << std::endl;
     return 1;
   }
-  
-  gramsballoon::CommandSender sender;
-  sender.set_serial_port("/dev/tty.usbserial-1130");
-  if ( !sender.open_serial_port() ) {
-    std::cout << "Serial port open error -> exit" << std::endl;
-    return -1;
+
+  std::cout << std::hex << std::uppercase;
+  for (const uint8_t c: command) {
+    std::cout << static_cast<int>(c) << " "; 
   }
-  
-  const int length_sent = sender.send(command);
-  std::cout << "Length sent: " << length_sent << std::endl;
-  
-  sender.close_serial_port();
+  std::cout << std::endl;
+  std::cout << std::dec << std::nouppercase;
 
   return 0;
 }
