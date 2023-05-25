@@ -344,7 +344,7 @@ template<typename T>
 void TelemetryDefinition::addValue(T input)
 {
   const int size = sizeof(T);
-  uint32_t v = static_cast<uint32_t>(input);
+  uint64_t v = static_cast<uint64_t>(input);
   for (int i=0; i<size; i++) {
     const int shift = 8 * (size-1-i);
     telemetry_.push_back(static_cast<uint8_t>((v>>shift) & 0xff));
@@ -376,11 +376,11 @@ T TelemetryDefinition::getValue(int index)
     return static_cast<T>(0);
   }
 
-  uint32_t v = 0;
+  uint64_t v = 0;
   for (int i=0; i<byte; i++) {
     const int j = index + i;
     const int shift = 8 * (byte-1-i);
-    v |= telemetry_[j] << (shift);
+    v |= (telemetry_[j] << shift);
   }
   return static_cast<T>(v);
 }
