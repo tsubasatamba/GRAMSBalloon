@@ -79,20 +79,20 @@ std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string& name, co
   const CommandProperty property = get_command_property(name);
   const uint16_t code = property.code;
   const int argnum = property.argnum;
-  command.push_back((code & 0xFF00) >> 8);
-  command.push_back((code & 0x00FF) >> 0);
-  command.push_back((argnum & 0xFF00) >> 8);
-  command.push_back((argnum & 0x00FF) >> 0);
+  command.push_back((code & 0xFF00u) >> 8);
+  command.push_back((code & 0x00FFu) >> 0);
+  command.push_back((argnum & 0xFF00u) >> 8);
+  command.push_back((argnum & 0x00FFu) >> 0);
 
   if (argnum != static_cast<int>(arg_array.size())) {
     throw CommandException("Invalid argument number");
   }
 
   for (const int32_t arg: arg_array) {
-    command.push_back((arg & 0xFF000000) >> 24);
-    command.push_back((arg & 0x00FF0000) >> 16);
-    command.push_back((arg & 0x0000FF00) >>  8);
-    command.push_back((arg & 0x000000FF) >>  0);
+    command.push_back((arg & 0xFF000000u) >> 24);
+    command.push_back((arg & 0x00FF0000u) >> 16);
+    command.push_back((arg & 0x0000FF00u) >>  8);
+    command.push_back((arg & 0x000000FFu) >>  0);
   }
 
   const uint16_t crc = crc_calc(command);
