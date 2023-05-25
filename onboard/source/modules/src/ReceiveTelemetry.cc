@@ -72,7 +72,7 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   if (chatter_>=1) {
     std::cout << "status: " << status << std::endl;
     for (int i = 0; i < static_cast<int>(telemetry_.size());i++) {
-      std::cout << "telemetry[" <<i<< "] = "<<static_cast<int>(telemetry_[i]) << std::endl;
+      std::cout << "telemetry[" << i << "] = "<<static_cast<int>(telemetry_[i]) << std::endl;
     }
   }
 
