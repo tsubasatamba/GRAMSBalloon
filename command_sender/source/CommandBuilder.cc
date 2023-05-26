@@ -27,27 +27,27 @@ namespace gramsballoon
 
 CommandBuilder::CommandBuilder()
 {
-  code_map_["Get_Status"]             = CommandProperty{100, 0};
-  code_map_["Reset_Error"]            = CommandProperty{101, 0};
-  code_map_["Exec_Shutdown"]          = CommandProperty{102, 0};
-  code_map_["Exec_Reboot"]            = CommandProperty{103, 0};
-  code_map_["Prepare_Shutdown"]       = CommandProperty{104, 0};
-  code_map_["Prepare_Reboot"]         = CommandProperty{105, 0};
-  code_map_["Start_Detector_Readout"] = CommandProperty{201, 0};
-  code_map_["Stop_Detector_Readout"]  = CommandProperty{202, 0};
-  code_map_["Set_Trigger_Mode"]       = CommandProperty{203, 1};
-  code_map_["Set_Trigger_Channel"]    = CommandProperty{204, 2}; 
-  code_map_["Set_ADC_Offset"]         = CommandProperty{205, 3};
-  code_map_["Exec_TPC_HV_Output"]     = CommandProperty{206, 0};
-  code_map_["Set_TPC_HV"]             = CommandProperty{207, 1}; 
-  code_map_["Exec_PMT_HV_Output"]     = CommandProperty{208, 0};
-  code_map_["Set_PMT_HV"]             = CommandProperty{209, 1};
-  code_map_["Get_Waveform"]           = CommandProperty{210, 0};
-  code_map_["Set_Trigger_Level"]      = CommandProperty{211, 1};
-  code_map_["Set_Trigger_Position"]   = CommandProperty{212, 1};
-  code_map_["Dummy_1"]                = CommandProperty{900, 0}; 
-  code_map_["Dummy_2"]                = CommandProperty{901, 1};
-  code_map_["Dummy_3"]                = CommandProperty{902, 0};
+  code_map_["get_status"]             = CommandProperty{100, 0};
+  code_map_["reset_error"]            = CommandProperty{101, 0};
+  code_map_["exec_shutdown"]          = CommandProperty{102, 0};
+  code_map_["exec_reboot"]            = CommandProperty{103, 0};
+  code_map_["prepare_shutdown"]       = CommandProperty{104, 0};
+  code_map_["prepare_reboot"]         = CommandProperty{105, 0};
+  code_map_["start_detector_readout"] = CommandProperty{201, 0};
+  code_map_["stop_detector_readout"]  = CommandProperty{202, 0};
+  code_map_["set_trigger_mode"]       = CommandProperty{203, 1};
+  code_map_["set_trigger_channel"]    = CommandProperty{204, 2}; 
+  code_map_["set_adc_offset"]         = CommandProperty{205, 3};
+  code_map_["exec_tpc_hv_output"]     = CommandProperty{206, 0};
+  code_map_["set_tpc_hv"]             = CommandProperty{207, 1}; 
+  code_map_["exec_pmt_hv_output"]     = CommandProperty{208, 0};
+  code_map_["set_pmt_hv"]             = CommandProperty{209, 1};
+  code_map_["get_waveform"]           = CommandProperty{210, 0};
+  code_map_["set_trigger_level"]      = CommandProperty{211, 1};
+  code_map_["set_trigger_position"]   = CommandProperty{212, 1};
+  code_map_["dummy_1"]                = CommandProperty{900, 0}; 
+  code_map_["dummy_2"]                = CommandProperty{901, 1};
+  code_map_["dummy_3"]                = CommandProperty{902, 0};
 }
 
 CommandProperty CommandBuilder::get_command_property(const std::string& name) const
