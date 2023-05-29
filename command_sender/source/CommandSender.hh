@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <termios.h>
 
 namespace gramsballoon
 {
@@ -23,6 +24,7 @@ public:
 private:
   std::string serial_port_;
   int fd_ = 0;
+  struct termios tio_;
 };
 
 } /* namespace gramsballoon */

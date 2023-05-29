@@ -36,17 +36,20 @@ bool CommandSender::open_serial_port()
     return false;
   }
 
-  struct termios tio;
-  tio.c_cflag |= CREAD;
-  tio.c_cflag |= CLOCAL;
-  tio.c_cflag |= CS8;
-  tio.c_cflag |= PARENB;
-  tio.c_cflag |= CSTOPB;
-  cfsetispeed(&tio, BAUDRATE);
-  cfsetospeed(&tio, BAUDRATE);
-  cfmakeraw(&tio);
-  tcsetattr(fd, TCSANOW, &tio);
-  ioctl(fd, TCSETS, &tio);
+  cfmakeraw(&tio_);
+  
+  tio_.c_cflag |= CREAD;
+  tio_.c_cflag |= CLOCAL;
+  tio_.c_cflag |= CS8;
+  //tio_.c_cflag |= PARENB;
+  tio_.c_cflag &= (~PARENB);
+  //tio_.c_cflag |= CSTOPB;
+  tio_.c_cflag &= (~CSTOPB);
+  cfsetispeed(&tio_, BAUDRATE);
+  cfsetospeed(&tio_, BAUDRATE);
+  
+  tcsetattr(fd, TCSANOW, &tio_);
+  ioctl(fd, TCSETS, &tio_);
   fcntl(fd, F_SETFL, O_RDWR); // reference: https://github.com/orbcode/orbuculum/issues/15
 
   fd_ = fd;
