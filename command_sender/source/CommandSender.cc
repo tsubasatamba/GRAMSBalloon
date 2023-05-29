@@ -37,6 +37,8 @@ bool CommandSender::open_serial_port()
   }
 
   struct termios tio;
+  cfmakeraw(&tio);
+  
   tio.c_cflag |= CREAD;
   tio.c_cflag |= CLOCAL;
   tio.c_cflag |= CS8;
@@ -46,7 +48,7 @@ bool CommandSender::open_serial_port()
   tio.c_cflag &= (~CSTOPB);
   cfsetispeed(&tio, BAUDRATE);
   cfsetospeed(&tio, BAUDRATE);
-  cfmakeraw(&tio);
+  
   tcsetattr(fd, TCSANOW, &tio);
   ioctl(fd, TCSETS, &tio);
   fcntl(fd, F_SETFL, O_RDWR); // reference: https://github.com/orbcode/orbuculum/issues/15
