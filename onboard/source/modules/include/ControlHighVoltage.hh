@@ -37,7 +37,7 @@ public:
 
   void setInvalidChannelError();
 
-  void setNextVoltage(double v) { singleton_self()->nextVoltage_ = v; }
+  bool setNextVoltage(double v);
   void setExec(bool v) { singleton_self()->exec_ = v; }
   double CurrentVoltage() { return singleton_self()->currentVoltage_; }
   double NextVoltage() { return singleton_self()->nextVoltage_; }
@@ -54,6 +54,7 @@ private:
   std::vector<double> voltages_;
   int voltageIndex_ = 0;
   SendTelemetry* sendTelemetry_ = nullptr;
+  double upperLimitVoltage_ = 0.0;
   int chatter_ = 0;
 };
 
