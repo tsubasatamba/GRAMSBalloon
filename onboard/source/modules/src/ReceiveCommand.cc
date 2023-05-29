@@ -249,8 +249,11 @@ bool ReceiveCommand::applyCommand()
   if (code==207 && argc==1) {
     if (TPCHVController_!=nullptr) {
       const double v = static_cast<double>(arguments[0]) * 1E-3;
-      TPCHVController_->setNextVoltage(v);
-      return true;
+      const bool status = TPCHVController_->setNextVoltage(v);
+      if (!status) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::TPC_HV_INVALID_VOLTAGE);
+      }
+      return status;
     }
   }
 
@@ -264,8 +267,11 @@ bool ReceiveCommand::applyCommand()
   if (code==209 && argc==1) {
     if (PMTHVController_!=nullptr) {
       const double v = static_cast<double>(arguments[0]) * 1E-3;
-      PMTHVController_->setNextVoltage(v);
-      return true;
+      const bool status = PMTHVController_->setNextVoltage(v);
+      if (!status) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::PMT_HV_INVALID_VOLTAGE);
+      }
+      return status;
     }
   }
 

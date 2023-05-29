@@ -18,6 +18,7 @@ ANLStatus ControlHighVoltage::mod_define()
   define_parameter("channel", &mod_class::channel_);
   define_parameter("sleep", &mod_class::sleep_);
   define_parameter("voltages", &mod_class::voltages_);
+  define_parameter("upper_limit_voltage", &mod_class::upperLimitVoltage_);
   define_parameter("chatter", &mod_class::chatter_);
 
   return AS_OK;
@@ -42,6 +43,15 @@ ANLStatus ControlHighVoltage::mod_initialize()
   }
   AnalogDiscoveryIO* io = ADManager_->ADIO();
   io -> setupAnalogOut(deviceID_, channel_);
+
+  for (int i=0; i<static_cast<int>(voltages_.size()); i++) {
+    if (voltages_[i]>upperLimitVoltage_) {
+      std::cerr << "Voltages are set inappropriately.\n Upper limit voltage is " << upperLimitVoltage_
+                << " V, but voltage set to " << voltages_[i] << " V." << std::endl;
+      voltages_.clear();
+      break;
+    }
+  }
   
   return AS_OK;
 }
@@ -63,6 +73,7 @@ ANLStatus ControlHighVoltage::mod_analyze()
     exec_ = true;
     nextVoltage_ = voltages_[voltageIndex_];
     voltageIndex_++;
+    return AS_OK;
   }
   
   if ((currentVoltage_!=nextVoltage_) && exec_) {
@@ -78,6 +89,15 @@ ANLStatus ControlHighVoltage::mod_analyze()
 ANLStatus ControlHighVoltage::mod_finalize()
 {
   return AS_OK;
+}
+
+bool ControlHighVoltage::setNextVoltage(double v)
+{
+  if (v>upperLimitVoltage_) {
+    return false;
+  }
+  singleton_self()->nextVoltage_ = v;
+  return true;
 }
 
 void ControlHighVoltage::setInvalidChannelError()
