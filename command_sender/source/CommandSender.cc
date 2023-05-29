@@ -41,9 +41,9 @@ bool CommandSender::open_serial_port()
   tio.c_cflag |= CLOCAL;
   tio.c_cflag |= CS8;
   //tio.c_cflag |= PARENB;
-  tio_->c_cflag &= (~PARENB);
+  tio.c_cflag &= (~PARENB);
   //tio.c_cflag |= CSTOPB;
-  tio_->c_cflag &= (~CSTOPB);
+  tio.c_cflag &= (~CSTOPB);
   cfsetispeed(&tio, BAUDRATE);
   cfsetospeed(&tio, BAUDRATE);
   cfmakeraw(&tio);
