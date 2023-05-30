@@ -228,6 +228,7 @@ void PushToMongoDB::pushStatusTelemetry()
       << "ADC_Range_2"          << (telemdef->ADCRange())[1]
       << "ADC_Range_3"          << (telemdef->ADCRange())[2]
       << "ADC_Range_4"          << (telemdef->ADCRange())[3]
+      << "DAQ_In_Progress"      << static_cast<int>(telemdef->DAQInProgress())
       << "SD_Capacity"          << static_cast<int>(telemdef->SDCapacity())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);

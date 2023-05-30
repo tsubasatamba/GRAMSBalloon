@@ -49,6 +49,7 @@ public:
   void setOndemand(bool v) { singleton_self()->ondemand_ = v; }
   DAQIO* getDAQIO() { return (singleton_self()->daqio_).get(); }
 
+  bool StartReading() { return singleton_self()->startReading_; }
   uint32_t EventCount() { return daqio_->EventCount(); }
   int TrigDevice() { return daqio_->TrigDevice(); }
   int TrigChannel() { return daqio_->TrigChannel(); }
