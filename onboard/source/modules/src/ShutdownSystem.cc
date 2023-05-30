@@ -110,8 +110,9 @@ void ShutdownSystem::setReboot(bool v)
     singleton_self()->reboot_ = v;
   }
   else {
-    if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::REBOOT_REJECTED);
+    if (getSendTelemetry()) {
+      std::cout << "set reboot rejected \n\n\n\n\n\n\n\n\n" << std::endl;
+      getSendTelemetry()->getErrorManager()->setError(ErrorType::REBOOT_REJECTED);
     }
   }
 }
@@ -122,8 +123,9 @@ void ShutdownSystem::setShutdown(bool v)
     singleton_self()->shutdown_ = v;
   }
   else {
-    if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::SHUTDOWN_REJECTED);
+    if (getSendTelemetry()) {
+      std::cout << "set shutdown rejected \n\n\n\n\n\n\n\n\n" << std::endl;
+      getSendTelemetry()->getErrorManager()->setError(ErrorType::SHUTDOWN_REJECTED);
     }
   }
 }

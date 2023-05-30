@@ -247,6 +247,7 @@ void SendTelemetry::inputStatusInfo()
     // chmask
     telemdef_->setADCOffset(readWaveform_->Offset());
     telemdef_->setADCRange(readWaveform_->Range());
+    telemdef_->setDAQInProgress(readWaveform_->StartReading());
   }
   if (getRaspiStatus_!=nullptr) {
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());

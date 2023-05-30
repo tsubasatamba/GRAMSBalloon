@@ -81,8 +81,13 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
     setDataAquisitionError();
   }
 
+  if (TemperatureADC()==0) {
+    std::cerr << "RTD ADC is equal to zero." << std::endl;
+    setDataAquisitionError();
+  }
+
   if (chatter_>=1) {
-    double temperature = max31865io_->Temperature();
+    const double temperature = max31865io_->Temperature();
     std::cout << "temperature ADC: " << TemperatureADC() << std::endl;
     std::cout << " temperature : " << temperature << std::endl;
   }

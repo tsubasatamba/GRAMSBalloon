@@ -127,11 +127,15 @@ void PushToMongoDB::pushHKTelemetry()
     auto section_stream = bsoncxx::builder::stream::document{};
     uint64_t error_code = telemdef->SoftwareErrorCode();
     for (int i=0; i<64; i++) {
+      const std::string error_name = ErrorManager::bitToStr(i);
+      if (error_name=="") {
+        continue;
+      }
       if ((error_code>>i)&1) {
-        const std::string error_name = ErrorManager::bitToStr(i);
-        if (error_name!="") {
-          section_stream << error_name << "Error";
-        }
+        section_stream << error_name << "Error";
+      }
+      else {
+        section_stream << error_name << "OK";
       }
     }
     auto section = section_stream << bsoncxx::builder::stream::finalize;
@@ -224,6 +228,7 @@ void PushToMongoDB::pushStatusTelemetry()
       << "ADC_Range_2"          << (telemdef->ADCRange())[1]
       << "ADC_Range_3"          << (telemdef->ADCRange())[2]
       << "ADC_Range_4"          << (telemdef->ADCRange())[3]
+      << "DAQ_In_Progress"      << static_cast<int>(telemdef->DAQInProgress())
       << "SD_Capacity"          << static_cast<int>(telemdef->SDCapacity())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);

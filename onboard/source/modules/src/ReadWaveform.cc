@@ -174,6 +174,10 @@ void ReadWaveform::createNewOutputFile()
   const std::string id_str = sout.str();
   const std::string filename = outputFilenameBase_ + "_" + timeStampStr_ + "_" + id_str + ".dat";
   ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
+  if (!(*ofs_)) {
+    std::cerr << "File open error." << std::endl;
+    return;
+  }
   fileID_++;
 
   std::vector<int16_t> file_header;

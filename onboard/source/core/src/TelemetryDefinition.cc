@@ -100,6 +100,7 @@ void TelemetryDefinition::generateTelemetryStatus()
   for (int i=0; i<n_range; i++) {
     addValue<int32_t>(static_cast<int32_t>(ADCRange_[i]/1E-3));
   }
+  addValue<uint16_t>(static_cast<uint16_t>(DAQInProgress_));
   addValue<uint64_t>(SDCapacity_);
 }
 
@@ -183,18 +184,25 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   for (int i=0; i<n-4; i++) {
     telem_without_fotter.push_back(v[i]);
   }
-  
-  uint16_t crc_calc = calcCRC16(telem_without_fotter);
-  uint16_t crc_attached = getValue<uint16_t>(n-4);
-  if (crc_calc != crc_attached) {
-    std::cerr << "Invalid telemetry: CRC16 not appropriate" << std::endl;
-    return false;
-  }
 
   uint16_t type = getValue<uint16_t>(2);
   if (type==1 && n!=122) {
     std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
     return false;
+  }
+  
+  uint16_t crc_calc = calcCRC16(telem_without_fotter);
+  uint16_t crc_attached = getValue<uint16_t>(n-4);
+  if (crc_calc != crc_attached) {
+    if (type==2) {
+      std::cerr << "CRC16 is not appropriate.\nBut for now, we process the telemetry as valid one since it is too long." << std::endl;
+      std::cerr << "Telemetry is very long: size = " << v.size() << std::endl;
+      return true;
+    }
+    if (type != 2) {
+      std::cerr << "Invalid telemetry: CRC16 not appropriate" << std::endl;
+      return false;
+    }
   }
 
   return true;
@@ -287,7 +295,7 @@ void TelemetryDefinition::interpretWF()
 
   int index = header_size;
   eventHeader_.resize(event_header_size/sizeof(int16_t));
-  getVector<int16_t>(index, event_header_size, eventHeader_);
+  getVector<int16_t>(index, event_header_size/sizeof(int16_t), eventHeader_);
   eventID_ = getValue<uint32_t>(index);
   eventTime_.tv_sec = getValue<int32_t>(index+4);
   eventTime_.tv_usec = getValue<int32_t>(index+8);
@@ -296,7 +304,7 @@ void TelemetryDefinition::interpretWF()
   eventData_.resize(4);
   for (int i=0; i<4; i++) {
     eventData_[i].resize(event_size/sizeof(int16_t));
-    getVector<int16_t>(index, event_size, eventData_[i]);
+    getVector<int16_t>(index, event_size/sizeof(int16_t), eventData_[i]);
     index += event_size;
   }
 
@@ -323,11 +331,12 @@ void TelemetryDefinition::interpretStatus()
     ADCOffset_[i] = static_cast<double>(offset[i]) * 1E-3;
     ADCRange_[i] = static_cast<double>(range[i]) * 1E-3;
   }
-  
-  SDCapacity_ = getValue<uint64_t>(64);
 
-  crc_ = getValue<uint16_t>(72);
-  stopCode_ = getValue<uint16_t>(74);
+  DAQInProgress_ = static_cast<bool>(getValue<uint16_t>(64));
+  SDCapacity_ = getValue<uint64_t>(66);
+
+  crc_ = getValue<uint16_t>(74);
+  stopCode_ = getValue<uint16_t>(76);
 }
 
 void TelemetryDefinition::clear()
@@ -380,7 +389,7 @@ T TelemetryDefinition::getValue(int index)
   for (int i=0; i<byte; i++) {
     const int j = index + i;
     const int shift = 8 * (byte-1-i);
-    v |= (telemetry_[j] << shift);
+    v |= (static_cast<uint64_t>(telemetry_[j]) << shift);
   }
   return static_cast<T>(v);
 }

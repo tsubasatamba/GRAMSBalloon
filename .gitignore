@@ -38,3 +38,4 @@
 *.png
 *.root
 .DS_Store
+**/.DS_Store

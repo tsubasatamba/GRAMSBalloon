@@ -11,7 +11,7 @@ ErrorManager::ErrorManager()
 
 void ErrorManager::resetError()
 {
-  errorCode_ = 0;
+  errorCode_ = (uint64_t)0;
 }
 
 void ErrorManager::setError(ErrorType v)

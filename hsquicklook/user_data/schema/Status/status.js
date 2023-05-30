@@ -35,6 +35,7 @@ HSQuickLook.main.schema =
           "ADC_Range_2": {"type": "double","format": "%7.3f"},
           "ADC_Range_3": {"type": "double","format": "%7.3f"},
           "ADC_Range_4": {"type": "double","format": "%7.3f"},
+          "DAQ_In_Progress": {"type": "int"},
           "SD_Capacity": {"type": "int"}
         }
       },
