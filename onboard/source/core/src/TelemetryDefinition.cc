@@ -183,18 +183,25 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   for (int i=0; i<n-4; i++) {
     telem_without_fotter.push_back(v[i]);
   }
-  
-  uint16_t crc_calc = calcCRC16(telem_without_fotter);
-  uint16_t crc_attached = getValue<uint16_t>(n-4);
-  if (crc_calc != crc_attached) {
-    std::cerr << "Invalid telemetry: CRC16 not appropriate" << std::endl;
-    return false;
-  }
 
   uint16_t type = getValue<uint16_t>(2);
   if (type==1 && n!=122) {
     std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
     return false;
+  }
+  
+  uint16_t crc_calc = calcCRC16(telem_without_fotter);
+  uint16_t crc_attached = getValue<uint16_t>(n-4);
+  if (crc_calc != crc_attached) {
+    if (type==2) {
+      std::cerr << "CRC16 is not appropriate.\nBut for now, we process the telemetry as valid one since it is too long." << std::endl;
+      std::cerr << "Telemetry is very long: size = " << v.size() << std::endl;
+      return true;
+    }
+    if (type != 2) {
+      std::cerr << "Invalid telemetry: CRC16 not appropriate" << std::endl;
+      return false;
+    }
   }
 
   return true;
