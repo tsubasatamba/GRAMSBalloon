@@ -3,7 +3,7 @@
 ## 日本語入力の設定
 
 `sudo apt install fcitx-mozc`
-を利用して行った。https://cloud-work.net/linux/fcitx-mozc/
+を利用して行った。<https://cloud-work.net/linux/fcitx-mozc/>
 
 ## rootユーザのパスワード入力
 
@@ -12,6 +12,7 @@
 ## 各種モジュールのインストール
 
 ### aptのアップデート
+
 `sudo apt update`で情報を取ってきて、`sudo apt upgrade`でモジュールを最新版にする(これはこまめに行うこと。)
 
 ### zsh
@@ -109,9 +110,23 @@ rubyのHP(<http://ruby-lang.org/en/downloads/>)に行き、2.7系の最新版を
 `sudo systemctl enable pigpiod`を実行し、pigpioデーモンを自動起動。
 
 ## Analog Discovery 2のAPI導入
+
 AdeptとWaveformsというものをインストールしないといけない。
 GRAMS-Balloon-test/sourceに入っている二つの.debで終わるファイルを使う。
 
 GRAMS-Balloon-test/sourceに移った後、
 
 `sudo apt install digilent.adept.runtime_2.27.9-armhf.deb`、`sudo apt install digilent.waveforms_3.19.5_armhf.deb`を行う。
+
+## ネットワークの設定
+
+直接Raspberry Piに接続する時はIPを固定する必要がある、root権限で/etc/dhcpcd.confを開き、
+
+`interface eth0
+static ip_address=192.168.10.205/24
+static routers=192.168.10.1
+static domain_name_servers=192.168.10.1`
+
+を最後に追加し、再起動する。
+
+Note：再起動するとIPが固定されるので今までのIPでは接続できなくなる。
