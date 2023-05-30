@@ -39,6 +39,7 @@ public:
   void setPrepareReboot(bool v);
   void setPrepareShutdown(bool v);
   void clearStatus();
+  SendTelemetry* getSendTelemetry() { return singleton_self()->sendTelemetry_; }
   
 private:
   bool reboot_ = false;
