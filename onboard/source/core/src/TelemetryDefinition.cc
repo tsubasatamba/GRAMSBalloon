@@ -295,7 +295,7 @@ void TelemetryDefinition::interpretWF()
 
   int index = header_size;
   eventHeader_.resize(event_header_size/sizeof(int16_t));
-  getVector<int16_t>(index, event_header_size, eventHeader_);
+  getVector<int16_t>(index, event_header_size/sizeof(int16_t), eventHeader_);
   eventID_ = getValue<uint32_t>(index);
   eventTime_.tv_sec = getValue<int32_t>(index+4);
   eventTime_.tv_usec = getValue<int32_t>(index+8);
@@ -304,7 +304,7 @@ void TelemetryDefinition::interpretWF()
   eventData_.resize(4);
   for (int i=0; i<4; i++) {
     eventData_[i].resize(event_size/sizeof(int16_t));
-    getVector<int16_t>(index, event_size, eventData_[i]);
+    getVector<int16_t>(index, event_size/sizeof(int16_t), eventData_[i]);
     index += event_size;
   }
 
