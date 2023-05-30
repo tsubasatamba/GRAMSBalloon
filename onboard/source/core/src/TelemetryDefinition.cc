@@ -100,6 +100,7 @@ void TelemetryDefinition::generateTelemetryStatus()
   for (int i=0; i<n_range; i++) {
     addValue<int32_t>(static_cast<int32_t>(ADCRange_[i]/1E-3));
   }
+  addValue<uint16_t>(static_cast<uint16_t>(DAQInProgress_));
   addValue<uint64_t>(SDCapacity_);
 }
 
@@ -330,11 +331,12 @@ void TelemetryDefinition::interpretStatus()
     ADCOffset_[i] = static_cast<double>(offset[i]) * 1E-3;
     ADCRange_[i] = static_cast<double>(range[i]) * 1E-3;
   }
-  
-  SDCapacity_ = getValue<uint64_t>(64);
 
-  crc_ = getValue<uint16_t>(72);
-  stopCode_ = getValue<uint16_t>(74);
+  DAQInProgress_ = static_cast<bool>(getValue<uint16_t>(64));
+  SDCapacity_ = getValue<uint64_t>(66);
+
+  crc_ = getValue<uint16_t>(74);
+  stopCode_ = getValue<uint16_t>(76);
 }
 
 void TelemetryDefinition::clear()

@@ -108,6 +108,7 @@ public:
   void setChannelMask(uint16_t v) { channelMask_ = v; }
   void setADCOffset(const std::vector<double>& v) { ADCOffset_ = v; }
   void setADCRange(const std::vector<double>& v) { ADCRange_ = v; }
+  void setDAQInProgress(bool v) { DAQInProgress_ = v; }
   void setSDCapacity(uint64_t v) { SDCapacity_ = v; }
   
   // getter
@@ -166,6 +167,7 @@ public:
   uint16_t ChannelMask() { return channelMask_; }
   const std::vector<double>& ADCOffset() const {return ADCOffset_; }
   const std::vector<double>& ADCRange() const { return ADCRange_; }
+  bool DAQInProgress() { return DAQInProgress_; }
   uint64_t SDCapacity() { return SDCapacity_; }
 
 private:
@@ -219,8 +221,8 @@ private:
   uint16_t channelMask_ = 0;
   std::vector<double> ADCOffset_; // volt
   std::vector<double> ADCRange_; // volt
+  bool DAQInProgress_ = false;
   uint64_t SDCapacity_ = 0;
-
 
   std::vector<int16_t> RTDTemperatureADC_;
   
