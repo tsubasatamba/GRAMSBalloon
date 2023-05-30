@@ -48,6 +48,7 @@ CommandBuilder::CommandBuilder()
   code_map_["dummy_1"]                = CommandProperty{900, 0}; 
   code_map_["dummy_2"]                = CommandProperty{901, 1};
   code_map_["dummy_3"]                = CommandProperty{902, 0};
+  code_map_["invalid_command_1"]      = CommandProperty{12345, 0};
 }
 
 CommandProperty CommandBuilder::get_command_property(const std::string& name) const
