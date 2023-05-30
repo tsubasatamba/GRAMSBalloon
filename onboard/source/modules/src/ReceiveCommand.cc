@@ -1,4 +1,5 @@
 #include "ReceiveCommand.hh"
+#include "DateManager.hh"
 #include <chrono>
 #include <thread>
 
@@ -37,6 +38,8 @@ ANLStatus ReceiveCommand::mod_define()
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
+  timeStampStr_ = getTimeStr();
+  
   const std::string send_telem_md = "SendTelemetry";
   if (exist_module(send_telem_md)) {
     get_module_NC(send_telem_md, &sendTelemetry_);
