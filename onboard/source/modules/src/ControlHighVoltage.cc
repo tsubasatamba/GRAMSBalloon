@@ -93,6 +93,9 @@ ANLStatus ControlHighVoltage::mod_finalize()
 
 bool ControlHighVoltage::setNextVoltage(double v)
 {
+  if (v<0.0) {
+    return false;
+  }
   if (v>upperLimitVoltage_) {
     return false;
   }

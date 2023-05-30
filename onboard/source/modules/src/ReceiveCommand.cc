@@ -142,8 +142,10 @@ ANLStatus ReceiveCommand::mod_finalize()
 bool ReceiveCommand::applyCommand()
 {
   commandIndex_++;
-  std::cout << "command start" << std::endl;
-  std::cout << "command index: " << commandIndex_ << std::endl;
+  if (chatter_>=1) {
+    std::cout << "command start" << std::endl;
+    std::cout << "command index: " << commandIndex_ << std::endl;
+  }
   for (int i=0; i<(int)command_.size(); i++) {
     std::cout << static_cast<int>(command_[i]) << std::endl;
   }
