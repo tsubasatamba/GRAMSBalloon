@@ -389,7 +389,7 @@ T TelemetryDefinition::getValue(int index)
   for (int i=0; i<byte; i++) {
     const int j = index + i;
     const int shift = 8 * (byte-1-i);
-    v |= (telemetry_[j] << shift);
+    v |= (static_cast<uint64_t>(telemetry_[j]) << shift);
   }
   return static_cast<T>(v);
 }

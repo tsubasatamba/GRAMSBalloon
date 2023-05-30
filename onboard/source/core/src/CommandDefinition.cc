@@ -98,7 +98,7 @@ T CommandDefinition::getValue(int index)
   uint32_t v = 0;
   for (int i=0; i<byte; i++) {
     const int shift = 8 * (byte-1-i);
-    v |= (command_[index+i] << (shift));
+    v |= (static_cast<uint32_t>(command_[index+i]) << (shift));
   }
   return static_cast<T>(v);
 }
