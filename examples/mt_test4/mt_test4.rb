@@ -144,5 +144,5 @@ a.modify do |m|
   end
 end
 
-a.run(10000, 1)
+a.run(10000000, 1)
 
