@@ -6,7 +6,7 @@ class MyApp < ANL::ANLApp
     def setup()
 
         chain GRAMSBalloon::ReceiveCommand
-        with_parameters(serial_path: "/dev/ttyAMA1") do |m|
+        with_parameters(serial_path: "/dev/ttyAMA1", chatter: 1) do |m|
             m.set_singleton(1)
         end
 

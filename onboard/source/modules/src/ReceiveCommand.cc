@@ -109,6 +109,25 @@ ANLStatus ReceiveCommand::mod_analyze()
   }
 
   for (int i=0; i<status; i++) {
+    if (command_.size()>=1 && command_.back()==0xeb && buffer_[i]==0x90) {
+      command_.clear();
+      command_.push_back(0xeb);
+      command_.push_back(0x90);
+      continue;
+    }
+    if (command_.size()>=1 && command_.back()==0xc5 && buffer_[i]==0xc5) {
+      command_.push_back(buffer_[i]);
+      const bool applied = applyCommand();
+      writeCommandToFile(!applied);
+      if (!applied) {
+        if (sendTelemetry_) {
+          sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
+        }
+      }
+      continue;
+    }
+    command_.push_back(buffer_[i]);
+    /*
     if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
       command_.clear();
     }
@@ -116,22 +135,14 @@ ANLStatus ReceiveCommand::mod_analyze()
     if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
       break;
     }
+    */
   }
 
   if (chatter_>=1) {
     std::cout << "ReceiveCommand status: " << status << std::endl;
-    for (int i=0; i<status; i++) {
+    for (int i=0; i<static_cast<int>(command_.size()); i++) {
       std::cout << "command[" << i << "] = " << static_cast<int>(command_[i]) << std::endl;
     }
-  }
-
-  const bool applied = applyCommand();
-  writeCommandToFile(!applied);
-  if (!applied) {
-    if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
-    }
-    commandRejectCount_++;
   }
   
   return AS_OK;
