@@ -144,10 +144,10 @@ int BME680IO::getData()
   bme68x_set_op_mode(BME68X_FORCED_MODE, bme68xn_.get());
   uint8_t ndata = 0;
   int res = bme68x_get_data(BME68X_FORCED_MODE, sensorData_.get(), &ndata, bme68xn_.get());
- 
+  
 
   if (res!=0) {
-    std::cerr << "BME680IO::getData failed: ndata = " << ndata << ", get_data_id = " << res << std::endl;
+    std::cerr << "BME680IO::getData failed: ndata = " << static_cast<int>(ndata) << ", get_data_id = " << res << std::endl;
   }
   bme68x_set_op_mode(BME68X_SLEEP_MODE, bme68xn_.get());
   

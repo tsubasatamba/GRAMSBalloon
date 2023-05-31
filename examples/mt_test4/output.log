@@ -1,0 +1,1472 @@
+
+######################################################
+#                                                    #
+#          ANL Next Data Analysis Framework          #
+#                                                    #
+#    version:  2.01.02                               #
+#    author: Hirokazu Odaka                          #
+#    URL: https://github.com/odakahirokazu/ANLNext   #
+#                                                    #
+######################################################
+
+
+        **************************************
+        ****          Definition          ****
+        **************************************
+
+
+ANLManager: starting <define> routine.
+
+
+ANLManager: <define> routine successfully done.
+
+
+
+        **************************************
+        ****      Pre-Initialization      ****
+        **************************************
+
+
+ANLManager: starting <pre_initialize> routine.
+
+
+ANLManager: <pre_initialize> routine successfully done.
+
+
+<Module chain duplication>
+2 chains have been duplicated. => Total: 3 chains.
+
+
+
+        **************************************
+        ****        Initialization        ****
+        **************************************
+
+
+        **************************************
+        ****        Analysis chain        ****
+        **************************************
+
+   #        Module ID                                   Version    ON/OFF 
+----------------------------------------------------------------------------
+   0    ReceiveCommand                                    1.0        OFF     
+   1    SPIManager                                        1.0        ON      
+   2    MeasureTemperatureWithRTDSensor_1 (MeasureTemperatureWithRTDSensor)  1.0        ON      
+   3    MeasureTemperatureWithRTDSensor_2 (MeasureTemperatureWithRTDSensor)  1.0        ON      
+   4    MeasureTemperatureWithRTDSensor_3 (MeasureTemperatureWithRTDSensor)  1.0        ON      
+   5    MeasureTemperatureWithRTDSensor_4 (MeasureTemperatureWithRTDSensor)  1.0        ON      
+   6    MeasureTemperatureWithRTDSensor_5 (MeasureTemperatureWithRTDSensor)  1.0        ON      
+   7    GetEnvironmentalData_1 (GetEnvironmentalData)     1.0        ON      
+   8    GetEnvironmentalData_2 (GetEnvironmentalData)     1.0        ON      
+   9    GetEnvironmentalData_3 (GetEnvironmentalData)     1.0        ON      
+  10    GetEnvironmentalData_4 (GetEnvironmentalData)     1.0        ON      
+  11    GetEnvironmentalData_5 (GetEnvironmentalData)     1.0        ON      
+  12    MeasureAcceleration                               1.0        ON      
+  13    GetSlowADCData                                    1.0        ON      
+  14    GetRaspiStatus                                    1.0        ON      
+  15    AnalogDiscoveryManager                            1.0        ON      
+  16    ControlHighVoltage_TPC (ControlHighVoltage)       1.0        ON      
+  17    ControlHighVoltage_PMT (ControlHighVoltage)       1.0        ON      
+  18    ReadWaveform                                      1.0        OFF     
+  19    SendTelemetry                                     1.0        ON      
+  20    ShutdownSystem                                    1.0        ON      
+
+
+        **************************************
+        ****      Module parameters       ****
+        **************************************
+
+--- ReceiveCommand ---
+baudrate: 9
+serial_path: /dev/ttyAMA1
+open_mode: 2
+TPC_HVController_module_name: ControlHighVoltage_TPC
+PMT_HVController_module_name: ControlHighVoltage_PMT
+timeout_sec: 10
+save_command: 1
+binary_filename_base: Command
+num_command_per_file: 100
+chatter: 1
+
+--- SPIManager ---
+channel: 0
+baudrate: 1000000
+spi_flags: 227
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_1 ---
+chip_select: 8
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_2 ---
+chip_select: 7
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_3 ---
+chip_select: 16
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_4 ---
+chip_select: 20
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_5 ---
+chip_select: 21
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_1 ---
+chip_select: 26
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_2 ---
+chip_select: 19
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_3 ---
+chip_select: 6
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_4 ---
+chip_select: 5
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_5 ---
+chip_select: 22
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureAcceleration ---
+device_path: /dev/i2c-1
+calibrate_gyro: 0
+chatter: 0
+
+--- GetSlowADCData ---
+chip_select: 17
+SPI_manager_name: SPIManager
+Va: 5.026
+channels: 0 1 2 3 4 
+num_trials: 100
+chatter: 0
+
+--- GetRaspiStatus ---
+temperature_filename: /sys/class/thermal/thermal_zone0/temp
+path: /
+chatter: 0
+
+--- AnalogDiscoveryManager ---
+chatter: 0
+
+--- ControlHighVoltage_TPC ---
+device_id: 0
+channel: 0
+sleep: 500
+voltages: 
+upper_limit_voltage: 0.1
+chatter: 0
+
+--- ControlHighVoltage_PMT ---
+device_id: 0
+channel: 1
+sleep: 500
+voltages: 
+upper_limit_voltage: 0.1
+chatter: 0
+
+--- ReadWaveform ---
+ad_manager_name: AnalogDiscoveryManager
+trig_device: 0
+trig_channel: 0
+trig_mode: 2
+trig_level: 0.1
+trig_position: 0
+time_window: 300
+sample_frequency: 20
+adc_range_list: 1 1 1 1 
+adc_offset_list: 0 0 0 0 
+output_filename_base: DAQ_output
+num_events_per_file: 100
+start_reading: 0
+max_non_detection_count: 100
+chatter: 0
+
+--- SendTelemetry ---
+MeasureTemperature_module_names: MeasureTemperatureWithRTDSensor_1 MeasureTemperatureWithRTDSensor_2 MeasureTemperatureWithRTDSensor_3 MeasureTemperatureWithRTDSensor_4 MeasureTemperatureWithRTDSensor_5 
+TPCHVController_module_name: ControlHighVoltage_TPC
+PMTHVController_module_name: ControlHighVoltage_PMT
+GetEnvironmentalData_module_names: GetEnvironmentalData_1 GetEnvironmentalData_2 GetEnvironmentalData_3 GetEnvironmentalData_4 GetEnvironmentalData_5 
+serial_path: /dev/ttyAMA0
+baudrate: 4097
+open_mode: 2
+save_telemetry: 1
+binary_filename_base: Telemetry
+num_telem_per_file: 100
+chatter: 0
+
+--- ShutdownSystem ---
+buffer_time_sec: 60
+chatter: 0
+
+--- ReceiveCommand[1] ---
+baudrate: 9
+serial_path: /dev/ttyAMA1
+open_mode: 2
+TPC_HVController_module_name: ControlHighVoltage_TPC
+PMT_HVController_module_name: ControlHighVoltage_PMT
+timeout_sec: 10
+save_command: 1
+binary_filename_base: Command
+num_command_per_file: 100
+chatter: 1
+
+--- SPIManager[1] ---
+channel: 0
+baudrate: 1000000
+spi_flags: 227
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_1[1] ---
+chip_select: 8
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_2[1] ---
+chip_select: 7
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_3[1] ---
+chip_select: 16
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_4[1] ---
+chip_select: 20
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_5[1] ---
+chip_select: 21
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_1[1] ---
+chip_select: 26
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_2[1] ---
+chip_select: 19
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_3[1] ---
+chip_select: 6
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_4[1] ---
+chip_select: 5
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_5[1] ---
+chip_select: 22
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureAcceleration[1] ---
+device_path: /dev/i2c-1
+calibrate_gyro: 0
+chatter: 0
+
+--- GetSlowADCData[1] ---
+chip_select: 17
+SPI_manager_name: SPIManager
+Va: 5.026
+channels: 0 1 2 3 4 
+num_trials: 100
+chatter: 0
+
+--- GetRaspiStatus[1] ---
+temperature_filename: /sys/class/thermal/thermal_zone0/temp
+path: /
+chatter: 0
+
+--- AnalogDiscoveryManager[1] ---
+chatter: 0
+
+--- ControlHighVoltage_TPC[1] ---
+device_id: 0
+channel: 0
+sleep: 500
+voltages: 
+upper_limit_voltage: 0.1
+chatter: 0
+
+--- ControlHighVoltage_PMT[1] ---
+device_id: 0
+channel: 1
+sleep: 500
+voltages: 
+upper_limit_voltage: 0.1
+chatter: 0
+
+--- ReadWaveform[1] ---
+ad_manager_name: AnalogDiscoveryManager
+trig_device: 0
+trig_channel: 0
+trig_mode: 2
+trig_level: 0.1
+trig_position: 0
+time_window: 300
+sample_frequency: 20
+adc_range_list: 1 1 1 1 
+adc_offset_list: 0 0 0 0 
+output_filename_base: DAQ_output
+num_events_per_file: 100
+start_reading: 0
+max_non_detection_count: 100
+chatter: 0
+
+--- SendTelemetry[1] ---
+MeasureTemperature_module_names: MeasureTemperatureWithRTDSensor_1 MeasureTemperatureWithRTDSensor_2 MeasureTemperatureWithRTDSensor_3 MeasureTemperatureWithRTDSensor_4 MeasureTemperatureWithRTDSensor_5 
+TPCHVController_module_name: ControlHighVoltage_TPC
+PMTHVController_module_name: ControlHighVoltage_PMT
+GetEnvironmentalData_module_names: GetEnvironmentalData_1 GetEnvironmentalData_2 GetEnvironmentalData_3 GetEnvironmentalData_4 GetEnvironmentalData_5 
+serial_path: /dev/ttyAMA0
+baudrate: 4097
+open_mode: 2
+save_telemetry: 1
+binary_filename_base: Telemetry
+num_telem_per_file: 100
+chatter: 0
+
+--- ShutdownSystem[1] ---
+buffer_time_sec: 60
+chatter: 0
+
+--- ReceiveCommand[2] ---
+baudrate: 9
+serial_path: /dev/ttyAMA1
+open_mode: 2
+TPC_HVController_module_name: ControlHighVoltage_TPC
+PMT_HVController_module_name: ControlHighVoltage_PMT
+timeout_sec: 10
+save_command: 1
+binary_filename_base: Command
+num_command_per_file: 100
+chatter: 1
+
+--- SPIManager[2] ---
+channel: 0
+baudrate: 1000000
+spi_flags: 227
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_1[2] ---
+chip_select: 8
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_2[2] ---
+chip_select: 7
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_3[2] ---
+chip_select: 16
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_4[2] ---
+chip_select: 20
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureTemperatureWithRTDSensor_5[2] ---
+chip_select: 21
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_1[2] ---
+chip_select: 26
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_2[2] ---
+chip_select: 19
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_3[2] ---
+chip_select: 6
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_4[2] ---
+chip_select: 5
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- GetEnvironmentalData_5[2] ---
+chip_select: 22
+SPI_manager_name: SPIManager
+chatter: 0
+
+--- MeasureAcceleration[2] ---
+device_path: /dev/i2c-1
+calibrate_gyro: 0
+chatter: 0
+
+--- GetSlowADCData[2] ---
+chip_select: 17
+SPI_manager_name: SPIManager
+Va: 5.026
+channels: 0 1 2 3 4 
+num_trials: 100
+chatter: 0
+
+--- GetRaspiStatus[2] ---
+temperature_filename: /sys/class/thermal/thermal_zone0/temp
+path: /
+chatter: 0
+
+--- AnalogDiscoveryManager[2] ---
+chatter: 0
+
+--- ControlHighVoltage_TPC[2] ---
+device_id: 0
+channel: 0
+sleep: 500
+voltages: 
+upper_limit_voltage: 0.1
+chatter: 0
+
+--- ControlHighVoltage_PMT[2] ---
+device_id: 0
+channel: 1
+sleep: 500
+voltages: 
+upper_limit_voltage: 0.1
+chatter: 0
+
+--- ReadWaveform[2] ---
+ad_manager_name: AnalogDiscoveryManager
+trig_device: 0
+trig_channel: 0
+trig_mode: 2
+trig_level: 0.1
+trig_position: 0
+time_window: 300
+sample_frequency: 20
+adc_range_list: 1 1 1 1 
+adc_offset_list: 0 0 0 0 
+output_filename_base: DAQ_output
+num_events_per_file: 100
+start_reading: 0
+max_non_detection_count: 100
+chatter: 0
+
+--- SendTelemetry[2] ---
+MeasureTemperature_module_names: MeasureTemperatureWithRTDSensor_1 MeasureTemperatureWithRTDSensor_2 MeasureTemperatureWithRTDSensor_3 MeasureTemperatureWithRTDSensor_4 MeasureTemperatureWithRTDSensor_5 
+TPCHVController_module_name: ControlHighVoltage_TPC
+PMTHVController_module_name: ControlHighVoltage_PMT
+GetEnvironmentalData_module_names: GetEnvironmentalData_1 GetEnvironmentalData_2 GetEnvironmentalData_3 GetEnvironmentalData_4 GetEnvironmentalData_5 
+serial_path: /dev/ttyAMA0
+baudrate: 4097
+open_mode: 2
+save_telemetry: 1
+binary_filename_base: Telemetry
+num_telem_per_file: 100
+chatter: 0
+
+--- ShutdownSystem[2] ---
+buffer_time_sec: 60
+chatter: 0
+
+
+ANLManager: starting <initialize> routine.
+
+Device not found
+Error in MeasureAcceleration::mod_initialize: Device not found.
+number of Analog Discovery: 1
+Only one analog Discovery is connected.
+BAUDRATE was set to 4097
+Set to raw mode
+Open Serial port
+
+ANLManager: <initialize> routine successfully done.
+
+
+ANLManager: starting <initialize:1> routine.
+
+BAUDRATE was set to 9
+Set to raw mode
+Open Serial port
+
+ANLManager: <initialize:1> routine successfully done.
+
+
+ANLManager: starting <initialize:2> routine.
+
+
+ANLManager: <initialize:2> routine successfully done.
+
+
+
+<Begin Analysis> | Time: 2023-05-31 15:10:14 +0900
+
+        **************************************
+        ****        Main Analysis         ****
+        **************************************
+
+Number of events: 10000000
+
+
+ANLManager: starting <begin_run> routine.
+
+
+ANLManager: <begin_run> routine successfully done.
+
+
+ANLManager: starting <begin_run:1> routine.
+
+
+ANLManager: <begin_run:1> routine successfully done.
+
+
+ANLManager: starting <begin_run:2> routine.
+
+
+ANLManager: <begin_run:2> routine successfully done.
+
+
+ANLManager: starting analysis loop (with user-console mode on).
+----------------------------------------------------------------------------
+  input '.q' => quit the analysis loop
+  input '.i' => show the current event index
+  input '.s' => show the status of event selections (of the master thread)
+----------------------------------------------------------------------------
+
+Event :          0
+Event :          1
+Event :          2
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :          3
+Event :          4
+Event :          5
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :          6
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :          7
+Event :          8
+Event :          9
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :         10
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         11
+command index: 0
+Event :         12
+Event :         13
+Event :         14
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         15
+command index: 0
+Event :         16
+Event :         17
+Event :         18
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         19
+command index: 0
+Event :         20
+Event :         21
+Event :         22
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         23
+command index: 0
+Event :         24
+Event :         25
+Event :         26
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         27
+command index: 0
+Event :         28
+Time out
+Event :         29
+Event :         30
+Event :         31
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         32
+command index: 0
+Event :         33
+Event :         34
+Event :         35
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         36
+command index: 0
+Event :         37
+Event :         38
+Event :         39
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         40
+command index: 0
+Event :         41
+Event :         42
+Event :         43
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         44
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         45
+Event :         46
+Event :         47
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         48
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         49
+Event :         50
+Event :         51
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         52
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         53
+Event :         54
+Event :         55
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         56
+Time out
+Event :         57
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         58
+Event :         59
+Event :         60
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         61
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         62
+[?2004hANL> ,q
+[?2004lEvent :         63
+Event :         64
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         65
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         66
+Event :         67
+Event :         68
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         69
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         70
+Event :         71
+Event :         72
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :         73
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :         74
+Event :         75
+Event :         76
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+[?2004hANL> .q
+[?2004l ---> Quit
+
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata =  , get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Time out
+
+ANLManager: analysis loop successfully done.
+
+
+ANLManager: starting <end_run> routine.
+
+
+ANLManager: <end_run> routine successfully done.
+
+
+ANLManager: starting <end_run:1> routine.
+
+
+ANLManager: <end_run:1> routine successfully done.
+
+
+ANLManager: starting <end_run:2> routine.
+
+
+ANLManager: <end_run:2> routine successfully done.
+
+
+
+        **************************************
+        ****        Analysis chain        ****
+        **************************************
+               Put: 3
+                |
+    [   0]  ReceiveCommand  version  1.0            
+             3  |  OK:          3 | Skip:          0 | Error:          0
+    [   1]  SPIManager  version  1.0                
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   2]  MeasureTemperatureWithRTDSensor/MeasureTemperatureWithRTDSensor_1  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   3]  MeasureTemperatureWithRTDSensor/MeasureTemperatureWithRTDSensor_2  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   4]  MeasureTemperatureWithRTDSensor/MeasureTemperatureWithRTDSensor_3  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   5]  MeasureTemperatureWithRTDSensor/MeasureTemperatureWithRTDSensor_4  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   6]  MeasureTemperatureWithRTDSensor/MeasureTemperatureWithRTDSensor_5  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   7]  GetEnvironmentalData/GetEnvironmentalData_1  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   8]  GetEnvironmentalData/GetEnvironmentalData_2  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [   9]  GetEnvironmentalData/GetEnvironmentalData_3  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  10]  GetEnvironmentalData/GetEnvironmentalData_4  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  11]  GetEnvironmentalData/GetEnvironmentalData_5  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  12]  MeasureAcceleration  version  1.0       
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  13]  GetSlowADCData  version  1.0            
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  14]  GetRaspiStatus  version  1.0            
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  15]  AnalogDiscoveryManager  version  1.0    
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  16]  ControlHighVoltage/ControlHighVoltage_TPC  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  17]  ControlHighVoltage/ControlHighVoltage_PMT  version  1.0
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  18]  ReadWaveform  version  1.0              
+            55  |  OK:         55 | Skip:          0 | Error:          0
+    [  19]  SendTelemetry  version  1.0             
+            19  |  OK:         19 | Skip:          0 | Error:          0
+    [  20]  ShutdownSystem  version  1.0            
+            19  |  OK:         19 | Skip:          0 | Error:          0
+               Get: 19
+
+
+        **************************************
+        ****  Result of Event Selections  ****
+        **************************************
+
+  Number of EVS : 0
+------------------------------------------------------------------------------
+                 key                        |     counts     |   completed    
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+
+        **************************************
+        ****       Module results         ****
+        **************************************
+
+--- ReceiveCommand ---
+
+--- SPIManager ---
+
+--- MeasureTemperatureWithRTDSensor_1 ---
+
+--- MeasureTemperatureWithRTDSensor_2 ---
+
+--- MeasureTemperatureWithRTDSensor_3 ---
+
+--- MeasureTemperatureWithRTDSensor_4 ---
+
+--- MeasureTemperatureWithRTDSensor_5 ---
+
+--- GetEnvironmentalData_1 ---
+
+--- GetEnvironmentalData_2 ---
+
+--- GetEnvironmentalData_3 ---
+
+--- GetEnvironmentalData_4 ---
+
+--- GetEnvironmentalData_5 ---
+
+--- MeasureAcceleration ---
+
+--- GetSlowADCData ---
+
+--- GetRaspiStatus ---
+
+--- AnalogDiscoveryManager ---
+
+--- ControlHighVoltage_TPC ---
+
+--- ControlHighVoltage_PMT ---
+
+--- ReadWaveform ---
+
+--- SendTelemetry ---
+
+--- ShutdownSystem ---
+
+--- ReceiveCommand[1] ---
+
+--- SPIManager[1] ---
+
+--- MeasureTemperatureWithRTDSensor_1[1] ---
+
+--- MeasureTemperatureWithRTDSensor_2[1] ---
+
+--- MeasureTemperatureWithRTDSensor_3[1] ---
+
+--- MeasureTemperatureWithRTDSensor_4[1] ---
+
+--- MeasureTemperatureWithRTDSensor_5[1] ---
+
+--- GetEnvironmentalData_1[1] ---
+
+--- GetEnvironmentalData_2[1] ---
+
+--- GetEnvironmentalData_3[1] ---
+
+--- GetEnvironmentalData_4[1] ---
+
+--- GetEnvironmentalData_5[1] ---
+
+--- MeasureAcceleration[1] ---
+
+--- GetSlowADCData[1] ---
+
+--- GetRaspiStatus[1] ---
+
+--- AnalogDiscoveryManager[1] ---
+
+--- ControlHighVoltage_TPC[1] ---
+
+--- ControlHighVoltage_PMT[1] ---
+
+--- ReadWaveform[1] ---
+
+--- SendTelemetry[1] ---
+
+--- ShutdownSystem[1] ---
+
+--- ReceiveCommand[2] ---
+
+--- SPIManager[2] ---
+
+--- MeasureTemperatureWithRTDSensor_1[2] ---
+
+--- MeasureTemperatureWithRTDSensor_2[2] ---
+
+--- MeasureTemperatureWithRTDSensor_3[2] ---
+
+--- MeasureTemperatureWithRTDSensor_4[2] ---
+
+--- MeasureTemperatureWithRTDSensor_5[2] ---
+
+--- GetEnvironmentalData_1[2] ---
+
+--- GetEnvironmentalData_2[2] ---
+
+--- GetEnvironmentalData_3[2] ---
+
+--- GetEnvironmentalData_4[2] ---
+
+--- GetEnvironmentalData_5[2] ---
+
+--- MeasureAcceleration[2] ---
+
+--- GetSlowADCData[2] ---
+
+--- GetRaspiStatus[2] ---
+
+--- AnalogDiscoveryManager[2] ---
+
+--- ControlHighVoltage_TPC[2] ---
+
+--- ControlHighVoltage_PMT[2] ---
+
+--- ReadWaveform[2] ---
+
+--- SendTelemetry[2] ---
+
+--- ShutdownSystem[2] ---
+
+
+<End Analysis>   | Time: 2023-05-31 15:10:44 +0900
+
+        **************************************
+        ****         Finalization         ****
+        **************************************
+
+
+ANLManager: starting <finalize> routine.
+
+
+ANLManager: <finalize> routine successfully done.
+
+
+ANLManager: starting <finalize:1> routine.
+
+
+ANLManager: <finalize:1> routine successfully done.
+
+
+ANLManager: starting <finalize:2> routine.
+
+
+ANLManager: <finalize:2> routine successfully done.
+
+
