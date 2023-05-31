@@ -2,7 +2,6 @@
 #include <chrono>
 #include <thread>
 #include "ReadWaveform.hh"
-#include "DateManager.hh"
 
 using namespace anlnext;
 
@@ -43,8 +42,6 @@ ANLStatus ReadWaveform::mod_define()
 
 ANLStatus ReadWaveform::mod_initialize()
 {
-  timeStampStr_ = getTimeStr();
-
   const std::string send_telemetry_md = "SendTelemetry";
   if (exist_module(send_telemetry_md)) {
     get_module_NC(send_telemetry_md, &sendTelemetry_);
@@ -60,6 +57,12 @@ ANLStatus ReadWaveform::mod_initialize()
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
   }
+
+  const std::string run_id_manager_md = "RunIDManager";
+  if (exist_module(run_id_manager_md)) {
+    get_module_NC(run_id_manager_md, &runIDManager_);
+  }
+  
   setupAnalogIn();
 
   AnalogDiscoveryIO* adio = ADManager_->ADIO();
@@ -169,10 +172,16 @@ void ReadWaveform::setupAnalogIn()
 
 void ReadWaveform::createNewOutputFile()
 {
+  int run_id = 0;
+  std::string time_stamp_str = "YYYYMMDDHHMMSS";
+  if (runIDManager_) {
+    run_id = runIDManager_->RunID();
+    time_stamp_str = runIDManager_->TimeStampStr();
+  }
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileID_;
   const std::string id_str = sout.str();
-  const std::string filename = outputFilenameBase_ + "_" + timeStampStr_ + "_" + id_str + ".dat";
+  const std::string filename = outputFilenameBase_ + "_" + std::to_string(run_id) + "_" + time_stamp_str + "_" + id_str + ".dat";
   ofs_ = std::make_shared<std::ofstream>(filename, std::ios::out|std::ios::binary);
   if (!(*ofs_)) {
     std::cerr << "File open error." << std::endl;
