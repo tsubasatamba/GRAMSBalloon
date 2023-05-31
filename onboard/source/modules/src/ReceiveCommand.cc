@@ -15,7 +15,7 @@ ReceiveCommand::ReceiveCommand()
   serialPath_ = "/dev/null";
   binaryFilenameBase_ = "Command";
   comdef_ = std::make_shared<CommandDefinition>(); 
-  buffer_.resize(200);
+  buffer_.resize(bufferSize_);
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
@@ -98,8 +98,8 @@ ANLStatus ReceiveCommand::mod_analyze()
     return AS_OK;
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  const int status = sc_->sread(buffer_, 200);
+  std::this_thread::sleep_for(std::chrono::milliseconds(serialReadingTimems_));
+  const int status = sc_->sread(buffer_, bufferSize_);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
     if (sendTelemetry_) {

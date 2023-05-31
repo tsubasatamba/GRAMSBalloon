@@ -81,6 +81,8 @@ private:
   mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
   int timeoutSec_ = 10;
+  constexpr int bufferSize_ = 200;
+  constexpr int serialReadingTimems_ = 250;
 };
 
 } /* namespace gramsballoon */
