@@ -98,7 +98,7 @@ ANLStatus ReceiveCommand::mod_analyze()
     return AS_OK;
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   const int status = sc_->sread(buffer_, 200);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
@@ -120,6 +120,7 @@ ANLStatus ReceiveCommand::mod_analyze()
       const bool applied = applyCommand();
       writeCommandToFile(!applied);
       if (!applied) {
+        commandRejectCount_++;
         if (sendTelemetry_) {
           sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
         }
@@ -127,15 +128,6 @@ ANLStatus ReceiveCommand::mod_analyze()
       continue;
     }
     command_.push_back(buffer_[i]);
-    /*
-    if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
-      command_.clear();
-    }
-    command_.push_back(buffer_[i]);
-    if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
-      break;
-    }
-    */
   }
 
   if (chatter_>=1) {
@@ -293,6 +285,9 @@ bool ReceiveCommand::applyCommand()
 
   if (code==210 && argc==0) {
     if (readWaveform_!=nullptr) {
+      if (!(readWaveform_->StartReading())) {
+        return false;
+      }
       readWaveform_->setOndemand(true);
       return true;
     }
