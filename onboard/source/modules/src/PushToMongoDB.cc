@@ -19,7 +19,7 @@ PushToMongoDB::PushToMongoDB()
 ANLStatus PushToMongoDB::mod_define()
 {
   define_parameter("chatter", &mod_class::chatter_);
-  
+
   return AS_OK;
 }
 
@@ -72,7 +72,7 @@ void PushToMongoDB::pushHKTelemetry()
     auto section = bsoncxx::builder::stream::document{}
       << "Event_Count"                  << static_cast<int>(telemdef->EventCount())
       << "Trigger_Count"                << static_cast<int>(telemdef->TriggerCount())
-      << "Chamber_Puressure"            << static_cast<int>(telemdef->ChamberPressure())
+      << "Chamber_Pressure"            << static_cast<int>(telemdef->ChamberPressure())
       << "Chamber_Temperature_1"        << static_cast<int>(telemdef->ChamberTemperature(0))
       << "Chamber_Temperature_2"        << static_cast<int>(telemdef->ChamberTemperature(1))
       << "Chamber_Temperature_3"        << static_cast<int>(telemdef->ChamberTemperature(2))
@@ -185,7 +185,7 @@ void PushToMongoDB::pushWFTelemetry()
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
-  
+
   auto doc = builder.generate();
   mongodbClient_->push("grams", doc);
 
