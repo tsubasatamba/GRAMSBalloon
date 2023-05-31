@@ -76,7 +76,7 @@ rubyのHP(<http://ruby-lang.org/en/downloads/>)に行き、2.7系の最新版を
 
 ### git　clone
 
-`git clone https://STA205233/GRAMS-Balloon-Test`でテスト用レポジトリをクローンしてくる。
+`git clone https://STA205233/GRAMS-Balloon-Test`でテスト用レポジトリをクローンしてくる。(deprecated)
 
 `git clone https://tsubasatamba/GRAMSBalloon`で本番用レポジトリをクローンしてくる。
 
@@ -118,15 +118,21 @@ GRAMS-Balloon-test/sourceに移った後、
 
 `sudo apt install digilent.adept.runtime_2.27.9-armhf.deb`、`sudo apt install digilent.waveforms_3.19.5_armhf.deb`を行う。
 
-## ネットワークの設定
+## 時刻の設定
 
-直接Raspberry Piに接続する時はIPを固定する必要がある、root権限で/etc/dhcpcd.confを開き、
+<https://arakoki70.com/?p=5691> を参考にする。
 
-`interface eth0
-static ip_address=192.168.10.205/24
-static routers=192.168.10.1
-static domain_name_servers=192.168.10.1`
+/etc/systemd/timesyncd.confを編集する。
+`NTP=ntp.jst.mfeed.ad.jp ntp.nict.jp`
+`FallbackNTP=time.google.com`
+を追記する。
+その後、`sudo timedatectl set-ntp true`、`sudo systemctl daemon-reload`、`sudo systemctl restart systemd-timesyncd.service`を打つ。ただし、JAXAからは繋がらないみたいなので、別の方法で行うこと。
 
-を最後に追加し、再起動する。
+## DAQソフト自動起動設定
 
-Note：再起動するとIPが固定されるので今までのIPでは接続できなくなる。
+`zsh /home/grams/software/GRAMSBalloon/starter/starter.sh`を/etc/rc.localに追記する。
+Note: 追記した後の電源ON動作でGRAMSBalloonが動いてしまうため、多重起動に注意すること。
+
+## まとめ
+
+`sudo apt install zsh g++ libboost-all-dev cmake swig git pigpio autoconf bison patch build-essential rustc libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev emacs`を行う
