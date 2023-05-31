@@ -351,10 +351,13 @@ void ReceiveCommand::writeCommandToFile(bool failed)
     run_id = runIDManager_->RunID();
     time_stamp_str = runIDManager_->TimeStampStr();
   }
-  std::ostringstream sout;
-  sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
-  const std::string id_str = sout.str();
-  const std::string filename = binaryFilenameBase_ + "_" + std::to_string(run_id) + "_" + time_stamp_str + "_" + type_str + "_" + id_str + ".dat";
+  std::ostringstream id_sout;
+  id_sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
+  const std::string id_str = id_sout.str();
+  std::ostringstream run_id_sout;
+  run_id_sout << std::setfill('0') << std::right << std::setw(6) << run_id;
+  const std::string run_id_str = run_id_sout.str();
+  const std::string filename = binaryFilenameBase_ + "_" + run_id_str + "_" + time_stamp_str + "_" + type_str + "_" + id_str + ".dat";
   
   if (!failed) {
     comdef_->writeFile(filename, app);
