@@ -1,3 +1,7 @@
+var Va = 5.026 //[V] for slow ADC
+var Rref = 430 //[ohm] for RTD measurement
+var Rshunt = 100 //[ohm] for Pressure gauge
+
 HSQuickLook.main.schema =
     [
       {
@@ -23,24 +27,24 @@ HSQuickLook.main.schema =
 	      "contents": {
           "Event_Count": {"type": "int"},
           "Trigger_Count": {"type": "int"},
-          "Chamber_Puressure_ADC": {"source": "Chamber_Puressure", "type": "int"},
-          "Chamber_Puressure": {"type": "int", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "Chamber_Pressure_ADC": {"source": "Chamber_Pressure", "type": "int"},
+          "Chamber_Pressure": {"type": "int", "format": "%7.3f", "conversion": convert_Chamber_Pressure},
           "Chamber_Temperature_1_ADC": {"source": "Chamber_Temperature_1", "type": "int"},
-          "Chamber_Temperature_1": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "Chamber_Temperature_1": {"type": "double", "format": "%7.3f", "conversion": convert_RTD_measure},
           "Chamber_Temperature_2_ADC": {"source": "Chamber_Temperature_2", "type": "int"},
-          "Chamber_Temperature_2": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "Chamber_Temperature_2": {"type": "double", "format": "%7.3f", "conversion": convert_RTD_measure},
           "Chamber_Temperature_3_ADC": {"source": "Chamber_Temperature_3", "type": "int"},
-          "Chamber_Temperature_3": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "Chamber_Temperature_3": {"type": "double", "format": "%7.3f", "conversion": convert_RTD_measure},
           "Valve_Temperature_ADC": {"source": "Valve_Temperature", "type": "int"},
-          "Valve_Temperature": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "Valve_Temperature": {"type": "double", "format": "%7.3f", "conversion": convert_RTD_measure},
           "Outer_Temperature_ADC": {"source": "Outer_Temperature", "type": "int"},
-          "Outer_Temperature": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "Outer_Temperature": {"type": "double", "format": "%7.3f", "conversion": convert_RTD_measure},
           "TPC_High_Voltage_Setting": {"source": "TPC_High_Voltage_Setting", "type": "double"},
           "TPC_High_Voltage_Measurement_ADC": {"source": "TPC_High_Voltage_Measurement", "type": "int"},
-          "TPC_High_Voltage_Measurement": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }},
+          "TPC_High_Voltage_Measurement": {"type": "double", "format": "%7.3f", "conversion": convert_RTD_measure},
           "PMT_High_Voltage_Setting": {"source": "PMT_High_Voltage_Setting", "type": "double"},
           "PMT_High_Voltage_Measurement_ADC": {"source": "PMT_High_Voltage_Measurement", "type": "int"},
-          "PMT_High_Voltage_Measurement": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (v*0.1); }}
+          "PMT_High_Voltage_Measurement": {"type": "double", "format": "%7.3f", "conversion": convert_RTD_measure}
         }
       },
       {
@@ -143,4 +147,9 @@ HSQuickLook.main.schema =
       }
     ];
 
-function convert_Slow_ADC(v) { return (v / 4096 * 5.026) }
+function convert_Slow_ADC(v) { return (v / 4096 * Va) }
+function convert_RTD_measure(v) { return (v / 400 * Rref) / 32.0 - 256 }
+function convert_Chamber_Pressure(v) {
+  var I = (convert_Slow_ADC(v) / Rshunt) * 1000 // mA
+  return (I - 4) * 2 / 16
+}
