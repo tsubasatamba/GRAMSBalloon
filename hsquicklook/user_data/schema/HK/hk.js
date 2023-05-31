@@ -151,5 +151,5 @@ function convert_Slow_ADC(v) { return (v / 4096 * Va) }
 function convert_RTD_measure(v) { return (v / 400 * Rref) / 32.0 - 256 }
 function convert_Chamber_Pressure(v) {
   var I = (convert_Slow_ADC(v) / Rshunt) * 1000 // mA
-  return (I - 4) * 2 / 1.6
+  return (I - 4) * 2 / 16
 }
