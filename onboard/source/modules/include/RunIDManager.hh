@@ -11,7 +11,6 @@
 
 #include <anlnext/BasicModule.hh>
 #include <sys/time.h>
-#include "SendTelemetry.hh"
 
 namespace gramsballoon {
 
@@ -40,7 +39,6 @@ public:
 private:
   int runID_ = 0;
   std::string filename_;
-  SendTelemetry* sendTelemetry_ = nullptr;
   std::string timeStampStr_;
   int chatter_;
 

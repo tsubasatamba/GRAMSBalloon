@@ -38,11 +38,6 @@ ANLStatus RunIDManager::mod_initialize()
   ofs << runID_ << " " << timeStampStr_ << "\n";
   ofs.flush();
   ofs.close();
-  
-  const std::string send_telem_md = "SendTelemetry";
-  if (exist_module(send_telem_md)) {
-    get_module_NC(send_telem_md, &sendTelemetry_);
-  }
 
   return AS_OK;
 }
