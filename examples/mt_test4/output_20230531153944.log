@@ -523,7 +523,7 @@ ANLManager: <initialize:2> routine successfully done.
 
 
 
-<Begin Analysis> | Time: 2023-05-31 15:19:59 +0900
+<Begin Analysis> | Time: 2023-05-31 15:39:50 +0900
 
         **************************************
         ****        Main Analysis         ****
@@ -690,12 +690,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         15
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         15
 command index: 0
 Event :         16
 Event :         17
@@ -720,12 +720,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         19
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         19
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -745,12 +745,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         23
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         23
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -882,12 +882,12 @@ RTD ADC is equal to zero.
 RTD ADC is equal to zero.
 RTD ADC is equal to zero.
 RTD ADC is equal to zero.
-Event :         40
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         40
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -978,16 +978,16 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         49
 command index: 0
+Event :         49
 Event :         50
 Event :         51
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :         52
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1013,18 +1013,18 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         53
 command index: 0
+Event :         53
 Event :         54
 Event :         55
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Time out
 Event :         56
 Event :         57
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1155,8 +1155,8 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         70
 command index: 0
+Event :         70
 Event :         71
 Event :         72
 Event :         73
@@ -1255,12 +1255,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         82
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         82
 command index: 0
 Event :         83
 Time out
@@ -1292,12 +1292,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         87
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         87
 command index: 0
 Event :         88
 Event :         89
@@ -1327,12 +1327,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         91
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         91
 command index: 0
 Event :         92
 Event :         93
@@ -1392,12 +1392,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :         99
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :         99
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1422,22 +1422,22 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        103
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 command index: 0
 Event :        104
 Event :        105
@@ -1457,17 +1457,17 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        107
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1492,14 +1492,14 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :        111
-Time out
-Event :        112
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :        111
+Time out
+Event :        112
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1529,12 +1529,12 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :        116
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+Event :        116
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1559,17 +1559,17 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        120
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1594,17 +1594,17 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        124
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1629,17 +1629,17 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        128
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1664,17 +1664,17 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        132
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -1689,841 +1689,842 @@ command index: 0
 Event :        133
 Event :        134
 Event :        135
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        136
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        137
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        138
 Time out
 Event :        139
+command index: 0
 Event :        140
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        141
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        142
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        143
+command index: 0
 Event :        144
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        145
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        146
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        147
+command index: 0
 Event :        148
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        149
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        150
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        151
+command index: 0
 Event :        152
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        153
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        154
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        155
+command index: 0
 Event :        156
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        157
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        158
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        159
+command index: 0
 Event :        160
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        161
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        162
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        163
-Event :        164
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-Event :        165
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-Event :        166
 command index: 0
+Event :        164
+Event :        165
 Time out
+Event :        166
 Event :        167
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        168
+command index: 0
 Event :        169
 Event :        170
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        171
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        172
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        173
 Event :        174
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        175
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        176
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        177
 Event :        178
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        179
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        180
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        181
 Event :        182
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        183
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        184
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        185
 Event :        186
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        187
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        188
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        189
 Event :        190
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        191
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        192
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        193
 Time out
 Event :        194
 Event :        195
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        196
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        197
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        198
 Event :        199
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        200
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        201
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        202
 Event :        203
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        204
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        205
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
-Event :        205
 Event :        206
 Event :        207
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        208
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        209
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        210
 Event :        211
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        212
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        213
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        214
 Event :        215
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        216
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        217
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
-Event :        217
 Event :        218
 Event :        219
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        220
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-command index: 0
 Event :        221
 Time out
 Event :        222
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        223
 Event :        224
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        225
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        226
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
-Event :        226
 Event :        227
 Event :        228
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        229
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        230
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
-Event :        230
 Event :        231
 Event :        232
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        233
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        234
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -2535,833 +2536,792 @@ Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
-Event :        234
 Event :        235
 Event :        236
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        237
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        238
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        239
+command index: 0
 Event :        240
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        241
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        242
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        243
+command index: 0
 Event :        244
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        245
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        246
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        247
+command index: 0
 Event :        248
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-Event :        249
 Time out
+Event :        249
 Event :        250
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        251
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        252
+command index: 0
 Event :        253
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        254
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        255
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        256
+command index: 0
 Event :        257
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        258
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        259
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        260
+command index: 0
 Event :        261
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        262
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        263
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        264
+command index: 0
 Event :        265
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
 Event :        266
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        267
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        268
+command index: 0
 Event :        269
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        270
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        271
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        272
-Event :        273
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-Event :        274
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
+Event :        273
+Event :        274
 Event :        275
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        276
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Time out
 Event :        277
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        278
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        279
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        280
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        281
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        282
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        283
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        284
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        285
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        286
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        287
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        288
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        289
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        290
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        291
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        292
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        293
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        294
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        295
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        296
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        297
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        298
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        299
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        300
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        301
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        302
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        303
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
+Time out
 Event :        304
-Time out
 Event :        305
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        306
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        307
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        308
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        309
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        310
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        311
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        312
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        313
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        314
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        315
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        316
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        317
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        318
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        319
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        320
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        321
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        322
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        323
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        324
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        325
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        326
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        327
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 Event :        328
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        329
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        330
-Event :        331
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-Event :        332
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-Time out
-Event :        333
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -3382,650 +3342,663 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :        334
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 command index: 0
+Event :        331
+Time out
+Event :        332
+Event :        333
+Event :        334
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        335
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        336
 Event :        337
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        338
-command index: 0
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        339
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        340
-Event :        341
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 command index: 0
+Event :        341
 Event :        342
 Event :        343
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        344
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-Event :        345
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 command index: 0
+Event :        345
 Event :        346
 Event :        347
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        348
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
+command index: 0
 Event :        349
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        350
-command index: 0
 Event :        351
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        352
+command index: 0
 Event :        353
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        354
-command index: 0
 Event :        355
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        356
+command index: 0
 Event :        357
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        358
-command index: 0
+Time out
 Event :        359
-Time out
 Event :        360
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        361
+command index: 0
 Event :        362
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        363
-command index: 0
 Event :        364
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        365
+command index: 0
 Event :        366
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        367
-command index: 0
 Event :        368
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        369
+command index: 0
 Event :        370
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        371
-command index: 0
 Event :        372
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        373
+command index: 0
 Event :        374
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        375
-command index: 0
 Event :        376
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        377
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        378
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        379
-command index: 0
 Event :        380
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        381
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        382
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        383
-command index: 0
 Event :        384
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        385
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        386
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-Event :        387
 Time out
+Event :        387
 Event :        388
-command index: 0
 Event :        389
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        390
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        391
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        392
-command index: 0
 Event :        393
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        394
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        395
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        396
-command index: 0
 Event :        397
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        398
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        399
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        400
-command index: 0
 Event :        401
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        402
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        403
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        404
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        405
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        406
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        407
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        408
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        409
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        410
-Event :        411
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -4041,310 +4014,305 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-Event :        412
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
+Event :        411
+Event :        412
 Event :        413
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        414
 Time out
 Event :        415
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        416
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        417
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        418
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        419
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        420
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        421
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        422
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
 Event :        423
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        424
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        425
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        426
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        427
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        428
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        429
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        430
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        431
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        432
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        433
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        434
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        435
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        436
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        437
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        438
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
 Event :        439
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        440
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        441
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
-Event :        442
 Time out
+Event :        442
 Event :        443
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        444
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
 Event :        445
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
 Event :        446
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-BME680IO::getData failed: ndata = 0, get_data_id = 2
-Failed to get environmental data.
-Pressure: 0
-Humidity: 0
-Temperature: 0
-command index: 0
 Event :        447
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
 Event :        448
-Event :        449
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
-RTD ADC is equal to zero.
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -4360,7 +4328,6 @@ Failed to get environmental data.
 Pressure: 0
 Humidity: 0
 Temperature: 0
-Event :        450
 BME680IO::getData failed: ndata = 0, get_data_id = 2
 Failed to get environmental data.
 Pressure: 0
@@ -4372,4 +4339,2228 @@ Pressure: 0
 Humidity: 0
 Temperature: 0
 command index: 0
+Event :        449
+Event :        450
 Event :        451
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        452
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        453
+command index: 0
+Event :        454
+Event :        455
+Event :        456
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        457
+command index: 0
+Event :        458
+Event :        459
+Event :        460
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        461
+command index: 0
+Event :        462
+Event :        463
+Event :        464
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        465
+command index: 0
+Event :        466
+Event :        467
+Event :        468
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        469
+command index: 0
+Time out
+Event :        470
+Event :        471
+Event :        472
+Event :        473
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        474
+command index: 0
+Event :        475
+Event :        476
+Event :        477
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        478
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        479
+Event :        480
+Event :        481
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        482
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        483
+Event :        484
+Event :        485
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        486
+command index: 0
+Event :        487
+Event :        488
+Event :        489
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        490
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        491
+Event :        492
+Event :        493
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        494
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        495
+Event :        496
+Time out
+Event :        497
+Event :        498
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        499
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        500
+Event :        501
+Event :        502
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        503
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        504
+Event :        505
+Event :        506
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        507
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        508
+Event :        509
+Event :        510
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        511
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        512
+Event :        513
+Event :        514
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        515
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        516
+Event :        517
+Event :        518
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        519
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        520
+Event :        521
+Event :        522
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        523
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        524
+Time out
+Event :        525
+Event :        526
+Event :        527
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        528
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        529
+Event :        530
+Event :        531
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        532
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        533
+Event :        534
+Event :        535
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        536
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        537
+Event :        538
+Event :        539
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        540
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        541
+Event :        542
+Event :        543
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        544
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        545
+Event :        546
+Event :        547
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        548
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        549
+Event :        550
+Event :        551
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        552
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Time out
+Event :        553
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        554
+Event :        555
+Event :        556
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        557
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        558
+command index: 0
+Event :        559
+Event :        560
+Event :        561
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        562
+command index: 0
+Event :        563
+Event :        564
+Event :        565
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        566
+command index: 0
+Event :        567
+Event :        568
+Event :        569
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        570
+command index: 0
+Event :        571
+Event :        572
+Event :        573
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        574
+command index: 0
+Event :        575
+Event :        576
+Event :        577
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        578
+command index: 0
+Event :        579
+Time out
+Event :        580
+Event :        581
+Event :        582
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        583
+command index: 0
+Event :        584
+Event :        585
+Event :        586
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        587
+command index: 0
+Event :        588
+Event :        589
+Event :        590
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        591
+command index: 0
+Event :        592
+Event :        593
+Event :        594
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        595
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        596
+Event :        597
+Event :        598
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        599
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        600
+Event :        601
+Event :        602
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        603
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        604
+Event :        605
+Event :        606
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        607
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Time out
+Event :        608
+command index: 0
+Event :        609
+Event :        610
+Event :        611
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        612
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        613
+Event :        614
+Event :        615
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        616
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        617
+Event :        618
+Event :        619
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        620
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        621
+Event :        622
+Event :        623
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        624
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        625
+Event :        626
+Event :        627
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        628
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        629
+Event :        630
+Event :        631
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        632
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        633
+Event :        634
+Time out
+Event :        635
+Event :        636
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        637
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        638
+Event :        639
+Event :        640
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        641
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        642
+Event :        643
+Event :        644
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        645
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        646
+Event :        647
+Event :        648
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        649
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        650
+Event :        651
+Event :        652
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        653
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        654
+Event :        655
+Event :        656
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+Event :        657
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        658
+command index: 0
+Event :        659
+Event :        660
+Event :        661
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        662
+Time out
+Event :        663
+command index: 0
+Event :        664
+Event :        665
+Event :        666
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        667
+command index: 0
+Event :        668
+Event :        669
+Event :        670
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        671
+command index: 0
+Event :        672
+Event :        673
+Event :        674
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        675
+command index: 0
+Event :        676
+Event :        677
+Event :        678
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        679
+command index: 0
+Event :        680
+Event :        681
+Event :        682
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        683
+command index: 0
+Event :        684
+Event :        685
+Event :        686
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        687
+command index: 0
+Event :        688
+Event :        689
+Time out
+Event :        690
+Event :        691
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        692
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        693
+Event :        694
+Event :        695
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        696
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        697
+Event :        698
+Event :        699
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        700
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        701
+Event :        702
+Event :        703
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        704
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        705
+Event :        706
+Event :        707
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        708
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+command index: 0
+Event :        709
+Event :        710
+Event :        711
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+RTD ADC is equal to zero.
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+Event :        712
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
+BME680IO::getData failed: ndata = 0, get_data_id = 2
+Failed to get environmental data.
+Pressure: 0
+Humidity: 0
+Temperature: 0
