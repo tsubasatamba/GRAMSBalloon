@@ -2,9 +2,7 @@
 #include <string>
 #include "CommandSender.hh"
 #include "CommandBuilder.hh"
-#include "SaveCommandLog.hh"
-
-std::string FILENAME = "command.log";
+#include "SaveCommand.hh"
 
 int main(int argc, char *argv[])
 {
@@ -13,16 +11,11 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  gramsballoon::CommandLog comlog;
-
   const std::string name(argv[1]);
-  comlog.commandname = name;
   std::vector<int32_t> arg_array;
   for (int i=2; i<argc; i++) {
     arg_array.push_back(std::stoi(argv[i]));
   }
-  
-  comlog.args = arg_array;
 
   std::vector<uint8_t> command;
   gramsballoon::CommandBuilder command_builder;
@@ -34,8 +27,6 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  comlog.hex = command;
-
   gramsballoon::CommandSender sender;
   sender.set_serial_port("/dev/tty.usbserial-1460");
   if ( !sender.open_serial_port() ) {
@@ -43,13 +34,13 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  gramsballoon::SaveCommandLog saver(FILENAME);
-  saver.writeCommandLog(comlog);
-
   const int length_sent = sender.send(command);
   std::cout << "Length sent: " << length_sent << std::endl;
 
+  std::string log_filename = "command_1.log";
+  gramsballoon::write_command(command, log_filename);
+
   sender.close_serial_port();
-  saver.close();
+  
   return 0;
 }
