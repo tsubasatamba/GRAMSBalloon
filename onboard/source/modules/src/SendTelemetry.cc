@@ -154,6 +154,10 @@ ANLStatus SendTelemetry::mod_finalize()
 void SendTelemetry::inputInfo()
 {
   telemdef_->setTelemetryType(telemetryType_);
+  if (runIDManager_!=nullptr) {
+    telemdef_->setRunID(runIDManager_->RunID());
+  }
+  
   if (telemetryType_==1) {
     inputDetectorInfo();
     inputHKVesselInfo();
@@ -219,6 +223,7 @@ void SendTelemetry::inputHKVesselInfo()
       telemdef_->setGyro(i, measureAcceleration_->getGyro(i));
       telemdef_->setMagnet(i, measureAcceleration_->getMagnet(i));
     }
+    telemdef_->setAccelSensorTemperature(measureAcceleration_->getTemperature());
   }
   if (getSlowADCData_!=nullptr) {
     telemdef_->setMainCurrent(getSlowADCData_->getADC(1));

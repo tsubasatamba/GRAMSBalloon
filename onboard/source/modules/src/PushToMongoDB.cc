@@ -63,6 +63,7 @@ void PushToMongoDB::pushHKTelemetry()
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
       << "Telemetry_Index" << static_cast<int>(telemdef->TelemetryIndex())
+      << "Run_ID"          << static_cast<int>(telemdef->RunID())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -104,6 +105,7 @@ void PushToMongoDB::pushHKTelemetry()
       section_stream << (boost::format("Acceleration_%d") % c).str() << telemdef->Magnet(i);
     }
     section_stream
+      << "Accel_Sensor_Temperature" << telemdef->AccelSensorTemperature()
       << "Main_Current" << static_cast<int>(telemdef->MainCurrent())
       << "Main_Voltage" << static_cast<int>(telemdef->MainVoltage());
     auto section = section_stream << bsoncxx::builder::stream::finalize;
@@ -163,6 +165,7 @@ void PushToMongoDB::pushWFTelemetry()
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
       << "Telemetry_Index" << static_cast<int>(telemdef->TelemetryIndex())
+      << "Run_ID"          << static_cast<int>(telemdef->RunID())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -207,6 +210,7 @@ void PushToMongoDB::pushStatusTelemetry()
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
       << "Telemetry_Index" << static_cast<int>(telemdef->TelemetryIndex())
+      << "Run_ID"          << static_cast<int>(telemdef->RunID())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
