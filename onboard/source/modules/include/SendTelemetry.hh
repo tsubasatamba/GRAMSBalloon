@@ -21,7 +21,7 @@
 #include "GetSlowADCData.hh"
 #include "SerialCommunication.hh"
 #include "ReceiveCommand.hh"
-
+#include "RunIDManager.hh"
 
 namespace gramsballoon {
 
@@ -33,7 +33,7 @@ class GetEnvironmentalData;
 class MeasureAcceleration;
 class GetSlowADCData;
 class ReceiveCommand;
-
+class RunIDManager;
 
 class SendTelemetry : public anlnext::BasicModule
 {
@@ -78,7 +78,6 @@ private:
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 100;
   int chatter_ = 0;
-  std::string timeStampStr_;
 
   // access to other classes
   ReadWaveform* readWaveform_ = nullptr;
@@ -94,6 +93,7 @@ private:
   MeasureAcceleration* measureAcceleration_ = nullptr;
   GetSlowADCData* getSlowADCData_ = nullptr;
   ReceiveCommand* receiveCommand_ = nullptr;
+  RunIDManager* runIDManager_ = nullptr;
 
   // communication
   std::shared_ptr<SerialCommunication> sc_;

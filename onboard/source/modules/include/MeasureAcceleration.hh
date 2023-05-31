@@ -48,6 +48,7 @@ public:
   float getGyro(int index) { return (index>=0 && index<3) ? icmIO_->getData()->mGyro[index] : 0; }
   const float* getMagnet() const { return icmIO_->getData()->mMag; }
   float getMagnet(int index) { return (index>=0 && index<3) ? icmIO_->getData()->mMag[index] : 0; }
+  float getTemperature() { return icmIO_->getData()->mTemp; }
 
 private:
   std::shared_ptr<ICM20948IO> icmIO_;

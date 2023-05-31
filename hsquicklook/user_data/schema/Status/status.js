@@ -11,7 +11,8 @@ HSQuickLook.main.schema =
           "Telemetry_Type": {"type": "int"},
           "Time": {"type": "int"},
           "Time_us": {"type": "int"},
-          "Telemetry_Index": {"type": "int"}
+          "Telemetry_Index": {"type": "int"},
+          "Run_ID": {"type": "int"}
         }
       },
       {

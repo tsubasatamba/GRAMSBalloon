@@ -1,5 +1,4 @@
 #include "ReceiveCommand.hh"
-#include "DateManager.hh"
 #include <chrono>
 #include <thread>
 
@@ -15,7 +14,7 @@ ReceiveCommand::ReceiveCommand()
   serialPath_ = "/dev/null";
   binaryFilenameBase_ = "Command";
   comdef_ = std::make_shared<CommandDefinition>(); 
-  buffer_.resize(200);
+  buffer_.resize(bufferSize_);
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
@@ -38,8 +37,6 @@ ANLStatus ReceiveCommand::mod_define()
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
-  timeStampStr_ = getTimeStr();
-  
   const std::string send_telem_md = "SendTelemetry";
   if (exist_module(send_telem_md)) {
     get_module_NC(send_telem_md, &sendTelemetry_);
@@ -61,6 +58,11 @@ ANLStatus ReceiveCommand::mod_initialize()
 
   if (exist_module(PMTHVControllerModuleName_)) {
     get_module_NC(PMTHVControllerModuleName_, &PMTHVController_);
+  }
+
+  const std::string run_id_manager_md = "RunIDManager";
+  if (exist_module(run_id_manager_md)) {
+    get_module_NC(run_id_manager_md, &runIDManager_);
   }
 
   // communication
@@ -98,8 +100,8 @@ ANLStatus ReceiveCommand::mod_analyze()
     return AS_OK;
   }
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  const int status = sc_->sread(buffer_, 200);
+  std::this_thread::sleep_for(std::chrono::milliseconds(serialReadingTimems_));
+  const int status = sc_->sread(buffer_, bufferSize_);
   if (status == -1) {
     std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
     if (sendTelemetry_) {
@@ -120,6 +122,7 @@ ANLStatus ReceiveCommand::mod_analyze()
       const bool applied = applyCommand();
       writeCommandToFile(!applied);
       if (!applied) {
+        commandRejectCount_++;
         if (sendTelemetry_) {
           sendTelemetry_->getErrorManager()->setError(ErrorType::INVALID_COMMAND);
         }
@@ -127,15 +130,6 @@ ANLStatus ReceiveCommand::mod_analyze()
       continue;
     }
     command_.push_back(buffer_[i]);
-    /*
-    if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
-      command_.clear();
-    }
-    command_.push_back(buffer_[i]);
-    if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
-      break;
-    }
-    */
   }
 
   if (chatter_>=1) {
@@ -293,6 +287,9 @@ bool ReceiveCommand::applyCommand()
 
   if (code==210 && argc==0) {
     if (readWaveform_!=nullptr) {
+      if (!(readWaveform_->StartReading())) {
+        return false;
+      }
       readWaveform_->setOndemand(true);
       return true;
     }
@@ -348,10 +345,16 @@ void ReceiveCommand::writeCommandToFile(bool failed)
     fileIDmp_[type].second = 0;
   }
 
+  int run_id = 0;
+  std::string time_stamp_str = "YYYYMMDDHHMMSS";
+  if (runIDManager_) {
+    run_id = runIDManager_->RunID();
+    time_stamp_str = runIDManager_->TimeStampStr();
+  }
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
   const std::string id_str = sout.str();
-  const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
+  const std::string filename = binaryFilenameBase_ + "_" + std::to_string(run_id) + "_" + time_stamp_str + "_" + type_str + "_" + id_str + ".dat";
   
   if (!failed) {
     comdef_->writeFile(filename, app);

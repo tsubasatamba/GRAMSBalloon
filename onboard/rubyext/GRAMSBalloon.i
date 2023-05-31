@@ -44,6 +44,7 @@
 #ifdef USE_PIGPIO
 #include "GetSlowADCData.hh"
 #endif
+#include "RunIDManager.hh"
 %}
 
 %include "std_vector.i"
@@ -174,4 +175,11 @@ public:
   GetSlowADCData();
 };
 #endif
+
+class RunIDManager : public anlnext::BasicModule
+{
+public:
+  RunIDManager();
+};
+
 } // namespace GRAMSBalloon

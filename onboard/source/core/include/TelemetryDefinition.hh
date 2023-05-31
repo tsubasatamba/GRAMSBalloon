@@ -60,6 +60,7 @@ public:
 
   // setter
   void setTelemetryType(uint16_t v) { telemetryType_ = v; }
+  void setRunID(int32_t v) { runID_ = v; }
   void setEventCount(uint32_t v) { eventCount_ = v; }
   void setTriggerCount(uint32_t v) { triggerCount_ = v; }
   void setChamberPressure(uint16_t v) { chamberPressure_ = v; }
@@ -91,6 +92,7 @@ public:
   void setMagnet(const std::vector<float>& v) { magnet_ = v; }
   void setMagnet(int index, float v) { if (index<static_cast<int>(magnet_.size())) magnet_[index] = v; }
   void resizeMagnet(int n) { magnet_.resize(n); }
+  void setAccelSensorTemperature(float v) { accelSensorTemperature_ = v; }
   void setMainCurrent(uint16_t v) { mainCurrent_ = v; }
   void setMainVoltage(uint16_t v) { mainVoltage_ = v; }
   void setLastCommandIndex(uint32_t v) { lastCommandIndex_ = v; }
@@ -116,6 +118,7 @@ public:
   uint16_t TelemetryType() { return telemetryType_; }
   timeval TimeNow() { return timeNow_; }
   uint32_t TelemetryIndex() { return telemetryIndex_; }
+  int32_t RunID() { return runID_; }
   uint16_t CRC() { return crc_; }
   uint16_t StopCode() { return stopCode_; }
   uint32_t EventCount() { return eventCount_; }
@@ -149,6 +152,7 @@ public:
   const std::vector<float>& Magnet() const { return magnet_; }
   std::vector<float>& Magnet() { return magnet_; }
   float Magnet(int index) { return index<(int)magnet_.size() ? magnet_[index] : 0 ; }
+  float AccelSensorTemperature() { return accelSensorTemperature_; }
   uint16_t MainCurrent() { return mainCurrent_; }
   uint16_t MainVoltage() { return mainVoltage_; }
   uint32_t LastCommandIndex() { return lastCommandIndex_; }
@@ -177,6 +181,7 @@ private:
   uint16_t telemetryType_ = 0;
   timeval timeNow_;
   uint32_t telemetryIndex_ = 0;
+  int32_t runID_ = -1;
   // footer
   uint16_t crc_ = 0;
   uint16_t stopCode_ = 0xc5c5;
@@ -199,6 +204,7 @@ private:
   std::vector<float> acceleration_;
   std::vector<float> gyro_;
   std::vector<float> magnet_;
+  float accelSensorTemperature_ = 0.0;
   uint16_t mainCurrent_ = 0;
   uint16_t mainVoltage_ = 0;
   uint32_t lastCommandIndex_ = 0;

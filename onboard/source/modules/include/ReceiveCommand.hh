@@ -19,7 +19,7 @@
 #include "SendTelemetry.hh"
 #include "ReadWaveform.hh"
 #include "ControlHighVoltage.hh"
-
+#include "RunIDManager.hh"
 
 namespace gramsballoon {
 
@@ -27,6 +27,7 @@ class ShutdownSystem;
 class SendTelemetry;
 class ReadWaveform;
 class ControlHighVoltage;
+class RunIDManager;
 
 class ReceiveCommand : public anlnext::BasicModule
 {
@@ -63,7 +64,6 @@ private:
   std::string binaryFilenameBase_ = "";
   int numCommandPerFile_ = 100;
   int chatter_ = 0;
-  std::string timeStampStr_;
 
   // access to other classes
   SendTelemetry* sendTelemetry_ = nullptr;
@@ -73,6 +73,7 @@ private:
   std::string TPCHVControllerModuleName_ = "";
   ControlHighVoltage* PMTHVController_ = nullptr;
   std::string PMTHVControllerModuleName_ = "";
+  RunIDManager* runIDManager_ = nullptr;
 
   //communication
   std::shared_ptr<SerialCommunication> sc_ = nullptr;
@@ -81,6 +82,8 @@ private:
   mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
   int timeoutSec_ = 10;
+  constexpr static int bufferSize_ = 200;
+  constexpr static int serialReadingTimems_ = 250;
 };
 
 } /* namespace gramsballoon */

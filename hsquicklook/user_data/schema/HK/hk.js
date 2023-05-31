@@ -15,7 +15,8 @@ HSQuickLook.main.schema =
           "Telemetry_Type": {"type": "int"},
           "Time": {"type": "int"},
           "Time_us": {"type": "int"},
-          "Telemetry_Index": {"type": "int"}
+          "Telemetry_Index": {"type": "int"},
+          "Run_ID": {"type": "int"}  
         }
       },
       {
@@ -79,6 +80,7 @@ HSQuickLook.main.schema =
           "Magnet_x": {"type": "float","format": "%7.3f"},
           "Magnet_y": {"type": "float","format": "%7.3f"},
           "Magnet_z": {"type": "float","format": "%7.3f"},
+          "Accel_Sensor_Temperature": {"type": "float", "format": "%7.3f"},
           "Main_Current_ADC": { "source": "Main_Current", "type": "int" },
           "Main_Current_ADC_Voltage": { "source": "Main_Current", "type": "double","format":"%7.3f", "conversion": convert_Slow_ADC},
           "Main_Current": {"type": "double", "format": "%7.3f", "conversion": function(v){ return (convert_Slow_ADC(v)-1)*0.8; }},
