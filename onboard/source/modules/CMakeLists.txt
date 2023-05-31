@@ -26,6 +26,7 @@ set(GB_MODULES
   src/SimpleLoop.cc
   src/ReceiveTelemetry.cc
   src/InterpretTelemetry.cc
+  src/RunIDManager.cc
   )
 
 if(GB_USE_PIGPIO)

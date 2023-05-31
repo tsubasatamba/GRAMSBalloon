@@ -47,6 +47,10 @@ if (GB_MAC)
   set(GB_USE_HSQUICKLOOK ON)
 endif(GB_MAC)
 
+if (NOT GB_MAC)
+  set(RUBY_CONFIG_FILE_DIR /usr/include/arm-linux-gnueabihf/ruby-2.7.0)
+endif(NOT GB_MAC)
+
 ### External libraries
 ### BOOST ###
 find_package(Boost 1.60.0 REQUIRED COMPONENTS system chrono thread)

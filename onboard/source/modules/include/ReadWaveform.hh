@@ -15,13 +15,13 @@
 #include "DAQIO.hh"
 #include "SendTelemetry.hh"
 #include "TelemetryDefinition.hh"
-
-class SendTelemetry;
+#include "RunIDManager.hh"
 
 namespace gramsballoon {
 
 class AnalogDiscoveryManager;
 class SendTelemetry;
+class RunIDManager;
 
 class ReadWaveform : public anlnext::BasicModule
 {
@@ -100,8 +100,8 @@ private:
   uint32_t eventID_ = 0;
   int nonDetectionCounter_ = 0;
   int maxNonDetectionCount_ = 100;
+  RunIDManager* runIDManager_ = nullptr;
   int chatter_ = 0;
-  std::string timeStampStr_ = "";
 };
 
 } /* namespace gramsballoon */

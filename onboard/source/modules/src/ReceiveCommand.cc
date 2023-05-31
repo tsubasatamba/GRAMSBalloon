@@ -1,5 +1,4 @@
 #include "ReceiveCommand.hh"
-#include "DateManager.hh"
 #include <chrono>
 #include <thread>
 
@@ -38,8 +37,6 @@ ANLStatus ReceiveCommand::mod_define()
 
 ANLStatus ReceiveCommand::mod_initialize()
 {
-  timeStampStr_ = getTimeStr();
-  
   const std::string send_telem_md = "SendTelemetry";
   if (exist_module(send_telem_md)) {
     get_module_NC(send_telem_md, &sendTelemetry_);
@@ -61,6 +58,11 @@ ANLStatus ReceiveCommand::mod_initialize()
 
   if (exist_module(PMTHVControllerModuleName_)) {
     get_module_NC(PMTHVControllerModuleName_, &PMTHVController_);
+  }
+
+  const std::string run_id_manager_md = "RunIDManager";
+  if (exist_module(run_id_manager_md)) {
+    get_module_NC(run_id_manager_md, &runIDManager_);
   }
 
   // communication
@@ -343,10 +345,16 @@ void ReceiveCommand::writeCommandToFile(bool failed)
     fileIDmp_[type].second = 0;
   }
 
+  int run_id = 0;
+  std::string time_stamp_str = "YYYYMMDDHHMMSS";
+  if (runIDManager_) {
+    run_id = runIDManager_->RunID();
+    time_stamp_str = runIDManager_->TimeStampStr();
+  }
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
   const std::string id_str = sout.str();
-  const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
+  const std::string filename = binaryFilenameBase_ + "_" + std::to_string(run_id) + "_" + time_stamp_str + "_" + type_str + "_" + id_str + ".dat";
   
   if (!failed) {
     comdef_->writeFile(filename, app);

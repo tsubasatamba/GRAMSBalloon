@@ -98,6 +98,10 @@ class MyApp < ANL::ANLApp
             m.set_singleton(0)
         end
 
+        chain GRAMSBalloon::RunIDManager do |m|
+            m.set_singleton(0)
+        end
+
         chain GRAMSBalloon::ShutdownSystem do |m|
             m.set_singleton(0)
         end
@@ -118,7 +122,7 @@ end
 
 main_modules << "MeasureAcceleration" << "GetSlowADCData" << "GetRaspiStatus"
 main_modules << "AnalogDiscoveryManager" << "ControlHighVoltage_TPC" << "ControlHighVoltage_PMT"
-main_modules << "SendTelemetry" << "ShutdownSystem"
+main_modules << "SendTelemetry" << "RunIDManager" << "ShutdownSystem"
 
 daq_modules = ["ReadWaveform"]
 command_modules = ["ReceiveCommand"]

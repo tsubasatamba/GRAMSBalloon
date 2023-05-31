@@ -1,5 +1,4 @@
 #include "SendTelemetry.hh"
-#include "DateManager.hh"
 
 using namespace anlnext;
 
@@ -39,8 +38,6 @@ ANLStatus SendTelemetry::mod_define()
 
 ANLStatus SendTelemetry::mod_initialize()
 {
-  timeStampStr_ = getTimeStr();
-
   const std::string read_wf_md = "ReadWaveform";
   if (exist_module(read_wf_md)) {
     get_module_NC(read_wf_md, &readWaveform_);
@@ -98,6 +95,11 @@ ANLStatus SendTelemetry::mod_initialize()
   const std::string receive_command_md = "ReceiveCommand";
   if (exist_module(receive_command_md)) {
     get_module_NC(receive_command_md, &receiveCommand_);
+  }
+
+  const std::string run_id_manager_md = "RunIDManager";
+  if (exist_module(run_id_manager_md)) {
+    get_module_NC(run_id_manager_md, &runIDManager_);
   }
 
   // communication
@@ -276,10 +278,16 @@ void SendTelemetry::writeTelemetryToFile(bool failed)
     fileIDmp_[type].second = 0;
   }
 
+  int run_id = 0;
+  std::string time_stamp_str = "YYYYMMDDHHMMSS";
+  if (runIDManager_) {
+    run_id = runIDManager_->RunID();
+    time_stamp_str = runIDManager_->TimeStampStr();
+  }
   std::ostringstream sout;
   sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
   const std::string id_str = sout.str();
-  const std::string filename = binaryFilenameBase_ + "_" + timeStampStr_ + "_" + type_str + "_" + id_str + ".dat";
+  const std::string filename = binaryFilenameBase_ + "_" + std::to_string(run_id) + "_" + time_stamp_str + "_" + type_str + "_" + id_str + ".dat";
   
   telemdef_->writeFile(filename, app);
   fileIDmp_[type].second++;
