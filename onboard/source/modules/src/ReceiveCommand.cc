@@ -211,9 +211,10 @@ bool ReceiveCommand::applyCommand()
     }
   }
 
-  if (code==198 && argc==0) {
+  if (code==198 && argc==1) {
     if (shutdownSystem_!=nullptr) {
       shutdownSystem_->setPrepareSoftwareStop(true);
+      shutdownSystem_->setExitStatus(arguments[0]);
       return true;
     }
   }
