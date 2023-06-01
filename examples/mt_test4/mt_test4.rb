@@ -33,13 +33,13 @@ class MyApp < ANL::ANLApp
         end
 
         chain GRAMSBalloon::MeasureAcceleration
-        with_parameters do |m|
+        with_parameters(calibrate_gyro: true) do |m|
             m.set_singleton(0)
         end
 
         chain GRAMSBalloon::GetSlowADCData
         with_parameters(chip_select: 17, Va: 5.026,
-        channels: [0, 1, 2, 3, 4], num_trials: 100) do |m|
+        channels: [0, 1, 2, 3, 4], num_trials: 100, chatter: 1) do |m|
             m.set_singleton(0)
         end
 
@@ -149,4 +149,3 @@ a.modify do |m|
 end
 
 a.run(10000000, 1)
-
