@@ -91,7 +91,7 @@ def main() -> None:
     if len(binary) % TELEMETRY_LENGTH != 0:
         raise ValueError(f"Telemetry length is inconsisttent with the files\nFile bytes: {len(binary)}\nTELEMETRY_LENGTH: {TELEMETRY_LENGTH}")
     tel = create_telemetry_definition()
-    if not telemetryvalue in tel.keys():
+    if telemetryvalue not in tel.keys():
         raise ValueError("Invalid telemetry code")
     i = 0
     x: List[int] = []
