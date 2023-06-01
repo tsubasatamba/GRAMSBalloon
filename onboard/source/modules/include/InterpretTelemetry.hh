@@ -26,6 +26,7 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   void writeTelemetryToFile(bool failed);
+  void updateRunIDFile();
 
   TelemetryDefinition* Telemdef() { return telemdef_.get(); }
   int CurrentTelemetryType() { return currentTelemetryType_; }
@@ -40,6 +41,8 @@ private:
   int numTelemPerFile_ = 100;
   std::string timeStampStr_ = "";
   int chatter_ = 0;
+  std::string runIDFilename_;
+  int currentRunID_ = -1;
 };
 
 } // namespace gramsballoon

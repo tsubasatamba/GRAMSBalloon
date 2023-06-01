@@ -9,6 +9,7 @@ InterpretTelemetry::InterpretTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
   binaryFilenameBase_ = "Telemetry";
+  runIDFilename_ = "/Users/grams/settings/run_id/run_id.txt";
 }
 
 InterpretTelemetry::~InterpretTelemetry() = default;
@@ -17,6 +18,7 @@ ANLStatus InterpretTelemetry::mod_define()
 {
   define_parameter("save_telemetry", &mod_class::saveTelemetry_);
   define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
+  define_parameter("run_ID_filename", &mod_class::runIDFilename_);
   define_parameter("chatter", &mod_class::chatter_);
   
   return AS_OK;
@@ -58,6 +60,10 @@ ANLStatus InterpretTelemetry::mod_analyze()
   currentTelemetryType_ = telemdef_->TelemetryType();
 
   writeTelemetryToFile(failed);
+  if (telemdef_->RunID() != currentRunID_) {
+    currentRunID_ = telemdef_->RunID();
+    updateRunIDFile();
+  }
   
   return AS_OK;
 }
@@ -104,6 +110,15 @@ void InterpretTelemetry::writeTelemetryToFile(bool failed)
   std::vector<int32_t> time_vec = {static_cast<int32_t>(tv.tv_sec), static_cast<int32_t>(tv.tv_usec)};
   writeVectorToBinaryFile<int32_t>(filename, app, time_vec);
   fileIDmp_[type].second++;
+}
+
+void InterpretTelemetry::updateRunIDFile()
+{
+  const std::string time_stamp_str = getTimeStr();
+  std::ofstream ofs(runIDFilename_, std::ios::app | std::ios::out);
+  ofs << currentRunID_ << " " << time_stamp_str << "\n";
+  ofs.flush();
+  ofs.close();
 }
 
 } // namespace gramsballoon

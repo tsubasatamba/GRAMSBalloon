@@ -37,8 +37,7 @@ int main(int argc, char *argv[])
   const int length_sent = sender.send(command);
   std::cout << "Length sent: " << length_sent << std::endl;
 
-  std::string log_filename = "command_1.log";
-  gramsballoon::write_command(command, name, log_filename);
+  gramsballoon::write_command(command, name);
 
   sender.close_serial_port();
   
