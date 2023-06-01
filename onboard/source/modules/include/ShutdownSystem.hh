@@ -36,19 +36,24 @@ public:
   anlnext::ANLStatus mod_finalize() override;
   void setReboot(bool v);
   void setShutdown(bool v);
+  void setSoftwareStop(bool v);
   void setPrepareReboot(bool v);
   void setPrepareShutdown(bool v);
+  void setPrepareSoftwareStop(bool v);
   void clearStatus();
   SendTelemetry* getSendTelemetry() { return singleton_self()->sendTelemetry_; }
   
 private:
   bool reboot_ = false;
   bool shutdown_ = false;
+  bool softwareStop_ = false;
   bool prepareReboot_ = false;
   bool prepareShutdown_ = false;
+  bool prepareSoftwareStop = false;
   int bufferTimeSec_ = 60;
   timeval prepareRebootTime_;
   timeval prepareShutdownTime_;
+  timeval prepareSoftwareStopTime_;
   SendTelemetry* sendTelemetry_ = nullptr;
   int chatter_ = 0;
 };

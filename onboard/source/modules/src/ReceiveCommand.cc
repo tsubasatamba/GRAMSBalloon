@@ -96,7 +96,9 @@ ANLStatus ReceiveCommand::mod_analyze()
   }
   
   if (rv==0) {
-    std::cout << "Time out" << std::endl;
+    if (chatter_>=1) {
+      std::cout << "Time out" << std::endl;
+    }
     return AS_OK;
   }
 
@@ -205,6 +207,20 @@ bool ReceiveCommand::applyCommand()
   if (code==105 && argc==0) {
     if (shutdownSystem_!=nullptr) {
       shutdownSystem_->setPrepareReboot(true);
+      return true;
+    }
+  }
+
+  if (code==198 && argc==0) {
+    if (shutdownSystem_!=nullptr) {
+      shutdownSystem_->setPrepareSoftwareStop(true);
+      return true;
+    }
+  }
+
+  if (code==199 && argc==0) {
+    if (shutdownSystem_!=nullptr) {
+      shutdownSystem_->setSoftwareStop(true);
       return true;
     }
   }

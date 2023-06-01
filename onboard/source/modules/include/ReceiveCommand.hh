@@ -81,7 +81,7 @@ private:
   std::string serialPath_;
   mode_t openMode_ = O_RDWR;
   bool startReading_ = false;
-  int timeoutSec_ = 10;
+  int timeoutSec_ = 2;
   constexpr static int bufferSize_ = 200;
   constexpr static int serialReadingTimems_ = 250;
 };
