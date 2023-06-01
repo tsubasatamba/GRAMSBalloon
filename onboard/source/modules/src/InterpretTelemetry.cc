@@ -101,7 +101,7 @@ void InterpretTelemetry::writeTelemetryToFile(bool failed)
   }
   timeval tv;
   gettimeofday(&tv, NULL);
-  std::vector<int32_t> time_vec = {tv.tv_sec, tv.tv_usec};
+  std::vector<int32_t> time_vec = {static_cast<int32_t>(tv.tv_sec), static_cast<int32_t>(tv.tv_usec)};
   writeVectorToBinaryFile<int32_t>(filename, app, time_vec);
   fileIDmp_[type].second++;
 }
