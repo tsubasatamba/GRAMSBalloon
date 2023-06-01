@@ -1,4 +1,4 @@
-#include "SaveCommand.hh"
+#include "CommandSaver.hh"
 #include <time.h>
 #include <sys/time.h>
 #include <boost/format.hpp>
@@ -6,12 +6,12 @@
 namespace gramsballoon
 {
 
-void write_command(const std::vector<uint8_t>& command, const std::string& log_filename)
+void write_command(const std::vector<uint8_t>& command, const std::string& command_name, const std::string& log_filename)
 {
   std::ofstream ofs(log_filename, std::ios_base::app | std::ios_base::out);
   const int n = command.size();
   std::string time_stamp_str = get_time_stamp_str();
-  ofs << std::dec << time_stamp_str << " ";
+  ofs << std::dec << time_stamp_str << " " << command_name << " ";
 
   ofs << std::hex << std::uppercase;
   

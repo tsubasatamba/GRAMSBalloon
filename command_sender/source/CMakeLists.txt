@@ -16,6 +16,6 @@ message("-- BOOST_INC_DIR: ${BOOST_INC_DIR}")
 message("-- BOOST_LIB_DIR: ${BOOST_LIB_DIR}")
 message("-- BOOST_LIB: ${BOOST_LIB}")
 
-add_executable(send_command send_command.cc CommandSender.cc CommandBuilder.cc SaveCommand.cc)
+add_executable(send_command send_command.cc CommandSender.cc CommandBuilder.cc CommandSaver.cc)
 target_link_libraries(send_command ${BOOST_LIB})
 add_executable(dump_command dump_command.cc CommandBuilder.cc)
