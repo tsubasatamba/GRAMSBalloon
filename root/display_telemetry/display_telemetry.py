@@ -5,7 +5,7 @@ import numpy as np
 
 # TELEMETRY_LENGTH = 122
 TELEMETRY_LENGTH = 132
-VERVOSE = 2
+VERVOSE = 1
 
 
 def create_telemetry_definition() -> Dict[str, Tuple[int, int, bool, Optional[float]]]:
@@ -81,7 +81,7 @@ def read_binary(filename: List[str]) -> bytes:
 
 
 def main() -> None:
-    print(sys.argv)
+    runID = sys.argv[2].split("_")[1]
     if len(sys.argv) < 3:
         raise ValueError("The arguments must be larger than 2.")
     if VERVOSE >= 2:
@@ -116,6 +116,8 @@ def main() -> None:
     fig = plt.figure()
     ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{sys.argv[1]}")
     ax.plot(x_arr, y_arr)
+
+    fig.savefig(f"telemetry_{runID}_{sys.argv[1]}.png")
     plt.show()
 
 
