@@ -10,6 +10,8 @@ ANLStatus ShutdownSystem::mod_define()
 {
   define_parameter("buffer_time_sec", &mod_class::bufferTimeSec_);
   define_parameter("chatter", &mod_class::chatter_);
+
+  define_result("exit_status", &mod_class::exitStatus_);
   
   return AS_OK;
 }
@@ -95,7 +97,7 @@ ANLStatus ShutdownSystem::mod_finalize()
     rslt = reboot(LINUX_REBOOT_CMD_HALT);
   }
   else if (softwareStop_) {
-    exit(exitStatus_);
+    ;
   }
 
   if (rslt < 0) {

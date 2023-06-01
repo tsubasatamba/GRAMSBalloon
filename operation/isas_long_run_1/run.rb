@@ -149,6 +149,16 @@ a.modify do |m|
   end
   m.get_parallel_module(0, "GetEnvironmentalData_1").off
   m.get_parallel_module(0, "GetEnvironmentalData_2").off
+  puts m.class
 end
 
 a.run(1000000000, 1)
+exit_status = 1
+
+
+exit_status = a.get_parallel_module(0, "ShutdownSystem").get_result_value("exit_status")
+
+
+puts "exit_status: #{exit_status}"
+exit exit_status
+

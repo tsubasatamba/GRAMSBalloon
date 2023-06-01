@@ -56,7 +56,7 @@ private:
   timeval prepareShutdownTime_;
   timeval prepareSoftwareStopTime_;
   SendTelemetry* sendTelemetry_ = nullptr;
-  int exitStatus_ = 20;
+  int exitStatus_ = 0;
   int chatter_ = 0;
 };
 
