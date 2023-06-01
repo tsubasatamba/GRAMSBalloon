@@ -97,8 +97,12 @@ void InterpretTelemetry::writeTelemetryToFile(bool failed)
     telemdef_->writeFile(filename, app);
   }
   else {
-    writeVectorToBinaryFile(filename, app, receiver_->Telemetry());
+    writeVectorToBinaryFile<uint8_t>(filename, app, receiver_->Telemetry());
   }
+  timeval tv;
+  gettimeofday(&tv, NULL);
+  std::vector<int32_t> time_vec = {static_cast<int32_t>(tv.tv_sec), static_cast<int32_t>(tv.tv_usec)};
+  writeVectorToBinaryFile<int32_t>(filename, app, time_vec);
   fileIDmp_[type].second++;
 }
 
