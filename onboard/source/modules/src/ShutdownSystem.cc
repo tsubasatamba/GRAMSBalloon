@@ -29,7 +29,7 @@ ANLStatus ShutdownSystem::mod_initialize()
 }
 
 ANLStatus ShutdownSystem::mod_analyze()
-{
+{  
   if (reboot_) {
     return AS_QUIT_ALL;
   }
@@ -95,7 +95,7 @@ ANLStatus ShutdownSystem::mod_finalize()
     rslt = reboot(LINUX_REBOOT_CMD_HALT);
   }
   else if (softwareStop_) {
-    ;
+    exit(exitStatus_);
   }
 
   if (rslt < 0) {
@@ -114,6 +114,7 @@ void ShutdownSystem::clearStatus()
   setShutdown(false);
   setPrepareSoftwareStop(false);
   setSoftwareStop(false);
+  setExitStatus(0);
 }
 
 void ShutdownSystem::setPrepareReboot(bool v)

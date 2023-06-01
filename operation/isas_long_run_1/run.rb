@@ -33,7 +33,7 @@ class MyApp < ANL::ANLApp
         end
 
         chain GRAMSBalloon::MeasureAcceleration
-        with_parameters(calibrate_gyro: true) do |m|
+        with_parameters(calibrate_gyro: false) do |m|
             m.set_singleton(0)
         end
 
@@ -147,6 +147,8 @@ a.modify do |m|
     m.get_parallel_module(0, mod).off
     m.get_parallel_module(1, mod).off
   end
+  m.get_parallel_module(0, "GetEnvironmentalData_1").off
+  m.get_parallel_module(0, "GetEnvironmentalData_2").off
 end
 
 a.run(1000000000, 1)

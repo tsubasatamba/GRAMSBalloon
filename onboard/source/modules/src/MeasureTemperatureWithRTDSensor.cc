@@ -77,12 +77,11 @@ ANLStatus MeasureTemperatureWithRTDSensor::mod_analyze()
 {
   int status = max31865io_->getData();
   if (status!=MAX31865_OK) {
-    std::cerr << "Failed to get data in MeasureTemperatureWithRTDSensor::mod_analyze: status = " << status << std::endl;
+    std::cerr << "Failed to get data in " << module_id() << "::mod_analyze(), status = " << status << std::endl;
     setDataAquisitionError();
   }
-
-  if (TemperatureADC()==0) {
-    std::cerr << "RTD ADC is equal to zero." << std::endl;
+  else if (TemperatureADC()==0) {
+    std::cerr << "Error in " << module_id() << "::mod_analyze(), RTD ADC is equal to zero." << std::endl;
     setDataAquisitionError();
   }
 
