@@ -111,7 +111,7 @@ def main() -> None:
         else:
             i += 1
 
-    x_arr = (np.array(x) - x[0]) / 1000
+    x_arr = (np.array(x, dtype=float) - x[0]) / 1000
     y_arr = np.array(y) / tel[sys.argv[1]][3]
     fig = plt.figure()
     ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{sys.argv[1]}")
