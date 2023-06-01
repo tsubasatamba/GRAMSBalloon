@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from typing import Dict, Tuple, Iterable, List
 import sys
+import numpy as np
 
 # TELEMETRY_LENGTH = 122
 TELEMETRY_LENGTH = 132
@@ -9,12 +10,13 @@ VERVOSE = 2
 
 def create_telemetry_definition() -> Dict[str, Tuple[int, int, bool]]:
     telemetry_definition: Dict[str, Tuple[int, int, bool]] = {}
-    telemetry_definition["start_code"] = (0, 2, False)
-    telemetry_definition["telemetry_type"] = (2, 4, False)
-    telemetry_definition["time"] = (4, 12, True)
-    telemetry_definition["telemetry_index"] = (12, 16, False)
-    telemetry_definition["run_id"] = (16, 20, True)
-    telemetry_definition["event_count"] = (20, 24, False)
+    telemetry_definition["start_code"] = 0, 2, False
+    telemetry_definition["telemetry_type"] = 2, 4, False
+    telemetry_definition["time_sec"] = 4, 10, True
+    telemetry_definition["tiem_usec"] = 10, 12, True
+    telemetry_definition["telemetry_index"] = 12, 16, False
+    telemetry_definition["run_id"] = 16, 20, True
+    telemetry_definition["event_count"] = 20, 24, False
     telemetry_definition["chamber_pressure"] = 24, 26, False
     telemetry_definition["chamber_temperature_1"] = 26, 28, False
     telemetry_definition["chamber_temperature_2"] = 28, 30, False
@@ -26,21 +28,21 @@ def create_telemetry_definition() -> Dict[str, Tuple[int, int, bool]]:
     telemetry_definition["pmt_high_voltage_setting"] = 42, 46, True
     telemetry_definition["pmt_high_voltage_measurement"] = 46, 48, False
     telemetry_definition["cpu_temperature"] = 48, 50, True
-    telemetry_definition["hktemperature_1"] = 50, 52, True
-    telemetry_definition["hktemperature_2"] = 52, 54, True
-    telemetry_definition["hktemperature_3"] = 54, 56, True
-    telemetry_definition["hktemperature_4"] = 56, 58, True
-    telemetry_definition["hktemperature_5"] = 58, 60, True
-    telemetry_definition["hkhumidity_1"] = 60, 62, False
-    telemetry_definition["hkhumidity_2"] = 62, 64, False
-    telemetry_definition["hkhumidity_3"] = 64, 66, False
-    telemetry_definition["hkhumidity_4"] = 66, 68, False
-    telemetry_definition["hkhumidity_5"] = 68, 70, False
-    telemetry_definition["hkpressure_1"] = 70, 72, False
-    telemetry_definition["hkpressure_2"] = 72, 74, False
-    telemetry_definition["hkpressure_3"] = 74, 76, False
-    telemetry_definition["hkpressure_4"] = 76, 78, False
-    telemetry_definition["hkpressure_5"] = 78, 80, False
+    telemetry_definition["hk_temperature_1"] = 50, 52, True
+    telemetry_definition["hk_temperature_2"] = 52, 54, True
+    telemetry_definition["hk_temperature_3"] = 54, 56, True
+    telemetry_definition["hk_temperature_4"] = 56, 58, True
+    telemetry_definition["hk_temperature_5"] = 58, 60, True
+    telemetry_definition["hk_humidity_1"] = 60, 62, False
+    telemetry_definition["hk_humidity_2"] = 62, 64, False
+    telemetry_definition["hk_humidity_3"] = 64, 66, False
+    telemetry_definition["hk_humidity_4"] = 66, 68, False
+    telemetry_definition["hk_humidity_5"] = 68, 70, False
+    telemetry_definition["hk_pressure_1"] = 70, 72, False
+    telemetry_definition["hk_pressure_2"] = 72, 74, False
+    telemetry_definition["hk_pressure_3"] = 74, 76, False
+    telemetry_definition["hk_pressure_4"] = 76, 78, False
+    telemetry_definition["hk_pressure_5"] = 78, 80, False
     telemetry_definition["acceleration_x"] = 80, 82, True
     telemetry_definition["acceleration_y"] = 82, 84, True
     telemetry_definition["acceleration_y"] = 84, 86, True
@@ -99,7 +101,7 @@ def main() -> None:
         if i >= len(binary) - 1:
             break
         if binary[i] == 0xeb and binary[i + 1] == 0x90:
-            x.append(int.from_bytes(binary[i + tel["time"][0]:i + tel["time"][1]], 'big', signed=tel["time"][2]))
+            x.append(int.from_bytes(binary[i + tel["time_sec"][0]:i + tel["tim_sece"][1]], 'big', signed=tel["time_sec"][2]))
             if VERVOSE >= 1:
                 print(f"x[{i}]: {x[-1]}")
             y.append(int.from_bytes(binary[i + tel[sys.argv[1]][0]: i + tel[sys.argv[1]][1]], "big", signed=tel[sys.argv[1]][2]))
@@ -109,9 +111,11 @@ def main() -> None:
         else:
             i += 1
 
+    x_arr = (np.array(x) - x[0]) / 1000
+    y_arr = np.array(y)
     fig = plt.figure()
     ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{sys.argv[1]}")
-    ax.plot(x, y)
+    ax.plot(x_arr, y_arr)
     plt.show()
 
 
