@@ -81,6 +81,7 @@ def read_binary(filename: List[str]) -> bytes:
 
 
 def main() -> None:
+    telemetryvalue = sys.argv[1]
     runID = sys.argv[2].split("_")[1]
     if len(sys.argv) < 3:
         raise ValueError("The arguments must be larger than 2.")
@@ -90,7 +91,7 @@ def main() -> None:
     if len(binary) % TELEMETRY_LENGTH != 0:
         raise ValueError(f"Telemetry length is inconsisttent with the files\nFile bytes: {len(binary)}\nTELEMETRY_LENGTH: {TELEMETRY_LENGTH}")
     tel = create_telemetry_definition()
-    if not sys.argv[1] in tel.keys():
+    if not telemetryvalue in tel.keys():
         raise ValueError("Invalid telemetry code")
     i = 0
     x: List[int] = []
@@ -104,7 +105,7 @@ def main() -> None:
             x.append(int.from_bytes(binary[i + tel["time_sec"][0]:i + tel["time_sec"][1]], 'big', signed=tel["time_sec"][2]))
             if VERVOSE >= 1:
                 print(f"x[{i}]: {x[-1]}")
-            y.append(int.from_bytes(binary[i + tel[sys.argv[1]][0]: i + tel[sys.argv[1]][1]], "big", signed=tel[sys.argv[1]][2]))
+            y.append(int.from_bytes(binary[i + tel[telemetryvalue][0]: i + tel[telemetryvalue][1]], "big", signed=tel[telemetryvalue][2]))
             if VERVOSE >= 1:
                 print(f"y[{i}]: {y[-1]}")
             i += TELEMETRY_LENGTH
@@ -112,12 +113,12 @@ def main() -> None:
             i += 1
 
     x_arr = (np.array(x, dtype=float) - x[0]) / 1000
-    y_arr = np.array(y) / tel[sys.argv[1]][3]
+    y_arr = np.array(y) / tel[telemetryvalue][3]
     fig = plt.figure()
-    ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{sys.argv[1]}")
+    ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{telemetryvalue}")
     ax.plot(x_arr, y_arr)
 
-    fig.savefig(f"telemetry_{runID}_{sys.argv[1]}.png")
+    fig.savefig(f"telemetry_{runID}_{telemetryvalue}.png")
     plt.show()
 
 
