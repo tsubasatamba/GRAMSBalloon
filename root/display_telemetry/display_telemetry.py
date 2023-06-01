@@ -68,6 +68,8 @@ def main() -> None:
     if len(sys.argv) < 2:
         raise ValueError("The arguments must be larger than 2.")
     binary = read_binary(filename=sys.argv[1:-1])
+    if len(binary) % TELEMETRY_LENGTH != 0:
+        raise ValueError("Telemetry length is inconsisttent with the files")
     tel = create_telemetry_definition()
     if not sys.argv[1] in tel.keys():
         raise ValueError
