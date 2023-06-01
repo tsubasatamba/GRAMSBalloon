@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from typing import Dict, Tuple, Iterable, List, Optional
+from typing import Dict, Tuple, List, Optional
 import sys
 import numpy as np
 
