@@ -12,8 +12,8 @@ def create_telemetry_definition() -> Dict[str, Tuple[int, int, bool, Optional[fl
     telemetry_definition: Dict[str, Tuple[int, int, bool, Optional[float]]] = {}
     telemetry_definition["start_code"] = 0, 2, False, 1
     telemetry_definition["telemetry_type"] = 2, 4, False, 1
-    telemetry_definition["time_sec"] = 4, 10, True, 1
-    telemetry_definition["tiem_usec"] = 10, 12, True, 1
+    telemetry_definition["time_sec"] = 4, 8, True, 1
+    telemetry_definition["tiem_usec"] = 8, 12, True, 1
     telemetry_definition["telemetry_index"] = 12, 16, False, 1
     telemetry_definition["run_id"] = 16, 20, True, 1
     telemetry_definition["event_count"] = 20, 24, False, 1
@@ -112,7 +112,7 @@ def main() -> None:
         else:
             i += 1
 
-    x_arr = (np.array(x, dtype=float) - x[0]) / 1000
+    x_arr = (np.array(x, dtype=float) - x[0])
     y_arr = np.array(y) / tel[telemetryvalue][3]
     fig = plt.figure()
     ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{telemetryvalue}")
