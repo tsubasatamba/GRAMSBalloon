@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from typing import Dict, Tuple, Iterable, List
 import sys
 
-TELEMETRY_LENGTH = 122
-# TELEMETRY_LENGTH = 132
+# TELEMETRY_LENGTH = 122
+TELEMETRY_LENGTH = 132
 VERVOSE = 2
 
 
@@ -26,9 +26,21 @@ def create_telemetry_definition() -> Dict[str, Tuple[int, int, bool]]:
     telemetry_definition["pmt_high_voltage_setting"] = 42, 46, True
     telemetry_definition["pmt_high_voltage_measurement"] = 46, 48, False
     telemetry_definition["cpu_temperature"] = 48, 50, True
-    telemetry_definition["hktemperature"] = 50, 60, True
-    telemetry_definition["hkhumidity"] = 60, 70, False
-    telemetry_definition["hkpressure"] = 70, 80, False
+    telemetry_definition["hktemperature_1"] = 50, 52, True
+    telemetry_definition["hktemperature_2"] = 52, 54, True
+    telemetry_definition["hktemperature_3"] = 54, 56, True
+    telemetry_definition["hktemperature_4"] = 56, 58, True
+    telemetry_definition["hktemperature_5"] = 58, 60, True
+    telemetry_definition["hkhumidity_1"] = 60, 62, False
+    telemetry_definition["hkhumidity_2"] = 62, 64, False
+    telemetry_definition["hkhumidity_3"] = 64, 66, False
+    telemetry_definition["hkhumidity_4"] = 66, 68, False
+    telemetry_definition["hkhumidity_5"] = 68, 70, False
+    telemetry_definition["hkpressure_1"] = 70, 72, False
+    telemetry_definition["hkpressure_2"] = 72, 74, False
+    telemetry_definition["hkpressure_3"] = 74, 76, False
+    telemetry_definition["hkpressure_4"] = 76, 78, False
+    telemetry_definition["hkpressure_5"] = 78, 80, False
     telemetry_definition["acceleration_x"] = 80, 82, True
     telemetry_definition["acceleration_y"] = 82, 84, True
     telemetry_definition["acceleration_y"] = 84, 86, True
