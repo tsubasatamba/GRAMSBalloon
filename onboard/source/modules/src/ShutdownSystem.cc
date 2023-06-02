@@ -10,6 +10,8 @@ ANLStatus ShutdownSystem::mod_define()
 {
   define_parameter("buffer_time_sec", &mod_class::bufferTimeSec_);
   define_parameter("chatter", &mod_class::chatter_);
+
+  define_result("exit_status", &mod_class::exitStatus_);
   
   return AS_OK;
 }
@@ -29,7 +31,7 @@ ANLStatus ShutdownSystem::mod_initialize()
 }
 
 ANLStatus ShutdownSystem::mod_analyze()
-{
+{  
   if (reboot_) {
     return AS_QUIT_ALL;
   }
@@ -114,6 +116,7 @@ void ShutdownSystem::clearStatus()
   setShutdown(false);
   setPrepareSoftwareStop(false);
   setSoftwareStop(false);
+  setExitStatus(0);
 }
 
 void ShutdownSystem::setPrepareReboot(bool v)

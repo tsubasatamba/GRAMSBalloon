@@ -146,7 +146,6 @@ int16_t MAX31865IO::getData()
     std::cout << "MAX31865IO::getData() deteted fault." << std::endl;
     getFaultStatus();
     faultStatusClear();
-    std::cout << "Fault detection: "<< static_cast<int>(getFaultDetection()) << std::endl;
     return MAX31865_BAD;
   }
   temperatureADC_ = data;
@@ -177,14 +176,13 @@ int MAX31865IO::faultStatusClear()
 
 int MAX31865IO::getFaultStatus()
 {
-  std::cout << "get_fault_status called" << std::endl;
   char bits = 0b0;
   int rslt_read = readReg(MAX31865_FAULT_STATUS_REG, &bits, 1);
   if (rslt_read != 1) {
     std::cerr << "get_fault_status failed due to read_reg failure. rslt_read = " << rslt_read << std::endl;
     return MAX31865_BAD;
   }
-  std::cout << "Fault status : " << std::bitset<8>(bits) << std::endl;
+  std::cout << "MAX31865 Fault status : " << std::bitset<8>(bits) << std::endl;
   return MAX31865_OK;
 }
 
