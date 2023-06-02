@@ -102,9 +102,9 @@ std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string& name, co
   command.push_back((crc & 0xFF00u) >> 8);
   command.push_back((crc & 0x00FFu) >> 0);
 
-  // termination word C5C5
+  // termination word C5A4
   command.push_back(0xC5);
-  command.push_back(0xC5);
+  command.push_back(0xA4);
   
   return command;
 }

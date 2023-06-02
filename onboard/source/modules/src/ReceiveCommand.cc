@@ -119,7 +119,7 @@ ANLStatus ReceiveCommand::mod_analyze()
       command_.push_back(0x90);
       continue;
     }
-    if (command_.size()>=1 && command_.back()==0xc5 && buffer_[i]==0xc5) {
+    if (command_.size()>=1 && command_.back()==0xc5 && buffer_[i]==0xa4) {
       command_.push_back(buffer_[i]);
       const bool applied = applyCommand();
       writeCommandToFile(!applied);
