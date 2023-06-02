@@ -2,6 +2,18 @@
 export LD_LIBRARY_PATH=/home/grams/lib:${LD_LIBRARY_PATH}
 export RUBYLIB=/home/grams/lib/ruby:${RUBYLIB}
 
-cd /home/grams/software/GRAMSBalloon/examples/mt_test4
+cd /home/grams/software/GRAMSBalloon/operation/isas_long_run_1
+
+
+#while :
+while :
+do
 id=`date "+%Y%m%d%H%M%S"`
-./mt_test4.rb  2>&1 | tee output_${id}.log
+./run.rb  &> output_${id}.log
+end_status=$?
+echo ${end_status}
+if [ "${end_status}" -eq "111" ]
+then
+break
+fi
+done

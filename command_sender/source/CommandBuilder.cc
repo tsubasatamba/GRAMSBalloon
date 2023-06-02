@@ -33,6 +33,8 @@ CommandBuilder::CommandBuilder()
   code_map_["exec_reboot"]            = CommandProperty{103, 0};
   code_map_["prepare_shutdown"]       = CommandProperty{104, 0};
   code_map_["prepare_reboot"]         = CommandProperty{105, 0};
+  code_map_["prepare_software_stop"]  = CommandProperty{198, 1};
+  code_map_["exec_software_stop"]     = CommandProperty{199, 0};
   code_map_["start_detector_readout"] = CommandProperty{201, 0};
   code_map_["stop_detector_readout"]  = CommandProperty{202, 0};
   code_map_["set_trigger_mode"]       = CommandProperty{203, 1};
@@ -100,9 +102,9 @@ std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string& name, co
   command.push_back((crc & 0xFF00u) >> 8);
   command.push_back((crc & 0x00FFu) >> 0);
 
-  // termination word C5C5
+  // termination word C5A4
   command.push_back(0xC5);
-  command.push_back(0xC5);
+  command.push_back(0xA4);
   
   return command;
 }

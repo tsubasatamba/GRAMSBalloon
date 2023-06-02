@@ -23,20 +23,34 @@ ANLStatus ShutdownSystem::mod_initialize()
 
   gettimeofday(&prepareRebootTime_, NULL);
   gettimeofday(&prepareShutdownTime_, NULL);
+  gettimeofday(&prepareSoftwareStopTime_, NULL);
   
   return AS_OK;
 }
 
 ANLStatus ShutdownSystem::mod_analyze()
-{
+{  
   if (reboot_) {
     return AS_QUIT_ALL;
   }
   else if (shutdown_) {
     return AS_QUIT_ALL;
   }
+  else if (softwareStop_) {
+    return AS_QUIT_ALL;
+  }
     
   if (prepareReboot_ && prepareShutdown_) {
+    clearStatus();
+    return AS_OK;
+  }
+
+  if (prepareReboot_ && prepareSoftwareStop_) {
+    clearStatus();
+    return AS_OK;
+  }
+
+  if (prepareShutdown_ && prepareSoftwareStop_) {
     clearStatus();
     return AS_OK;
   }
@@ -56,12 +70,22 @@ ANLStatus ShutdownSystem::mod_analyze()
       prepareShutdown_ = false;
     }
   }
+
+  if (prepareSoftwareStop_) {
+    timeval now;
+    gettimeofday(&now, NULL);
+    if (now.tv_sec-prepareSoftwareStopTime_.tv_sec>bufferTimeSec_) {
+      prepareSoftwareStop_ = false;
+    }
+  }
+
     
   return AS_OK;
 }
 
 ANLStatus ShutdownSystem::mod_finalize()
 {
+  define_result("exit_status", &mod_class::exitStatus_);
   int rslt = 0;
   if (reboot_) {
     sync();
@@ -70,6 +94,8 @@ ANLStatus ShutdownSystem::mod_finalize()
   else if (shutdown_) {
     sync();
     rslt = reboot(LINUX_REBOOT_CMD_HALT);
+  }
+  else if (softwareStop_) {
   }
 
   if (rslt < 0) {
@@ -86,6 +112,9 @@ void ShutdownSystem::clearStatus()
   setReboot(false);
   setPrepareShutdown(false);
   setShutdown(false);
+  setPrepareSoftwareStop(false);
+  setSoftwareStop(false);
+  setExitStatus(0);
 }
 
 void ShutdownSystem::setPrepareReboot(bool v)
@@ -104,6 +133,14 @@ void ShutdownSystem::setPrepareShutdown(bool v)
   }
 }
 
+void ShutdownSystem::setPrepareSoftwareStop(bool v)
+{
+  singleton_self()->prepareSoftwareStop_ = v;
+  if (v) {
+    gettimeofday(&(singleton_self()->prepareSoftwareStopTime_), NULL);
+  }
+}
+
 void ShutdownSystem::setReboot(bool v)
 {
   if (singleton_self()->prepareReboot_) {
@@ -111,7 +148,6 @@ void ShutdownSystem::setReboot(bool v)
   }
   else {
     if (getSendTelemetry()) {
-      std::cout << "set reboot rejected \n\n\n\n\n\n\n\n\n" << std::endl;
       getSendTelemetry()->getErrorManager()->setError(ErrorType::REBOOT_REJECTED);
     }
   }
@@ -124,8 +160,19 @@ void ShutdownSystem::setShutdown(bool v)
   }
   else {
     if (getSendTelemetry()) {
-      std::cout << "set shutdown rejected \n\n\n\n\n\n\n\n\n" << std::endl;
       getSendTelemetry()->getErrorManager()->setError(ErrorType::SHUTDOWN_REJECTED);
+    }
+  }
+}
+
+void ShutdownSystem::setSoftwareStop(bool v)
+{
+  if (singleton_self()->prepareSoftwareStop_) {
+    singleton_self()->softwareStop_ = v;
+  }
+  else {
+    if (getSendTelemetry()) {
+      getSendTelemetry()->getErrorManager()->setError(ErrorType::SOFTWARE_STOP_REJECTED);
     }
   }
 }

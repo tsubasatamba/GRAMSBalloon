@@ -17,7 +17,10 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-/bin/zsh /home/grams/software/GRAMSBalloon/starter/starter.sh
+echo hello
+echo hello > /home/grams/test_1.log
+/bin/zsh /home/grams/software/GRAMSBalloon/starter/starter.sh &
+echo byebye > /home/grams/test_2.log
 
 
 exit 0

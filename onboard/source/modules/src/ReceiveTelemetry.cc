@@ -64,7 +64,7 @@ ANLStatus ReceiveTelemetry::mod_analyze()
       telemetry_.clear();
     }
     telemetry_.push_back(buffer_[i]);
-    if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xc5) {
+    if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xa4) {
       valid_ = true;
       break;
     }

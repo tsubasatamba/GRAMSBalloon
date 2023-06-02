@@ -76,7 +76,7 @@ private:
   std::map<int, std::pair<int, int>> fileIDmp_;
   bool saveTelemetry_ = true;
   std::string binaryFilenameBase_ = "";
-  int numTelemPerFile_ = 100;
+  int numTelemPerFile_ = 1000;
   int chatter_ = 0;
 
   // access to other classes

@@ -46,7 +46,7 @@ void TelemetryDefinition::generateTelemetry()
     return;
   }
   writeCRC16();
-  stopCode_ = 0xc5c5;
+  stopCode_ = 0xc5a4;
   addValue<uint16_t>(stopCode_);
 }
 

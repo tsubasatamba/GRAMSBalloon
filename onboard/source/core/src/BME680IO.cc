@@ -20,10 +20,6 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
   const unsigned int spihandler = intf->SPIHandler();
   
   gpio_write(pi, cs, PI_LOW);
-  #if 0
-  int dbg = gpio_read(pi, cs);
-  std::cout << "gpio_read: " << dbg << std::endl;
-  #endif
   char* address = reinterpret_cast<char *>(&reg_addr);
 
   int write_status = spi_write(pi, spihandler, address, BME_REGISTER_BYTES);
@@ -54,22 +50,7 @@ int8_t BME680IO::readReg(uint8_t reg_addr, uint8_t* reg_data, uint32_t length, v
     reg_data[i] = temp[i];   
   }
   
-  #if 0
-  std::cout << "reg_addr: " << std::hex << static_cast<int>(0x7F &  reg_addr) << std::endl;
-  for (int i=0; i<static_cast<int>(length); i++) {
-    std::cout << static_cast<int>(temp[i]) << " ";
-  }
-  for (int i=0; i<static_cast<int>(length); i++) {
-    std::cout << static_cast<int>(reg_data[i]) << " ";
-  }
-  std::cout << std::dec << std::endl;
-  #endif
-
   gpio_write(pi, cs, PI_HIGH);
-  #if 0
-  int dbg2 = gpio_read(pi, cs);
-  std::cout << "gpio_read: " << dbg2 << std::endl;
-  #endif
     
   return rslt;
 }
