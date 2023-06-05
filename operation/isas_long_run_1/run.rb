@@ -55,11 +55,13 @@ class MyApp < ANL::ANLApp
         with_parameters(device_id: 0, channel: 0, voltages: [], upper_limit_voltage: 0.1) do |m|
           m.set_singleton(0)
         end
+        ### conversion: HV = DAC * 2000.0
         
         chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_PMT"
-        with_parameters(device_id: 0, channel: 1, voltages: [], upper_limit_voltage: 0.1) do |m|
+        with_parameters(device_id: 0, channel: 1, voltages: [], upper_limit_voltage: 3.2) do |m|
           m.set_singleton(0)
         end
+        ### conversion: HV = DAC * 250.0
                 
         chain GRAMSBalloon::ReadWaveform
         with_parameters(
