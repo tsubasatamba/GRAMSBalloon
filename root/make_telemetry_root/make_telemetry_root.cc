@@ -10,6 +10,8 @@
 
 #define VERBOSE 2
 
+using namespace gramsballoon;
+
 int main(int argc, char **argv)
 {
     constexpr int TELEMETRY_LENGTH = 132;
@@ -23,36 +25,44 @@ int main(int argc, char **argv)
     const std::string output_filename(argv[2]);
     std::fstream ifs(input_filename, std::ios_base::binary | std::ios::in);
 
-    #if VERBOSE > 0
-        std::cout << "Input filename: " << input_filename << std::endl;
-        std::cout << "Output filename: " << output_filename << std::endl;
-    #endif
+#if VERBOSE > 0
+    std::cout << "Input filename: " << input_filename << std::endl;
+    std::cout << "Output filename: " << output_filename << std::endl;
+#endif
 
     std::vector<std::string>
         binary_files;
 
-    while (!ifs.eof()){
+    while (!ifs.eof())
+    {
         std::string line;
         std::getline(ifs, line);
         binary_files.push_back(line);
-        #if VERBOSE > 1
+#if VERBOSE > 1
         std::cout << line << std::endl;
-        #endif
+#endif
     }
 
     ifs.close();
 
     std::vector<std::vector<uint8_t>> Telemetry;
-
     for (int i = 0; i < binary_files.size(); i++)
     {
-        std::vector<uint8_t> _telemetry;
+        std::fstream ifs(binary_files[i]);
+
+        while (!ifs.eof())
+        {
+            std::vector<uint8_t> buf(TELEMETRY_LENGTH);
+            for (int j = 0; j < TELEMETRY_LENGTH; j++)
+            {
+                ifs >> buf[i];
+            }
+            Telemetry.push_back(buf);
+        }
     }
 
     TFile *rootfile = TFile::Open(output_filename.c_str());
     std::unique_ptr<TTree> HK_telemetry = std::make_unique<TTree>("HK", "HK");
 
-
-
-
+    for (int i = 0;)
 }
