@@ -135,6 +135,8 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
   timeval event_time;
 
   const int sz_header = 5;
+  header.clear();
+  data.clear();
   header.resize(sz_header, 0);
   header[0] = static_cast<int16_t>(event_id);
   data.resize(num_channels, std::vector<int16_t>(numSample_));
