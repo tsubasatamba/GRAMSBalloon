@@ -8,49 +8,51 @@
 #include "TString.h"
 #include "TelemetryDefinition.hh"
 
+#define VERBOSE 2
+
 int main(int argc, char **argv)
 {
     constexpr int TELEMETRY_LENGTH = 132;
-    std::vector<TString> binaryName;
-    TString rootName;
 
-    // if (argc == 2)
-    // {
-    //     binaryName.push_back(Form("%s.dat", argv[1]));
-    //     rootName = Form("%s.root", argv[1]);
-    // }
-    int num_input = argc;
-    const size_t telSize = TELEMETRY_LENGTH * sizeof(uint8_t);
-    if (num_input > 2)
+    if (argc != 2)
     {
-        for (int i = 1; i < num_input; i++)
-        {
-            binaryName.push_back(Form("%s.dat", argv[i]));
-        }
-        rootName = Form("%s_%s.root", argv[1], num_input);
-    }
-    else
-    {
-        std::cout << "Usage :" << std::endl;
-        std::cout << "./prod file_name_without_extension" << std::endl;
+        std::cerr << "Usage: ./Prod inputfile outputfile" << std::endl;
         return -1;
     }
-    TFile *outFile = TFile::Open(rootName.Data(), "RECREATE");
+    const std::string input_filename(argv[1]);
+    const std::string output_filename(argv[2]);
+    std::fstream ifs(input_filename, std::ios_base::binary | std::ios::in);
 
-    std::unique_ptr<TTree> HK_telemetery = std::make_unique<TTree>("HK","HK");
+    #if VERBOSE > 0
+        std::cout << "Input filename: " << input_filename << std::endl;
+        std::cout << "Output filename: " << output_filename << std::endl;
+    #endif
 
+    std::vector<std::string>
+        binary_files;
 
-
-    std::cout << binaryName << " ---> " << rootName << std::endl;
-    for (int i = 0; i < num_input; i++)
-    {
-        FILE *dataFile = fopen(binaryName[i].Data(), "rb");
-        while (1)
-        {
-        std::vector<uint8_t> telemetry(TELEMETRY_LENGTH);
-        fread(telemetry.data() + i, telSize, 1, dataFile);
-        break;
-        }
+    while (!ifs.eof()){
+        std::string line;
+        std::getline(ifs, line);
+        binary_files.push_back(line);
+        #if VERBOSE > 1
+        std::cout << line << std::endl;
+        #endif
     }
+
+    ifs.close();
+
+    std::vector<std::vector<uint8_t>> Telemetry;
+
+    for (int i = 0; i < binary_files.size(); i++)
+    {
+        std::vector<uint8_t> _telemetry;
+    }
+
+    TFile *rootfile = TFile::Open(output_filename.c_str());
+    std::unique_ptr<TTree> HK_telemetry = std::make_unique<TTree>("HK", "HK");
+
+
+
 
 }
