@@ -57,7 +57,7 @@ class MyApp < ANL::ANLApp
         end
         
         chain GRAMSBalloon::ControlHighVoltage, "ControlHighVoltage_PMT"
-        with_parameters(device_id: 0, channel: 1, voltages: [], upper_limit_voltage: 0.1) do |m|
+        with_parameters(device_id: 0, channel: 1, voltages: [], upper_limit_voltage: 3.2) do |m|
           m.set_singleton(0)
         end
                 
