@@ -67,11 +67,11 @@ class MyApp < ANL::ANLApp
         with_parameters(
             trig_device: 0,
             trig_channel: 0,
-            trig_mode: 2,
-            trig_level: 0.1,
-            trig_position: 0.0,
-            time_window: 300.0, # us
-            sample_frequency: 20.0, #MHz
+            trig_mode: 18,
+            trig_level: -0.01,
+            trig_position: 5.0,
+            time_window: 30.0, # us
+            sample_frequency: 100.0, #MHz
             output_filename_base: "/home/grams/data/daq/daq_output",
             num_events_per_file: 100,
             start_reading: false
