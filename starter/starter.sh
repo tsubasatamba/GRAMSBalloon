@@ -5,7 +5,7 @@ export RUBYLIB=/home/grams/lib/ruby:${RUBYLIB}
 cd /home/grams/software/GRAMSBalloon/operation/isas_long_run_1
 
 
-#while :
+
 while :
 do
 id=`date "+%Y%m%d%H%M%S"`
@@ -14,6 +14,7 @@ end_status=$?
 echo ${end_status}
 if [ "${end_status}" -eq "111" ]
 then
-break
+exit
 fi
 done
+
