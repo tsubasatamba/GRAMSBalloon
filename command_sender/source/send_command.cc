@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
   }
 
   gramsballoon::CommandSender sender;
-  sender.set_serial_port("/dev/tty.usbserial-1460");
+  sender.set_serial_port("/dev/tty.usbserial-14410");
   if ( !sender.open_serial_port() ) {
     std::cout << "Serial port open error -> exit" << std::endl;
     return -1;
