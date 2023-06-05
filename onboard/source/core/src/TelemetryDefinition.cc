@@ -175,7 +175,7 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
     std::cerr << "start code incorect" << std::endl;
     return false;
   }
-  if (v[n-2]!=0xc5 || v[n-1]!=0xc5) {
+  if (v[n-2]!=0xc5 || v[n-1]!=0xa4) {
     std::cerr << "stop code incorrect" << std::endl;
     return false;
   }
