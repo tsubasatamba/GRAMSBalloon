@@ -40,202 +40,216 @@ double main_current_conversion(int adcValue)
     return (slow_ADC_conversion(adcValue) - 1.0) * 1.25;
 }
 
+double main_voltage_conversion(int adcValue){
+  return slow_ADC_conversion(adcValue)*24.0/3.34;
+}
+  
 int main(int argc, char **argv)
 {
-    constexpr int TELEMETRY_LENGTH = 132;
+  constexpr int TELEMETRY_LENGTH = 132;
 
-    if (argc != 2)
-    {
-        std::cerr << "Usage: ./make_telemetry_root inputfile outputfile" << std::endl;
-        return -1;
-    }
-    const std::string input_filename(argv[1]);
-    const std::string output_filename(argv[2]);
-    std::ifstream ifs(input_filename, std::ios::in);
+  if (argc != 3) {
+    std::cerr << "Usage: ./make_telemetry_root inputfile outputfile" << std::endl;
+    return -1;
+  }
+  const std::string input_filename(argv[1]);
+  const std::string output_filename(argv[2]);
+  std::ifstream ifs_input(input_filename, std::ios::in);
 
-#if VERBOSE > 0
+  if (VERBOSE > 0) {
     std::cout << "Input filename: " << input_filename << std::endl;
     std::cout << "Output filename: " << output_filename << std::endl;
-#endif
+  }
 
-    std::vector<std::string>
-        binary_files;
-
-    while (!ifs.eof())
-    {
-        std::string line;
-        std::getline(ifs, line);
-        binary_files.push_back(line);
-#if VERBOSE > 1
-        std::cout << line << std::endl;
-#endif
+  std::vector<std::string> binary_files;
+  std::string filename_buffer;
+  while (ifs_input >> filename_buffer) {
+    binary_files.push_back(filename_buffer);
+    if (VERBOSE > 1) {
+      std::cout << filename_buffer << std::endl;
     }
+  }
 
-    ifs.close();
+  ifs_input.close();
 
-    std::vector<std::vector<uint8_t>> telemetry;
-    for (int i = 0; i < static_cast<int>(binary_files.size()); i++)
-    {
-        std::ifstream ifs_binary(binary_files[i]);
-
-        while (!ifs_binary.eof())
-        {
-            std::vector<uint8_t> buf(TELEMETRY_LENGTH);
-            for (int j = 0; j < TELEMETRY_LENGTH; j++)
-            {
-                if (ifs_binary.eof())
-                {
-                    break;
-                }
-                ifs_binary >> buf[i];
-            }
-            telemetry.push_back(buf);
+  std::vector<std::vector<uint8_t>> telemetry;
+  for (int i = 0; i < static_cast<int>(binary_files.size()); i++) {
+    std::ifstream ifs_binary(binary_files[i], std::ios::binary);
+    if (!ifs_binary) {
+      std::cerr << "File open error" << std::endl;
+      exit(1);
+    }
+    while (!ifs_binary.eof()) {
+      std::vector<uint8_t> buf(TELEMETRY_LENGTH);
+      for (int j = 0; j < TELEMETRY_LENGTH; j++) {
+        if (ifs_binary.eof()) {
+          break;
         }
+        char c;
+        ifs_binary.read(&c, 1);
+        buf[j] = static_cast<uint8_t>(c);
+      }
+      if (ifs_binary.eof()) break;
+      telemetry.push_back(buf);
     }
+    ifs_binary.close();
+  }
 
-    TFile *rootfile = TFile::Open(output_filename.c_str());
-    TTree *HK_telemetry = new TTree("hk_telemetry", "hk_telemetry");
-    TelemetryDefinition teldef;
-    uint16_t start_code = 0xeb90;
-    uint16_t telemetry_type = 0;
-    timeval time_now;
-    uint32_t telemetry_index = 0;
-    int32_t run_id = -1;
-    // footer
-    uint16_t crc = 0;
-    uint16_t stop_code = 0xc5c5;
+  TFile* rootfile = TFile::Open(output_filename.c_str(), "recreate");
+  TTree* tree = new TTree("hk_telemetry", "hk_telemetry");
+  TelemetryDefinition teldef;
 
-    // HK
-    uint32_t event_count = 0;
-    // uint32_t trigger_count = 0;
-    double chamber_pressure = 0.;
-    std::vector<double> chamber_temperature(MTR_NUM_CHAMBER_TEMP);
-    double valve_temperature = 0.;
-    double outer_temperature = 0.;
-    double TPC_HV_setting = 0.0;
-    double TPC_HV_measure = 0.;
-    double PMT_HV_setting = 0.0;
-    double PMT_HV_measure = 0.;
-    double CPU_temperature = 0.0;
-    std::vector<double> env_temperature(MTR_NUM_ENV_SENSOR);
-    std::vector<double> env_humidity(MTR_NUM_ENV_SENSOR);
-    std::vector<double> env_pressure(MTR_NUM_ENV_SENSOR);
-    std::vector<float> acceleration(3);
-    std::vector<float> gyro(3);
-    std::vector<float> magnet(3);
-    float accel_sensor_temperature = 0.0;
-    double main_current = 0.;
-    double main_voltage = 0.;
-    uint16_t last_command_index = 0;
-    uint16_t last_command_code = 0;
-    uint16_t command_reject_count = 0;
-    uint64_t software_error_code = 0;
-    HK_telemetry->Branch("start_code", &start_code, "start_code/s");
-    HK_telemetry->Branch("telemetry_type", &telemetry_type, "telemetry_type/s");
-    HK_telemetry->Branch("time_sec", &time_now.tv_sec, "time_sec/I");
-    HK_telemetry->Branch("time_usec", &time_now.tv_usec, "time_usec/I");
-    HK_telemetry->Branch("telemetry_index", &telemetry_index, "telemetry_index/i");
-    HK_telemetry->Branch("run_id", &run_id, "run_id/I");
-    HK_telemetry->Branch("CRC", &crc, "CRC/s");
-    HK_telemetry->Branch("stop_code", &stop_code, "stop_code/s");
-    HK_telemetry->Branch("event_count", &event_count, "event_count/i");
-    HK_telemetry->Branch("chamber_pressure", &chamber_pressure, "chamber_pressure/D");
-    for (int i = 0; i < MTR_NUM_CHAMBER_TEMP; i++)
-    {
-        HK_telemetry->Branch(Form("chamber_temperature_%d", i), chamber_temperature.data() + i, Form("chamber_temperature_%d/D", i));
-    }
-    HK_telemetry->Branch("outer_temperature", &outer_temperature, "outer_temperature/D");
-    HK_telemetry->Branch("valve_temperature", &valve_temperature, "valve_temperature/D");
-    HK_telemetry->Branch("TPC_HV_setting", &TPC_HV_setting, "TPC_HV_setting/D");
-    HK_telemetry->Branch("TPC_HV_measure", &TPC_HV_measure, "TPC_HV_measure/D");
-    HK_telemetry->Branch("PMT_HV_setting", &PMT_HV_setting, "PMT_HV_setting/D");
-    HK_telemetry->Branch("PMT_HV_measure", &PMT_HV_measure, "PMT_HV_measure/D");
-    HK_telemetry->Branch("CPU_temperature", &CPU_temperature, "CPU_temperature/D");
+  // branches
+  uint16_t start_code = 0xeb90;
+  uint16_t telemetry_type = 0;
+  timeval time_now;
+  uint32_t telemetry_index = 0;
+  int32_t run_id = -1;
+  uint16_t crc = 0;
+  uint16_t stop_code = 0xc5c5;
+  uint32_t event_count = 0;
+  double chamber_pressure = 0.0;
+  std::vector<double> chamber_temperature(MTR_NUM_CHAMBER_TEMP);
+  double valve_temperature = 0.0;
+  double outer_temperature = 0.0;
+  double TPC_HV_setting = 0.0;
+  double TPC_HV_measure = 0.0;
+  double PMT_HV_setting = 0.0;
+  double PMT_HV_measure = 0.0;
+  double CPU_temperature = 0.0;
+  std::vector<double> env_temperature(MTR_NUM_ENV_SENSOR);
+  std::vector<double> env_humidity(MTR_NUM_ENV_SENSOR);
+  std::vector<double> env_pressure(MTR_NUM_ENV_SENSOR);
+  std::vector<double> acceleration(3);
+  std::vector<double> gyro(3);
+  std::vector<double> magnet(3);
+  double accel_sensor_temperature = 0.0;
+  double main_current = 0.;
+  double main_voltage = 0.;
+  uint16_t last_command_index = 0;
+  uint16_t last_command_code = 0;
+  uint16_t command_reject_count = 0;
+  uint64_t software_error_code = 0;
+  int received_time_sec = 0;
+  int received_time_usec = 0;
+  tree->Branch("start_code", &start_code, "start_code/s");
+  tree->Branch("telemetry_type", &telemetry_type, "telemetry_type/s");
+  tree->Branch("time_sec", &time_now.tv_sec, "time_sec/I");
+  tree->Branch("time_usec", &time_now.tv_usec, "time_usec/I");
+  tree->Branch("telemetry_index", &telemetry_index, "telemetry_index/i");
+  tree->Branch("run_id", &run_id, "run_id/I");
+  tree->Branch("CRC", &crc, "CRC/s");
+  tree->Branch("stop_code", &stop_code, "stop_code/s");
+  tree->Branch("event_count", &event_count, "event_count/i");
+  tree->Branch("chamber_pressure", &chamber_pressure, "chamber_pressure/D");
+  for (int i = 0; i < MTR_NUM_CHAMBER_TEMP; i++) {
+    const int j = i+1;
+    tree->Branch(Form("chamber_temperature_%d", j), &chamber_temperature[i], Form("chamber_temperature_%d/D", j));
+  }
+  tree->Branch("outer_temperature", &outer_temperature, "outer_temperature/D");
+  tree->Branch("valve_temperature", &valve_temperature, "valve_temperature/D");
+  tree->Branch("TPC_HV_setting", &TPC_HV_setting, "TPC_HV_setting/D");
+  tree->Branch("TPC_HV_measure", &TPC_HV_measure, "TPC_HV_measure/D");
+  tree->Branch("PMT_HV_setting", &PMT_HV_setting, "PMT_HV_setting/D");
+  tree->Branch("PMT_HV_measure", &PMT_HV_measure, "PMT_HV_measure/D");
+  tree->Branch("CPU_temperature", &CPU_temperature, "CPU_temperature/D");
 
-    for (int i = 0; i < MTR_NUM_ENV_SENSOR; i++)
-    {
-        HK_telemetry->Branch(Form("env_temperature_%d", i), env_temperature.data() + i, Form("env_temperature_%d/D", i));
-        HK_telemetry->Branch(Form("env_humidity_%d", i), env_humidity.data() + i, Form("env_humidity_%d/D", i));
-        HK_telemetry->Branch(Form("env_pressure_%d", i), env_pressure.data() + i, Form("env_pressure_%d/D",i));
-    }
+  for (int i = 0; i < MTR_NUM_ENV_SENSOR; i++) {
+    const int j = i + 1;
+    tree->Branch(Form("env_temperature_%d", j), &env_temperature[i], Form("env_temperature_%d/D", j));
+    tree->Branch(Form("env_humidity_%d", j), &env_humidity[i], Form("env_humidity_%d/D", j));
+    tree->Branch(Form("env_pressure_%d", j), &env_pressure[i], Form("env_pressure_%d/D",j));
+  }
 
-    HK_telemetry->Branch("acceleration_x", &acceleration[0], "acceleration_x/F");
-    HK_telemetry->Branch("acceleration_y", &acceleration[1], "acceleration_y/F");
-    HK_telemetry->Branch("acceleration_z", &acceleration[2], "acceleration_z/F");
+  tree->Branch("acceleration_x", &acceleration[0], "acceleration_x/D");
+  tree->Branch("acceleration_y", &acceleration[1], "acceleration_y/D");
+  tree->Branch("acceleration_z", &acceleration[2], "acceleration_z/D");
 
-    HK_telemetry->Branch("gyro_x", &gyro[0], "gyro_x/F");
-    HK_telemetry->Branch("gyro_y", &gyro[1], "gyro_y/F");
-    HK_telemetry->Branch("gyro_z", &gyro[2], "gyro_z/F");
+  tree->Branch("gyro_x", &gyro[0], "gyro_x/D");
+  tree->Branch("gyro_y", &gyro[1], "gyro_y/D");
+  tree->Branch("gyro_z", &gyro[2], "gyro_z/D");
 
-    HK_telemetry->Branch("magnet_x", &magnet[0], "magnet_x/F");
-    HK_telemetry->Branch("magnet_y", &magnet[1], "magnet_y/F");
-    HK_telemetry->Branch("magnet_z", &magnet[2], "magnet_z/F");
+  tree->Branch("magnet_x", &magnet[0], "magnet_x/D");
+  tree->Branch("magnet_y", &magnet[1], "magnet_y/D");
+  tree->Branch("magnet_z", &magnet[2], "magnet_z/D");
 
-    HK_telemetry->Branch("accel_sensor_temperature", &accel_sensor_temperature, "accel_sensor_temperature/F");
+  tree->Branch("accel_sensor_temperature", &accel_sensor_temperature, "accel_sensor_temperature/D");
+    
+  tree->Branch("main_current", &main_current, "main_current/D");
+  tree->Branch("main_voltage", &main_voltage, "main_voltage/D");
+  tree->Branch("last_command_code", &last_command_code, "last_command_code/s");
+  tree->Branch("last_command_index", &last_command_index, "last_command_index/s");
+  tree->Branch("command_reject_count", &command_reject_count, "command_reject_count/s");
+  tree->Branch("software_command_error_code", &software_error_code, "software_error_code/l");
 
-    HK_telemetry->Branch("main_current", &main_current, "main_current/D");
-    HK_telemetry->Branch("main_voltage", &main_voltage, "main_voltage/D");
-    HK_telemetry->Branch("last_command_code", &last_command_code, "last_command_code/s");
-    HK_telemetry->Branch("last_command_index", &last_command_index, "last_command_index/s");
-    HK_telemetry->Branch("command_reject_count", &command_reject_count, "command_reject_count/s");
-    HK_telemetry->Branch("software_command_error_code", &software_error_code, "software_error_code/l");
+  tree->Branch("received_time_sec", &received_time_sec, "received_time_sec/I");
+  tree->Branch("received_time_usec", &received_time_usec, "received_time_usec/I");
 
-    for (int i = 0; i < static_cast<int>(telemetry.size()); i++)
-    {
-
-        teldef.setTelemetry(telemetry[i]);
-        teldef.interpret();
-        start_code = teldef.StartCode();
-        telemetry_type = teldef.TelemetryType();
-        time_now = teldef.TimeNow();
-        telemetry_index = teldef.TelemetryIndex();
-        run_id = teldef.RunID();
-        crc = teldef.CRC();
-        stop_code = teldef.StopCode();
-        event_count = teldef.EventCount();
-        // trigger_count = teldef.TriggerCount();
-        chamber_pressure = pressure_conversion(teldef.ChamberPressure());
-
-        for (int j = 0; j < static_cast<int>(MTR_NUM_CHAMBER_TEMP); j++)
-        {
-            chamber_temperature[j] = RTD_conversion(teldef.ChamberTemperature(j));
+  for (int i = 0; i < static_cast<int>(telemetry.size()); i++) {
+    received_time_sec = 0;
+    received_time_usec = 0;
+    for (int j=0; j<2; j++) {
+      for (int k=0; k<4; k++) {
+        const int shift = k*8;
+        const int now = static_cast<int>(static_cast<uint32_t>(telemetry[i].back()) << shift);
+        if (j==0) {
+          received_time_usec |= now;
         }
-
-        valve_temperature = RTD_conversion(teldef.ValveTemperature());
-        outer_temperature = RTD_conversion(teldef.OuterTemperature());
-        TPC_HV_setting = teldef.TPCHVSetting();
-        TPC_HV_measure = slow_ADC_conversion(teldef.TPCHVMeasure());
-        PMT_HV_setting = teldef.PMTHVSetting();
-        // tpc_hv_measure_current
-        CPU_temperature = teldef.CPUTemperature();
-
-        for (int j = 0; j < MTR_NUM_ENV_SENSOR; j++)
-        {
-            env_temperature[j] = teldef.EnvTemperature(j);
-            env_humidity[j] = teldef.EnvHumidity(j);
-            env_pressure[j] = teldef.EnvPressure(j);
+        if (j==1) {
+          received_time_sec |= now;
         }
-
-        for (int j = 0; j < 3; j++)
-        {
-            acceleration[j] = teldef.Acceleration(j);
-            gyro[j] = teldef.Gyro(j);
-            magnet[j] = teldef.Magnet(j);
-        }
-
-        accel_sensor_temperature = teldef.AccelSensorTemperature();
-        main_current = main_current_conversion(teldef.MainCurrent());
-        main_voltage = slow_ADC_conversion(teldef.MainVoltage());
-        last_command_index = teldef.LastCommandIndex();
-        last_command_code = teldef.LastCommandCode();
-        command_reject_count = teldef.CommandRejectCount();
-        software_error_code = teldef.SoftwareErrorCode();
-
-        HK_telemetry->Fill();
+        telemetry[i].pop_back();
+      }
     }
-    rootfile->cd();
-    HK_telemetry->Write();
-    rootfile->Clone();
+    teldef.setTelemetry(telemetry[i]);
+    teldef.interpret();
+    start_code = teldef.StartCode();
+    telemetry_type = teldef.TelemetryType();
+    time_now = teldef.TimeNow();
+    telemetry_index = teldef.TelemetryIndex();
+    run_id = teldef.RunID();
+    crc = teldef.CRC();
+    stop_code = teldef.StopCode();
+    event_count = teldef.EventCount();
+    chamber_pressure = pressure_conversion(teldef.ChamberPressure());
 
-    return 0;
+    for (int j = 0; j < static_cast<int>(MTR_NUM_CHAMBER_TEMP); j++) {
+      chamber_temperature[j] = RTD_conversion(teldef.ChamberTemperature(j));
+    }
+
+    valve_temperature = RTD_conversion(teldef.ValveTemperature());
+    outer_temperature = RTD_conversion(teldef.OuterTemperature());
+    TPC_HV_setting = teldef.TPCHVSetting();
+    TPC_HV_measure = slow_ADC_conversion(teldef.TPCHVMeasure());
+    PMT_HV_setting = teldef.PMTHVSetting();
+    // tpc_hv_measure_current
+    CPU_temperature = teldef.CPUTemperature();
+
+    for (int j = 0; j < MTR_NUM_ENV_SENSOR; j++) {
+      env_temperature[j] = teldef.EnvTemperature(j);
+      env_humidity[j] = teldef.EnvHumidity(j);
+      env_pressure[j] = teldef.EnvPressure(j);
+    }
+
+    for (int j = 0; j < 3; j++) {
+      acceleration[j] = teldef.Acceleration(j);
+      gyro[j] = teldef.Gyro(j);
+      magnet[j] = teldef.Magnet(j);
+    }
+
+    accel_sensor_temperature = teldef.AccelSensorTemperature();
+    main_current = main_current_conversion(teldef.MainCurrent());
+    main_voltage = main_voltage_conversion(teldef.MainVoltage());
+    last_command_index = teldef.LastCommandIndex();
+    last_command_code = teldef.LastCommandCode();
+    command_reject_count = teldef.CommandRejectCount();
+    software_error_code = teldef.SoftwareErrorCode();
+
+    tree->Fill();
+    }
+  rootfile->cd();
+  tree->Write();
+  rootfile->Close();
+
+  return 0;
 }
