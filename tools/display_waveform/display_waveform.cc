@@ -77,7 +77,7 @@ void plotWaveform(const std::vector<std::vector<double> >& wf, double dt, const 
     for (int j=0; j<n; j++) {
       const double t = dt * j;
       graph[i]->SetPoint(j, t, wf[i][j]);
-      std::cout << j << " " << t << " " << wf[i][j] << std::endl;
+      //std::cout << j << " " << t << " " << wf[i][j] << std::endl;
     }
     graph[i]->Draw("AP");
     const double min_y = *std::min_element(wf[i].begin(), wf[i].end());
