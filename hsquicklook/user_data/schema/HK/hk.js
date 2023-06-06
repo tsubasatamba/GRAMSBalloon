@@ -42,10 +42,10 @@ HSQuickLook.main.schema =
           "Outer_Temperature": {"type": "float", "format": "%7.3f", "conversion": convert_RTD_measure},
           "TPC_High_Voltage_Setting": {"source": "TPC_High_Voltage_Setting", "type": "float"},
           "TPC_High_Voltage_Measurement_ADC": {"source": "TPC_High_Voltage_Measurement", "type": "int"},
-          "TPC_High_Voltage_Measurement": {"type": "float", "format": "%7.3f", "conversion": convert_RTD_measure},
-          "PMT_High_Voltage_Setting": {"source": "PMT_High_Voltage_Setting", "type": "float"},
-          "PMT_High_Voltage_Measurement_ADC": {"source": "PMT_High_Voltage_Measurement", "type": "int"},
-          "PMT_High_Voltage_Measurement": {"type": "float", "format": "%7.3f", "conversion": convert_RTD_measure}
+          "TPC_High_Voltage_Measurement": {"type": "float", "format": "%7.3f", "conversion": convert_Slow_ADC},
+          "TPC_Current_Measurement_ADC": {"source": "PMT_High_Voltage_Measurement", "type": "int"},
+          "TPC_Current_Measurement": {"type": "float", "format": "%7.3f", "source": "PMT_High_Voltage_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }},
+          "PMT_High_Voltage_Setting": {"source": "PMT_High_Voltage_Setting", "type": "float"}
         }
       },
       {
@@ -83,7 +83,7 @@ HSQuickLook.main.schema =
           "Accel_Sensor_Temperature": {"type": "float", "format": "%7.3f"},
           "Main_Current_ADC": { "source": "Main_Current", "type": "int" },
           "Main_Current_ADC_Voltage": { "source": "Main_Current", "type": "float","format":"%7.3f", "conversion": convert_Slow_ADC},
-          "Main_Current": {"type": "float", "format": "%7.3f", "conversion": function(v){ return (convert_Slow_ADC(v)-1)*0.8; }},
+          "Main_Current": {"type": "float", "format": "%7.3f", "conversion": function(v){ return (convert_Slow_ADC(v)-1)*1.25; }},
           "Main_Voltage_ADC": { "source": "Main_Voltage", "type": "int" },
           "Main_Voltage_ADC_Voltage":{"source":"Main_Voltage","type":"float","format":"%7.3f","conversion":convert_Slow_ADC},
           "Main_Voltage": { "type": "float", "format": "%7.3f", "conversion": function (v) { return (convert_Slow_ADC(v))*24/3.34; } }},

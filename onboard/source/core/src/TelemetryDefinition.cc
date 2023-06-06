@@ -217,7 +217,6 @@ void TelemetryDefinition::interpret()
 {
   startCode_ = getValue<uint16_t>(0);
   telemetryType_ = getValue<uint16_t>(2);
-  std::cout << "telemetry type: " << telemetryType_ << std::endl;
   timeNow_.tv_sec = getValue<int32_t>(4);
   timeNow_.tv_usec = getValue<int32_t>(8);
   telemetryIndex_ = getValue<uint32_t>(12);
