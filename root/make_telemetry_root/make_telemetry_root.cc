@@ -10,6 +10,9 @@
 
 #define VERBOSE 2
 
+#define MTR_NUM_ENV_SENSOR 5
+#define MTR_NUM_RTD 5
+
 using namespace gramsballoon;
 
 double RTD_conversion(int adcValue)
@@ -21,7 +24,7 @@ double RTD_conversion(int adcValue)
 double slow_ADC_conversion(int adcValue)
 {
     double va = 5.026;
-    return adcValue / 4096 * va;
+    return static_cast<double>(adcValue) / 4096 * va;
 }
 
 int main(int argc, char **argv)
@@ -91,11 +94,11 @@ int main(int argc, char **argv)
         uint32_t event_count = teldef.EventCount();
         uint32_t trigger_count = teldef.TriggerCount();
         uint16_t chamber_pressure = teldef.ChamberPressure();
-        std::vector<double> chamber_temperature(3);
+        std::vector<double> chamber_temperature(MTR_NUM_RTD);
 
-        for (int i = 0; i < chamber_temperature.size(); i++)
+        for (int j = 0; j < chamber_temperature.size(); j++)
         {
-            chamber_temperature[i] = RTD_conversion(teldef.ChamberTemperature(i));
+            chamber_temperature[j] = RTD_conversion(teldef.ChamberTemperature(j));
         }
 
         double valve_temperature = RTD_conversion(teldef.ValveTemperature());
@@ -104,7 +107,22 @@ int main(int argc, char **argv)
         double tpc_hv_measure = slow_ADC_conversion(teldef.TPCHVMeasure());
         double pmt_hv_setting = teldef.PMTHVSetting();
         // tpc_hv_measure_current
+        double cpu_temperature = teldef.CPUTemperature();
 
+        std::vector<double> env_temperature(MTR_NUM_ENV_SENSOR);
+        for (int j = 0; j < env_temperature.size(); j++)
+        {
+            env_temperature[j] = teldef.EnvTemperature(j);
+        }
+
+        std::vector<double> env_humidity(MTR_NUM_ENV_SENSOR);
+        for (int j = 0; j < env_humidity.size(); j++)
+        {
+            env_humidity[j] = teldef.EnvHumidity(j);
+        }
+
+        std::vector<double> env_pressure(MTR_NUM_ENV_SENSOR);
+        for(int)
 
         HK_telemetry->Branch("start_code", &start_code, "start_code/I");
         HK_telemetry->Branch("telemetry_type", &telemetry_type, "telemetry_type/I");
