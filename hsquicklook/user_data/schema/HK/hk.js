@@ -44,7 +44,7 @@ HSQuickLook.main.schema =
           "TPC_High_Voltage_Measurement_ADC": {"source": "TPC_High_Voltage_Measurement", "type": "int"},
           "TPC_High_Voltage_Measurement": {"type": "float", "format": "%7.3f", "conversion": convert_Slow_ADC},
           "TPC_Current_Measurement_ADC": {"source": "PMT_High_Voltage_Measurement", "type": "int"},
-          "TPC_Current_Measurement_Voltage": {"type": "float", "format": "%7.3f", "source": "PMT_High_Voltage_Measurement", "conversion": convert_Slow_ADC},
+          "TPC_Current_Measurement": {"type": "float", "format": "%7.3f", "source": "PMT_High_Voltage_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }},
           "PMT_High_Voltage_Setting": {"source": "PMT_High_Voltage_Setting", "type": "float"}
         }
       },

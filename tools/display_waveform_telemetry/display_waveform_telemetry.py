@@ -4,12 +4,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from typing import Any, List
+import os
 
-dt = 0.05  # us
+dt = 0.01  # us
+num_bin = 3000
 header_length = 20
 footer_length = 12
 event_header_length = 12
-
+total_length = header_length+footer_length+event_header_length+num_bin*8
 
 plt.rcParams['font.family'] = 'Times New Roman'  # 使用するフォント
 plt.rcParams['xtick.direction'] = 'in'  # x軸の目盛線が内向き('in')か外向き('out')か双方向か('inout')
@@ -26,10 +28,6 @@ def convert_to_mV(wf: np.ndarray[Any, Any], channel: int) -> np.ndarray:
     return wf * adc_range[channel] / 65536 * 1000
 
 
-def get_num_bin(length: int) -> int:
-    return (length - header_length - footer_length - event_header_length) // 8
-
-
 def main() -> None:
     if len(sys.argv)!=2:
         print("USAGE: ./display_waveform_telemetry.py input_filename")
@@ -39,28 +37,31 @@ def main() -> None:
 
     with open(filename, "rb") as fr:
         binary = fr.read()
-    num_bin = get_num_bin(len(binary))
-    eventid: int = int.from_bytes(binary[20:24], byteorder="big", signed=False)
-    runid: int = int.from_bytes(binary[16:20], byteorder="big", signed=False)
-    eventdata = np.zeros((4, num_bin))
-    index = 32
-    for i in range(4):
-        for j in range(num_bin):
-            eventdata[i, j] = int.from_bytes(binary[index:index + 2], byteorder="big", signed=True)
-            index += 2
-    print(num_bin)
+    binary_size = len(binary)
+    num_events = binary_size//total_length
+    print(f"num_events: {num_events}")
+    print(binary_size%total_length)
+    for k in range(num_events):
+        start_index = total_length * k
+        eventid: int = int.from_bytes(binary[start_index+20:start_index+24], byteorder="big", signed=False)
+        runid: int = int.from_bytes(binary[start_index+16:start_index+20], byteorder="big", signed=False)
+        eventdata = np.zeros((4, num_bin))
+        index = start_index + 32
+        for i in range(4):
+            for j in range(num_bin):
+                eventdata[i, j] = int.from_bytes(binary[index:index + 2], byteorder="big", signed=True)
+                index += 2
+        x = np.linspace(0, num_bin * dt, num_bin)
+        fig = plt.figure(1, figsize=(6.4 * 2, 4.8 * 2))
 
-    x = np.linspace(0, num_bin * dt, num_bin)
-
-    fig = plt.figure(1, figsize=(6.4 * 2, 4.8 * 2))
-
-    fig.suptitle(f"RunID={runid}, EventID={eventid}")
-    axs = [fig.add_subplot(221 + i, xlabel="time [$\\mu s$]", ylabel="Voltage [mV]", title=Chennal_name[i]) for i in range(4)]
-    fig.tight_layout()
-    for i in range(4):
-        axs[i].plot(x, convert_to_mV(eventdata[i], i), linewidth=1.0, color="black")
-    fig.savefig(f"{filename.rstrip('.dat')}.png")
-    plt.show()
+        fig.suptitle(f"RunID={runid}, EventID={eventid}")
+        axs = [fig.add_subplot(221 + i, xlabel="time [$\\mu s$]", ylabel="Voltage [mV]", title=Chennal_name[i]) for i in range(4)]
+        fig.tight_layout()
+        for i in range(4):
+            axs[i].plot(x, convert_to_mV(eventdata[i], i), linewidth=1.0, color="black")
+        image_filename = f"{filename.rstrip('.dat')}_{k}.png"
+        fig.savefig(image_filename)
+        os.system(f"open {image_filename}")
 
 
 if __name__ == "__main__":
