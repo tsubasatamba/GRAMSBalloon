@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from glob import glob
+import glob
 import time
 from typing import List
 import os
-
+import sys
 
 def get_filename_id(filename: str):
     id = filename.split("_")[-1].rstrip(".dat")
@@ -21,7 +21,9 @@ def get_filename_time(filename:str):
 def run(runIDs: List[int], output_root: str):
     filenames = []
     for runid in runIDs:
-        globbed_filename: List[str] = glob("/Users/grams/data/telemetry/telemetry_{:0=6}_*_HK_*.dat".format (runid))
+        runid_str = str(runid).zfill(6)
+        name = os.environ["HOME"] + f"/data/telemetry/telemetry_{runid_str}_*_HK_*.dat"
+        globbed_filename = glob.glob(name)
         globbed_filename = sorted(globbed_filename, key=get_filename_id)
         for path in globbed_filename:
             t = get_filename_time(path)
@@ -34,9 +36,13 @@ def run(runIDs: List[int], output_root: str):
     with open(temp_filelist, "w") as fp :
         for filename in filenames:
             fp.write(filename + "\n")
-    exe_file = "/Users/grams/software/GRAMSBalloon/tools/make_telemetry_root/build/make_telemetry_root"
+    exe_file = os.environ["HOME"] + "/software/GRAMSBalloon/tools/make_telemetry_root/build/make_telemetry_root"
     os.system(f"{exe_file} {temp_filelist} {output_root}")
     os.system(f"rm {temp_filelist}") 
 
 if __name__=="__main__":
-    run([106], "output.root")
+    if len(sys.argv)<=2:
+        raise ValueError("USAGE: ./run_multiple.py output_file runI_D1 runID_2 runID_3 ...")
+    output_file = sys.argv[1]
+    run_ids = sys.argv[2:]
+    run(run_ids, output_file)
