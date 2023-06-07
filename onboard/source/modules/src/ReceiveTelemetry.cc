@@ -63,8 +63,8 @@ ANLStatus ReceiveTelemetry::mod_analyze()
     const int n = telemetry_.size();
     if (n>=3 && telemetry_[n-3]==0xEB && telemetry_[n-2]==0x90 && telemetry_[n-1]==0x5B && buffer_[i]==0x6A) {
       telemetry_.clear();
-      telemetry_.push_back(0x90);
       telemetry_.push_back(0xEB);
+      telemetry_.push_back(0x90);
       telemetry_.push_back(0x5B);
       telemetry_.push_back(0x6A);
       continue;
