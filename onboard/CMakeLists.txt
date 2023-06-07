@@ -31,6 +31,7 @@ option(GB_USE_WAVEFORMS "enable waveforms" ON)
 option(GB_USE_ICM20948 "enable ICM20948" ON)
 option(GB_USE_RASPISYS "enable raspi system control" ON)
 option(GB_USE_HSQUICKLOOK "enable hsquicklook" OFF)
+option(GB_APT_RUBY "installed ruby via apt" ON)
 ## install options
 option(GB_INSTALL_HEADERS "install all header files" ON)
 option(GB_INSTALL_CMAKE_FILES "install all cmake files" ON)
@@ -45,11 +46,13 @@ if (GB_MAC)
   set(GB_USE_ICM20948 OFF)
   set(GB_USE_RASPISYS OFF)
   set(GB_USE_HSQUICKLOOK ON)
+  set(GB_APT_RUBY OFF)
 endif(GB_MAC)
 
-if (NOT GB_MAC)
+if (GB_APT_RUBY)
   set(RUBY_CONFIG_FILE_DIR /usr/include/arm-linux-gnueabihf/ruby-2.7.0)
-endif(NOT GB_MAC)
+endif(GB_APT_RUBY)
+
 
 ### External libraries
 ### BOOST ###

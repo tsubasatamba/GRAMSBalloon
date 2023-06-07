@@ -52,25 +52,32 @@ ANLStatus ReceiveTelemetry::mod_analyze()
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  const int status = sc_->sread(buffer_, maxTelemetry_);
-  if (status == -1) {
-    std::cerr << "Read command failed in ReceiveTelemetry::mod_analyze: status = " << status << std::endl;
+  const int byte_read = sc_->sread(buffer_, maxTelemetry_);
+  if (byte_read == -1) {
+    std::cerr << "Read command failed in ReceiveTelemetry::mod_analyze: byte_read = " << byte_read << std::endl;
     return AS_OK;
   }
   
-  for (int i = 0; i < status; i++) {
+  for (int i = 0; i < byte_read; i++) {
     valid_ = false;
-    if (i<status-1 && buffer_[i]==0xeb && buffer_[i+1]==0x90) {
+    const int n = telemetry_.size();
+    if (n>=3 && telemetry_[n-3]==0xEB && telemetry_[n-2]==0x90 && telemetry_[n-1]==0x5B && buffer_[i]==0x6A) {
       telemetry_.clear();
+      telemetry_.push_back(0xEB);
+      telemetry_.push_back(0x90);
+      telemetry_.push_back(0x5B);
+      telemetry_.push_back(0x6A);
+      continue;
     }
-    telemetry_.push_back(buffer_[i]);
-    if (i>0 && buffer_[i-1]==0xc5 && buffer_[i]==0xa4) {
+    if (n>=3 && telemetry_[n-3]==0xC5 && telemetry_[n-2]==0xA4 && telemetry_[n-1]==0xD2 && buffer_[i]==0x79) {
+      telemetry_.push_back(buffer_[i]);
       valid_ = true;
       break;
     }
+    telemetry_.push_back(buffer_[i]);
   }
   if (chatter_>=1) {
-    std::cout << "status: " << status << std::endl;
+    std::cout << "byte_read: " << byte_read << std::endl;
     for (int i = 0; i < static_cast<int>(telemetry_.size());i++) {
       std::cout << "telemetry[" << i << "] = "<<static_cast<int>(telemetry_[i]) << std::endl;
     }

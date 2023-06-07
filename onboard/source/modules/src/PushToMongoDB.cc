@@ -58,7 +58,7 @@ void PushToMongoDB::pushHKTelemetry()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start_Code"           << static_cast<int>(telemdef->StartCode())
+      << "Start_Code"           << static_cast<long long>(telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(telemdef->TelemetryType())
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
@@ -72,8 +72,8 @@ void PushToMongoDB::pushHKTelemetry()
     const std::string section_name = "Detector";
     auto section = bsoncxx::builder::stream::document{}
       << "Event_Count"                  << static_cast<int>(telemdef->EventCount())
-      << "Trigger_Count"                << static_cast<int>(telemdef->TriggerCount())
-      << "Chamber_Pressure"            << static_cast<int>(telemdef->ChamberPressure())
+      << "Current_EventID"              << static_cast<int>(telemdef->CurrentEventID())
+      << "Chamber_Pressure"             << static_cast<int>(telemdef->ChamberPressure())
       << "Chamber_Temperature_1"        << static_cast<int>(telemdef->ChamberTemperature(0))
       << "Chamber_Temperature_2"        << static_cast<int>(telemdef->ChamberTemperature(1))
       << "Chamber_Temperature_3"        << static_cast<int>(telemdef->ChamberTemperature(2))
@@ -82,7 +82,7 @@ void PushToMongoDB::pushHKTelemetry()
       << "TPC_High_Voltage_Setting"     << static_cast<double>(telemdef->TPCHVSetting())
       << "TPC_High_Voltage_Measurement" << static_cast<int>(telemdef->TPCHVMeasure())
       << "PMT_High_Voltage_Setting"     << static_cast<double>(telemdef->PMTHVSetting())
-      << "PMT_High_Voltage_Measurement" << static_cast<int>(telemdef->PMTHVMeasure())
+      << "TPC_High_Voltage_Current_Measurement" << static_cast<int>(telemdef->TPCHVCurrentMeasure())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -101,8 +101,8 @@ void PushToMongoDB::pushHKTelemetry()
     for (int i=0; i<3; i++) {
       const char c = 'x' + i;
       section_stream << (boost::format("Acceleration_%s") % c).str() << telemdef->Acceleration(i);
-      section_stream << (boost::format("Gyro_%d") % c).str() << telemdef->Gyro(i);
-      section_stream << (boost::format("Acceleration_%d") % c).str() << telemdef->Magnet(i);
+      section_stream << (boost::format("Gyro_%s") % c).str() << telemdef->Gyro(i);
+      section_stream << (boost::format("Magnet_%s") % c).str() << telemdef->Magnet(i);
     }
     section_stream
       << "Accel_Sensor_Temperature" << telemdef->AccelSensorTemperature()
@@ -120,7 +120,7 @@ void PushToMongoDB::pushHKTelemetry()
       << "Command_Reject_Count" << static_cast<int>(telemdef->CommandRejectCount())
       << "Software_Error_Code"  << static_cast<long long>(telemdef->SoftwareErrorCode())
       << "CRC"                  << static_cast<int>(telemdef->CRC())
-      << "Stop_Code"            << static_cast<int>(telemdef->StopCode())
+      << "Stop_Code"            << static_cast<long long>(telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -160,7 +160,7 @@ void PushToMongoDB::pushWFTelemetry()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start_Code"      << static_cast<int>(telemdef->StartCode())
+      << "Start_Code"      << static_cast<long long>(telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(telemdef->TelemetryType())
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
@@ -176,6 +176,8 @@ void PushToMongoDB::pushWFTelemetry()
       << "Event_ID"              << static_cast<int>(telemdef->EventID())
       << "Event_Time"            << static_cast<int>((telemdef->EventTime()).tv_sec)
       << "Event_Time_us"         << static_cast<int>((telemdef->EventTime()).tv_usec)
+      << "Sample_Frequency"      << telemdef->SampleFrequency()
+      << "Time_Window"           << telemdef->TimeWindow()
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -184,7 +186,7 @@ void PushToMongoDB::pushWFTelemetry()
     const std::string section_name = "Footer";
     auto section = bsoncxx::builder::stream::document{}
       << "CRC"                  << static_cast<int>(telemdef->CRC())
-      << "Stop_Code"            << static_cast<int>(telemdef->StopCode())
+      << "Stop_Code"            << static_cast<long long>(telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -205,7 +207,7 @@ void PushToMongoDB::pushStatusTelemetry()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start_Code"      << static_cast<int>(telemdef->StartCode())
+      << "Start_Code"      << static_cast<long long>(telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(telemdef->TelemetryType())
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
@@ -223,7 +225,8 @@ void PushToMongoDB::pushStatusTelemetry()
       << "Trigger_Channel"      << static_cast<int>(telemdef->TriggerChannel())
       << "Trigger_Level"        << telemdef->TriggerLevel()
       << "Trigger_Position"     << telemdef->TriggerPosition()
-      << "Channel_Mask"         << telemdef->ChannelMask()
+      << "Sample_Frequency"     << telemdef->SampleFrequency()
+      << "Time_Window"          << telemdef->TimeWindow()
       << "ADC_Offset_1"         << (telemdef->ADCOffset())[0]
       << "ADC_Offset_2"         << (telemdef->ADCOffset())[1]
       << "ADC_Offset_3"         << (telemdef->ADCOffset())[2]
@@ -233,7 +236,7 @@ void PushToMongoDB::pushStatusTelemetry()
       << "ADC_Range_3"          << (telemdef->ADCRange())[2]
       << "ADC_Range_4"          << (telemdef->ADCRange())[3]
       << "DAQ_In_Progress"      << static_cast<int>(telemdef->DAQInProgress())
-      << "SD_Capacity"          << static_cast<int>(telemdef->SDCapacity())
+      << "SD_Capacity"          << (static_cast<double>(telemdef->SDCapacity()) / std::pow(2.0, 30.0))
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -242,7 +245,7 @@ void PushToMongoDB::pushStatusTelemetry()
     const std::string section_name = "Footer";
     auto section = bsoncxx::builder::stream::document{}
       << "CRC"                  << static_cast<int>(telemdef->CRC())
-      << "Stop_Code"            << static_cast<int>(telemdef->StopCode())
+      << "Stop_Code"            << static_cast<long long>(telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }

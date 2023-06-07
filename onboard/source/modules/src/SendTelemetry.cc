@@ -115,8 +115,25 @@ ANLStatus SendTelemetry::mod_initialize()
 
 ANLStatus SendTelemetry::mod_analyze()
 {
-  inputInfo();
-  telemdef_->generateTelemetry();
+  if (telemetryType_==2) {
+    if (wfDivisionCounter_==0) {
+      inputStatusInfo();
+    }
+    if (wfDivisionCounter_%2==0) {
+      wfDivisionCounter_++;
+      telemdef_->setTelemetryType(telemetryType_);
+      const int division_id = wfDivisionCounter_/2;
+      telemdef_->generateTelemetry(division_id);
+    }
+    else {
+      wfDivisionCounter_++;
+      telemetryType_ = 1;
+    }
+  }
+  if (telemetryType_==1 || telemetryType_==3) {
+    inputInfo();
+    telemdef_->generateTelemetry();
+  }
 
   const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
   const int status = sc_->swrite(telemetry);
@@ -140,8 +157,15 @@ ANLStatus SendTelemetry::mod_analyze()
   if (telemetryType_!=1) {
     telemetryType_ = 1;
   }
+  if (wfDivisionCounter_>0) {
+    telemetryType_ = 2;
+  }
+  if (wfDivisionCounter_==16) {
+    telemetryType_ = 1;
+    wfDivisionCounter_ = 0;
+  }
 
-  std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleepms_));
 
   return AS_OK;
 }
@@ -177,10 +201,9 @@ void SendTelemetry::inputInfo()
 void SendTelemetry::inputDetectorInfo()
 {
   if (readWaveform_!=nullptr) {
-    uint32_t event_count = readWaveform_->EventCount();
-    telemdef_->setEventCount(event_count);
+    telemdef_->setEventCount(readWaveform_->EventCount());
+    telemdef_->setCurrentEventID(readWaveform_->EventID());
   }
-  // trigger count
   if (getSlowADCData_!=nullptr) {
     telemdef_->setChamberPressure(getSlowADCData_->getADC(2));
   }
@@ -199,7 +222,7 @@ void SendTelemetry::inputDetectorInfo()
     telemdef_->setPMTHVSetting(PMTHVController_->NextVoltage());
   }
   if (getSlowADCData_!=nullptr) {
-    telemdef_->setPMTHVMeasure(getSlowADCData_->getADC(4));
+    telemdef_->setTPCHVCurrentMeasure(getSlowADCData_->getADC(4));
   }
 }
 
@@ -251,7 +274,8 @@ void SendTelemetry::inputStatusInfo()
     telemdef_->setTriggerChannel(static_cast<uint16_t>(readWaveform_->TrigChannel()));
     telemdef_->setTriggerLevel(readWaveform_->TrigLevel());
     telemdef_->setTriggerPosition(readWaveform_->TrigPosition());
-    // chmask
+    telemdef_->setSampleFrequency(readWaveform_->SampleFrequency());
+    telemdef_->setTimeWindow(readWaveform_->TimeWindow());
     telemdef_->setADCOffset(readWaveform_->Offset());
     telemdef_->setADCRange(readWaveform_->Range());
     telemdef_->setDAQInProgress(readWaveform_->StartReading());
@@ -259,7 +283,6 @@ void SendTelemetry::inputStatusInfo()
   if (getRaspiStatus_!=nullptr) {
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());
   }
-
 }
 
 void SendTelemetry::writeTelemetryToFile(bool failed)

@@ -11,7 +11,7 @@ def get_filename_id(filename):
 
 def get_filenames(run_id):
     arr = []
-    dirname = "/Users/grams/data/telemetry/"
+    dirname =  os.environ['HOME'] + "/data/telemetry/"
     run_id_str = '{:0=6}'.format(run_id)
     arr = glob.glob(dirname + "telemetry_" + run_id_str + "_*_HK_*.dat")
     arr = sorted(arr, key=get_filename_id)

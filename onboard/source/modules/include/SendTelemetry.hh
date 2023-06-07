@@ -60,6 +60,7 @@ public:
   void writeTelemetryToFile(bool failed);
 
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
+  int TelemetryType() { return singleton_self()->telemetryType_; }
 
   void setEventID(int v) { telemdef_->setEventID(v); };
   void setEventHeader(const std::vector<int16_t>& v) { telemdef_->setEventHeader(v); }
@@ -68,6 +69,7 @@ public:
   const std::vector<int16_t>& EventHeader() const { return telemdef_->EventHeader(); }
   const std::vector<std::vector<int16_t>>& EventData() const { return telemdef_->EventData(); }
   ErrorManager* getErrorManager() { return (singleton_self()->errorManager_).get(); }
+  int WfDivisionCounter() { return singleton_self()->wfDivisionCounter_; }
 
 private:
   std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
@@ -77,6 +79,8 @@ private:
   bool saveTelemetry_ = true;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 1000;
+  static constexpr int sleepms_ = 500;
+  int wfDivisionCounter_ = 0;
   int chatter_ = 0;
 
   // access to other classes
