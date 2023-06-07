@@ -60,6 +60,7 @@ public:
   void writeTelemetryToFile(bool failed);
 
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
+  int TelemetryType() { return singleton_self()->telemetryType_; }
 
   void setEventID(int v) { telemdef_->setEventID(v); };
   void setEventHeader(const std::vector<int16_t>& v) { telemdef_->setEventHeader(v); }

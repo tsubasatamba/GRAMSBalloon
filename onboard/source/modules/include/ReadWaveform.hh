@@ -47,6 +47,7 @@ public:
 
   const std::vector<std::vector<int16_t>>& EventData() const { return singleton_self()->eventData_; }
   void setOndemand(bool v) { singleton_self()->ondemand_ = v; }
+  bool getOndemand() { return singleton_self()->ondemand_; }
   DAQIO* getDAQIO() { return (singleton_self()->daqio_).get(); }
 
   bool StartReading() { return singleton_self()->startReading_; }
@@ -102,7 +103,7 @@ private:
   bool startReading_ = false;
   uint32_t eventID_ = 0;
   int nonDetectionCounter_ = 0;
-  int maxNonDetectionCount_ = 100;
+  int maxNonDetectionCount_ = 5;
   RunIDManager* runIDManager_ = nullptr;
   int chatter_ = 0;
 };

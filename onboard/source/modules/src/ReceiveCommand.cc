@@ -172,6 +172,10 @@ bool ReceiveCommand::applyCommand()
 
   if (code==100 && argc==0) {
     if (sendTelemetry_!=nullptr) {
+      if (readWaveform_->getOndemand() || sendTelemetry_->TelemetryType()==2 || sendTelemetry_->WfDivisionCounter()>0) {
+        return false;
+      }
+
       sendTelemetry_->setTelemetryType(static_cast<int>(TelemetryType::Status));
       return true;
     }
@@ -306,6 +310,9 @@ bool ReceiveCommand::applyCommand()
   if (code==210 && argc==0) {
     if (readWaveform_!=nullptr) {
       if (!(readWaveform_->StartReading())) {
+        return false;
+      }
+      if (readWaveform_->getOndemand() || sendTelemetry_->TelemetryType()==2 || sendTelemetry_->WfDivisionCounter()>0) {
         return false;
       }
       readWaveform_->setOndemand(true);
