@@ -115,8 +115,25 @@ ANLStatus SendTelemetry::mod_initialize()
 
 ANLStatus SendTelemetry::mod_analyze()
 {
-  inputInfo();
-  telemdef_->generateTelemetry();
+  if (telemetryType_==2) {
+    if (wfDivisionCounter_==0) {
+      inputStatusInfo();
+    }
+    if (wfDivisionCounter_%2==0) {
+      wfDivisionCounter_++;
+      telemdef_->setTelemetryType(telemetryType_);
+      const int division_id = wfDivisionCounter_/2;
+      telemdef_->generateTelemetry(division_id);
+    }
+    else {
+      wfDivisionCounter_++;
+      telemetryType_ = 1;
+    }
+  }
+  if (telemetryType_==1 || telemetryType_==3) {
+    inputInfo();
+    telemdef_->generateTelemetry();
+  }
 
   const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
   const int status = sc_->swrite(telemetry);
@@ -139,6 +156,13 @@ ANLStatus SendTelemetry::mod_analyze()
 
   if (telemetryType_!=1) {
     telemetryType_ = 1;
+  }
+  if (wfDivisionCounter_>0) {
+    telemetryType_ = 2;
+  }
+  if (wfDivisionCounter_==16) {
+    telemetryType_ = 1;
+    wfDivisionCounter_ = 0;
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(sleepms_));

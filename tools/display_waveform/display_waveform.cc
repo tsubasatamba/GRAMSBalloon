@@ -128,7 +128,7 @@ int main(int argc, char **argv)
   int trigger_slope = static_cast<int>(file_header[3]);
   double trigger_level = static_cast<double>(file_header[4]) / 1E3;
   double trigger_position = static_cast<double>(file_header[5])/1E3;
-  double sample_frequency = static_cast<double>(file_header[6])/1E3;
+  double sample_frequency = static_cast<double>(file_header[6])/1E2;
   double time_window = static_cast<double>(file_header[7])/1E3;
   int num_sample = static_cast<int>(file_header[8]);
   int num_event_per_file = static_cast<int>(file_header[9]);

@@ -209,7 +209,7 @@ void DAQIO::generateFileHeader(std::vector<int16_t>& header, int16_t num_event)
   header[3] = static_cast<int16_t>(trigSlope_);
   header[4] = static_cast<int16_t>(trigLevel_*1E3);
   header[5] = static_cast<int16_t>(trigPosition_*1E3);
-  header[6] = static_cast<int16_t>(sampleFreq_*1E3);
+  header[6] = static_cast<int16_t>(sampleFreq_*1E2);
   header[7] = static_cast<int16_t>(timeWindow_*1E3);
   header[8] = static_cast<int16_t>(numSample_);
   header[9] = static_cast<int16_t>(num_event);

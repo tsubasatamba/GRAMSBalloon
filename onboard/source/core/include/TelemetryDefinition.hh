@@ -28,9 +28,9 @@ class TelemetryDefinition
 {
 public:
   TelemetryDefinition();
-  void generateTelemetry();
+  void generateTelemetry(int wf_division_id=0);
   void generateTelemetryHK();
-  void generateTelemetryWF();
+  void generateTelemetryWF(int wf_division_id);
   void generateTelemetryStatus();
   void writeRTDTemperature();
   void writeEnvironmentalData();
@@ -56,7 +56,6 @@ public:
   void setRTDTemperatureADC(int index, int16_t v) { RTDTemperatureADC_[index] = v; }
   void resizeRTDTemperatureADC(int n) { RTDTemperatureADC_.resize(n); }
   std::vector<int16_t>& RTDTemperatureADC() { return RTDTemperatureADC_; }
-
 
   // setter
   void setTelemetryType(uint16_t v) { telemetryType_ = v; }

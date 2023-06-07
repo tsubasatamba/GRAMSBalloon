@@ -19,7 +19,7 @@ TelemetryDefinition::TelemetryDefinition()
   ADCRange_.resize(4);
 }
 
-void TelemetryDefinition::generateTelemetry()
+void TelemetryDefinition::generateTelemetry(int wf_division_id/*=0*/)
 {
   clear();
   startCode_ = 0xEB905B6A;
@@ -36,7 +36,7 @@ void TelemetryDefinition::generateTelemetry()
     generateTelemetryHK();
   }
   else if (telemetryType_==static_cast<int>(TelemetryType::WF)) {
-    generateTelemetryWF();
+    generateTelemetryWF(wf_division_id);
   }
   else if (telemetryType_==static_cast<int>(TelemetryType::Status)) {
     generateTelemetryStatus();
@@ -72,16 +72,35 @@ void TelemetryDefinition::generateTelemetryHK()
   addValue<uint64_t>(softwareErrorCode_); //software error code
 }
 
-void TelemetryDefinition::generateTelemetryWF()
+void TelemetryDefinition::generateTelemetryWF(int wf_division_id)
 {
+  if (wf_division_id<0 || wf_division_id>=8) {
+    std::cerr << "wf_division_id incorrect" << std::endl;
+    return;
+  }
   addValue<uint32_t>(eventID_);
   for (int i=0; i<5; i++) {
     if (i==0) continue;
     addValue<int16_t>(eventHeader_[i]);
   }
-  const int n = eventData_.size();
-  for (int i=0; i<n; i++) {
-    addVector<int16_t>(eventData_[i]);
+  const int channel = wf_division_id / 2;
+  const int division_id = wf_division_id % 2;
+  const int num_sampling = eventData_[channel].size();
+  addValue<uint16_t>(static_cast<uint16_t>(channel));
+  addValue<uint16_t>(static_cast<uint16_t>(division_id));
+  addValue<uint32_t>(static_cast<uint32_t>(sampleFrequency_/1E-3));
+  addValue<uint32_t>(static_cast<uint32_t>(timeWindow_/1E-3));
+  addValue<uint32_t>(static_cast<uint32_t>(num_sampling));
+
+  if (division_id==0) {
+    for (int i=0; i<num_sampling/2; i++) {
+      addValue<int16_t>(eventData_[channel][i]);
+    }
+  }
+  else {
+    for (int i=num_sampling/2; i<num_sampling; i++) {
+      addValue<int16_t>(eventData_[channel][i]);
+    }
   }
 }
 
@@ -193,6 +212,10 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
     std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
     return false;
   }
+  if (type==2 && n!=8248) {
+    std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
+    return false;
+  }
   if (type==3 && n!=92) {
     std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
     return false;
@@ -295,25 +318,33 @@ void TelemetryDefinition::interpretHK()
 
 void TelemetryDefinition::interpretWF()
 {
-  const int total_size = telemetry_.size();
-  const int header_size = 20;
-  const int footer_size = 4;
-  const int event_header_size = 12;
-  const int event_size = (total_size-header_size-footer_size-event_header_size)/4;
+  eventID_ = getValue<uint32_t>(22);
+  eventTime_.tv_sec = getValue<int32_t>(26);
+  eventTime_.tv_usec = getValue<int32_t>(30);
+  const int channel = static_cast<int>(getValue<uint16_t>(34));
+  const int division_id = static_cast<int>(getValue<uint16_t>(36));
+  sampleFrequency_ = getValue<uint32_t>(38) * 1E-3;
+  timeWindow_ = getValue<uint32_t>(42) * 1E-3;
+  const int num_sampling = static_cast<int>(getValue<uint32_t>(46));
 
-  int index = header_size;
-  eventHeader_.resize(event_header_size/sizeof(int16_t));
-  getVector<int16_t>(index, event_header_size/sizeof(int16_t), eventHeader_);
-  eventID_ = getValue<uint32_t>(index);
-  eventTime_.tv_sec = getValue<int32_t>(index+4);
-  eventTime_.tv_usec = getValue<int32_t>(index+8);
-  index += event_header_size;
-  
-  eventData_.resize(4);
-  for (int i=0; i<4; i++) {
-    eventData_[i].resize(event_size/sizeof(int16_t));
-    getVector<int16_t>(index, event_size/sizeof(int16_t), eventData_[i]);
-    index += event_size;
+  if (static_cast<int>(eventData_.size())<=channel) {
+    eventData_.resize(channel+1);
+  }
+  eventData_[channel].resize(num_sampling);
+
+  int index = 50;
+  std::cout << "num_sampling: " << num_sampling << std::endl;
+  if (division_id==0) {
+    for (int i=0; i<num_sampling/2; i++) {
+      eventData_[channel][i] = getValue<int16_t>(index);
+      index += sizeof(int16_t);
+    }
+  }
+  else {
+    for (int i=num_sampling/2; i<num_sampling; i++) {
+      eventData_[channel][i] = getValue<int16_t>(index);
+      index += sizeof(int16_t);
+    }
   }
 
   crc_ = getValue<uint16_t>(index);
