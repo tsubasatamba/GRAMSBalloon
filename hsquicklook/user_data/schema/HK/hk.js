@@ -27,7 +27,7 @@ HSQuickLook.main.schema =
 	      "section": "Detector",
 	      "contents": {
           "Event_Count": {"type": "int"},
-          "Trigger_Count": {"type": "int"},
+          "Current_EventID": {"type": "int"},
           "Chamber_Pressure_ADC": {"source": "Chamber_Pressure", "type": "int"},
           "Chamber_Pressure": {"type": "int", "format": "%7.3f", "conversion": convert_Chamber_Pressure},
           "Chamber_Temperature_1_ADC": {"source": "Chamber_Temperature_1", "type": "int"},
@@ -43,8 +43,8 @@ HSQuickLook.main.schema =
           "TPC_High_Voltage_Setting": {"source": "TPC_High_Voltage_Setting", "type": "float"},
           "TPC_High_Voltage_Measurement_ADC": {"source": "TPC_High_Voltage_Measurement", "type": "int"},
           "TPC_High_Voltage_Measurement": {"type": "float", "format": "%7.3f", "conversion": convert_Slow_ADC},
-          "TPC_Current_Measurement_ADC": {"source": "PMT_High_Voltage_Measurement", "type": "int"},
-          "TPC_Current_Measurement": {"type": "float", "format": "%7.3f", "source": "PMT_High_Voltage_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }},
+          "TPC_Current_Measurement_ADC": {"source": "TPC_High_Voltage_Current_Measurement", "type": "int"},
+          "TPC_Current_Measurement": {"type": "float", "format": "%7.3f", "source": "TPC_High_Voltage_Current_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }},
           "PMT_High_Voltage_Setting": {"source": "PMT_High_Voltage_Setting", "type": "float"}
         }
       },
