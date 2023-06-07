@@ -27,8 +27,8 @@ HSQuickLook.main.schema =
                 "Trigger_Channel": {"type": "int"},
                 "Trigger_Level": {"type": "double","format": "%7.3f"},
                 "Trigger_Position": {"type": "double","format": "%7.3f"},
-                "Sample_Frequency[MHz]": {"type": "double", "format": "%7.3f", "source": "Sample_Frequency"},
-                "TimeWindow[us]": {"type": "double", "format": "%7.3f", "source": "Time_Window"},
+                "Sample_Frequency_MHz": {"type": "double", "format": "%7.3f", "source": "Sample_Frequency"},
+                "Time_Window_us": {"type": "double", "format": "%7.3f", "source": "Time_Window"},
                 "ADC_Offset_1": {"type": "double","format": "%7.3f"},
                 "ADC_Offset_2": {"type": "double","format": "%7.3f"},
                 "ADC_Offset_3": {"type": "double","format": "%7.3f"},
@@ -38,7 +38,7 @@ HSQuickLook.main.schema =
                 "ADC_Range_3": {"type": "double","format": "%7.3f"},
                 "ADC_Range_4": {"type": "double","format": "%7.3f"},
                 "DAQ_In_Progress": {"type": "int"},
-                "SD_Capacity[GB]": {"type": "double", "format": "%7.3f", "source": "SD_Capacity"}
+                "SD_Capacity_GB": {"type": "double", "format": "%7.3f", "source": "SD_Capacity"}
             }
         },
         {
