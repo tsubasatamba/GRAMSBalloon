@@ -184,7 +184,7 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
 
   telemetry_ = v;
   std::vector<uint8_t> telem_without_fotter;
-  for (int i=0; i<n-4; i++) {
+  for (int i=0; i<n-6; i++) {
     telem_without_fotter.push_back(v[i]);
   }
 
