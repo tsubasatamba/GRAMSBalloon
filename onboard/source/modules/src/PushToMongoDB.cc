@@ -176,6 +176,8 @@ void PushToMongoDB::pushWFTelemetry()
       << "Event_ID"              << static_cast<int>(telemdef->EventID())
       << "Event_Time"            << static_cast<int>((telemdef->EventTime()).tv_sec)
       << "Event_Time_us"         << static_cast<int>((telemdef->EventTime()).tv_usec)
+      << "Sample_Frequency"      << telemdef->SampleFrequency()
+      << "Time_Window"           << telemdef->TimeWindow()
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
