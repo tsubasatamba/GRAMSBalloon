@@ -127,16 +127,6 @@ ANLStatus ReadWaveform::mod_analyze()
     nonDetectionCounter_ = 0;
   }
 
-  /// start for debug
-  #if 1
-  for (int i=0; i<4; i++) {
-    for (int j=0; j<8192; j++) {
-      eventData_[i][j] = (i+1)*j;
-    }
-  }
-  #endif
-  /// end for debug
-
   if (nonDetectionCounter_>=maxNonDetectionCount_) {
     std::cout << "Failed to detect events " << nonDetectionCounter_ << "times in a row." << std::endl;
     std::cout << "Probably trigger level is too high." << std::endl;
