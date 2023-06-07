@@ -50,6 +50,7 @@ public:
   DAQIO* getDAQIO() { return (singleton_self()->daqio_).get(); }
 
   bool StartReading() { return singleton_self()->startReading_; }
+  uint32_t EventID() { return singleton_self()->eventID_; }
   uint32_t EventCount() { return daqio_->EventCount(); }
   int TrigDevice() { return daqio_->TrigDevice(); }
   int TrigChannel() { return daqio_->TrigChannel(); }
@@ -60,6 +61,8 @@ public:
   double TrigPosition() { return daqio_->TrigPosition(); }
   const std::vector<double>& Offset() const { return daqio_->Offset(); }
   const std::vector<double>& Range() const { return daqio_->Range(); }
+  double SampleFrequency() { return daqio_->SampleFrequency(); }
+  double TimeWindow() { return daqio_->TimeWindow(); }
 
   void setStartReading(bool v) { singleton_self()->startReading_ = v; }
   void setTrigDevice(int v) { singleton_self()->trigDevice_ = v; singleton_self()->triggerChanged_ = true; }

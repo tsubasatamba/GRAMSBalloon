@@ -60,6 +60,8 @@ public:
   void getRange();
   const std::vector<double>& Offset() const { return offset_; }
   const std::vector<double>& Range() const { return range_; }
+  double TimeWindow() { return timeWindow_; }
+  double SampleFrequency() { return sampleFreq_; }
 
 private:
   AnalogDiscoveryIO* ADIO_;

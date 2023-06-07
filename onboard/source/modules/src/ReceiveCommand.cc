@@ -103,23 +103,24 @@ ANLStatus ReceiveCommand::mod_analyze()
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(serialReadingTimems_));
-  const int status = sc_->sread(buffer_, bufferSize_);
-  if (status == -1) {
-    std::cerr << "Read command failed in ReceiveCommand::mod_analyze: status = " << status << std::endl;
+  const int byte_read = sc_->sread(buffer_, bufferSize_);
+  if (byte_read == -1) {
+    std::cerr << "Read command failed in ReceiveCommand::mod_analyze: byte_read = " << byte_read << std::endl;
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SREAD_ERROR);
     }
     return AS_OK;
   }
 
-  for (int i=0; i<status; i++) {
-    if (command_.size()>=1 && command_.back()==0xeb && buffer_[i]==0x90) {
+  for (int i=0; i<byte_read; i++) {
+    const int n = command_.size();
+    if (n>=1 && command_[n-1]==0xEB && buffer_[i]==0x90) {
       command_.clear();
-      command_.push_back(0xeb);
+      command_.push_back(0xEB);
       command_.push_back(0x90);
       continue;
     }
-    if (command_.size()>=1 && command_.back()==0xc5 && buffer_[i]==0xa4) {
+    if (n>=1 && command_[n-1]==0xC5 && buffer_[i]==0xA4) {
       command_.push_back(buffer_[i]);
       const bool applied = applyCommand();
       writeCommandToFile(!applied);
@@ -135,7 +136,7 @@ ANLStatus ReceiveCommand::mod_analyze()
   }
 
   if (chatter_>=1) {
-    std::cout << "ReceiveCommand status: " << status << std::endl;
+    std::cout << "ReceiveCommand byte_read: " << byte_read << std::endl;
     for (int i=0; i<static_cast<int>(command_.size()); i++) {
       std::cout << "command[" << i << "] = " << static_cast<int>(command_[i]) << std::endl;
     }

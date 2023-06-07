@@ -62,7 +62,7 @@ public:
   void setTelemetryType(uint16_t v) { telemetryType_ = v; }
   void setRunID(int32_t v) { runID_ = v; }
   void setEventCount(uint32_t v) { eventCount_ = v; }
-  void setTriggerCount(uint32_t v) { triggerCount_ = v; }
+  void setCurrentEventID(uint32_t v) { currentEventID_ = v; }
   void setChamberPressure(uint16_t v) { chamberPressure_ = v; }
   void setChamberTemperature(const std::vector<uint16_t>& v) { chamberTemperature_ = v; } //should be fixed
   void setChamberTemperature(int index, uint16_t v) { if (index<static_cast<int>(chamberTemperature_.size())) chamberTemperature_[index] = v; }
@@ -72,7 +72,7 @@ public:
   void setTPCHVSetting(double v) { TPCHVSetting_ = v; }
   void setTPCHVMeasure(uint16_t v) {TPCHVMeasure_ = v; }
   void setPMTHVSetting(double v) { PMTHVSetting_ = v; }
-  void setPMTHVMeasure(uint16_t v) {PMTHVMeasure_ = v; }
+  void setTPCHVCurrentMeasure(uint16_t v) {TPCHVCurrentMeasure_ = v; }
   void setCPUTemperature(double v) { CPUTemperature_ = v; }
   void setEnvTemperature(const std::vector<double>& v) { envTemperature_ = v; }
   void setEnvTemperature(int index, double v) { if (index<static_cast<int>(envTemperature_.size())) envTemperature_[index] = v; }
@@ -107,22 +107,23 @@ public:
   void setTriggerChannel(uint16_t v) { triggerChannel_ = v; }
   void setTriggerLevel(double v) { triggerLevel_ = v; }
   void setTriggerPosition(double v) { triggerPosition_ = v; }
-  void setChannelMask(uint16_t v) { channelMask_ = v; }
+  void setSampleFrequency(double v) { sampleFrequency_ = v; }
+  void setTimeWindow(double v) { timeWindow_ = v; }
   void setADCOffset(const std::vector<double>& v) { ADCOffset_ = v; }
   void setADCRange(const std::vector<double>& v) { ADCRange_ = v; }
   void setDAQInProgress(bool v) { DAQInProgress_ = v; }
   void setSDCapacity(uint64_t v) { SDCapacity_ = v; }
   
   // getter
-  uint16_t StartCode() { return startCode_; }
+  uint32_t StartCode() { return startCode_; }
   uint16_t TelemetryType() { return telemetryType_; }
   timeval TimeNow() { return timeNow_; }
   uint32_t TelemetryIndex() { return telemetryIndex_; }
   int32_t RunID() { return runID_; }
   uint16_t CRC() { return crc_; }
-  uint16_t StopCode() { return stopCode_; }
+  uint32_t StopCode() { return stopCode_; }
   uint32_t EventCount() { return eventCount_; }
-  uint32_t TriggerCount() { return triggerCount_; }
+  uint32_t CurrentEventID() { return currentEventID_; }
   uint16_t ChamberPressure() { return chamberPressure_; }
   const std::vector<uint16_t>& ChamberTemperature() const { return chamberTemperature_; }
   std::vector<uint16_t>& ChamberTemperature() { return chamberTemperature_; }
@@ -132,7 +133,7 @@ public:
   double TPCHVSetting() { return TPCHVSetting_; }
   uint16_t TPCHVMeasure() { return TPCHVMeasure_; }
   double PMTHVSetting() { return PMTHVSetting_; }
-  uint16_t PMTHVMeasure() { return PMTHVMeasure_; }
+  uint16_t TPCHVCurrentMeasure() { return TPCHVCurrentMeasure_; }
   double CPUTemperature() { return CPUTemperature_; }
   const std::vector<double>& EnvTemperature() const { return envTemperature_; }
   std::vector<double>& EnvTemperature() { return envTemperature_; }
@@ -168,7 +169,8 @@ public:
   uint16_t TriggerChannel() { return triggerChannel_; }
   double TriggerLevel() { return triggerLevel_; }
   double TriggerPosition() { return triggerPosition_; }
-  uint16_t ChannelMask() { return channelMask_; }
+  double SampleFrequency() { return sampleFrequency_; }
+  double TimeWindow() { return timeWindow_; }
   const std::vector<double>& ADCOffset() const {return ADCOffset_; }
   const std::vector<double>& ADCRange() const { return ADCRange_; }
   bool DAQInProgress() { return DAQInProgress_; }
@@ -177,18 +179,18 @@ public:
 private:
   std::vector<uint8_t> telemetry_;
   // header
-  uint16_t startCode_ = 0xeb90;
+  uint32_t startCode_ = 0xEB905B6A;
   uint16_t telemetryType_ = 0;
   timeval timeNow_;
   uint32_t telemetryIndex_ = 0;
   int32_t runID_ = -1;
   // footer
   uint16_t crc_ = 0;
-  uint16_t stopCode_ = 0xc5c5;
+  uint32_t stopCode_ = 0xC5A4D279;
 
   // HK
   uint32_t eventCount_ = 0;
-  uint32_t triggerCount_ = 0;
+  uint32_t currentEventID_ = 0;
   uint16_t chamberPressure_ = 0;
   std::vector<uint16_t> chamberTemperature_;
   uint16_t valveTemperature_ = 0;
@@ -196,7 +198,7 @@ private:
   double TPCHVSetting_ = 0.0;
   uint16_t TPCHVMeasure_ = 0;
   double PMTHVSetting_ = 0.0;
-  uint16_t PMTHVMeasure_ = 0;
+  uint16_t TPCHVCurrentMeasure_ = 0;
   double CPUTemperature_ = 0.0;
   std::vector<double> envTemperature_;
   std::vector<double> envHumidity_;
@@ -224,7 +226,8 @@ private:
   uint16_t triggerChannel_ = 0;
   double triggerLevel_ = 0.0; // volt
   double triggerPosition_ = 0.0; // us
-  uint16_t channelMask_ = 0;
+  double sampleFrequency_ = 0.0; // MHz
+  double timeWindow_ = 0.0; // us
   std::vector<double> ADCOffset_; // volt
   std::vector<double> ADCRange_; // volt
   bool DAQInProgress_ = false;

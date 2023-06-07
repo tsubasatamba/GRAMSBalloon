@@ -22,8 +22,8 @@ TelemetryDefinition::TelemetryDefinition()
 void TelemetryDefinition::generateTelemetry()
 {
   clear();
-  startCode_ = 0xeb90;
-  addValue<uint16_t>(startCode_);
+  startCode_ = 0xEB905B6A;
+  addValue<uint32_t>(startCode_);
   addValue<uint16_t>(static_cast<uint16_t>(telemetryType_));
   gettimeofday(&timeNow_, NULL);
   addValue<int32_t>(static_cast<int32_t>(timeNow_.tv_sec));
@@ -46,20 +46,21 @@ void TelemetryDefinition::generateTelemetry()
     return;
   }
   writeCRC16();
-  stopCode_ = 0xc5a4;
-  addValue<uint16_t>(stopCode_);
+  stopCode_ = 0xC5A4D279;
+  addValue<uint32_t>(stopCode_);
 }
 
 void TelemetryDefinition::generateTelemetryHK()
 {
   addValue<uint32_t>(eventCount_);
+  addValue<uint32_t>(currentEventID_);
   addValue<uint16_t>(chamberPressure_);
   
   writeRTDTemperature();  
   addValue<int32_t>(static_cast<int32_t>(TPCHVSetting_ / 1E-3));
   addValue<int16_t>(TPCHVMeasure_);
   addValue<int32_t>(static_cast<int32_t>(PMTHVSetting_ / 1E-3));
-  addValue<int16_t>(PMTHVMeasure_);
+  addValue<int16_t>(TPCHVCurrentMeasure_);
   addValue<int16_t>(static_cast<int16_t>(CPUTemperature_ / 0.1));
   writeEnvironmentalData();
   writeAccelerationData();
@@ -91,7 +92,8 @@ void TelemetryDefinition::generateTelemetryStatus()
   addValue<uint16_t>(triggerChannel_);
   addValue<int32_t>(static_cast<int32_t>(triggerLevel_/1E-3));
   addValue<int32_t>(static_cast<int32_t>(triggerPosition_/1E-3));
-  addValue<uint16_t>(channelMask_);
+  addValue<uint32_t>(static_cast<uint32_t>(sampleFrequency_/1E-3));
+  addValue<uint32_t>(static_cast<uint32_t>(timeWindow_/1E-3));
   const int n_offset = ADCOffset_.size();
   for (int i=0; i<n_offset; i++) {
     addValue<int32_t>(static_cast<int32_t>(ADCOffset_[i]/1E-3));
@@ -166,16 +168,16 @@ void TelemetryDefinition::writeCRC16()
 bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
 {
   const int n = v.size();
-  if (n<6) {
+  if (n<10) {
     std::cerr << "Telemetry is too short!!: length = " << n << std::endl; 
     return false;
   }
 
-  if (v[0]!=0xeb || v[1]!=0x90) {
+  if (v[0]!=0xEB || v[1]!=0x90 || v[2]!=0x5B || v[3]!=0x6A) {
     std::cerr << "start code incorect" << std::endl;
     return false;
   }
-  if (v[n-2]!=0xc5 || v[n-1]!=0xa4) {
+  if (v[n-4]!=0xC5 || v[n-3]!=0xA4 || v[n-2]!=0xD2 || v[n-1]!=0x79) {
     std::cerr << "stop code incorrect" << std::endl;
     return false;
   }
@@ -187,17 +189,17 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   }
 
   uint16_t type = getValue<uint16_t>(2);
-  if (type==1 && n!=124) {
+  if (type==1 && n!=132) {
     std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
     return false;
   }
-  if (type==3 && n!=82) {
+  if (type==3 && n!=92) {
     std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
     return false;
   }
   
   uint16_t crc_calc = calcCRC16(telem_without_fotter);
-  uint16_t crc_attached = getValue<uint16_t>(n-4);
+  uint16_t crc_attached = getValue<uint16_t>(n-6);
   if (crc_calc != crc_attached) {
     if (type==2) {
       std::cerr << "CRC16 is not appropriate.\nBut for now, we process the telemetry as valid one since it is too long." << std::endl;
@@ -215,12 +217,12 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
 
 void TelemetryDefinition::interpret()
 {
-  startCode_ = getValue<uint16_t>(0);
-  telemetryType_ = getValue<uint16_t>(2);
-  timeNow_.tv_sec = getValue<int32_t>(4);
-  timeNow_.tv_usec = getValue<int32_t>(8);
-  telemetryIndex_ = getValue<uint32_t>(12);
-  runID_ = getValue<int32_t>(16);
+  startCode_ = getValue<uint32_t>(0);
+  telemetryType_ = getValue<uint16_t>(4);
+  timeNow_.tv_sec = getValue<int32_t>(6);
+  timeNow_.tv_usec = getValue<int32_t>(10);
+  telemetryIndex_ = getValue<uint32_t>(14);
+  runID_ = getValue<int32_t>(18);
   if (static_cast<int>(telemetryType_)==static_cast<int>(TelemetryType::HK)) {
     interpretHK();
   }
@@ -237,17 +239,18 @@ void TelemetryDefinition::interpret()
 
 void TelemetryDefinition::interpretHK()
 {
-  eventCount_ = getValue<uint32_t>(20);
-  chamberPressure_ = getValue<uint16_t>(24);
+  eventCount_ = getValue<uint32_t>(22);
+  currentEventID_ = getValue<uint32_t>(26);
+  chamberPressure_ = getValue<uint16_t>(30);
   chamberTemperature_.resize(3);
-  getVector<uint16_t>(26, 3, chamberTemperature_);
-  valveTemperature_ = getValue<uint16_t>(32);
-  outerTemperature_ = getValue<uint16_t>(34);
-  TPCHVSetting_ = static_cast<double>(getValue<int32_t>(36))*1E-3;
-  TPCHVMeasure_ = getValue<uint16_t>(40);
-  PMTHVSetting_ = static_cast<double>(getValue<int32_t>(42))*1E-3;
-  PMTHVMeasure_ = getValue<uint16_t>(46);
-  CPUTemperature_ = static_cast<double>(getValue<int16_t>(48)) * 0.1;
+  getVector<uint16_t>(32, 3, chamberTemperature_);
+  valveTemperature_ = getValue<uint16_t>(38);
+  outerTemperature_ = getValue<uint16_t>(40);
+  TPCHVSetting_ = static_cast<double>(getValue<int32_t>(42))*1E-3;
+  TPCHVMeasure_ = getValue<uint16_t>(46);
+  PMTHVSetting_ = static_cast<double>(getValue<int32_t>(48))*1E-3;
+  TPCHVCurrentMeasure_ = getValue<uint16_t>(52);
+  CPUTemperature_ = static_cast<double>(getValue<int16_t>(54)) * 0.1;
   
   envTemperature_.resize(5);
   envHumidity_.resize(5);
@@ -255,9 +258,9 @@ void TelemetryDefinition::interpretHK()
   std::vector<int16_t> temp(5);
   std::vector<uint16_t> hum(5);
   std::vector<uint16_t> pre(5);
-  getVector<int16_t>(50, 5, temp);
-  getVector<uint16_t>(60, 5, hum);
-  getVector<uint16_t>(70, 5, pre);
+  getVector<int16_t>(56, 5, temp);
+  getVector<uint16_t>(66, 5, hum);
+  getVector<uint16_t>(76, 5, pre);
   for (int i=0; i<5; i++) {
     envTemperature_[i] = static_cast<double>(temp[i])*0.1;
     envHumidity_[i] = static_cast<double>(hum[i])*0.1;
@@ -270,24 +273,24 @@ void TelemetryDefinition::interpretHK()
   std::vector<int16_t> acc(3);
   std::vector<int16_t> gyr(3);
   std::vector<int16_t> mag(3);
-  getVector<int16_t>(80, 3, acc);
-  getVector<int16_t>(86, 3, gyr);
-  getVector<int16_t>(92, 3, mag);
+  getVector<int16_t>(86, 3, acc);
+  getVector<int16_t>(92, 3, gyr);
+  getVector<int16_t>(98, 3, mag);
   for (int i=0; i<3; i++) {
     acceleration_[i] = static_cast<float>(acc[i]) * 0.01;
     gyro_[i] = static_cast<float>(gyr[i]) * 0.01;
     magnet_[i] = static_cast<float>(mag[i]) * 0.01;
   }
-  accelSensorTemperature_ = static_cast<float>(getValue<int16_t>(98)) * 0.1;
+  accelSensorTemperature_ = static_cast<float>(getValue<int16_t>(104)) * 0.1;
 
-  mainCurrent_ = getValue<int16_t>(100);
-  mainVoltage_ = getValue<int16_t>(102);
-  lastCommandIndex_ = getValue<uint32_t>(104);
-  lastCommandCode_ = getValue<uint16_t>(108);
-  commandRejectCount_ = getValue<uint16_t>(110);
-  softwareErrorCode_ = getValue<uint64_t>(112);
-  crc_ = getValue<uint16_t>(120);
-  stopCode_ = getValue<uint16_t>(122);
+  mainCurrent_ = getValue<int16_t>(106);
+  mainVoltage_ = getValue<int16_t>(108);
+  lastCommandIndex_ = getValue<uint32_t>(110);
+  lastCommandCode_ = getValue<uint16_t>(114);
+  commandRejectCount_ = getValue<uint16_t>(116);
+  softwareErrorCode_ = getValue<uint64_t>(118);
+  crc_ = getValue<uint16_t>(126);
+  stopCode_ = getValue<uint16_t>(128);
 }
 
 void TelemetryDefinition::interpretWF()
@@ -319,17 +322,18 @@ void TelemetryDefinition::interpretWF()
 
 void TelemetryDefinition::interpretStatus()
 {
-  triggerMode_ = getValue<uint16_t>(20);
-  triggerDevice_ = getValue<uint16_t>(22);
-  triggerChannel_ = getValue<uint16_t>(24);
-  triggerLevel_ = getValue<int32_t>(26) * 1E-3;
-  triggerPosition_ = getValue<int32_t>(30) * 1E-3;
-  channelMask_ = getValue<uint16_t>(34);
+  triggerMode_ = getValue<uint16_t>(22);
+  triggerDevice_ = getValue<uint16_t>(24);
+  triggerChannel_ = getValue<uint16_t>(26);
+  triggerLevel_ = getValue<int32_t>(28) * 1E-3;
+  triggerPosition_ = getValue<int32_t>(32) * 1E-3;
+  sampleFrequency_ = getValue<uint32_t>(36) * 1E-3;
+  timeWindow_ = getValue<uint32_t>(40) * 1E-3;
 
   std::vector<int32_t> offset(4);
   std::vector<int32_t> range(4);
-  getVector<int32_t>(36, 4, offset);
-  getVector<int32_t>(52, 4, range);
+  getVector<int32_t>(44, 4, offset);
+  getVector<int32_t>(60, 4, range);
   ADCOffset_.resize(4);
   ADCRange_.resize(4);
   for (int i=0; i<4; i++) {
@@ -337,11 +341,11 @@ void TelemetryDefinition::interpretStatus()
     ADCRange_[i] = static_cast<double>(range[i]) * 1E-3;
   }
 
-  DAQInProgress_ = static_cast<bool>(getValue<uint16_t>(68));
-  SDCapacity_ = getValue<uint64_t>(70);
+  DAQInProgress_ = static_cast<bool>(getValue<uint16_t>(76));
+  SDCapacity_ = getValue<uint64_t>(78);
 
-  crc_ = getValue<uint16_t>(78);
-  stopCode_ = getValue<uint16_t>(80);
+  crc_ = getValue<uint16_t>(86);
+  stopCode_ = getValue<uint16_t>(88);
 }
 
 void TelemetryDefinition::clear()
