@@ -141,7 +141,7 @@ ANLStatus SendTelemetry::mod_analyze()
     telemetryType_ = 1;
   }
 
-  std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleepms_));
 
   return AS_OK;
 }

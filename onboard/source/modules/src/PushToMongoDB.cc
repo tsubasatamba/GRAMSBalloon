@@ -160,7 +160,7 @@ void PushToMongoDB::pushWFTelemetry()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start_Code"      << static_cast<int>(telemdef->StartCode())
+      << "Start_Code"      << static_cast<long long>(telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(telemdef->TelemetryType())
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
@@ -184,7 +184,7 @@ void PushToMongoDB::pushWFTelemetry()
     const std::string section_name = "Footer";
     auto section = bsoncxx::builder::stream::document{}
       << "CRC"                  << static_cast<int>(telemdef->CRC())
-      << "Stop_Code"            << static_cast<int>(telemdef->StopCode())
+      << "Stop_Code"            << static_cast<long long>(telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
@@ -205,7 +205,7 @@ void PushToMongoDB::pushStatusTelemetry()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start_Code"      << static_cast<int>(telemdef->StartCode())
+      << "Start_Code"      << static_cast<long long>(telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(telemdef->TelemetryType())
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
@@ -243,7 +243,7 @@ void PushToMongoDB::pushStatusTelemetry()
     const std::string section_name = "Footer";
     auto section = bsoncxx::builder::stream::document{}
       << "CRC"                  << static_cast<int>(telemdef->CRC())
-      << "Stop_Code"            << static_cast<int>(telemdef->StopCode())
+      << "Stop_Code"            << static_cast<long long>(telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }
