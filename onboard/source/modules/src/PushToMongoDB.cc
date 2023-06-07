@@ -58,7 +58,7 @@ void PushToMongoDB::pushHKTelemetry()
   {
     const std::string section_name = "Header";
     auto section = bsoncxx::builder::stream::document{}
-      << "Start_Code"           << static_cast<int>(telemdef->StartCode())
+      << "Start_Code"           << static_cast<long long>(telemdef->StartCode())
       << "Telemetry_Type"  << static_cast<int>(telemdef->TelemetryType())
       << "Time"            << static_cast<int>((telemdef->TimeNow()).tv_sec)
       << "Time_us"         << static_cast<int>((telemdef->TimeNow()).tv_usec)
@@ -120,7 +120,7 @@ void PushToMongoDB::pushHKTelemetry()
       << "Command_Reject_Count" << static_cast<int>(telemdef->CommandRejectCount())
       << "Software_Error_Code"  << static_cast<long long>(telemdef->SoftwareErrorCode())
       << "CRC"                  << static_cast<int>(telemdef->CRC())
-      << "Stop_Code"            << static_cast<int>(telemdef->StopCode())
+      << "Stop_Code"            << static_cast<long long>(telemdef->StopCode())
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
   }

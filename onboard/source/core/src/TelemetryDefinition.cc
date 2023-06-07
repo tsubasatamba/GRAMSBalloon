@@ -290,7 +290,7 @@ void TelemetryDefinition::interpretHK()
   commandRejectCount_ = getValue<uint16_t>(116);
   softwareErrorCode_ = getValue<uint64_t>(118);
   crc_ = getValue<uint16_t>(126);
-  stopCode_ = getValue<uint16_t>(128);
+  stopCode_ = getValue<uint32_t>(128);
 }
 
 void TelemetryDefinition::interpretWF()
@@ -317,7 +317,7 @@ void TelemetryDefinition::interpretWF()
   }
 
   crc_ = getValue<uint16_t>(index);
-  stopCode_ = getValue<uint16_t>(index+2);
+  stopCode_ = getValue<uint32_t>(index+2);
 }
 
 void TelemetryDefinition::interpretStatus()
@@ -345,7 +345,7 @@ void TelemetryDefinition::interpretStatus()
   SDCapacity_ = getValue<uint64_t>(78);
 
   crc_ = getValue<uint16_t>(86);
-  stopCode_ = getValue<uint16_t>(88);
+  stopCode_ = getValue<uint32_t>(88);
 }
 
 void TelemetryDefinition::clear()
