@@ -333,7 +333,6 @@ void TelemetryDefinition::interpretWF()
   eventData_[channel].resize(num_sampling);
 
   int index = 50;
-  std::cout << "num_sampling: " << num_sampling << std::endl;
   if (division_id==0) {
     for (int i=0; i<num_sampling/2; i++) {
       eventData_[channel][i] = getValue<int16_t>(index);

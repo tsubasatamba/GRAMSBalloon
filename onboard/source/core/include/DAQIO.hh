@@ -81,6 +81,7 @@ private:
   const int getDataMaxTrial_ = 1000;
 
   uint32_t eventCount_ = 0;
+  static constexpr int AD2_MAXBIN = 8192;
 };
 
 } /* namespace gramsballoon */

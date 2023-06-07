@@ -41,6 +41,9 @@ void DAQIO::setSampleParameters(double freq, double tw)
   sampleFreq_ = freq; // MHz
   timeWindow_ = tw; // us
   numSample_ = static_cast<int>(freq*tw);
+  if (numSample_>AD2_MAXBIN) {
+    numSample_ = AD2_MAXBIN;
+  }
 }
 
 int DAQIO::setupTrigger()
@@ -139,7 +142,7 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
   data.clear();
   header.resize(sz_header, 0);
   header[0] = static_cast<int16_t>(event_id);
-  data.resize(num_channels, std::vector<int16_t>(numSample_));
+  data.resize(num_channels, std::vector<int16_t>(AD2_MAXBIN));
 
   while (true) {
     FDwfAnalogInStatus(handler_list[trigDevice_], true, &status);
