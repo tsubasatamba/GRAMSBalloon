@@ -62,6 +62,7 @@ def main() -> None:
         image_filename = f"{filename.rstrip('.dat')}_{k}.png"
         fig.savefig(image_filename)
         os.system(f"open {image_filename}")
+        plt.close()
 
 
 if __name__ == "__main__":

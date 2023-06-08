@@ -39,4 +39,4 @@ def run(runIDs: List[int], output_root: str):
     os.system(f"rm {temp_filelist}") 
 
 if __name__=="__main__":
-    run([106], "output.root")
+    run([111], "output.root")
