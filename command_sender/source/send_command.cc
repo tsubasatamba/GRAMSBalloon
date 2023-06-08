@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-#include <stdlib.h>
-#include <fstream>
 #include "CommandSender.hh"
 #include "CommandBuilder.hh"
 #include "CommandSaver.hh"
@@ -19,13 +17,6 @@ int main(int argc, char *argv[])
     arg_array.push_back(std::stoi(argv[i]));
   }
 
-  std::string port_name;
-  std::string setting_filename = getenv("HOME");
-  setting_filename += "/settings/serial/command_port.txt";
-  std::ifstream ifs(setting_filename);
-  ifs >> port_name;
-  ifs.close();
-
   std::vector<uint8_t> command;
   gramsballoon::CommandBuilder command_builder;
   try {
@@ -37,7 +28,7 @@ int main(int argc, char *argv[])
   }
 
   gramsballoon::CommandSender sender;
-  sender.set_serial_port(port_name);
+  sender.set_serial_port("/dev/tty.usbserial-14410");
   if ( !sender.open_serial_port() ) {
     std::cout << "Serial port open error -> exit" << std::endl;
     return -1;
