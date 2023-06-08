@@ -78,7 +78,7 @@ private:
   double timeWindow_ = 0.0; // us
   double sampleFreq_ = 2.0; //MHz
   int numSample_ = 0;
-  const int getDataMaxTrial_ = 1000;
+  const int getDataMaxTrial_ = 10000;
 
   uint32_t eventCount_ = 0;
   static constexpr int AD2_MAXBIN = 8192;

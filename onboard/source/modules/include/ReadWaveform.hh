@@ -94,6 +94,9 @@ private:
 
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
+  std::vector<int16_t> recentEventHeader_;
+  std::vector<std::vector<int16_t>> recentEventData_;
+  uint32_t recentEventID_ = 0;
   std::string outputFilenameBase_ = "";
   int numEventsPerFile_ = 100;
   std::shared_ptr<std::ofstream> ofs_;
