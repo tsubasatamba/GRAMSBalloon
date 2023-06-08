@@ -120,6 +120,12 @@ ANLStatus ReadWaveform::mod_analyze()
   }
 
   DAQResult res = daqio_->getData(eventID_, eventHeader_, eventData_);
+  if (recentEventHeader_.size()==0) {
+    recentEventHeader_ = eventHeader_;
+  }
+  if (recentEventData_.size()==0) {
+    recentEventData_ = eventData_;
+  }
   if (res==DAQResult::NON_DETECTION) {
     nonDetectionCounter_++;
   }
@@ -135,15 +141,23 @@ ANLStatus ReadWaveform::mod_analyze()
     }
     nonDetectionCounter_ = 0;
   }
+
+  writeData();
+
+  if (res==DAQResult::TRIGGERED) {
+    std::swap(eventHeader_, recentEventHeader_);
+    std::swap(eventData_, recentEventData_);
+    recentEventID_ = eventID_;
+  }
   
   if (ondemand_) {
-    sendTelemetry_->setEventID(eventID_);
-    sendTelemetry_->setEventHeader(eventHeader_);
-    sendTelemetry_->setEventData(eventData_);
+    sendTelemetry_->setEventID(recentEventID_);
+    sendTelemetry_->setEventHeader(recentEventHeader_);
+    sendTelemetry_->setEventData(recentEventData_);
     sendTelemetry_->setTelemetryType(2);
     ondemand_ = false;
   }
-  writeData();
+
   eventID_++;
 
   return AS_OK;
