@@ -120,13 +120,7 @@ GRAMS-Balloon-test/sourceに移った後、
 
 ## 時刻の設定
 
-<https://arakoki70.com/?p=5691> を参考にする。
-
-/etc/systemd/timesyncd.confを編集する。
-`NTP=ntp.jst.mfeed.ad.jp ntp.nict.jp`
-`FallbackNTP=time.google.com`
-を追記する。
-その後、`sudo timedatectl set-ntp true`、`sudo systemctl daemon-reload`、`sudo systemctl restart systemd-timesyncd.service`を打つ。ただし、JAXAからは繋がらないみたいなので、別の方法で行うこと。
+ethernetでraspiに接続し、mac上でsetting_templetes/raspi_time/set_raspi_time.shを実行する。
 
 ## DAQソフト自動起動設定
 
@@ -135,4 +129,12 @@ Note: 追記した後の電源ON動作でGRAMSBalloonが動いてしまうため
 
 ## まとめ
 
-`sudo apt install zsh g++ libboost-all-dev cmake swig git pigpio autoconf bison patch build-essential rustc libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev emacs`を行う
+sudo passwd rootでパスワードを設定
+
+`sudo apt install zsh g++ libboost-all-dev cmake swig git pigpio autoconf bison patch build-essential rustc libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev emacs ruby-all-dev`を行う
+
+adept, waveformsを導入する。
+
+setting_templetes/boot/config.txtを/boot/config.txtにコピー。
+setting_templetes/zsh/zshrc_raspi.txtを~/.zshrcにコピー。
+setting_templetes/rc_local/rc_local.txtを/etc/rc.localにコピー。
