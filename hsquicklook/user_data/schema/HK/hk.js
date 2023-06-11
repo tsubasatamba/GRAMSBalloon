@@ -46,7 +46,7 @@ HSQuickLook.main.schema =
         "Outer_Temperature": { "type": "float", "format": "%7.3f", "conversion": convert_RTD_measure, "status": function (v) { return status_func("Outer_Temperature", v); } },
         "TPC_High_Voltage_Setting": { "source": "TPC_High_Voltage_Setting", "type": "float", "status": function (v) { return status_func("TPC_High_Voltage_Setting", v); } },
         "TPC_High_Voltage_Measurement_ADC": { "source": "TPC_High_Voltage_Measurement", "type": "int" },
-        "TPC_High_Voltage_Measurement_V": { "type": "float", "format": "%7.3f", "conversion": convert_Slow_ADC, "status": function (v) { return status_func("TPC_High_Voltage_Measurement", v); } },
+        "TPC_High_Voltage_Measurement_kV": { "source": "TPC_High_Voltage_Measurement", "type": "float", "format": "%7.3f", "conversion": function (v) { return convert_Slow_ADC(v) * 4; }, "status": function (v) { return status_func("TPC_High_Voltage_Measurement", v); } },
         "TPC_Current_Measurement_ADC": { "source": "TPC_High_Voltage_Current_Measurement", "type": "int" },
         "TPC_Current_Measurement_uA": {
           "type": "float", "format": "%7.3f", "source": "TPC_High_Voltage_Current_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }, "status": function (v) { return status_func("TPC_Current_Measurement", v); }
@@ -207,6 +207,40 @@ function Error_status(v) {
   return (v == "OK") ? "safe" : (v == "Error") ? "error" : "safe";
 }
 
+var status_configuration = {
+  "Chamber_Pressure": { "error_ranges": [[Infinity, Infinity], [-Infinity, 0]], "warning_ranges": [[Infinity, Infinity]] },
+  "Chamber_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
+  "Outer_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
+  "Valve_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
+  "TPC_High_Voltage_Setting": { "error_ranges": [[0.1, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "TPC_High_Voltage_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "TPC_Current_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "PMT_High_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[50, 80]] },
+  "HK_Humidity": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "HK_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "HK_Pressure": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Acceleration": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Gyro": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Magnet": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Main_Current": { "error_ranges": [[3, Infinity], [-Infinity, 0]], "warning_ranges": [[1, 3]] },
+  "Main_Voltage": { "error_ranges": [[0, 18], [36, Infinity]], "warning_ranges": [[34, 36], [18, 20]] },
+}
+
+function status_func(name, v) {
+  for (var i = 0; i < status_configuration[name]["error_ranges"].length; i++) {
+    if ((status_configuration[name]["error_ranges"][i][1] >= v) && (status_configuration[name]["error_ranges"][i][0] <= v)) {
+      // console.log("error in " + String(name) + "\nupper: " + String(status_configuration[name]["error_range"] + "\nlower: " + String(status_configuration[name]["error_range_lower"]) + "\nValue: " + String(v)));
+      return "error";
+    }
+  }
+  for (var i = 0; i < status_configuration[name]["warning_ranges"].length; i++) {
+    if ((status_configuration[name]["warning_ranges"][i][1] >= v) && (status_configuration[name]["warning_ranges"][i][0] <= v)) {
+      return "warning";
+    }
+  }
+  return "safe";
+}
 
 var command_code = {
   100: "Get Status",
@@ -232,42 +266,4 @@ var command_code = {
   900: "Dummy 1",
   901: "Dummy 2",
   902: "Dummy 3",
-}
-
-var status_configuration = {
-  "Chamber_Pressure": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "Chamber_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "Outer_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "Valve_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "TPC_High_Voltage_Setting": { "error_ranges": [[0.1, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "TPC_High_Voltage_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "TPC_Current_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "PMT_High_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[50, 80]] },
-  "HK_Humidity": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "HK_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "HK_Pressure": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "Acceleration": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "Gyro": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "Magnet": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-  "Main_Current": { "error_ranges": [[3, Infinity], [-Infinity, 0]], "warning_ranges": [[1, 3]] },
-  "Main_Voltage": { "error_ranges": [[0, 18], [36, Infinity]], "warning_ranges": [[34, 36], [18, 20]] },
-
-
-}
-function status_func(name, v) {
-  for (var i = 0; i < status_configuration[name]["error_ranges"].length; i++) {
-    if ((status_configuration[name]["error_ranges"][i][1] >= v) && (status_configuration[name]["error_ranges"][i][0] <= v)) {
-      // console.log("error in " + String(name) + "\nupper: " + String(status_configuration[name]["error_range"] + "\nlower: " + String(status_configuration[name]["error_range_lower"]) + "\nValue: " + String(v)));
-      return "error";
-    }
-  }
-
-  for (var i = 0; i < status_configuration[name]["warning_ranges"].length; i++) {
-    if ((status_configuration[name]["warning_ranges"][i][1] >= v) && (status_configuration[name]["warning_ranges"][i][0] <= v)) {
-      return "warning";
-    }
-  }
-  return "safe";
-
 }
