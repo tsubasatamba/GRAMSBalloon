@@ -1,5 +1,3 @@
-// import { status } from "./status_configuration"
-
 var Va = 5.026 //[V] for slow ADC
 var Rref = 430 //[ohm] for RTD measurement
 var Rshunt = 100 //[ohm] for Pressure gauge
@@ -32,8 +30,8 @@ HSQuickLook.main.schema =
       "period": 1,
       "section": "Detector",
       "contents": {
-        "Event_Count": { "type": "int" },
-        "Current_EventID": { "type": "int" },
+        "Event_Count": { "type": "int", "status": "safe" },
+        "Current_EventID": { "type": "int", "status": "safe" },
         "Chamber_Pressure_ADC": { "source": "Chamber_Pressure", "type": "int" },
         "Chamber_Pressure": { "type": "int", "format": "%7.3f", "conversion": convert_Chamber_Pressure, "status": function (v) { return status_func("Chamber_Pressure", v); } },
         "Chamber_Temperature_Upper_ADC": { "source": "Chamber_Temperature_1", "type": "int" },
@@ -68,30 +66,30 @@ HSQuickLook.main.schema =
         "HK_Temperature_Middle": { "source": "HK_Temperature_4", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("HK_Temperature", v); } },
         "HK_Temperature_Lower": { "source": "HK_Temperature_5", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("HK_Temperature", v); } },
 
-        "HK_Humidity_Upper": { "source": "HK_Humidity_3", "type": "float", "format": "%7.3f" },
-        "HK_Humidity_Middle": { "source": "HK_Humidity_4", "type": "float", "format": "%7.3f" },
-        "HK_Humidity_Lower": { "source": "HK_Humidity_5", "type": "float", "format": "%7.3f" },
+        "HK_Humidity_Upper": { "source": "HK_Humidity_3", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("HK_Humidity", v); } },
+        "HK_Humidity_Middle": { "source": "HK_Humidity_4", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("HK_Humidity", v); } },
+        "HK_Humidity_Lower": { "source": "HK_Humidity_5", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("HK_Humidity", v); } },
 
-        "HK_Pressure_Upper": { "source": "HK_Pressure_3", "type": "float", "format": "%7.2f", "conversion": function (v) { return v / 100.0; } },
-        "HK_Pressure_Middle": { "source": "HK_Pressure_4", "type": "float", "format": "%7.2f", "conversion": function (v) { return v / 100.0; } },
-        "HK_Pressure_Lower": { "source": "HK_Pressure_5", "type": "float", "format": "%7.2f", "conversion": function (v) { return v / 100.0; } },
+        "HK_Pressure_Upper": { "source": "HK_Pressure_3", "type": "float", "format": "%7.2f", "conversion": function (v) { return v / 100.0; }, "status": function (v) { return status_func("HK_Pressure", v); } },
+        "HK_Pressure_Middle": { "source": "HK_Pressure_4", "type": "float", "format": "%7.2f", "conversion": function (v) { return v / 100.0; }, "status": function (v) { return status_func("HK_Pressure", v); } },
+        "HK_Pressure_Lower": { "source": "HK_Pressure_5", "type": "float", "format": "%7.2f", "conversion": function (v) { return v / 100.0; }, "status": function (v) { return status_func("HK_Pressure", v); } },
         "Acceleration_x": {
           "type": "float", "format": "%7.3f", "conversion": function (v) {
             accel_x = v;
             return v;
-          }
+          }, "status": function (v) { return status_func("Acceleration", v); }
         },
         "Acceleration_y": {
           "type": "float", "format": "%7.3f", "conversion": function (v) {
             accel_y = v;
             return v;
-          }
+          }, "status": function (v) { return status_func("Acceleration", v); }
         },
         "Acceleration_z": {
           "type": "float", "format": "%7.3f", "conversion": function (v) {
             accel_z = v;
             return v;
-          }
+          }, "status": function (v) { return status_func("Acceleration", v); }
         },
         "Acceleration": {
           "type": "float", "format": "%7.3f", "conversion": function (v) {
@@ -99,19 +97,19 @@ HSQuickLook.main.schema =
           }
 
         },
-        "Gyro_x": { "type": "float", "format": "%7.3f" },
-        "Gyro_y": { "type": "float", "format": "%7.3f" },
-        "Gyro_z": { "type": "float", "format": "%7.3f" },
-        "Magnet_x_uT": { "source": "Magnet_x", "type": "float", "format": "%7.3f" },
-        "Magnet_y_uT": { "source": "Magnet_y", "type": "float", "format": "%7.3f" },
-        "Magnet_z_uT": { "source": "Magnet_z", "type": "float", "format": "%7.3f" },
-        "Accel_Sensor_Temperature_C": { "source": "Accel_Sensor_Temperature", "type": "float", "format": "%7.3f" },
+        "Gyro_x": { "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Gyro", v); } },
+        "Gyro_y": { "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Gyro", v); } },
+        "Gyro_z": { "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Gyro", v); } },
+        "Magnet_x_uT": { "source": "Magnet_x", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Magnet", v); } },
+        "Magnet_y_uT": { "source": "Magnet_y", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Magnet", v); } },
+        "Magnet_z_uT": { "source": "Magnet_z", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Magnet", v); } },
+        "Accel_Sensor_Temperature_C": { "source": "Accel_Sensor_Temperature", "type": "float", "format": "%7.3f", "status": function (v) { return status_func("HK_Temperature", v); } },
         "Main_Current_ADC": { "source": "Main_Current", "type": "int" },
         "Main_Current_ADC_Voltage": { "source": "Main_Current", "type": "float", "format": "%7.3f", "conversion": convert_Slow_ADC },
-        "Main_Current_A": { "source": "Main_Current", "type": "float", "format": "%7.3f", "conversion": function (v) { return (convert_Slow_ADC(v) - 1) * 1.25; }, "status": function (v) { return (v > 1) ? "warning" : (v > 3) ? "error" : "safe"; } },
+        "Main_Current_A": { "source": "Main_Current", "type": "float", "format": "%7.3f", "conversion": function (v) { return (convert_Slow_ADC(v) - 1) * 1.25; }, "status": function (v) { return status_func("Main_Current", v); } },
         "Main_Voltage_ADC": { "source": "Main_Voltage", "type": "int" },
         "Main_Voltage_ADC_Voltage": { "source": "Main_Voltage", "type": "float", "format": "%7.3f", "conversion": convert_Slow_ADC },
-        "Main_Voltage_V": { "source": "Main_Voltage", "type": "float", "format": "%7.3f", "conversion": function (v) { return (convert_Slow_ADC(v)) * 24 / 3.34; } }
+        "Main_Voltage_V": { "source": "Main_Voltage", "type": "float", "format": "%7.3f", "conversion": function (v) { return (convert_Slow_ADC(v)) * 24 / 3.34; }, "status": function (v) { return status_func("Main_Voltage", v); } }
       },
     },
     {
@@ -121,14 +119,15 @@ HSQuickLook.main.schema =
       "period": 1,
       "section": "Software",
       "contents": {
-        "Last_Command_Index": { "type": "int" },
+        "Last_Command_Index": { "type": "int", "status": "safe" },
         "Last_Command_Code": { "type": "int" },
         "Last_Command": {
-          "source": "Last_Command_Code", "type": "int", "conversion": function (v) {
-            return (v in command_code) ? command_code : "None";
-          }
+          "source": "Last_Command_Code", "type": "string", "conversion": function (v) {
+            return (v in command_code) ? command_code[v] : "None";
+          },
+          "status": function (v) { return (v == "None") ? "error" : "safe" }
         },
-        "Command_Reject_Count": { "type": "int" },
+        "Command_Reject_Count": { "type": "int", "status": function (v) { return (v > 0) ? "warning" : "safe"; } },
         "Software_Error_Code": { "type": "int" },
         "CRC": { "type": "int" },
         "Stop_Code": { "type": "int", "format": "0x%04X" }
@@ -235,33 +234,40 @@ var command_code = {
   902: "Dummy 3",
 }
 
-
 var status_configuration = {
-  "Chamber_Pressure": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "Chamber_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "Outer_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "Valve_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "TPC_High_Voltage_Setting": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "TPC_High_Voltage_Measurement": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "TPC_Current_Measurement": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "PMT_High_Voltage_Setting": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "CPU_Temperature": { "error_range": Infinity, "error_range_lower": 80, "warning_range_upper": 80, "warning_range_lower": 50 },
-  "HK_Humidity": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  "HK_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  // "Valve_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  // "Valve_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  // "Valve_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
-  // "Valve_Temperature": { "error_range": Infinity, "error_range_lower": -Infinity, "warning_range_upper": Infinity, "warning_range_lower": -Infinity },
+  "Chamber_Pressure": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Chamber_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Outer_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Valve_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "TPC_High_Voltage_Setting": { "error_ranges": [[0.1, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "TPC_High_Voltage_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "TPC_Current_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "PMT_High_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[50, 80]] },
+  "HK_Humidity": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "HK_Temperature": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "HK_Pressure": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Acceleration": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Gyro": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Magnet": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+  "Main_Current": { "error_ranges": [[3, Infinity], [-Infinity, 0]], "warning_ranges": [[1, 3]] },
+  "Main_Voltage": { "error_ranges": [[0, 18], [36, Infinity]], "warning_ranges": [[34, 36], [18, 20]] },
+
 
 }
 function status_func(name, v) {
-  if ((status_configuration[name]["error_range"] >= v) && (status_configuration[name]["error_range_lower"] <= v)) {
-    // console.log("error in " + String(name) + "\nupper: " + String(status_configuration[name]["error_range"] + "\nlower: " + String(status_configuration[name]["error_range_lower"]) + "\nValue: " + String(v)));
-    return "error";
+  for (var i = 0; i < status_configuration[name]["error_ranges"].length; i++) {
+    if ((status_configuration[name]["error_ranges"][i][1] >= v) && (status_configuration[name]["error_ranges"][i][0] <= v)) {
+      // console.log("error in " + String(name) + "\nupper: " + String(status_configuration[name]["error_range"] + "\nlower: " + String(status_configuration[name]["error_range_lower"]) + "\nValue: " + String(v)));
+      return "error";
+    }
   }
-  else if ((status_configuration[name]["warning_range_upper"] >= v) && (status_configuration[name]["warning_range_lower"] <= v)) {
-    return "warning";
-  } else {
-    return "safe";
+
+  for (var i = 0; i < status_configuration[name]["warning_ranges"].length; i++) {
+    if ((status_configuration[name]["warning_ranges"][i][1] >= v) && (status_configuration[name]["warning_ranges"][i][0] <= v)) {
+      return "warning";
+    }
   }
+  return "safe";
+
 }
