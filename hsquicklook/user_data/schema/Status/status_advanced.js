@@ -32,7 +32,7 @@ HSQuickLook.main.schema =
                 },
                 "Trigger_Mode_slope": {
                     "source": "Trigger_Mode", "type": "string", "conversion": function (v) {
-                        var slope = v & 0b11110000
+                        var slope = (v & 0b11110000)>>4
                         return (slope == 0) ? "Rise" : (slope == 1) ? "Fall" : (slope == 2) ? "Either" : "Invalid";
                     },
                     "status": function (v) { return (v == "Invalid") ? "error" : "safe"; }
