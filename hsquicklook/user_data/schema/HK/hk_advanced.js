@@ -51,7 +51,7 @@ HSQuickLook.main.schema =
         "TPC_Current_Measurement_uA": {
           "type": "float", "format": "%7.3f", "source": "TPC_High_Voltage_Current_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }, "status": function (v) { return status_func("TPC_Current_Measurement", v); }
         },
-        "PMT_High_Voltage_Setting_mV": { "source": "PMT_High_Voltage_Setting", "type": "float", "status": function (v) { return status_func("PMT_High_Voltage_Setting", v); } }
+        "PMT_High_Voltage_Setting_V": { "source": "PMT_High_Voltage_Setting", "type": "float", "status": function (v) { return status_func("PMT_High_Voltage_Setting", v); } }
       }
     },
     {
