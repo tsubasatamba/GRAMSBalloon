@@ -57,11 +57,12 @@ def main() -> None:
         x = np.linspace(0, num_bin * dt, num_bin)
         fig = plt.figure(1, figsize=(6.4 * 2, 4.8 * 2))
         fig.suptitle(f"RunID={runid}, EventID={eventid}")
-        axs = [fig.add_subplot(221 + i, xlabel="time [$\\mu s$]", ylabel="Voltage [mV]", title=Chennal_name[i]) for i in range(4)]
+        axs = [fig.add_subplot(221 + j, xlabel="time [$\\mu s$]", ylabel="Voltage [mV]", title=Chennal_name[j]) for j in range(4)]
         fig.tight_layout()
-        for i in range(4):
-            axs[i].plot(x, convert_to_mV(eventdata[i], i), linewidth=1.0, color="black")
-        image_filename = f"{filename.rstrip('.dat')}_{k}.png"
+        for j in range(4):
+            axs[j].plot(x, convert_to_mV(eventdata[j], j), linewidth=1.0, color="black")
+            axs[j].set_xlim(0.0, 30.0)
+        image_filename = f"{filename.rstrip('.dat')}_{i}.png"
         fig.savefig(image_filename)
         os.system(f"open {image_filename}")
         plt.close()
