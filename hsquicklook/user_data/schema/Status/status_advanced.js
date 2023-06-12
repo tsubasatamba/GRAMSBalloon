@@ -23,7 +23,7 @@ HSQuickLook.main.schema =
             "section": "Status",
             "contents": {
                 "Trigger_Mode": { "type": "int", "format": "%08b" },
-                "Trigger_Source": {
+                "Trigger_Source": {"source": "Trigger_Mode",
                     "type": "string", "conversion": function (v) {
                         var source = v & 0b00001111
                         return (source == 0) ? "Random" : (source == 1) ? "Periodic" : (source == 2) ? "Self" : (source == 11) ? "External" : "Invalid";
@@ -33,7 +33,7 @@ HSQuickLook.main.schema =
                 "Trigger_Mode_slope": {
                     "source": "Trigger_Mode", "type": "string", "conversion": function (v) {
                         var slope = v & 0b11110000
-                        return (slope == 0) ? "Rise" : (slope == 1) ? "Fall" : (slope == 3) ? "Either" : "Invalid";
+                        return (slope == 0) ? "Rise" : (slope == 1) ? "Fall" : (slope == 2) ? "Either" : "Invalid";
                     },
                     "status": function (v) { return (v == "Invalid") ? "error" : "safe"; }
                 },

@@ -61,7 +61,7 @@ def main() -> None:
         fig.tight_layout()
         for j in range(4):
             axs[j].plot(x, convert_to_mV(eventdata[j], j), linewidth=1.0, color="black")
-            axs[j].set_xlim(0.0, 30.0)
+            #axs[j].set_xlim(0.0, 30.0)
         image_filename = f"{filename.rstrip('.dat')}_{i}.png"
         fig.savefig(image_filename)
         os.system(f"open {image_filename}")
