@@ -83,7 +83,7 @@
   GPIO および SPI のハンドラーをSPIManagerからもらう。
 - <b>mod_analyze</b><br>
   BME680 にアクセスし、温度・湿度・気圧を測定。
-  
+
 
 #### Core class
 - BME680IO.cc
@@ -166,7 +166,7 @@
 
 #### Core class
 - ICM20948IO.cc
-  
+
 
 
 ### MeasureTemperatureWithRTDSensor
@@ -189,7 +189,7 @@
   GPIO および SPI のハンドラーをSPIManagerからもらう。<tt>max31865io -> setConfigureSingle()</tt>で温度計の初期設定を行う。
 - <b>mod_analyze</b><br>
   MAX31865 にアクセスし、温度を測定。この際、実際の温度とADC値の両方を取得することできる。Telemetryに用いるのは、ADC値の方である。
-  
+
 
 #### Core class
 - MAX31865IO.cc
@@ -204,7 +204,7 @@
 
 - Analog Discvoveryを操作することで、波形データを読み込み、保存する。
 - 地上からのコマンドで波形データを要求された場合、直近で取得した波形を<tt>SendTelemetry</tt> moduleに書き込みに行く (参照渡しではなく、値をコピーする)。
-  
+
 #### 入力パラメータ
 
 - <modpar>ad_manager_name</modpar> (default: "AnalogDiscoveryManager")<br>
@@ -214,7 +214,7 @@
 - <modpar>trig_channel</modpar> (default: 0)<br>
   トリガーソースとなるチャンネル。Analog Discoveryには2つチャンネルがあるので、0か1を指定する。前項と合わせて、トリガーソースとなる波形が決定できる。
 - <modpar>trig_mode</modpar> (default: 0x02)<br>
-  トリガーモードを入力する。8 bit の整数で構成され、前半4 bitはtrigger slopeを表し、後半4 bitはtrigger sourceを表す。0-255までの値を入力できるが、invalidな値も多数ある。Trigger slope は、0 (RISE), 1 (FALL), 2 (EITHER) である。Trigger source は、0 (random trigger), 1 (periodic trigger), 2 (self trigger), 11 (external trigger) である。デフォルト値は、RISE + self triggerとなっている。
+  トリガーモードを入力する。8 bit の整数で構成され、上位4 bitはtrigger slopeを表し、下位4 bitはtrigger sourceを表す。0-255までの値を入力できるが、invalidな値も多数ある。Trigger slope は、0 (RISE), 1 (FALL), 2 (EITHER) である。Trigger source は、0 (random trigger), 1 (periodic trigger), 2 (self trigger), 11 (external trigger) である。デフォルト値は、RISE + self triggerとなっている。
   たとえば、FALL + external trigger を設定したい場合は、0x1B=27を入力すれば良い。
 - <modpar>trig_level</modpar> (default: 0.0)<br>
   トリガーレベルを入力する。単位は${\rm V}$。
@@ -242,13 +242,13 @@
 
 - <b>mod_initialize</b><br>
   AnalogDiscoveryManger module およびsendTelemetry moduleへのアクセスを確立する。その後、Analog Discovery のAnalogInの設定を行う。<tt>adio->setupAnalogIn()</tt> でサンプル周波数、レンジ、オフセットを設定し、その後<tt>daqio->initialize()</tt> で初期化作業を行う。さらに、<tt>daqio->setupTrigger()</tt> でトリガーのセットアップを行う。
-  
+
 - <b>mod_analyze</b><br>
   1ループごとに<tt>daqio->getData()</tt> を走らせることでデータ取得を行う。<tt>numEventsPerFile</tt>ループごとにバイナリーファイルを保存する。トリガーのセットアップを変える指令がコマンド側から来た場合にはそれを反映する。波形データをテレメトリーで送る必要がある場合には、<tt>SendTelemetry</tt> moduleにデータを書き込みに行く。
 
 - <b>mod_finalize</b><br>
   保存していないデータを保存する。
-  
+
 #### Core class
 
 - DAQIO.cc
@@ -405,4 +405,3 @@
 
 
 <modpar>aaaspi_flags</modpar>bcd
-
