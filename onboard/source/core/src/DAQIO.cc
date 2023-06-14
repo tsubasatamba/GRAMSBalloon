@@ -71,7 +71,7 @@ int DAQIO::setupTrigger()
   else if (trigSrc_==static_cast<int>(TriggerSrc::SELF_TRIGGER)) {
     for(int i=0; i<num_devices; i++) {
       if (i==trigDevice_) {
-	      FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
+	FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
         FDwfAnalogInTriggerTypeSet(handler_list[i], trigtypeEdge);
         FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcDetectorAnalogIn);
         for (int j=0; j<2; j++) {
@@ -92,7 +92,7 @@ int DAQIO::setupTrigger()
               return -1;
             }
           }
-	      }
+	}
       }
       else {
         FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcExternal1);
@@ -112,7 +112,7 @@ int DAQIO::setupTrigger()
   for (int i=0; i<num_devices; i++){  
     for(int j=0; j<2; j++){
       const double us = 1.0E-6;
-	    FDwfAnalogInTriggerPositionSet(handler_list[i], (timeWindow_*0.5-trigPosition_)*us);
+      FDwfAnalogInTriggerPositionSet(handler_list[i], (timeWindow_*0.5-trigPosition_)*us);
     }
   }
 
@@ -133,6 +133,7 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
   const int num_channels = num_devices * 2;
   const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
   STS status = 0;
+  STS status1 = 0;
   int count = 0;
   bool data_acquired = false;
   timeval event_time;
@@ -146,12 +147,13 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
 
   while (true) {
     FDwfAnalogInStatus(handler_list[trigDevice_], true, &status);
-    if (status==DwfStateDone) {
+    FDwfAnalogInStatus(handler_list[trigDevice_^1], true, &status1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    if (status==DwfStateDone && status1==DwfStateDone) {
       data_acquired = true;
       eventCount_++;
       break;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     if (trigSrc_==static_cast<int>(TriggerSrc::PERIODIC_TRIGGER)) {
       std::this_thread::sleep_for(std::chrono::milliseconds(PERIODIC_TRIGGER_MS));
       for (int i=0; i<num_devices; i++) {
@@ -171,12 +173,12 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
   header[2] = static_cast<int16_t>((event_time.tv_sec)&(0xffff));
   header[3] = static_cast<int16_t>((event_time.tv_usec>>16)&(0xffff));
   header[4] = static_cast<int16_t>((event_time.tv_usec)&(0xffff));
-
+  
   if (!data_acquired) {
     std::cout << "DAQ did not detect any events." << std::endl;
     return DAQResult::NON_DETECTION;
   }
-
+  /*
   std::vector<bool> detected(num_devices, true);
   for (int i=0; i<num_devices; i++) {
     if (i!=trigDevice_) {
@@ -187,9 +189,9 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
       std::cout << "device " << i << " does not detect an event..." << std::endl;
     }
   }
-
+  */
   for (int i=0; i<num_devices; i++) {
-    if (!detected[i]) continue;
+    //if (!detected[i]) continue;
     for (int j=0; j<2; j++) {
       const int k = i*2 + j;
       FDwfAnalogInStatusData16(handler_list[i], j, &data[k][0], 0, numSample_);
