@@ -1,4 +1,6 @@
 #include "SerialCommunication.hh"
+#include <thread>
+#include <chrono>
 
 namespace gramsballoon {
 
@@ -80,9 +82,29 @@ int SerialCommunication::sread(std::vector<uint8_t>& buf, int length)
 int SerialCommunication::swrite(const std::vector<uint8_t>& buf)
 {
   const int length = buf.size();
-  const int status = write(fd_, &buf[0], length);
+  int rem = length;
+  std::vector<int> counts;
+  const int max_send = 1000;
+  const int sleep_ms = 250;
+  while (rem>0) {
+    const int v = std::min(rem, max_send);
+    counts.push_back(v);
+    rem -= v;
+  }
+
+  int num_sent = 0;
+  int index = 0;
+  for (int c: counts) {
+    const int status = write(fd_, &buf[index], c);
+    index += c;
+    if (status<0) {
+      return status;
+    }
+    num_sent += status;
+    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+  }
   
-  return status;
+  return num_sent;
 }
 
 } /* namespace gramsballoon */
