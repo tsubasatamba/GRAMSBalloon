@@ -130,7 +130,8 @@ int main(int argc, char **argv)
   double trigger_position = static_cast<double>(file_header[5])/1E3;
   double sample_frequency = static_cast<double>(file_header[6])/1E2;
   double time_window = static_cast<double>(file_header[7])/1E3;
-  int num_sample = static_cast<int>(file_header[8]);
+  //int num_sample = static_cast<int>(file_header[8]);
+  int num_sample = 8192;
   int num_event_per_file = static_cast<int>(file_header[9]);
   timeval header_time;
   header_time.tv_sec = ((static_cast<int>(file_header[10]))<<16) + static_cast<int>(file_header[11]);
