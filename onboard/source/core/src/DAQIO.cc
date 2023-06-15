@@ -71,9 +71,9 @@ int DAQIO::setupTrigger()
   else if (trigSrc_==static_cast<int>(TriggerSrc::SELF_TRIGGER)) {
     for(int i=0; i<num_devices; i++) {
       if (i==trigDevice_) {
-	FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
+	      FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
         FDwfAnalogInTriggerTypeSet(handler_list[i], trigtypeEdge);
-        FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcDetectorAnalogIn);
+        FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcAnalogIn);
         for (int j=0; j<2; j++) {
           if (j==trigChannel_) {
             FDwfAnalogInTriggerChannelSet(handler_list[i], j);
@@ -133,7 +133,6 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
   const int num_channels = num_devices * 2;
   const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
   STS status = 0;
-  STS status1 = 0;
   int count = 0;
   bool data_acquired = false;
   timeval event_time;
@@ -149,15 +148,18 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
   while (true) {
     counter++;
     FDwfAnalogInStatus(handler_list[trigDevice_], true, &status);
-    FDwfAnalogInStatus(handler_list[trigDevice_^1], true, &status1);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    std::this_thread::sleep_for(std::chrono::microseconds(100));
+    #if 0
     if (status==DwfStateDone) {
-      //std::cout << "device 0 detected: counter = " << counter << std::endl;
+      std::cout << "device 0 detected: counter = " << counter << std::endl;
     }
-    if (status==DwfStateDone && status1==DwfStateDone) {
+    if (status1==DwfStateDone) {
+      std::cout << "device 1 detected: counter = " << counter << std::endl;
+    }
+    #endif
+    if (status==DwfStateDone) {
       data_acquired = true;
       eventCount_++;
-      //std::cout << "device 1 detected: counter = " << counter << std::endl;
       break;
     }
     if (trigSrc_==static_cast<int>(TriggerSrc::PERIODIC_TRIGGER)) {
@@ -184,20 +186,20 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
     std::cout << "DAQ did not detect any events." << std::endl;
     return DAQResult::NON_DETECTION;
   }
-  /*  
+  
   std::vector<bool> detected(num_devices, true);
   for (int i=0; i<num_devices; i++) {
     if (i!=trigDevice_) {
       int num = 0;
       while (true) {
-	FDwfAnalogInStatus(handler_list[i], true, &status);
-	std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	if (status==DwfStateDone) {
-	  std::cout << "break!!! num = " << num << std::endl;
-	  break;
-	}
-	num++;
-	if (num==10000) break;
+	      FDwfAnalogInStatus(handler_list[i], true, &status);
+	      std::this_thread::sleep_for(std::chrono::microseconds(100));
+	      if (status==DwfStateDone) {
+	        //std::cout << "break!!! num = " << num << std::endl;
+	        break;
+	      }
+	      num++;
+	      if (num==1000) break;
       }
     }
     if (status!=DwfStateDone) {
@@ -205,9 +207,9 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
       std::cout << "device " << i << " does not detect an event..." << std::endl;
     }
   }
-  */
+  
   for (int i=0; i<num_devices; i++) {
-    //if (!detected[i]) continue;
+    if (!detected[i]) continue;
     for (int j=0; j<2; j++) {
       const int k = i*2 + j;
       FDwfAnalogInStatusData16(handler_list[i], j, &data[k][0], 0, numSample_);
