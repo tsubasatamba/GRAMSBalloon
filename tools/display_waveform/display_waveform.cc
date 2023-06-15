@@ -67,7 +67,6 @@ void plotWaveform(const std::vector<std::vector<double> >& wf, double dt, const 
   TCanvas* canv = new TCanvas();
   canv -> Divide(2, 2);
   std::vector<TGraph*> graph(4);
-  dt = 1.0 / (1E2);
 
   for (int i=0; i<4; i++) {
     if (i>=static_cast<int>(wf.size())) break;
