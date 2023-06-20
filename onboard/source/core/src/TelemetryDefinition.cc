@@ -184,7 +184,7 @@ void TelemetryDefinition::writeCRC16()
   addValue<uint16_t>(crc);
 }
 
-bool TelemetryDefinition::setTelemetry(std::vector<uint8_t>& v)
+bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
 {
   int n = v.size();
   if (n<10) {
