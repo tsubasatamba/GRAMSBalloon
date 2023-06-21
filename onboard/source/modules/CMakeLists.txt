@@ -24,7 +24,6 @@ link_directories(
 set(GB_MODULES
   src/SimpleLoop.cc
   src/ReceiveTelemetry.cc
-  src/InterpretTelemetry.cc
   src/RunIDManager.cc
   src/ReadTelemetry.cc
   )
@@ -70,6 +69,7 @@ endif(GB_USE_HSQUICKLOOK)
 if(GB_USE_ROOT)
   set(GB_ROOT_MODULES
     src/PlotWaveform.cc
+    src/InterpretTelemetry.cc
   )
 endif(GB_USE_ROOT)
 
