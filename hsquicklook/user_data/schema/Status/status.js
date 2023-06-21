@@ -38,6 +38,8 @@ HSQuickLook.main.schema =
                 "ADC_Range_3": {"type": "double","format": "%7.3f"},
                 "ADC_Range_4": {"type": "double","format": "%7.3f"},
                 "DAQ_In_Progress": {"type": "int"},
+                "TPC_HV_Upper_Limit": {"type": "double", "format": "%7.3f"},
+                "PMT_HV_Upper_Limit": {"type": "double", "format": "%7.3f"},
                 "SD_Capacity_GB": {"type": "double", "format": "%7.3f", "source": "SD_Capacity"}
             }
         },

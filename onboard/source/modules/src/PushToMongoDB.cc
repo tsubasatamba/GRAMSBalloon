@@ -236,6 +236,8 @@ void PushToMongoDB::pushStatusTelemetry()
       << "ADC_Range_3"          << (telemdef->ADCRange())[2]
       << "ADC_Range_4"          << (telemdef->ADCRange())[3]
       << "DAQ_In_Progress"      << static_cast<int>(telemdef->DAQInProgress())
+      << "TPC_HV_Upper_Limit"   << telemdef->TPCHVUpperLimit()
+      << "PMT_HV_Upper_Limit"   << telemdef->PMTHVUpperLimit()
       << "SD_Capacity"          << (static_cast<double>(telemdef->SDCapacity()) / std::pow(2.0, 30.0))
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
