@@ -112,7 +112,7 @@ public:
   void setADCRange(const std::vector<double>& v) { ADCRange_ = v; }
   void setDAQInProgress(bool v) { DAQInProgress_ = v; }
   void setTPCHVUpperLimit(double v) { TPCHVUpperLimit_ = v; }
-  void setPMTHVUpperLimit(double v) { PMTHVUPperLimit_ = v; }
+  void setPMTHVUpperLimit(double v) { PMTHVUpperLimit_ = v; }
   void setSDCapacity(uint64_t v) { SDCapacity_ = v; }
   
   // getter
