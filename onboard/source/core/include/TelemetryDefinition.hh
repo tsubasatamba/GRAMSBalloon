@@ -101,6 +101,7 @@ public:
   void setEventID(uint32_t v) { eventID_ = v; }
   void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
   void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
+  void setWFDownloadDone(bool v) { wfDownloadDone_ = v; };
   void setTriggerMode(uint16_t v) { triggerMode_ = v; }
   void setTriggerDevice(uint16_t v) { triggerDevice_ = v; }
   void setTriggerChannel(uint16_t v) { triggerChannel_ = v; }
@@ -165,6 +166,7 @@ public:
   timeval EventTime() { return eventTime_; }
   const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
   const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
+  bool WFDownloadDone() { return wfDownloadDone_; }
   uint16_t TriggerMode() { return triggerMode_; }
   uint16_t TriggerDevice() { return triggerDevice_; }
   uint16_t TriggerChannel() { return triggerChannel_; }
@@ -222,6 +224,7 @@ private:
   timeval eventTime_;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
+  bool wfDownloadDone_ = false;
 
   // Status
   uint16_t triggerMode_ = 0;

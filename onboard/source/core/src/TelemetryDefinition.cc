@@ -359,6 +359,9 @@ void TelemetryDefinition::interpretWF()
 
   crc_ = getValue<uint16_t>(index);
   stopCode_ = getValue<uint32_t>(index+2);
+  if (channel==3 && division_id==1) {
+    wfDownloadDone_ = true;
+  }
 }
 
 void TelemetryDefinition::interpretStatus()

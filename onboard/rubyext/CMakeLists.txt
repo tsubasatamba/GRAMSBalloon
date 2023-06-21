@@ -12,12 +12,14 @@ set(RUBY_EXT_INCLUDE_DIRS
   ${ANLNEXT_INC_DIR}
   ${BOOST_INC_DIR}
   ${HSQUICKLOOK_INC_DIR}
+  ${ROOT_INC_DIR}
   )
 set(RUBY_EXT_LIBRARY_DIRS
   /usr/local/lib
   ${ANLNEXT_LIB_DIR}
   ${ADD_LIB_DIR}
   ${CMAKE_INSTALL_PREFIX}/lib
+  ${ROOT_LIB_DIR}
   )
 set(RUBY_EXT_LIBRARIES
   ${ANLNEXT_LIB}
@@ -30,6 +32,7 @@ set(RUBY_EXT_LIBRARIES
   ${ICM20948_LIB}
   ${HSQUICKLOOK_LIB}
   ${MONGODB_LIB}
+  ${ROOT_LIB}
 )
 
 
@@ -49,6 +52,9 @@ if(GB_USE_RASPISYS)
 endif()
 if(GB_USE_HSQUICKLOOK)
   list(APPEND cxx_definitions -DUSE_HSQUICKLOOK)
+endif()
+if(GB_USE_ROOT)
+  list(APPEND cxx_definitions -DUSE_ROOT)
 endif()
 
 set(SWIG_FLAGS ${cxx_definitions})

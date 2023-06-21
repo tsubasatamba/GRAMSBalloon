@@ -154,7 +154,7 @@ void PushToMongoDB::pushWFTelemetry()
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
 
   hsquicklook::DocumentBuilder builder("Telemetry", "WF");
-  builder.setTI(0);
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
   builder.setTimeNow();
 
   {
@@ -201,7 +201,7 @@ void PushToMongoDB::pushStatusTelemetry()
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
 
   hsquicklook::DocumentBuilder builder("Telemetry", "Status");
-  builder.setTI(0);
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
   builder.setTimeNow();
 
   {
@@ -255,7 +255,37 @@ void PushToMongoDB::pushStatusTelemetry()
   auto doc = builder.generate();
   mongodbClient_->push("grams", doc);
 
+}
 
+void PushToMongoDB::pushWaveformImage()
+{
+  const std::size_t size = 10*1024*1024;
+  static uint8_t buf[size];
+  const std::string filename = "waveform.png";
+  std::ifstream fin(filename.c_str(), std::ios::in|std::ios::binary);
+  fin.read((char*)buf, size);
+  const std::size_t readSize = fin.gcount();
+  fin.close();
+
+  TelemetryDefinition* telemdef = interpreter_->Telemdef();
+  hsquicklook::DocumentBuilder builder("Telemetry", "WF");
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
+  builder.setTimeNow();
+
+  {
+    const std::string section_name = "waveform_image";
+    auto section = bsoncxx::builder::stream::document{}
+      << "waveform_image" << hsquicklook::make_image_value(buf,
+                                                           readSize,
+                                                           640,
+                                                           480,
+                                                           filename)
+      << bsoncxx::builder::stream::finalize;
+    builder.addSection(section_name, section);
+  }
+
+  auto doc = builder.generate();
+  mongodbClient_->push("image", doc);
 }
 
 } /* namespace gramsballoon */

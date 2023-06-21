@@ -34,6 +34,17 @@ ANLStatus InterpretTelemetry::mod_initialize()
   if (exist_module(receiverModuleName_)) {
     get_module_NC(receiverModuleName_, &receiver_);
   }
+
+  const std::string plotter_module_name = "PlotWaveform";
+  if (exist_module(plotter_module_name)) {
+    get_module_NC(plotter_module_name, &plotter_);
+  }
+
+  const std::string pusher_module_name = "PushToMongoDB";
+  if (exist_module(pusher_module_name)) {
+    get_module_NC(pusher_module_name, &pusher_);
+  }
+
   
   return AS_OK;
 }
@@ -65,6 +76,16 @@ ANLStatus InterpretTelemetry::mod_analyze()
   }
   if (saveTelemetry_) {
     writeTelemetryToFile(failed);
+  }
+
+  if (telemdef_->WFDownloadDone()) {
+    if (plotter_!=nullptr) {
+      plotter_->makeImage();
+    }
+    if (pusher_!=nullptr) {
+      pusher_->pushWaveformImage();
+    }
+    telemdef_->setWFDownloadDone(false);
   }
   
   return AS_OK;

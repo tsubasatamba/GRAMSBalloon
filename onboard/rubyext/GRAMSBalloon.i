@@ -46,6 +46,9 @@
 #endif
 #include "RunIDManager.hh"
 #include "ReadTelemetry.hh"
+#ifdef USE_ROOT
+#include "PlotWaveform.hh"
+#endif
 %}
 
 %include "std_vector.i"
@@ -189,5 +192,12 @@ public:
   ReadTelemetry();
 };
 
+#ifdef USE_ROOT
+class PlotWaveform : public anlnext::BasicModule
+{
+public:
+  PlotWaveform();
+};
+#endif
 
 } // namespace GRAMSBalloon

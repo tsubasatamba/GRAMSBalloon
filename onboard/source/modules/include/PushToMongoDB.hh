@@ -10,6 +10,7 @@
 namespace gramsballoon {
 
 class MongoDBClient;
+class InterpretTelemetry;
 
 class PushToMongoDB : public anlnext::BasicModule
 {
@@ -24,6 +25,7 @@ public:
   void pushHKTelemetry();
   void pushWFTelemetry();
   void pushStatusTelemetry();
+  void pushWaveformImage();
 
 private:
   hsquicklook::MongoDBClient* mongodbClient_ = nullptr;

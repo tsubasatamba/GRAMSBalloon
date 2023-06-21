@@ -69,6 +69,7 @@ endif(GB_USE_HSQUICKLOOK)
 
 if(GB_USE_ROOT)
   set(GB_ROOT_MODULES
+    src/PlotWaveform.cc
   )
 endif(GB_USE_ROOT)
 
