@@ -111,6 +111,8 @@ public:
   void setADCOffset(const std::vector<double>& v) { ADCOffset_ = v; }
   void setADCRange(const std::vector<double>& v) { ADCRange_ = v; }
   void setDAQInProgress(bool v) { DAQInProgress_ = v; }
+  void setTPCHVUpperLimit(double v) { TPCHVUpperLimit_ = v; }
+  void setPMTHVUpperLimit(double v) { PMTHVUPperLimit_ = v; }
   void setSDCapacity(uint64_t v) { SDCapacity_ = v; }
   
   // getter
@@ -173,6 +175,8 @@ public:
   const std::vector<double>& ADCOffset() const {return ADCOffset_; }
   const std::vector<double>& ADCRange() const { return ADCRange_; }
   bool DAQInProgress() { return DAQInProgress_; }
+  double TPCHVUpperLimit() { return TPCHVUpperLimit_; }
+  double PMTHVUpperLimit() { return PMTHVUpperLimit_; }
   uint64_t SDCapacity() { return SDCapacity_; }
 
 private:
@@ -230,6 +234,8 @@ private:
   std::vector<double> ADCOffset_; // volt
   std::vector<double> ADCRange_; // volt
   bool DAQInProgress_ = false;
+  double TPCHVUpperLimit_ = 0.0;
+  double PMTHVUpperLimit_ = 0.0;
   uint64_t SDCapacity_ = 0;
 
   std::vector<int16_t> RTDTemperatureADC_;

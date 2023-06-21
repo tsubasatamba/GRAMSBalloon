@@ -122,6 +122,8 @@ void TelemetryDefinition::generateTelemetryStatus()
     addValue<int32_t>(static_cast<int32_t>(ADCRange_[i]/1E-3));
   }
   addValue<uint16_t>(static_cast<uint16_t>(DAQInProgress_));
+  addValue<int32_t>(static_cast<int32_t>(TPCHVUpperLimit_/1E-3));
+  addValue<int32_t>(static_cast<int32_t>(PMTHVUpperLimit_/1E-3));
   addValue<uint64_t>(SDCapacity_);
 }
 
@@ -206,7 +208,7 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   uint16_t type = getValue<uint16_t>(4);
   const int hk_telemetry_len = 132;
   const int wf_telemetry_len = 8248;
-  const int status_telemetry_len = 92;
+  const int status_telemetry_len = 100;
   if (type==1 && n!=hk_telemetry_len) {
     std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
     return false;
@@ -381,10 +383,12 @@ void TelemetryDefinition::interpretStatus()
   }
 
   DAQInProgress_ = static_cast<bool>(getValue<uint16_t>(76));
-  SDCapacity_ = getValue<uint64_t>(78);
+  TPCHVUpperLimit_ = static_cast<double>(getValue<int32_t>(78)) * 1E-3;
+  PMTHVUpperLimit_ = static_cast<double>(getValue<int32_t>(82)) * 1E-3;
+  SDCapacity_ = getValue<uint64_t>(86);
 
-  crc_ = getValue<uint16_t>(86);
-  stopCode_ = getValue<uint32_t>(88);
+  crc_ = getValue<uint16_t>(94);
+  stopCode_ = getValue<uint32_t>(96);
 }
 
 void TelemetryDefinition::clear()

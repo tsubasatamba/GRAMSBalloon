@@ -280,6 +280,12 @@ void SendTelemetry::inputStatusInfo()
     telemdef_->setADCRange(readWaveform_->Range());
     telemdef_->setDAQInProgress(readWaveform_->StartReading());
   }
+  if (TPCHVController_!=nullptr) {
+    telemdef_->setTPCHVUpperLimit(TPCHVController_->UpperLimitVoltage());
+  }
+  if (PMTHVController_!=nullptr) {
+    telemdef_->setPMTHVUpperLimit(PMTHVController_->UpperLimitVoltage());
+  }
   if (getRaspiStatus_!=nullptr) {
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());
   }
