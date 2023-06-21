@@ -52,7 +52,7 @@ void PushToMongoDB::pushHKTelemetry()
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
 
   hsquicklook::DocumentBuilder builder("Telemetry", "HK");
-  builder.setTI(0);
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
   builder.setTimeNow();
 
   {
