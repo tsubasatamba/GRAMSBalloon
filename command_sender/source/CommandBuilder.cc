@@ -47,6 +47,8 @@ CommandBuilder::CommandBuilder()
   code_map_["get_waveform"]           = CommandProperty{210, 0};
   code_map_["set_trigger_level"]      = CommandProperty{211, 1};
   code_map_["set_trigger_position"]   = CommandProperty{212, 1};
+  code_map_["set_tpc_hv_upper_limit"] = CommandProperty{301, 1};
+  code_map_["set_pmt_hv_upper_limit"] = CommandProperty{302, 1};
   code_map_["dummy_1"]                = CommandProperty{900, 0}; 
   code_map_["dummy_2"]                = CommandProperty{901, 1};
   code_map_["dummy_3"]                = CommandProperty{902, 0};

@@ -41,6 +41,8 @@ public:
   void setExec(bool v) { singleton_self()->exec_ = v; }
   double CurrentVoltage() { return singleton_self()->currentVoltage_; }
   double NextVoltage() { return singleton_self()->nextVoltage_; }
+  double UpperLimitVoltage() { return singleton_self()->upperLimitVoltage_; }
+  void setUpperLimitVoltage(double v) { singleton_self()->upperLimitVoltage_ = v; }
 
 private:
   int deviceID_ = 0;

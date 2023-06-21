@@ -336,6 +336,22 @@ bool ReceiveCommand::applyCommand()
     }
   }
 
+  if (code==301 && argc==1) {
+    if (TPCHVController_!=nullptr) {
+      const double v = static_cast<double>(arguments[0]) * 1E-3;
+      TPCHVController_->setUpperLimitVoltage(v);
+      return true;
+    }
+  }
+
+  if (code==302 && argc==1) {
+    if (PMTHVController_!=nullptr) {
+      const double v = static_cast<double>(arguments[0]) * 1E-3;
+      PMTHVController_->setUpperLimitVoltage(v);
+      return true;
+    }
+  }
+  
   if (code==900 && argc==0) {
     return true;
   }
