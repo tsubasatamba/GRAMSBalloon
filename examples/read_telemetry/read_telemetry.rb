@@ -10,12 +10,12 @@ class MyApp < ANL::ANLApp
     with_parameters(database: "grams")
     #with_parameters(host: @host_name, database: @database_name, instantiation: false)
     chain GRAMSBalloon::ReadTelemetry
-    with_parameters(filenames: ["telemetry_000159_20230614151309_HK_000000.dat"], sleep_ms: 500, chatter: 0)
+    with_parameters(filenames: @filenames, sleep_ms: 1000, chatter: 0)
     chain GRAMSBalloon::InterpretTelemetry
-    with_parameters(save_telemetry: false, receiver_module_name: "ReadTelemetry", chatter: 0)
+    with_parameters(save_telemetry: false, receiver_module_name: "ReadTelemetry", run_ID_filename: "/Users/grams/settings/run_id/run_id_read.txt", chatter: 0)
     chain GRAMSBalloon::PushToMongoDB
   end
-  attr_accessor :serial_path
+  attr_accessor :serial_path, :filenames
 end
 
 def get_serial_path()
@@ -31,5 +31,5 @@ end
 
 a = MyApp.new
 a.serial_path = get_serial_path()
-
+a.filenames = Dir.glob("/Users/grams/data/telemetry/telemetry_000120_20230609124507_HK_*.dat")
 a.run(:all, 1)

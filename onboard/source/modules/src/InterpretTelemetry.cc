@@ -63,7 +63,9 @@ ANLStatus InterpretTelemetry::mod_analyze()
     updateRunIDFile();
     fileIDmp_.clear();
   }
-  writeTelemetryToFile(failed);
+  if (saveTelemetry_) {
+    writeTelemetryToFile(failed);
+  }
   
   return AS_OK;
 }
