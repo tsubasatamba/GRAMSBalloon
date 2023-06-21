@@ -45,6 +45,7 @@
 #include "GetSlowADCData.hh"
 #endif
 #include "RunIDManager.hh"
+#include "ReadTelemetry.hh"
 %}
 
 %include "std_vector.i"
@@ -181,5 +182,12 @@ class RunIDManager : public anlnext::BasicModule
 public:
   RunIDManager();
 };
+
+class ReadTelemetry : public anlnext::BasicModule
+{
+public:
+  ReadTelemetry();
+};
+
 
 } // namespace GRAMSBalloon

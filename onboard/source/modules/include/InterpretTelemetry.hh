@@ -43,6 +43,7 @@ private:
   int chatter_ = 0;
   std::string runIDFilename_;
   int currentRunID_ = -1;
+  std::string receiverModuleName_;
 };
 
 } // namespace gramsballoon
