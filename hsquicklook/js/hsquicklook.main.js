@@ -75,7 +75,8 @@ var HSQuickLook = HSQuickLook || {};
     $("input#time3").keypress(enterDLModeByEvent);
     $("input#time4").keypress(enterDLModeByEvent);
     $("input#time5").keypress(enterDLModeByEvent);
-    $("input#request-time").click(enterDLMode);
+    $("input#request-data").click(enterDLMode);
+    $("input#reset-time").click(setCurrentTime);
 
     // title and control panels
     $("#display-button").click(toggleControlDisplay);
@@ -142,12 +143,12 @@ var HSQuickLook = HSQuickLook || {};
 
   function setCurrentTime() {
     var t = new Date();
-    $('input#time0').attr("value", t.getUTCFullYear());
-    $('input#time1').attr("value", t.getUTCMonth() + 1);
-    $('input#time2').attr("value", t.getUTCDate());
-    $('input#time3').attr("value", t.getUTCHours());
-    $('input#time4').attr("value", t.getUTCMinutes());
-    $('input#time5').attr("value", t.getUTCSeconds());
+    $('input#time0').val(t.getUTCFullYear());
+    $('input#time1').val(t.getUTCMonth() + 1);
+    $('input#time2').val(t.getUTCDate());
+    $('input#time3').val(t.getUTCHours());
+    $('input#time4').val(t.getUTCMinutes());
+    $('input#time5').val(t.getUTCSeconds());
   }
 
   function loadDataSheetList() {
@@ -273,12 +274,9 @@ var HSQuickLook = HSQuickLook || {};
    * Time control
    */
   function enterQLMode() {
-    if (paused) {
-      paused = false;
-    } else {
-      $("input#mode-paused").attr("disabled", false);
-      sendTimeNow();
-    }
+    paused = false;
+    $("input#mode-paused").attr("disabled", false);
+    sendTimeNow();
   }
 
   function enterDLMode() {
@@ -389,7 +387,7 @@ var HSQuickLook = HSQuickLook || {};
     if (graphRangeResetEnable) {
       $(".graph-placeholder").dblclick(
         function() {
-          var elemID = this.id.replace("_placeholder", ""),
+          var elemID = this.id.replace("-placeholder", ""),
               graph = graphs[elemID];
           graph.resetRangeY();
         }
@@ -493,19 +491,19 @@ var HSQuickLook = HSQuickLook || {};
     table = $("<table />").html("");
     table.attr("frame", "border");
     table.attr("rules", "all");
-    table.attr("id", "table_" + tableID);
+    table.attr("id", "table-" + tableID);
     table.addClass("data-table");
 
     thead = $("<thead />").html("");
     theadRow = $("<tr />").html("");
     theadTitle = $("<th />").html(getTableTitle(tableInfo));
     theadTitle.attr("colspan", "2");
-    theadTitle.attr("id", "table_" + tableID + "_title");
+    theadTitle.attr("id", "table-" + tableID + "-title");
     theadRow.append(theadTitle);
     thead.append(theadRow);
 
     tbody = $("<tbody/>").html("");
-    tbody.attr("id", "table_" + tableID + "_body");
+    tbody.attr("id", "table-" + tableID + "-body");
 
     table.append(thead);
     table.append(tbody);
@@ -516,7 +514,7 @@ var HSQuickLook = HSQuickLook || {};
   function initializeTable(tableInfo) {
     var tableID = getTableID(tableInfo),
         contents = tableInfo.contents,
-        tbody = $('tbody#table_' + tableID + '_body').html(""),
+        tbody = $('tbody#table-' + tableID + '-body').html(""),
         key,
         info,
         value = 0,
@@ -558,7 +556,7 @@ var HSQuickLook = HSQuickLook || {};
     for (key in contents) {
       info = contents[key];
       if (info.type == "trend-graph") {
-        elemID = tableID + "_" + key;
+        elemID = tableID + "-" + key;
         time = ti*timeScaling;
         updateGraph(elemID, info, time, values, tableID);
       }
@@ -591,11 +589,12 @@ var HSQuickLook = HSQuickLook || {};
    */
   function makePair(key, rawValue, info, tableID) {
     var type = info.type,
-        elemID = tableID + "_" + key,
+        elemID = tableID + "-" + key,
         pair, elemKeyHTML, elemValueHTML,
         value, status, valueFormated;
     
-    elemKeyHTML = $("<td />").html(key);
+    elemKeyHTML = $("<td />").attr("id", elemID+"-key").html(key);
+    
     if (type == "trend-graph") {
       elemValueHTML = $("<td />").attr("id", elemID).html("");
       appendTrendCurve(elemValueHTML, elemID, info, tableID);
@@ -626,7 +625,7 @@ var HSQuickLook = HSQuickLook || {};
 
     graph = new HSQuickLook.graph.MultiTrendCurves();
     graphs[elemID] = graph;
-    graph.placeholder = "#"+elemID+"_placeholder";
+    graph.placeholder = "#"+elemID+"-placeholder";
 
     if ('options' in info) {
       if ('xWidth' in info.options) {
@@ -649,7 +648,7 @@ var HSQuickLook = HSQuickLook || {};
 
     for (i=0; i<info.group.length; i++) {
       plotInfo = info.group[i];
-      sourceID = tableID + "_" + plotInfo.source;
+      sourceID = tableID + "-" + plotInfo.source;
       curve = createTrendCurve(capacity, plotInfo);
       graph.addTrendCurve(sourceID, curve);
     }
@@ -658,9 +657,9 @@ var HSQuickLook = HSQuickLook || {};
     elemValueHTML.attr("id", elemID);
     elemValueHTML.append(container);
     
-    timeOriginHTML = $("<div />").attr("id", elemID+"_timeorigin").html("Origin of time: ");
+    timeOriginHTML = $("<div />").attr("id", elemID+"-timeorigin").html("Origin of time: ");
     timeOriginHTML.addClass("graph-timeorigin");
-    timeOriginHTML.append($("<span />").attr("id", elemID+"_timeorigin_value"));
+    timeOriginHTML.append($("<span />").attr("id", elemID+"-timeorigin-value"));
     elemValueHTML.append(timeOriginHTML);
   }
 
@@ -704,14 +703,14 @@ var HSQuickLook = HSQuickLook || {};
   function addValueClass(target, status, type) {
     var statusClass;
     if (status != "") {
-      statusClass = "status-" + status;
+      statusClass = "value-status-" + status;
       target.addClass(statusClass);
     }
-    target.addClass("type-" + type);
+    target.addClass("value-type-" + type);
   }
 
   function updateValue(key, rawValue, info, tableID) {
-    var elemID = tableID + "_" + key,
+    var elemID = tableID + "-" + key,
         target,
         value,
         status,
@@ -740,7 +739,7 @@ var HSQuickLook = HSQuickLook || {};
     graph = graphs[elemID];
     if (graph.timeOrigin === void 0) {
       graph.timeOrigin = time;
-      $("#" + elemID + "_timeorigin_value").html(time);
+      $("#" + elemID + "-timeorigin-value").html(time);
     }
     xValue = time - graph.timeOrigin;
 
@@ -748,7 +747,7 @@ var HSQuickLook = HSQuickLook || {};
       plotInfo = info.group[i];
       source = plotInfo.source;
       convertedValue = Number(convertValue(plotInfo, values[source]));
-      sourceID = tableID + "_" + source;
+      sourceID = tableID + "-" + source;
 
       curve = graph.getTrendCurve(sourceID);
       curve.pushData([xValue, convertedValue]);
@@ -760,7 +759,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateImage(key, rawValue, info, tableID) {
-    var elemID = tableID + "_" + key,
+    var elemID = tableID + "-" + key,
         target,
         value = convertValue(info, rawValue),
         image1, image2, data, data64, binaryData, mimeType,
@@ -859,13 +858,13 @@ var HSQuickLook = HSQuickLook || {};
    */
   function createGraphContainer(elemID, frameOption) {
     var container, placeholder;
-    container = $("<div />").attr("id", elemID+"_graph").addClass("graph-container");
+    container = $("<div />").attr("id", elemID+"-graph").addClass("graph-container");
     if (frameOption !== void 0) {
       container.css("width", frameOption.width);
       container.css("height", frameOption.height);
     }
     
-    placeholder = $("<div />").attr("id", elemID+"_placeholder").addClass("graph-placeholder");
+    placeholder = $("<div />").attr("id", elemID+"-placeholder").addClass("graph-placeholder");
     container.append(placeholder);
     return container;
   }
