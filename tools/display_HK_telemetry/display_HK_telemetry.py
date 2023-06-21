@@ -93,7 +93,7 @@ def read_binary(filename: List[str]) -> bytes:
 
 def run(telemetry_key, filenames) -> None:
     runID = filenames[0].split("_")[1]
-    
+
     if VERVOSE >= 2:
         print(f"Open files: {filenames}")
     binary = read_binary(filename=filenames)
