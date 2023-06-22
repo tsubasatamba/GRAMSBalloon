@@ -40,7 +40,7 @@ HSQuickLook.main.schema =
                 "Trigger_Device": { "type": "int", "status": function (v) { return (v == 0) ? "safe" : (v == 1) ? "warning" : "error"; } },
                 "Trigger_Channel": { "type": "int", "status": function (v) { return (v == 0) ? "safe" : (v == 1) ? "warning" : "error"; } },
                 "Trigger_Level": { "type": "float", "format": "%7.3f V", "status": function (v) { return (v > 5 || v < -5) ? "error" : "safe"; } },
-                "Trigger_Position": { "source": "Trigger_Position", "type": "float", "format": "%7.3f", "status": function (v) { return "safe"; } },
+                "Trigger_Position": { "source": "Trigger_Position", "type": "float", "format": "%7.3f us", "status": function (v) { return "safe"; } },
                 "Sample_Frequency": { "type": "float", "format": "%7.3f MHz", "source": "Sample_Frequency" },
                 "Time_Window": { "type": "float", "format": "%7.3f us", "source": "Time_Window" },
                 "ADC_Offset_1": { "type": "float", "format": "%7.3f V" },
