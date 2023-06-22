@@ -122,12 +122,12 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
             }
             catch (CommandException &e)
             {
-                std::cout << "Command exception caught: " << e.print() << " in " << com_args[0] << std::endl;
+                std::cout << "Command exception caught: " << e.print() << " in " << com_args[0] << " <- Exit" << std::endl;
                 exit(1);
             }
             if (com_args.size() - 1 != builder.get_argnum(com_args[0]))
             {
-                std::cout << "Invalid args in " << com_args[0] << std::endl;
+                std::cout << "Invalid args in " << com_args[0] << " <- Exit" << std::endl;
                 exit(1);
             }
         }
@@ -223,7 +223,7 @@ void send_command(const std::vector<std::vector<std::string>> &commands, int run
     }
     else
     {
-        std::cout << "Command sent." << std::endl;
+        std::cout << "Command " << commands[run_index][0] <<"sent." << std::endl;
     }
     sender.close_serial_port();
     write_command(command_bits, commands[run_index][0]);
