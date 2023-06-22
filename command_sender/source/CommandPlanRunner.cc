@@ -96,13 +96,14 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
         }
         catch (CommandException &e)
         {
-            std::cout << "Command exception caught: " << e.print() << std::endl;
+            std::cout << "Command exception caught: " << e.print() << " in " << com_args[0] << std::endl;
             exit(1);
         }
 
         if (com_args.size() - 1 != builder.get_argnum(com_args[0]))
         {
-            std::cout << "Invalid args" << std::endl;
+            std::cout << "Invalid args in " << com_args[0] << std::endl;
+            exit(1);
         }
         commands.push_back(com_args);
     }
