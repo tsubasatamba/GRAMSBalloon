@@ -47,7 +47,6 @@ void print_command(const std::vector<std::vector<std::string>> commands, int run
     std::cout << "disp_num_adv: " << disp_num_adv << " disp_num_prev:" << disp_num_prev << std::endl;
     for (int i = disp_num_prev; i > 0; i--)
     {
-        // std::cout << "i: " << i << std::endl;
         for (int j = 0; j < commands[run_index - i].size(); j++)
         {
             std::cout << commands[run_index - i][j] << " ";
@@ -64,14 +63,17 @@ void print_command(const std::vector<std::vector<std::string>> commands, int run
               << " <=" << std::endl;
 
     for (int i = 0; i < disp_num_adv; i++)
-    {
-        // std::cout << "i: " << i << std::endl;
+    {   
         for (int j = 0; j < commands[run_index + i].size(); j++)
         {
             std::cout << commands[run_index + i][j] << " ";
         }
         std::cout << std::endl;
     }
+    if (DISPLAY_NUMBER_ADVANCE > disp_num_adv){
+      std::cout << "\x1b[41m" << "EOF" << "\x1b[49m" << std::endl;
+    }
+    
 }
 
 std::vector<std::vector<std::string>> read_command_plan(const std::string &filename)
@@ -114,9 +116,12 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
 void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
 {
     anlnext::ReadLine reader;
+    int run_index = 0;
     while (true)
     {
-        int run_index = 0;
+      if (run_index >= commands.size()){
+        break;
+      }
         print_command(commands, run_index);
         const int count = reader.read("COM> ");
         const std::string line = reader.str();
@@ -150,5 +155,6 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
         {
             std::cout << "Error: invalid input." << std::endl;
         }
+        run_index++;
     }
 }
