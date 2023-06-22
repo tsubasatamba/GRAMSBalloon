@@ -25,8 +25,8 @@ HSQuickLook.main.schema =
                 "Event_ID": {"type": "int"},
                 "Event_Time": {"type": "int"},
                 "Event_Time_us": {"type": "int"},
-                "Sample_Frequency_MHz": {"type": "double", "format": "%7.3f", "source": "Sample_Frequency"},
-                "Time_Window_us": {"type": "double", "format": "%7.3f", "source": "Time_Window"}
+                "Sample_Frequency": {"type": "double", "format": "%7.3f MHz", "source": "Sample_Frequency"},
+                "Time_Window": {"type": "double", "format": "%7.3f us", "source": "Time_Window"}
             }
         },
         {
