@@ -122,7 +122,7 @@ def run(telemetry_key, filenames) -> None:
             i += 1
 
     x_arr = (np.array(x, dtype=float) - x[0])
-    y_arr = np.array(y) / tel[telemetry_key][3]
+    y_arr = np.array(y)
     fig = plt.figure(1, figsize=(6.4, 4.8))
     ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{telemetry_key}")
     ax.plot(x_arr, y_arr)
@@ -135,3 +135,10 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         raise ValueError("The arguments must be larger than 2.")
     run(sys.argv[1], sys.argv[2:])
+
+
+def convert_chamber_pressure(v):
+    current = v / 100. * 1000.
+    return (current - 4.) / 16. * 2.
+def convert_slow_ADC(v):
+    return v / 4096. * 5.026

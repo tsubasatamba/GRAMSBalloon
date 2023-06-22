@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+XC#!/usr/bin/env python3
 
 from display_HK_telemetry import *
 import sys
