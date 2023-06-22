@@ -22,11 +22,12 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void makeImage();
+  void makeImage(std::vector<std::string>& image_filenames);
 
 private:
   InterpretTelemetry* interpreter_ = nullptr;
-  std::string imageName_;
+  std::string wfImageName_;
+  std::string pmtImageName_;
   int chatter_ = 0;
 };
 

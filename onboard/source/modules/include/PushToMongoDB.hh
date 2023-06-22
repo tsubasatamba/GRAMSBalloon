@@ -25,7 +25,7 @@ public:
   void pushHKTelemetry();
   void pushWFTelemetry();
   void pushStatusTelemetry();
-  void pushWaveformImage();
+  void pushWaveformImage(const std::vector<std::string>& keys, const std::vector<std::string>& image_filenames);
 
 private:
   hsquicklook::MongoDBClient* mongodbClient_ = nullptr;

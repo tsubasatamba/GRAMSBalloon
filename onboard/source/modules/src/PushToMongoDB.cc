@@ -257,35 +257,42 @@ void PushToMongoDB::pushStatusTelemetry()
 
 }
 
-void PushToMongoDB::pushWaveformImage()
+void PushToMongoDB::pushWaveformImage(const std::vector<std::string>& keys, const std::vector<std::string>& image_filenames)
 {
-  const std::size_t size = 10*1024*1024;
-  static uint8_t buf[size];
-  const std::string filename = "waveform.png";
-  std::ifstream fin(filename.c_str(), std::ios::in|std::ios::binary);
-  fin.read((char*)buf, size);
-  const std::size_t readSize = fin.gcount();
-  fin.close();
+  if (keys.size() != image_filenames.size()) {
+    std::cerr << "Error in PushToMongoDB::pushWaveformImage  keys and image_filenames should be the same size." << std::endl;
+  }
 
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
-  hsquicklook::DocumentBuilder builder("Telemetry", "WF");
+  hsquicklook::DocumentBuilder builder("Telemetry", "waveform_image");
   builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
   builder.setTimeNow();
 
-  {
-    const std::string section_name = "waveform_image";
-    auto section = bsoncxx::builder::stream::document{}
-      << "waveform_image" << hsquicklook::make_image_value(buf,
-                                                           readSize,
-                                                           640,
-                                                           480,
-                                                           filename)
-      << bsoncxx::builder::stream::finalize;
-    builder.addSection(section_name, section);
-  }
+  const std::size_t size = 10*1024*1024;
+  static uint8_t buf[size];
+  const int n = keys.size();
+  for (int i=0; i<n; i++) {
+    const std::string key = keys[i];
+    const std::string image_filename = image_filenames[i];
+    std::ifstream fin(image_filename.c_str(), std::ios::in|std::ios::binary);
+    fin.read((char*)buf, size);
+    const std::size_t readSize = fin.gcount();
+    fin.close();
 
+    {
+      const std::string section_name = key;
+      auto section = bsoncxx::builder::stream::document{}
+        << key << hsquicklook::make_image_value(buf,
+                                                readSize,
+                                                640,
+                                                480,
+                                                image_filename)
+        << bsoncxx::builder::stream::finalize;
+      builder.addSection(section_name, section);
+    }
+  }
   auto doc = builder.generate();
-  mongodbClient_->push("image", doc);
+  mongodbClient_->push("grams", doc);
 }
 
 } /* namespace gramsballoon */

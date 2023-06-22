@@ -39,5 +39,27 @@ HSQuickLook.main.schema =
                 "CRC": {"type": "int"},
                 "Stop_Code": {"type": "int", "format": "0x%04X"}
             }
-        }      
+        },
+        {
+            "collection": "grams",
+            "directory": "Telemetry",
+            "document": "waveform_image",
+            "period": "4",
+            "section": "waveform_all",
+            "contents": {
+                "waveform_all": {"type": "image"}
+            }
+        },
+        {
+            "collection": "grams",
+            "directory": "Telemetry",
+            "document": "waveform_image",
+            "period": "4",
+            "section": "waveform_pmt",
+            "contents": {
+                "waveform_pmt": {"type": "image"}
+            }
+        }
+
+
     ];
