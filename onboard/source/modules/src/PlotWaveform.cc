@@ -96,7 +96,7 @@ void PlotWaveform::makeImage(std::vector<std::string>& image_filenames)
     const double ymax = vmax + (vmax-vmin)/8.0;
     histograms[i]->GetYaxis()->SetRangeUser(ymin, ymax);
     histograms[i]->GetXaxis()->SetTitle("Time (us)");
-    histograms[i]->GetYaxis()->SetTitle("Voltage (V)");
+    histograms[i]->GetYaxis()->SetTitle("Voltage (mV)");
     histograms[i]->GetXaxis()->SetTitleOffset(0.0);
     histograms[i]->GetXaxis()->CenterTitle();
     histograms[i]->GetYaxis()->SetTitleOffset(0.8);
@@ -117,7 +117,7 @@ void PlotWaveform::makeImage(std::vector<std::string>& image_filenames)
     histograms[0]->GetYaxis()->SetRangeUser(ymin, ymax);
     histograms[0]->GetXaxis()->SetRangeUser(5.0, 20.0);
     histograms[0]->GetXaxis()->SetTitle("Time (us)");
-    histograms[0]->GetYaxis()->SetTitle("Voltage (V)");
+    histograms[0]->GetYaxis()->SetTitle("Voltage (mV)");
   }
   canv2->SaveAs(pmtImageName_.c_str());
   image_filenames.push_back(pmtImageName_);

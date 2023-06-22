@@ -261,6 +261,7 @@ void PushToMongoDB::pushWaveformImage(const std::vector<std::string>& keys, cons
 {
   if (keys.size() != image_filenames.size()) {
     std::cerr << "Error in PushToMongoDB::pushWaveformImage  keys and image_filenames should be the same size." << std::endl;
+    return;
   }
 
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
