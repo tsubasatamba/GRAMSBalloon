@@ -52,7 +52,6 @@ ANLStatus InterpretTelemetry::mod_initialize()
 ANLStatus InterpretTelemetry::mod_analyze()
 {
   if (!(receiver_->Valid())) {
-    std::cout << "valid = " << receiver_->Valid() << std::endl;
     return AS_OK;
   }
   
