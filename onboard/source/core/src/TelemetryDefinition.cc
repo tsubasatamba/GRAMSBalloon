@@ -209,19 +209,25 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   const int hk_telemetry_len = 132;
   const int wf_telemetry_len = 8248;
   const int status_telemetry_len = 100;
-  if (type==1 && n!=hk_telemetry_len) {
-    std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
-    return false;
+  if (type==1) {
+    if (n!=hk_telemetry_len) {
+      std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
+      return false;
+    }
   }
-  else if (type==2 && n!=wf_telemetry_len) {
-    std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
-    std::cerr << "We force to resize the telemetry..." << std::endl;
-    telemetry_.resize(wf_telemetry_len);
-    n = wf_telemetry_len;
+  else if (type==2) {
+    if (n!=wf_telemetry_len) {
+      std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
+      std::cerr << "We force to resize the telemetry..." << std::endl;
+      telemetry_.resize(wf_telemetry_len);
+      n = wf_telemetry_len;
+    }
   }
-  else if (type==3 && n!=status_telemetry_len) {
-    std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
-    return false;
+  else if (type==3) {
+    if (n!=status_telemetry_len) {
+      std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
+      return false;
+    }
   }
   else {
     std::cerr << "Invalid telemetry type: type = " << type << std::endl;
