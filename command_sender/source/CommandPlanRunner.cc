@@ -11,6 +11,7 @@
 #include <sstream>
 #include <istream>
 #include <fstream>
+#include <iomanip>
 #include <anlnext/CLIUtility.hh>
 #include "CommandSender.hh"
 #include "CommandBuilder.hh"
@@ -22,8 +23,10 @@ void print_command(const std::vector<std::string> commands, int run_index);
 std::vector<std::vector<std::string>> read_command_plan(const std::string &filename);
 void run_command_sequence(const std::vector<std::vector<std::string>> &commands);
 
+void send_command(const std::vector<std::vector<std::string>> &commands, int run_index);
+
 const int DISPLAY_NUMBER_PREVIOUS = 2;
-const int DISPLAY_NUMBER_ADVANCE = 2;
+const int DISPLAY_NUMBER_ADVANCE = 10;
 
 int main(int argc, char **argv)
 {
@@ -41,19 +44,29 @@ int main(int argc, char **argv)
 
 void print_command(const std::vector<std::vector<std::string>> commands, int run_index)
 {
-    std::cout << run_index << std::endl;
     int disp_num_prev = std::min(DISPLAY_NUMBER_PREVIOUS, run_index);
-    int disp_num_adv = std::min(static_cast<int>(commands.size()) - run_index - 1, DISPLAY_NUMBER_ADVANCE);
-    std::cout << "disp_num_adv: " << disp_num_adv << " disp_num_prev:" << disp_num_prev << std::endl;
+    int disp_num_adv = std::min(static_cast<int>(commands.size()) - run_index, DISPLAY_NUMBER_ADVANCE);
+    std::cout << "\n\n#############################################"
+              << "\nlines command" << std::endl;
+    for (int i = 0; i < DISPLAY_NUMBER_PREVIOUS - disp_num_prev; i++)
+    {
+        std::cout << "\n";
+    }
     for (int i = disp_num_prev; i > 0; i--)
     {
+        std::cout << std::setfill('0') << std::right << std::setw(3) << run_index - i << std::setfill(' ') << "   ";
+        if (commands[run_index - i][0][0] == '#')
+            std::cout << "\x1b[40m";
         for (int j = 0; j < commands[run_index - i].size(); j++)
         {
             std::cout << commands[run_index - i][j] << " ";
         }
+        if (commands[run_index - i][0][0] == '#')
+            std::cout << "\x1b[49m";
         std::cout << std::endl;
     }
 
+    std::cout << std::setfill('0') << std::right << std::setw(3) << run_index << std::setfill(' ') << "   ";
     std::cout << "\x1b[42m";
     for (int i = 0; i < commands[run_index].size(); i++)
     {
@@ -62,18 +75,28 @@ void print_command(const std::vector<std::vector<std::string>> commands, int run
     std::cout << "\x1b[49m"
               << " <=" << std::endl;
 
-    for (int i = 0; i < disp_num_adv; i++)
-    {   
+    for (int i = 1; i < disp_num_adv; i++)
+    {
+        std::cout << std::setfill('0') << std::right << std::setw(3) << run_index + i << std::setfill(' ') << "   ";
         for (int j = 0; j < commands[run_index + i].size(); j++)
         {
             std::cout << commands[run_index + i][j] << " ";
         }
         std::cout << std::endl;
     }
-    if (DISPLAY_NUMBER_ADVANCE > disp_num_adv){
-      std::cout << "\x1b[41m" << "EOF" << "\x1b[49m" << std::endl;
+
+    if (DISPLAY_NUMBER_ADVANCE > disp_num_adv)
+    {
+
+        std::cout << "\x1b[41m"
+                  << "EOF"
+                  << "\x1b[49m";
+        for (int i = 0; i < DISPLAY_NUMBER_ADVANCE - disp_num_adv; i++)
+            std::cout << "\n";
     }
-    
+
+    std::cout << "#############################################\n\n"
+              << std::endl;
 }
 
 std::vector<std::vector<std::string>> read_command_plan(const std::string &filename)
@@ -91,21 +114,22 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
         {
             com_args.push_back(temp);
         }
-
-        try
+        if (com_args[0][0] != '#')
         {
-            builder.get_command_property(com_args[0]);
-        }
-        catch (CommandException &e)
-        {
-            std::cout << "Command exception caught: " << e.print() << " in " << com_args[0] << std::endl;
-            exit(1);
-        }
-
-        if (com_args.size() - 1 != builder.get_argnum(com_args[0]))
-        {
-            std::cout << "Invalid args in " << com_args[0] << std::endl;
-            exit(1);
+            try
+            {
+                builder.get_command_property(com_args[0]);
+            }
+            catch (CommandException &e)
+            {
+                std::cout << "Command exception caught: " << e.print() << " in " << com_args[0] << std::endl;
+                exit(1);
+            }
+            if (com_args.size() - 1 != builder.get_argnum(com_args[0]))
+            {
+                std::cout << "Invalid args in " << com_args[0] << std::endl;
+                exit(1);
+            }
         }
         commands.push_back(com_args);
     }
@@ -119,42 +143,88 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
     int run_index = 0;
     while (true)
     {
-      if (run_index >= commands.size()){
-        break;
-      }
+        if (run_index >= commands.size())
+        {
+            break;
+        }
+        if (commands[run_index][0][0] == '#')
+        {
+            run_index++;
+            continue;
+        }
         print_command(commands, run_index);
-        const int count = reader.read("COM> ");
+        const int count = reader.read("INPUT> ");
+        std::cout << std::endl;
         const std::string line = reader.str();
-        std::cout << line << std::endl;
         if (line == "send")
         {
-            CommandBuilder builder;
-            std::vector<int> args;
-            for (int i = 1; i < commands[run_index].size(); i++)
-            {
-                args.push_back(atoi(commands[run_index][i].c_str()));
-            }
-            std::vector<uint8_t> command_bits = builder.make_byte_array(commands[run_index][0], args);
-            CommandSender sender;
-            sender.set_serial_port("/dev/tty.usbserial-14410");
-            if (!sender.open_serial_port())
-            {
-                std::cout << "Serial port open error -> exit" << std::endl;
-                return;
-            }
-            sender.send(command_bits);
-            std::cout << "Command sent." << std::endl;
-            sender.close_serial_port();
+            send_command(commands, run_index);
+            run_index++;
+            continue;
         }
         else if (line == "exit")
         {
             std::cout << "Exiting the command sender." << std::endl;
             break;
         }
+        else if (line == "back")
+        {
+            int i = run_index;
+            while (1)
+            {
+                if (i <= 0)
+                {
+                    std::cout << "Can't back anymore" << std::endl;
+                    break;
+                }
+                if (commands[i - 1][0][0] != '#')
+                {
+                    run_index = i - 1;
+                    break;
+                }
+                else
+                    i--;
+            }
+            continue;
+        }
+        else if (line == "skip")
+        {
+            std::cout << "Skipped line " << run_index << std::endl;
+            run_index++;
+            continue;
+        }
         else
         {
             std::cout << "Error: invalid input." << std::endl;
         }
-        run_index++;
     }
+}
+
+void send_command(const std::vector<std::vector<std::string>> &commands, int run_index)
+{
+    CommandBuilder builder;
+    std::vector<int> args;
+    for (int i = 1; i < commands[run_index].size(); i++)
+    {
+        args.push_back(atoi(commands[run_index][i].c_str()));
+    }
+    std::vector<uint8_t> command_bits = builder.make_byte_array(commands[run_index][0], args);
+    CommandSender sender;
+    sender.set_serial_port("/dev/tty.usbserial-14410");
+    if (!sender.open_serial_port())
+    {
+        std::cout << "Serial port open error -> Skip" << std::endl;
+        return;
+    }
+    int rval = sender.send(command_bits);
+    if (rval != command_bits.size())
+    {
+        std::cout << "Send Error" << std::endl;
+    }
+    else
+    {
+        std::cout << "Command sent." << std::endl;
+    }
+    sender.close_serial_port();
+    write_command(command_bits, commands[run_index][0]);
 }
