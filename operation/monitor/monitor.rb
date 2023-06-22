@@ -14,6 +14,7 @@ class MyApp < ANL::ANLApp
     chain GRAMSBalloon::InterpretTelemetry
     with_parameters(save_telemetry: true, num_telem_per_file: 1000, chatter: 0, binary_filename_base: Dir.home + "/data/telemetry/telemetry")
     chain GRAMSBalloon::PushToMongoDB
+    chain GRAMSBalloon::PlotWaveform
   end
   attr_accessor :serial_path
 end

@@ -242,6 +242,8 @@ private:
   uint64_t SDCapacity_ = 0;
 
   std::vector<int16_t> RTDTemperatureADC_;
+
+  int numZeroFill_ = 0;
   
 };
 

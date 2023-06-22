@@ -220,6 +220,7 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
       std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
       std::cerr << "We force to resize the telemetry..." << std::endl;
       telemetry_.resize(wf_telemetry_len);
+      numZeroFill_ = wf_telemetry_len - n;
       n = wf_telemetry_len;
     }
   }
@@ -352,13 +353,17 @@ void TelemetryDefinition::interpretWF()
   int index = 50;
   if (division_id==0) {
     for (int i=0; i<num_sampling/2; i++) {
-      eventData_[channel][i] = getValue<int16_t>(index);
+      if (i+(numZeroFill_+1)/2<num_sampling/2) {
+        eventData_[channel][i] = getValue<int16_t>(index);
+      }
       index += sizeof(int16_t);
     }
   }
   else {
     for (int i=num_sampling/2; i<num_sampling; i++) {
-      eventData_[channel][i] = getValue<int16_t>(index);
+      if (i+(numZeroFill_+1)/2<num_sampling) {
+        eventData_[channel][i] = getValue<int16_t>(index);
+      }
       index += sizeof(int16_t);
     }
   }
