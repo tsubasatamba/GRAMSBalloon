@@ -52,7 +52,7 @@ int DAQIO::setupTrigger()
   const std::vector<HDWF>& handler_list = ADIO_ -> HandlerList();
 
   if (trigSrc_==static_cast<int>(TriggerSrc::RANDOM_TRIGGER)) {
-    FDwfDeviceTriggerSet(handler_list[trigDevice_], 0, trigsrcNone);
+    FDwfDeviceTriggerSet(handler_list[trigDevice_], 0, trigsrcAnalogIn);
     for(int i=0; i<num_devices; i++) {
       if(i==trigDevice_) {
         FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcNone); // fire the trigger from the master device
@@ -71,7 +71,7 @@ int DAQIO::setupTrigger()
   else if (trigSrc_==static_cast<int>(TriggerSrc::SELF_TRIGGER)) {
     for(int i=0; i<num_devices; i++) {
       if (i==trigDevice_) {
-	      FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
+	FDwfAnalogInTriggerSourceSet(handler_list[i], trigsrcDetectorAnalogIn);
         FDwfAnalogInTriggerTypeSet(handler_list[i], trigtypeEdge);
         FDwfDeviceTriggerSet(handler_list[i], 0, trigsrcAnalogIn);
         for (int j=0; j<2; j++) {
