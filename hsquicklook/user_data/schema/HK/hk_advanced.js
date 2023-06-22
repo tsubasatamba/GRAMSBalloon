@@ -82,7 +82,7 @@ HSQuickLook.main.schema =
                 "HK_Pressure_Middle": { "source": "HK_Pressure_4", "type": "float", "format": "%7.2f hPa", "conversion": function (v) { return v / 100.0; }, "status": function (v) { return status_func("HK_Pressure", v); } },
                 "HK_Pressure_Lower": { "source": "HK_Pressure_5", "type": "float", "format": "%7.2f hPa", "conversion": function (v) { return v / 100.0; }, "status": function (v) { return status_func("HK_Pressure", v); } },
                 "Acceleration_x": {
-                    "type": "float", "format": "%7.3f g", "conversion": function (v) {
+                    "type": "float", "format": "%7.3f G", "conversion": function (v) {
                         accel_x = v;
                         return v;
                     }, "status": function (v) { return status_func("Acceleration", v); }
