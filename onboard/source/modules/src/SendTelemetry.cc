@@ -133,6 +133,7 @@ ANLStatus SendTelemetry::mod_analyze()
   if (telemetryType_==1 || telemetryType_==3) {
     inputInfo();
     telemdef_->generateTelemetry();
+    telemetryType_ = 1;
   }
 
   const std::vector<uint8_t>& telemetry = telemdef_->Telemetry();
@@ -154,9 +155,6 @@ ANLStatus SendTelemetry::mod_analyze()
     }
   }
 
-  if (telemetryType_!=1) {
-    telemetryType_ = 1;
-  }
   if (wfDivisionCounter_>0) {
     telemetryType_ = 2;
   }
@@ -258,7 +256,6 @@ void SendTelemetry::inputHKVesselInfo()
 void SendTelemetry::inputSoftwareInfo()
 {
   if (receiveCommand_!=nullptr) {
-    std::cout << "command index: " << receiveCommand_->CommandIndex() << std::endl;
     telemdef_->setLastCommandIndex(receiveCommand_->CommandIndex());
     telemdef_->setLastCommandCode(receiveCommand_ -> CommandCode());
     telemdef_->setCommandRejectCount(receiveCommand_->CommandRejectCount());
@@ -279,6 +276,12 @@ void SendTelemetry::inputStatusInfo()
     telemdef_->setADCOffset(readWaveform_->Offset());
     telemdef_->setADCRange(readWaveform_->Range());
     telemdef_->setDAQInProgress(readWaveform_->StartReading());
+  }
+  if (TPCHVController_!=nullptr) {
+    telemdef_->setTPCHVUpperLimit(TPCHVController_->UpperLimitVoltage());
+  }
+  if (PMTHVController_!=nullptr) {
+    telemdef_->setPMTHVUpperLimit(PMTHVController_->UpperLimitVoltage());
   }
   if (getRaspiStatus_!=nullptr) {
     telemdef_->setSDCapacity(getRaspiStatus_->CapacityFree());

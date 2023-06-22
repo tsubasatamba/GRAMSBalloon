@@ -9,7 +9,8 @@
       "HK_advanced": "user_data/schema/HK/hk_advanced.js",
       "WF": "user_data/schema/WF/wf.js",
       "Status": "user_data/schema/Status/status.js",
-      "Status_advanced": "user_data/schema/Status/status_advanced.js"
+      "Status_advanced": "user_data/schema/Status/status_advanced.js",
+      "Software_Error": "user_data/schema/Software_Error/software_error.js"
     }
   }
 }

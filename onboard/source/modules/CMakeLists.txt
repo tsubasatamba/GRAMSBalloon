@@ -11,7 +11,6 @@ include_directories(
   ${BOOST_INC_DIR}
   ${PIGPIO_INC_DIR}
   ${HSQUICKLOOK_INC_DIR}
-  #/Users/tambatsubasa/include/hsquicklook
   )
 
 link_directories(
@@ -25,8 +24,8 @@ link_directories(
 set(GB_MODULES
   src/SimpleLoop.cc
   src/ReceiveTelemetry.cc
-  src/InterpretTelemetry.cc
   src/RunIDManager.cc
+  src/ReadTelemetry.cc
   )
 
 if(GB_USE_PIGPIO)
@@ -67,6 +66,13 @@ if(GB_USE_HSQUICKLOOK)
   )
 endif(GB_USE_HSQUICKLOOK)
 
+if(GB_USE_ROOT)
+  set(GB_ROOT_MODULES
+    src/PlotWaveform.cc
+    src/InterpretTelemetry.cc
+  )
+endif(GB_USE_ROOT)
+
 add_library(GBModules SHARED
   ${GB_MODULES}
   ${GB_PIGPIO_MODULES}
@@ -74,6 +80,7 @@ add_library(GBModules SHARED
   ${GB_ICM20948_MODULES}
   ${GB_RASPISYS_MODULES}
   ${GB_HSQUICKLOOK_MODULES}
+  ${GB_ROOT_MODULES}
   )
 
 target_link_libraries(GBModules

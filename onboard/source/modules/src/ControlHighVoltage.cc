@@ -97,7 +97,7 @@ bool ControlHighVoltage::setNextVoltage(double v)
   if (v<0.0) {
     return false;
   }
-  if (v>upperLimitVoltage_) {
+  if (v>singleton_self()->upperLimitVoltage_) {
     return false;
   }
   singleton_self()->nextVoltage_ = v;

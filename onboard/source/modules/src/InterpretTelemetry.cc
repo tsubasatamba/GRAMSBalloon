@@ -10,6 +10,7 @@ InterpretTelemetry::InterpretTelemetry()
   telemdef_ = std::make_shared<TelemetryDefinition>();
   binaryFilenameBase_ = "Telemetry";
   runIDFilename_ = "/Users/grams/settings/run_id/run_id.txt";
+  receiverModuleName_ = "ReceiveTelemetry";
 }
 
 InterpretTelemetry::~InterpretTelemetry() = default;
@@ -20,6 +21,7 @@ ANLStatus InterpretTelemetry::mod_define()
   define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
   define_parameter("run_ID_filename", &mod_class::runIDFilename_);
   define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
+  define_parameter("receiver_module_name", &mod_class::receiverModuleName_);
   define_parameter("chatter", &mod_class::chatter_);
   
   return AS_OK;
@@ -29,24 +31,30 @@ ANLStatus InterpretTelemetry::mod_initialize()
 {
   timeStampStr_ = getTimeStr();
 
-  const std::string receiver_module_name = "ReceiveTelemetry";
-  if (exist_module(receiver_module_name)) {
-    get_module_NC(receiver_module_name, &receiver_);
+  if (exist_module(receiverModuleName_)) {
+    get_module_NC(receiverModuleName_, &receiver_);
   }
+
+  const std::string plotter_module_name = "PlotWaveform";
+  if (exist_module(plotter_module_name)) {
+    get_module_NC(plotter_module_name, &plotter_);
+  }
+
+  const std::string pusher_module_name = "PushToMongoDB";
+  if (exist_module(pusher_module_name)) {
+    get_module_NC(pusher_module_name, &pusher_);
+  }
+
   
   return AS_OK;
 }
 
 ANLStatus InterpretTelemetry::mod_analyze()
 {
-  if (!receiver_->Valid()) {
-    return AS_OK;
-  }
-
   if (!(receiver_->Valid())) {
     return AS_OK;
   }
-
+  
   currentTelemetryType_ = 0;
   const std::vector<uint8_t>& telemetry = receiver_->Telemetry();
 
@@ -65,7 +73,21 @@ ANLStatus InterpretTelemetry::mod_analyze()
     updateRunIDFile();
     fileIDmp_.clear();
   }
-  writeTelemetryToFile(failed);
+  if (saveTelemetry_) {
+    writeTelemetryToFile(failed);
+  }
+
+  if (telemdef_->WFDownloadDone()) {
+    std::vector<std::string> image_filenames;
+    if (plotter_!=nullptr) {
+      plotter_->makeImage(image_filenames);
+    }
+    if (pusher_!=nullptr) {
+      std::vector<std::string> keys = {"waveform_all", "waveform_pmt"};
+      pusher_->pushWaveformImage(keys, image_filenames);
+    }
+    telemdef_->setWFDownloadDone(false);
+  }
   
   return AS_OK;
 }

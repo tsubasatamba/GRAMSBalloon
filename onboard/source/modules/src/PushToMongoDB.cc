@@ -52,7 +52,7 @@ void PushToMongoDB::pushHKTelemetry()
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
 
   hsquicklook::DocumentBuilder builder("Telemetry", "HK");
-  builder.setTI(0);
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
   builder.setTimeNow();
 
   {
@@ -154,7 +154,7 @@ void PushToMongoDB::pushWFTelemetry()
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
 
   hsquicklook::DocumentBuilder builder("Telemetry", "WF");
-  builder.setTI(0);
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
   builder.setTimeNow();
 
   {
@@ -201,7 +201,7 @@ void PushToMongoDB::pushStatusTelemetry()
   TelemetryDefinition* telemdef = interpreter_->Telemdef();
 
   hsquicklook::DocumentBuilder builder("Telemetry", "Status");
-  builder.setTI(0);
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
   builder.setTimeNow();
 
   {
@@ -236,6 +236,8 @@ void PushToMongoDB::pushStatusTelemetry()
       << "ADC_Range_3"          << (telemdef->ADCRange())[2]
       << "ADC_Range_4"          << (telemdef->ADCRange())[3]
       << "DAQ_In_Progress"      << static_cast<int>(telemdef->DAQInProgress())
+      << "TPC_HV_Upper_Limit"   << telemdef->TPCHVUpperLimit()
+      << "PMT_HV_Upper_Limit"   << telemdef->PMTHVUpperLimit()
       << "SD_Capacity"          << (static_cast<double>(telemdef->SDCapacity()) / std::pow(2.0, 30.0))
       << bsoncxx::builder::stream::finalize;
     builder.addSection(section_name, section);
@@ -253,7 +255,44 @@ void PushToMongoDB::pushStatusTelemetry()
   auto doc = builder.generate();
   mongodbClient_->push("grams", doc);
 
+}
 
+void PushToMongoDB::pushWaveformImage(const std::vector<std::string>& keys, const std::vector<std::string>& image_filenames)
+{
+  if (keys.size() != image_filenames.size()) {
+    std::cerr << "Error in PushToMongoDB::pushWaveformImage  keys and image_filenames should be the same size." << std::endl;
+  }
+
+  TelemetryDefinition* telemdef = interpreter_->Telemdef();
+  hsquicklook::DocumentBuilder builder("Telemetry", "waveform_image");
+  builder.setTI(telemdef->TimeNow().tv_sec*64 + telemdef->TimeNow().tv_usec*64*1E-6);
+  builder.setTimeNow();
+
+  const std::size_t size = 10*1024*1024;
+  static uint8_t buf[size];
+  const int n = keys.size();
+  for (int i=0; i<n; i++) {
+    const std::string key = keys[i];
+    const std::string image_filename = image_filenames[i];
+    std::ifstream fin(image_filename.c_str(), std::ios::in|std::ios::binary);
+    fin.read((char*)buf, size);
+    const std::size_t readSize = fin.gcount();
+    fin.close();
+
+    {
+      const std::string section_name = key;
+      auto section = bsoncxx::builder::stream::document{}
+        << key << hsquicklook::make_image_value(buf,
+                                                readSize,
+                                                640,
+                                                480,
+                                                image_filename)
+        << bsoncxx::builder::stream::finalize;
+      builder.addSection(section_name, section);
+    }
+  }
+  auto doc = builder.generate();
+  mongodbClient_->push("grams", doc);
 }
 
 } /* namespace gramsballoon */

@@ -101,6 +101,7 @@ public:
   void setEventID(uint32_t v) { eventID_ = v; }
   void setEventHeader(const std::vector<int16_t>& v) { eventHeader_ = v; }
   void setEventData(const std::vector<std::vector<int16_t>>& v) { eventData_ = v; }
+  void setWFDownloadDone(bool v) { wfDownloadDone_ = v; };
   void setTriggerMode(uint16_t v) { triggerMode_ = v; }
   void setTriggerDevice(uint16_t v) { triggerDevice_ = v; }
   void setTriggerChannel(uint16_t v) { triggerChannel_ = v; }
@@ -111,6 +112,8 @@ public:
   void setADCOffset(const std::vector<double>& v) { ADCOffset_ = v; }
   void setADCRange(const std::vector<double>& v) { ADCRange_ = v; }
   void setDAQInProgress(bool v) { DAQInProgress_ = v; }
+  void setTPCHVUpperLimit(double v) { TPCHVUpperLimit_ = v; }
+  void setPMTHVUpperLimit(double v) { PMTHVUpperLimit_ = v; }
   void setSDCapacity(uint64_t v) { SDCapacity_ = v; }
   
   // getter
@@ -163,6 +166,7 @@ public:
   timeval EventTime() { return eventTime_; }
   const std::vector<int16_t>& EventHeader() const { return eventHeader_; }
   const std::vector<std::vector<int16_t>>& EventData() const { return eventData_; }
+  bool WFDownloadDone() { return wfDownloadDone_; }
   uint16_t TriggerMode() { return triggerMode_; }
   uint16_t TriggerDevice() { return triggerDevice_; }
   uint16_t TriggerChannel() { return triggerChannel_; }
@@ -173,6 +177,8 @@ public:
   const std::vector<double>& ADCOffset() const {return ADCOffset_; }
   const std::vector<double>& ADCRange() const { return ADCRange_; }
   bool DAQInProgress() { return DAQInProgress_; }
+  double TPCHVUpperLimit() { return TPCHVUpperLimit_; }
+  double PMTHVUpperLimit() { return PMTHVUpperLimit_; }
   uint64_t SDCapacity() { return SDCapacity_; }
 
 private:
@@ -218,6 +224,7 @@ private:
   timeval eventTime_;
   std::vector<int16_t> eventHeader_;
   std::vector<std::vector<int16_t>> eventData_;
+  bool wfDownloadDone_ = false;
 
   // Status
   uint16_t triggerMode_ = 0;
@@ -230,6 +237,8 @@ private:
   std::vector<double> ADCOffset_; // volt
   std::vector<double> ADCRange_; // volt
   bool DAQInProgress_ = false;
+  double TPCHVUpperLimit_ = 0.0;
+  double PMTHVUpperLimit_ = 0.0;
   uint64_t SDCapacity_ = 0;
 
   std::vector<int16_t> RTDTemperatureADC_;

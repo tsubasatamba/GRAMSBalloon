@@ -25,7 +25,10 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   const std::vector<uint8_t>& Telemetry() const { return telemetry_; }
+  std::vector<uint8_t>& Telemetry() { return telemetry_; }
   bool Valid() { return valid_; }
+  void setValid(bool v) { valid_ = v;}
+  int Chatter() { return chatter_; }
   
 private:
   std::vector<uint8_t> telemetry_;

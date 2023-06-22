@@ -136,9 +136,9 @@ ANLStatus ReadWaveform::mod_analyze()
   if (nonDetectionCounter_>=maxNonDetectionCount_) {
     std::cout << "Failed to detect events " << nonDetectionCounter_ << "times in a row." << std::endl;
     std::cout << "Probably trigger level is too high." << std::endl;
-    if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::TOO_FEW_EVENTS_DETECTED);
-    }
+    //if (sendTelemetry_) {
+    //sendTelemetry_->getErrorManager()->setError(ErrorType::TOO_FEW_EVENTS_DETECTED);
+    //}
     nonDetectionCounter_ = 0;
   }
 

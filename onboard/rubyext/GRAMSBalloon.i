@@ -37,7 +37,9 @@
 #ifdef USE_RASPISYS
 #include "ShutdownSystem.hh"
 #endif
+#ifdef USE_ROOT
 #include "InterpretTelemetry.hh"
+#endif
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
 #endif
@@ -45,6 +47,10 @@
 #include "GetSlowADCData.hh"
 #endif
 #include "RunIDManager.hh"
+#include "ReadTelemetry.hh"
+#ifdef USE_ROOT
+#include "PlotWaveform.hh"
+#endif
 %}
 
 %include "std_vector.i"
@@ -154,11 +160,13 @@ public:
 };
 #endif
 
+#ifdef USE_ROOT
 class InterpretTelemetry : public anlnext::BasicModule
 {
 public:
   InterpretTelemetry();
 };
+#endif
 
 #ifdef USE_HSQUICKLOOK
 class PushToMongoDB : public anlnext::BasicModule
@@ -181,5 +189,19 @@ class RunIDManager : public anlnext::BasicModule
 public:
   RunIDManager();
 };
+
+class ReadTelemetry : public anlnext::BasicModule
+{
+public:
+  ReadTelemetry();
+};
+
+#ifdef USE_ROOT
+class PlotWaveform : public anlnext::BasicModule
+{
+public:
+  PlotWaveform();
+};
+#endif
 
 } // namespace GRAMSBalloon

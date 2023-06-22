@@ -52,6 +52,8 @@ HSQuickLook.main.schema =
                 "ADC_Range_3": { "type": "float", "format": "%7.3f" },
                 "ADC_Range_4": { "type": "float", "format": "%7.3f" },
                 "DAQ_In_Progress": { "type": "string", "conversion": function (v) { return (v == 1) ? "True" : "False"; }, "status": function (v) { return (v == "True") ? "safe" : "error" } },
+                "TPC_HV_Upper_Limit": {"type": "double", "format": "%7.3f"},
+                "PMT_HV_Upper_Limit": {"type": "double", "format": "%7.3f"},
                 "SD_Capacity_GB": { "type": "float", "format": "%7.3f", "source": "SD_Capacity", "status": function (v) { return (v < 100) ? "error" : (v < 200) ? "warning" : "safe"; } }
             }
         },

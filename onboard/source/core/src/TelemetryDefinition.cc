@@ -122,6 +122,8 @@ void TelemetryDefinition::generateTelemetryStatus()
     addValue<int32_t>(static_cast<int32_t>(ADCRange_[i]/1E-3));
   }
   addValue<uint16_t>(static_cast<uint16_t>(DAQInProgress_));
+  addValue<int32_t>(static_cast<int32_t>(TPCHVUpperLimit_/1E-3));
+  addValue<int32_t>(static_cast<int32_t>(PMTHVUpperLimit_/1E-3));
   addValue<uint64_t>(SDCapacity_);
 }
 
@@ -186,7 +188,7 @@ void TelemetryDefinition::writeCRC16()
 
 bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
 {
-  const int n = v.size();
+  int n = v.size();
   if (n<10) {
     std::cerr << "Telemetry is too short!!: length = " << n << std::endl; 
     return false;
@@ -202,25 +204,40 @@ bool TelemetryDefinition::setTelemetry(const std::vector<uint8_t>& v)
   }
 
   telemetry_ = v;
-  std::vector<uint8_t> telem_without_fotter;
-  for (int i=0; i<n-6; i++) {
-    telem_without_fotter.push_back(v[i]);
+  
+  uint16_t type = getValue<uint16_t>(4);
+  const int hk_telemetry_len = 132;
+  const int wf_telemetry_len = 8248;
+  const int status_telemetry_len = 100;
+  if (type==1) {
+    if (n!=hk_telemetry_len) {
+      std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
+      return false;
+    }
+  }
+  else if (type==2) {
+    if (n!=wf_telemetry_len) {
+      std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
+      std::cerr << "We force to resize the telemetry..." << std::endl;
+      telemetry_.resize(wf_telemetry_len);
+      n = wf_telemetry_len;
+    }
+  }
+  else if (type==3) {
+    if (n!=status_telemetry_len) {
+      std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
+      return false;
+    }
+  }
+  else {
+    std::cerr << "Invalid telemetry type: type = " << type << std::endl;
   }
 
-  uint16_t type = getValue<uint16_t>(2);
-  if (type==1 && n!=132) {
-    std::cerr << "Telemetry HK: Telemetry length is not correct: n = " << n << std::endl;
-    return false;
+  std::vector<uint8_t> telem_without_fotter;
+  for (int i=0; i<n-6; i++) {
+    telem_without_fotter.push_back(telemetry_[i]);
   }
-  if (type==2 && n!=8248) {
-    std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
-    return false;
-  }
-  if (type==3 && n!=92) {
-    std::cerr << "Telemetry Status: Telemetry length is not correct: n = " << n << std::endl;
-    return false;
-  }
-  
+
   uint16_t crc_calc = calcCRC16(telem_without_fotter);
   uint16_t crc_attached = getValue<uint16_t>(n-6);
   if (crc_calc != crc_attached) {
@@ -348,6 +365,9 @@ void TelemetryDefinition::interpretWF()
 
   crc_ = getValue<uint16_t>(index);
   stopCode_ = getValue<uint32_t>(index+2);
+  if (channel==3 && division_id==1) {
+    wfDownloadDone_ = true;
+  }
 }
 
 void TelemetryDefinition::interpretStatus()
@@ -372,10 +392,12 @@ void TelemetryDefinition::interpretStatus()
   }
 
   DAQInProgress_ = static_cast<bool>(getValue<uint16_t>(76));
-  SDCapacity_ = getValue<uint64_t>(78);
+  TPCHVUpperLimit_ = static_cast<double>(getValue<int32_t>(78)) * 1E-3;
+  PMTHVUpperLimit_ = static_cast<double>(getValue<int32_t>(82)) * 1E-3;
+  SDCapacity_ = getValue<uint64_t>(86);
 
-  crc_ = getValue<uint16_t>(86);
-  stopCode_ = getValue<uint32_t>(88);
+  crc_ = getValue<uint16_t>(94);
+  stopCode_ = getValue<uint32_t>(96);
 }
 
 void TelemetryDefinition::clear()
