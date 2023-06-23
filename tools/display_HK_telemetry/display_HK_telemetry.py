@@ -28,20 +28,20 @@ class Telemetry_Definition:
         self.show_limit = show_limit
 
     @property
-    def length(self):
+    def length(self) -> int:
         return self.__length
 
-    @property
-    def start_index(self):
-        return self.__start_index
-
     @length.setter
-    def length(self, v):
+    def length(self, v: int) -> None:
         self.__length = v
         self.end_index = self.__length + self.__start_index
 
+    @property
+    def start_index(self) -> int:
+        return self.__start_index
+
     @start_index.setter
-    def length(self, v):
+    def start_index(self, v: int) -> None:
         self.__start_index = v
         self.end_index = self.__length + self.__start_index
 
