@@ -180,6 +180,7 @@ public:
   double TPCHVUpperLimit() { return TPCHVUpperLimit_; }
   double PMTHVUpperLimit() { return PMTHVUpperLimit_; }
   uint64_t SDCapacity() { return SDCapacity_; }
+  double EventRate() { return eventRate_; }
 
 private:
   std::vector<uint8_t> telemetry_;
@@ -242,7 +243,11 @@ private:
   uint64_t SDCapacity_ = 0;
 
   std::vector<int16_t> RTDTemperatureADC_;
-  
+
+  // event rate
+  double eventRate_ = 0.0;
+  timeval prevTime_;
+  uint32_t prevEventCount_ = 0;
 };
 
 } /* namespace gramsballoon */
