@@ -209,7 +209,8 @@ def run(telemetry_key: str, filenames: list[str]) -> None:
     fig = plt.figure(1, figsize=(6.4, 4.8))
     ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{telemetry_key}")
     ax.plot(x_arr, y_arr)
-    ax.set_xlim(*tel[telemetry_key].show_limit)
+    if tel[telemetry_key].show_limit is not None:
+        ax.set_xlim(*tel[telemetry_key].show_limit)
     fig.savefig(f"telemetry_{runID}_{telemetry_key}.png")
     plt.show()
 
