@@ -123,7 +123,7 @@ def run(telemetry_key: str, filenames: list[str]) -> None:
             i += 1
 
     x_arr = (np.array(x, dtype=float) - x[0])
-    y_arr = np.array(map(tel[telemetry_key][3], y))
+    y_arr = np.array(list(map(tel[telemetry_key][3], y)))
     fig = plt.figure(1, figsize=(6.4, 4.8))
     ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{telemetry_key}")
     ax.plot(x_arr, y_arr)
