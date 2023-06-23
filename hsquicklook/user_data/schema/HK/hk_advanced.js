@@ -35,7 +35,7 @@ HSQuickLook.main.schema =
             "section": "Detector",
             "contents": {
                 "Event_Count": { "type": "int", "status": "safe" },
-                "Event_Rate" : {"type": "float", "status": "safe" },
+                "Event_Rate" : {"type": "float", "status": "safe" , "format": "%7.3f"},
                 "Current_EventID": { "type": "int", "status": "safe" },
                 "Chamber_Pressure": { "type": "int", "format": "%7.3f atm", "conversion": convert_Chamber_Pressure, "status": function (v) { return status_func("Chamber_Pressure", v); } },
                 "Chamber_Temperature_Upper": { "source": "Chamber_Temperature_1", "type": "float", "format": "%7.3f &deg;C", "conversion": convert_RTD_measure, "status": function (v) { return status_func("Chamber_Temperature", v); } },
@@ -169,7 +169,7 @@ HSQuickLook.main.schema =
                         {"source": "Chamber_Temperature_2","conversion":convert_RTD_measure, "options":{"legend": "Middle","color": "red"}},
                         {"source": "Chamber_Temperature_3","conversion":convert_RTD_measure, "options":{"legend": "Lower","color": "green"}},
                     ],
-                    "options":{"xWidth": 10000,"yRange":[-200, 30]}
+                    "options":{"xWidth": 1000,"yRange":[-200, 30]}
                 },
                 "Pressure": {
                     "type": "trend-graph",
@@ -177,7 +177,7 @@ HSQuickLook.main.schema =
                         {"source": "Chamber_Pressure","conversion":convert_Chamber_Pressure,"options":{"legend":"Chamber","color":"red"}},
                         {"source": "HK_Pressure_3","conversion": function (v) { return v / 100.0 / 1013.25; },"options":{"legend":"HK_Upper","color":"green"}},
                     ],
-                    "options":{"xWidth": 10000,"yRange":[0.9, 1.5]}
+                    "options":{"xWidth": 1000,"yRange":[0.9, 1.5]}
                     
                 }
             }
