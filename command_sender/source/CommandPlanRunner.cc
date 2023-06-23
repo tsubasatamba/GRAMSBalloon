@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 {
     if (argc != 2)
     {
-        std::cout << "Usage: grams_command_sender <command-plan>" << std::endl;
+        std::cout << "Usage: CommandPlanRunner <command-plan>" << std::endl;
         return 1;
     }
     const std::string filename(argv[1]);
@@ -153,6 +153,8 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
             continue;
         }
         print_command(commands, run_index);
+        std::vector<std::string> completion_candidate = {"send", "back", "skip", "exit", "goto"};
+        reader.set_completion_candidates(completion_candidate);
         const int count = reader.read("INPUT> ");
         std::cout << std::endl;
         const std::string line = reader.str();
@@ -187,6 +189,29 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
             }
             continue;
         }
+        else if (line == "goto")
+        {
+            std::cout << "Where do you want to go?" << std::endl;
+            reader.read("INPUT>");
+            const std::string destination_str = reader.str();
+            const int destination = atoi(destination_str.c_str());
+            if (destination > commands.size() || destination < 0)
+            {
+                std::cout << "Invalid value" << std::endl;
+                continue;
+            }
+            if (commands[destination][0][0] == '#')
+            {
+                std::cout << "This line is comment" << std::endl;
+                continue;
+            }
+            else
+            {
+                std::cout << "Go to line " << destination << std::endl;
+                run_index = destination;
+                continue;
+            }
+        }
         else if (line == "skip")
         {
             std::cout << "Skipped line " << run_index << std::endl;
@@ -196,6 +221,7 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
         else
         {
             std::cout << "Error: invalid input." << std::endl;
+            continue;
         }
     }
 }
@@ -223,8 +249,8 @@ void send_command(const std::vector<std::vector<std::string>> &commands, int run
     }
     else
     {
-        std::cout << "Command " << commands[run_index][0] <<"sent." << std::endl;
+        std::cout << "Command " << commands[run_index][0] << "sent." << std::endl;
+        write_command(command_bits, commands[run_index][0]);
     }
     sender.close_serial_port();
-    write_command(command_bits, commands[run_index][0]);
 }
