@@ -72,6 +72,7 @@ void PushToMongoDB::pushHKTelemetry()
     const std::string section_name = "Detector";
     auto section = bsoncxx::builder::stream::document{}
       << "Event_Count"                  << static_cast<int>(telemdef->EventCount())
+      << "Event_Rate"                   << telemdef->EventRate()
       << "Current_EventID"              << static_cast<int>(telemdef->CurrentEventID())
       << "Chamber_Pressure"             << static_cast<int>(telemdef->ChamberPressure())
       << "Chamber_Temperature_1"        << static_cast<int>(telemdef->ChamberTemperature(0))
