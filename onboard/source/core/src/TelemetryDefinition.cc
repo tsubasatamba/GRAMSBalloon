@@ -332,6 +332,16 @@ void TelemetryDefinition::interpretHK()
   softwareErrorCode_ = getValue<uint64_t>(118);
   crc_ = getValue<uint16_t>(126);
   stopCode_ = getValue<uint32_t>(128);
+
+  const double dt = (timeNow_.tv_sec - prevTime_.tv_sec) + (timeNow_.tv_usec - prevTime_.tv_usec) * 1E-6;
+  const int dn = eventCount_ - prevEventCount_;
+  eventRate_ = 0.0;
+  const double eps = 1E-9;
+  if (dt>eps) {
+    eventRate_ = dn/dt;
+  }
+  prevTime_ = timeNow_;
+  prevEventCount_ = eventCount_;
 }
 
 void TelemetryDefinition::interpretWF()
