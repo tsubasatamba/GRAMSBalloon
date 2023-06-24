@@ -210,7 +210,7 @@ def run(telemetry_key: str, filenames: list[str]) -> None:
         if i >= len(binary) - 1:
             break
         if binary[i] == 0xeb and binary[i + 1] == 0x90:
-            x.append(int.from_bytes(binary[i + tel["recieve_time_sec"].start_index:i + tel["recieve_time_sec"].end_index], 'big', signed=tel["recieve_time_sec"].signed))
+            x.append(int.from_bytes(binary[i + tel["receive_time_sec"].start_index:i + tel["receive_time_sec"].end_index], 'big', signed=tel["receive_time_sec"].signed))
             if VERVOSE >= 1:
                 print(f"x[{i}]: {x[-1]}")
             y.append(int.from_bytes(binary[i + tel[telemetry_key].start_index: i + tel[telemetry_key].end_index], "big", signed=tel[telemetry_key].signed))

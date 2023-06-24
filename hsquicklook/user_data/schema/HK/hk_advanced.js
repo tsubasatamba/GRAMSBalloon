@@ -175,7 +175,6 @@ HSQuickLook.main.schema =
                     "type": "trend-graph",
                     "group":[
                         {"source": "Chamber_Pressure","conversion":convert_Chamber_Pressure,"options":{"legend":"Chamber","color":"red"}},
-                        {"source": "HK_Pressure_3","conversion": function (v) { return v / 100.0 / 1013.25; },"options":{"legend":"HK_Upper","color":"green"}},
                     ],
                     "options":{"xWidth": 1000,"yRange":[0.9, 1.5]}
                     
