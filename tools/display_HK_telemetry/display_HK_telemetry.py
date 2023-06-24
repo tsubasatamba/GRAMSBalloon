@@ -189,7 +189,7 @@ def read_binary(filename: List[str]) -> bytes:
     return binary
 
 
-def run(telemetry_key: str, filenames: list[str]) -> None:
+def run(telemetry_keys: List[str], filenames: list[str], x_key: str = "receive_time_sec") -> None:
     runID = filenames[0].split("_")[1]
 
     if VERVOSE >= 2:
@@ -199,35 +199,37 @@ def run(telemetry_key: str, filenames: list[str]) -> None:
         raise ValueError(
             f"Telemetry length is inconsisttent with the files\nFile bytes: {len(binary)}\nTELEMETRY_LENGTH: {TELEMETRY_LENGTH}")
     tel = create_telemetry_definition()
-    if telemetry_key not in tel.keys():
+    if telemetry_keys not in tel.keys():
         raise ValueError("Invalid telemetry code")
     i = 0
     x: List[int] = []
-    y: List[int] = []
+    y: List[List[int]] = [[] for i in range(len(telemetry_keys))]
     while 1:
         if VERVOSE >= 2:
             print(f"loop: {i}")
         if i >= len(binary) - 1:
             break
         if binary[i] == 0xeb and binary[i + 1] == 0x90:
-            x.append(int.from_bytes(binary[i + tel["recieve_time_sec"].start_index:i + tel["recieve_time_sec"].end_index], 'big', signed=tel["recieve_time_sec"].signed))
+            x.append(int.from_bytes(binary[i + tel[x_key].start_index:i + tel[x_key].end_index], 'big', signed=tel[x_key].signed))
             if VERVOSE >= 1:
                 print(f"x[{i}]: {x[-1]}")
-            y.append(int.from_bytes(binary[i + tel[telemetry_key].start_index: i + tel[telemetry_key].end_index], "big", signed=tel[telemetry_key].signed))
-            if VERVOSE >= 1:
-                print(f"y[{i}]: {y[-1]}")
+            for j in range(len(telemetry_keys)):
+                y[j].append(tel[telemetry_keys[j]].func(int.from_bytes(binary[i + tel[telemetry_keys[j]].start_index: i + tel[telemetry_keys[j]].end_index], "big", signed=tel[telemetry_keys[j]].signed)))
+                if VERVOSE >= 1:
+                    print(f"y[{j}]: {y[j][-1]}")
             i += TELEMETRY_LENGTH
         else:
             i += 1
 
     x_arr = (np.array(x, dtype=float) - x[0])
-    y_arr = np.array(list(map(tel[telemetry_key].func, y)))
+    y_arr = np.array(list(map(tel[telemetry_keys[i]].func, y)))
     fig = plt.figure(1, figsize=(6.4, 4.8))
-    ax = fig.add_subplot(111, xlabel="Time [s]", ylabel=f"{telemetry_key}")
-    ax.plot(x_arr, y_arr)
-    if tel[telemetry_key].show_limit is not None:
-        ax.set_ylim(*tel[telemetry_key].show_limit)
-    fig.savefig(f"telemetry_{runID}_{telemetry_key}.png")
+    ax = fig.add_subplot(111, xlabel=x_key)
+    for i in range(len(telemetry_keys)):
+        ax.plot(x_arr, y_arr)
+        if tel[telemetry_keys[i]].show_limit is not None:
+            ax.set_ylim(tel[telemetry_keys[i]].show_limit[0], tel[telemetry_keys[i]].show_limit[1])
+    fig.savefig(f"telemetry_{runID}_{telemetry_keys}.png")
     plt.show()
 
 
