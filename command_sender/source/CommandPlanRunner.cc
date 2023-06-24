@@ -114,7 +114,11 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
         {
             com_args.push_back(temp);
         }
-        if (com_args[0][0] != '#')
+        if (com_args.size() == 0)
+        {
+            continue;
+        }
+        else if ((com_args[0][0] != '#'))
         {
             try
             {
@@ -146,6 +150,11 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
         if (run_index >= commands.size())
         {
             break;
+        }
+        if (commands[run_index].size() == 0)
+        {
+            run_index++;
+            continue;
         }
         if (commands[run_index][0][0] == '#')
         {
@@ -179,7 +188,11 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
                     std::cout << "Can't back anymore" << std::endl;
                     break;
                 }
-                if (commands[i - 1][0][0] != '#')
+                if (commands[i - 1].size() == 0)
+                {
+                    i--;
+                }
+                else if (commands[i - 1][0][0] != '#')
                 {
                     run_index = i - 1;
                     break;
@@ -200,7 +213,12 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
                 std::cout << "Invalid value" << std::endl;
                 continue;
             }
-            if (commands[destination][0][0] == '#')
+            if (commands[destination].size() == 0)
+            {
+                std::cout << "This line is blank" << std::endl;
+                continue;
+            }
+            else if (commands[destination][0][0] == '#')
             {
                 std::cout << "This line is comment" << std::endl;
                 continue;
@@ -249,7 +267,7 @@ void send_command(const std::vector<std::vector<std::string>> &commands, int run
     }
     else
     {
-        std::cout << "Command " << commands[run_index][0] << "sent." << std::endl;
+        std::cout << "Command " << commands[run_index][0] << " sent." << std::endl;
         write_command(command_bits, commands[run_index][0]);
     }
     sender.close_serial_port();
