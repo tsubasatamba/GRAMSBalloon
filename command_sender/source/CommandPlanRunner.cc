@@ -25,8 +25,8 @@ void run_command_sequence(const std::vector<std::vector<std::string>> &commands)
 
 void send_command(const std::vector<std::vector<std::string>> &commands, int run_index);
 
-const int DISPLAY_NUMBER_PREVIOUS = 2;
-const int DISPLAY_NUMBER_ADVANCE = 10;
+const int DISPLAY_NUMBER_PREVIOUS = 10;
+const int DISPLAY_NUMBER_ADVANCE = 30;
 
 int main(int argc, char **argv)
 {
