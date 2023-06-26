@@ -19,7 +19,7 @@
 
 using namespace gramsballoon;
 
-void print_command(const std::vector<std::string> commands, int run_index);
+void print_command(const std::vector<std::string>& commands, int run_index);
 std::vector<std::vector<std::string>> read_command_plan(const std::string &filename);
 void run_command_sequence(const std::vector<std::vector<std::string>> &commands);
 
@@ -30,8 +30,7 @@ const int DISPLAY_NUMBER_ADVANCE = 30;
 
 int main(int argc, char **argv)
 {
-  if (argc != 2)
-  {
+  if (argc != 2) {
     std::cout << "Usage: CommandPlanRunner <command-plan>" << std::endl;
     return 1;
   }
@@ -42,7 +41,7 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void print_command(const std::vector<std::vector<std::string>> commands, int run_index)
+void print_command(const std::vector<std::vector<std::string>>& commands, int run_index)
 {
   int disp_num_prev = std::min(DISPLAY_NUMBER_PREVIOUS, run_index);
   int disp_num_adv = std::min(static_cast<int>(commands.size()) - run_index, DISPLAY_NUMBER_ADVANCE);
@@ -224,6 +223,7 @@ void send_command(const std::vector<std::vector<std::string>> &commands, int run
   std::vector<uint8_t> command_bits = builder.make_byte_array(commands[run_index][0], args);
   CommandSender sender;
   sender.set_serial_port("/dev/tty.usbserial-14410");
+  //sender.set_serial_port("/dev/ttyAMA0");
   if (!sender.open_serial_port()) {
     std::cout << "Serial port open error -> Skip" << std::endl;
     return;
