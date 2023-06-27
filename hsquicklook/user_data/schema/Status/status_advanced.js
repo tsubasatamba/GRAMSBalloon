@@ -30,7 +30,7 @@ HSQuickLook.main.schema =
                     },
                     "status": function (v) { return (v == "Invalid") ? "error" : "safe"; }
                 },
-                "Trigger_Mode_slope": {
+                "Trigger_Mode_Slope": {
                     "source": "Trigger_Mode", "type": "string", "conversion": function (v) {
                         var slope = (v & 0b11110000)>>4
                         return (slope == 0) ? "Rise" : (slope == 1) ? "Fall" : (slope == 2) ? "Either" : "Invalid";
@@ -52,8 +52,8 @@ HSQuickLook.main.schema =
                 "ADC_Range_3": { "type": "float", "format": "%7.3f V" },
                 "ADC_Range_4": { "type": "float", "format": "%7.3f V" },
                 "DAQ_In_Progress": { "type": "string", "conversion": function (v) { return (v == 1) ? "True" : "False"; }, "status": function (v) { return (v == "True") ? "safe" : "error" } },
-                "TPC_HV_Upper_Limit": {"type": "double", "format": "%7.3f V"},
-                "PMT_HV_Upper_Limit": {"type": "double", "format": "%7.3f V"},
+                "TPC_Control_Voltage_Upper_Limit": {"type": "double", "format": "%7.3f V", "source": "TPC_HV_Upper_Limit"},
+                "PMT_Control_Voltage_Upper_Limit": {"type": "double", "format": "%7.3f V", "source": "PMT_HV_Upper_Limit"},
                 "SD_Capacity": { "type": "float", "format": "%7.3f GB", "source": "SD_Capacity", "status": function (v) { return (v < 100) ? "error" : (v < 200) ? "warning" : "safe"; } }
             }
         },
