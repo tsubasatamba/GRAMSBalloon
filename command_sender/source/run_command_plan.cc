@@ -107,7 +107,8 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
       com_args.push_back(temp);
     }
     if (com_args.size() == 0) {
-      continue;
+      com_args.push_back("#####");
+      //continue;
     }
     else if ((com_args[0][0] != '#')) {
       try {

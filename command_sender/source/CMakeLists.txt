@@ -55,9 +55,9 @@ link_directories(
 add_executable(send_command send_command.cc CommandSender.cc CommandBuilder.cc CommandSaver.cc)
 target_link_libraries(send_command ${BOOST_LIB})
 add_executable(dump_command dump_command.cc CommandBuilder.cc)
-add_executable(command_plan_runner CommandPlanRunner.cc CommandSender.cc CommandBuilder.cc CommandSaver.cc)
+add_executable(run_command_plan run_command_plan.cc CommandSender.cc CommandBuilder.cc CommandSaver.cc)
 
-target_link_libraries(command_plan_runner
+target_link_libraries(run_command_plan
   ${Boost_LIBRARIES}
   ${READLINE_LIB}
   ${ANLNEXT_LIB}
