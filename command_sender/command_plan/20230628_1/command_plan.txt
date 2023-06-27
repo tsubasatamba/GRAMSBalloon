@@ -45,7 +45,7 @@ exec_tpc_hv_output
 ### AMP ON (DC only)
 
 ### Waveform
-get_weaveform
+get_waveform
 
 ### Change trigger setup
 set_trigger_mode 2
