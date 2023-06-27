@@ -23,10 +23,10 @@ def get_filenames(run_id):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--run_ids", nargs='*', type=int)
-    parser.add_argument("-y", nargs='*')
-    parser.add_argument("-x", nargs=1, default="receive_time", help="X axis")
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("-i", "--run_ids", nargs='*', type=int)
+    # parser.add_argument("-y", nargs='*')
+    # parser.add_argument("-x", nargs=1, default="receive_time", help="X axis")
     if len(sys.argv) < 3:
         raise ValueError("USAGE: ./display_HK_telemetry_all.py telemetry_key run_ID_1 run_ID_2 ...")
     telemetry_key = sys.argv[1]

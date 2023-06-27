@@ -199,7 +199,7 @@ def run(telemetry_keys: List[str], filenames: list[str], x_key: str = "receive_t
         raise ValueError(
             f"Telemetry length is inconsisttent with the files\nFile bytes: {len(binary)}\nTELEMETRY_LENGTH: {TELEMETRY_LENGTH}")
     tel = create_telemetry_definition()
-    if telemetry_keys not in tel.keys():
+    if set(telemetry_keys) <= set(tel.keys()):
         raise ValueError("Invalid telemetry code")
     i = 0
     x: List[int] = []
@@ -236,7 +236,7 @@ def run(telemetry_keys: List[str], filenames: list[str], x_key: str = "receive_t
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         raise ValueError("The arguments must be larger than 2.")
-    run(sys.argv[1], sys.argv[2:])
+    run([sys.argv[1]], sys.argv[2:])
 
 
 def convert_chamber_pressure(v: float) -> float:
