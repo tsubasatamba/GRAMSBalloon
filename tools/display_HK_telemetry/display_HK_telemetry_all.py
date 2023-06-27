@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
-from display_HK_telemetry import Telmetry_Definition, run
+from display_HK_telemetry import run, Telmetry_Definition
 import os
 import glob
 import argparse
 
 
-def get_filename_id(filename) -> int:
+def get_filename_id(filename: str) -> int:
     id_str = filename.split("_")[-1].replace(".dat", "")
     return int(id_str)
 
 
-def get_filenames(run_id) -> list[str]:
+def get_filenames(run_id: int) -> list[str]:
     arr = []
     dirname = os.environ['HOME'] + "/data/telemetry/"
     run_id_str = '{:0=6}'.format(run_id)
@@ -25,17 +25,21 @@ def get_filenames(run_id) -> list[str]:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("y", nargs=1, help="telemetry key of y axis")
-    parser.add_argument("run_ids", nargs='*', type=int, help="runIDs")
+    parser.add_argument("y", nargs=1, help="Telemetry key of y axis. You can also choise a group.", type=str)
+    parser.add_argument("run_ids", nargs='*', type=int, help="RunIDs")
     # group.add_argument("-ir", "--run_id_range", nargs=2, type=int, help="runID range")
-    parser.add_argument("-x", nargs=1, default="receive_time", help="telemetry key of x axis")
+    parser.add_argument("-x", nargs=1, default="receive_time", help="Telemetry key of x axis.")
 
     args = parser.parse_args()
-
+    tel = Telmetry_Definition()
+    if args.y[0] in tel.keys():
+        telemetry_keys = args.y
+    else:
+        telemetry_keys = list(tel.groups[args.y[0]])
     filenames = []
     for run_id in args.run_ids:
         arr = get_filenames(run_id)
         for s in arr:
             filenames.append(s)
     print(filenames)
-    run(args.telemetry_keys, filenames, args.x)
+    run(telemetry_keys, filenames, args.x)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import matplotlib.pyplot as plt
-from typing import Callable, Optional, Any, Iterable
+from typing import Callable, Optional, Any, Iterable, Union
 import sys
 import numpy as np
 
@@ -32,8 +32,8 @@ class Telemetry_Property:
     def groups(self) -> set[str]:
         return self.__groups
 
-    def append_groups(self, groups: Iterable[str]) -> None:
-        self.__groups |= set(groups)
+    def append_group(self, group: str) -> None:
+        self.__groups.add(group)
 
     @property
     def length(self) -> int:
@@ -63,7 +63,7 @@ class Telmetry_Definition():
             4, 2, False, lambda x: x, )
         self.telemetry_definition["time_sec"] = Telemetry_Property(
             6, 4, True, lambda x: x, )
-        self.telemetry_definition["tiem_usec"] = Telemetry_Property(
+        self.telemetry_definition["time_usec"] = Telemetry_Property(
             10, 4, True, lambda x: x,)
         self.telemetry_definition["telemetry_index"] = Telemetry_Property(
             14, 4, False, lambda x: x,)
@@ -182,6 +182,13 @@ class Telmetry_Definition():
             136, 4, True)
 
         self.groups: dict[str, set[str]] = {}
+        self.add_group("time_sec", ["time_sec", "receive_time_sec"])
+        self.add_group("time_usec", ["time_usec", "receive_time_usec"])
+        self.add_group("chamber_temperature", ["chamber_temperature_1", "chamber_temperature_2", "chamber_temperature_3"])
+        self.add_group("pressure", ["chamber_pressure", "hk_pressure_3", "hk_pressure_4", "hk_pressure_5"])
+        self.add_group("hk_pressure", ["hk_pressure_3", "hk_pressure_4", "hk_pressure_5"])
+        self.add_group("hk_temperature", ["hk_temperature_3", "hk_temperature_4", "hk_temperature_5"])
+        self.add_group("temperature", ["chamber_temperature_1", "chamber_temperature_2", "chamber_temperature_3", "outer_temperature", "valve_temperature", "hk_temperature_3", "hk_temperature_4", "hk_temperature_5"])
 
     def __getitem__(self, index: str) -> Telemetry_Property:
         return self.telemetry_definition[index]
@@ -189,11 +196,35 @@ class Telmetry_Definition():
     def keys(self) -> Any:
         return self.telemetry_definition.keys()
 
-    def add_group(self, keys: Iterable[str], groups: Iterable[str] | str) -> None:
+    def add_group(self, groups: Union[Iterable[str], str], keys: Union[Iterable[str], str]) -> None:
         if isinstance(groups, str):
-            groups = [groups]
+            groups = {groups, }
+        if isinstance(keys, str):
+            keys = {keys, }
         for key in keys:
-            self.telemetry_definition[key].append_groups(groups)
+            if key not in self.telemetry_definition.keys():
+                raise KeyError("Invalid telemetry key: " + key)
+            for group in groups:
+                self.telemetry_definition[key].append_group(group)
+                if group in self.groups.keys():
+                    self.groups[group].add(key)
+                else:
+                    self.groups[group] = {key}
+
+    def get_group_show_limit(self, group: str) -> tuple[Optional[float], Optional[float]]:
+        minimum: float | None = None
+        maximum: float | None = None
+        for key in self.groups[group]:
+            if self.telemetry_definition[key].show_limit is not None:
+                if minimum is None:
+                    minimum = self.telemetry_definition[key].show_limit[0]
+                else:
+                    minimum = min((minimum, self.telemetry_definition[key].show_limit[0]))
+                if maximum is None:
+                    maximum = self.telemetry_definition[key].show_limit[1]
+                else:
+                    maximum = max((maximum, self.telemetry_definition[key].show_limit[1]))
+        return minimum, maximum
 
 
 def read_binary(filename: list[str]) -> bytes:
@@ -211,7 +242,7 @@ def read_binary(filename: list[str]) -> bytes:
     return binary
 
 
-def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec") -> None:
+def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None)) -> None:
     runID = filenames[0].split("_")[1]
 
     if VERVOSE >= 2:
@@ -249,7 +280,8 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
     ax = fig.add_subplot(111, xlabel=x_key)
     for i in range(len(telemetry_keys)):
         ax.plot(x_arr, y_arr)
-        ax.set_ylim(*tel[telemetry_keys[i]].show_limit)
+        if show_limit is not None:
+            ax.set_ylim(*show_limit)
     fig.savefig(f"telemetry_{runID}_{telemetry_keys}.png")
     plt.show()
 
