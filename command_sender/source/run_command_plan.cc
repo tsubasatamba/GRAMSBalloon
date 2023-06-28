@@ -203,7 +203,8 @@ void send_command(const std::vector<std::string>& command)
   std::vector<uint8_t> command_byte_array = builder.make_byte_array(command_name, arg_array);
 
   CommandSender sender;
-  sender.set_serial_port("/dev/tty.usbserial-14410");
+  //sender.set_serial_port("/dev/tty.usbserial-14410");
+  sender.set_serial_port("/dev/ttyAMA0");
   if ( !sender.open_serial_port() ) {
     std::cout << "Serial port open error -> Skip" << std::endl;
     return;
