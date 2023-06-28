@@ -8,10 +8,9 @@
 
 #include <vector>
 #include <string>
-#include <sstream>
 #include <istream>
 #include <fstream>
-#include <iomanip>
+#include <sstream>
 #include <anlnext/CLIUtility.hh>
 #include "CommandSender.hh"
 #include "CommandBuilder.hh"
@@ -19,21 +18,23 @@
 
 using namespace gramsballoon;
 
-void print_command(const std::vector<std::string>& commands, int run_index);
-std::vector<std::vector<std::string>> read_command_plan(const std::string &filename);
-void run_command_sequence(const std::vector<std::vector<std::string>> &commands);
+void print_command(const std::vector<std::string>& commands, int run_index, bool all_lines=false);
+std::vector<std::vector<std::string>> read_command_plan(const std::string& filename);
+void run_command_sequence(const std::vector<std::vector<std::string>>& commands);
+void send_command(const std::vector<std::string>& command);
+void print_help();
 
-void send_command(const std::vector<std::vector<std::string>> &commands, int run_index);
+constexpr int DISPLAY_NUMBER_BEFORE = 8;
+constexpr int DISPLAY_NUMBER_AFTER  = 12;
 
-const int DISPLAY_NUMBER_PREVIOUS = 10;
-const int DISPLAY_NUMBER_ADVANCE = 30;
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   if (argc != 2) {
     std::cout << "Usage: CommandPlanRunner <command-plan>" << std::endl;
     return 1;
   }
+
   const std::string filename(argv[1]);
   const std::vector<std::vector<std::string>> commands = read_command_plan(filename);
   run_command_sequence(commands);
@@ -41,59 +42,28 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void print_command(const std::vector<std::vector<std::string>>& commands, int run_index)
+void print_command(const std::vector<std::vector<std::string>>& commands, int run_index, bool all_lines=false)
 {
-  int disp_num_prev = std::min(DISPLAY_NUMBER_PREVIOUS, run_index);
-  int disp_num_adv = std::min(static_cast<int>(commands.size()) - run_index, DISPLAY_NUMBER_ADVANCE);
-  std::cout << "\n\n#############################################"
-            << "\nlines command" << std::endl;
-  for (int i = 0; i < DISPLAY_NUMBER_PREVIOUS - disp_num_prev; i++) {
-    std::cout << "\n";
-  }
-  for (int i = disp_num_prev; i > 0; i--) {
-    std::cout << std::setfill('0') << std::right << std::setw(3) << run_index - i << std::setfill(' ') << "   ";
-    if (commands[run_index - i][0][0] == '#') {
-      std::cout << "\x1b[40m";
-    }
-    for (int j = 0; j < commands[run_index - i].size(); j++) {
-      std::cout << commands[run_index - i][j] << " ";
-    }
-    if (commands[run_index - i][0][0] == '#') {
-      std::cout << "\x1b[49m";
-    }
-    std::cout << std::endl;
-  }
+  std::cout << "\n\n"
+            << "#############################################\n";
 
-  std::cout << std::setfill('0') << std::right << std::setw(3) << run_index << std::setfill(' ') << "   ";
-  std::cout << "\x1b[42m";
-  for (int i = 0; i < commands[run_index].size(); i++) {
-    std::cout << commands[run_index][i] << " ";
-  }
-  std::cout << "\x1b[49m"
-            << " <=" << std::endl;
-
-  for (int i = 1; i < disp_num_adv; i++) {
-    std::cout << std::setfill('0') << std::right << std::setw(3) << run_index + i << std::setfill(' ') << "   ";
-    for (int j = 0; j < commands[run_index + i].size(); j++) {
-      std::cout << commands[run_index + i][j] << " ";
-    }
-    std::cout << std::endl;
-  }
-
-  if (DISPLAY_NUMBER_ADVANCE > disp_num_adv) {
-    std::cout << "\x1b[41m"
-              << "EOF"
-              << "\x1b[49m";
-    for (int i = 0; i < DISPLAY_NUMBER_ADVANCE - disp_num_adv; i++) {
-      std::cout << "\n";
+  for (int line_index=0; line_index<commands.size(); line_index++) {
+    if (all_lines || (run_index-DISPLAY_NUMBER_BEFORE <= line_index && line_index <= run_index+DISPLAY_NUMBER_AFTER)) {
+      std::cout << std::setfill('0') << std::right << std::setw(3) << line_index << std::setfill(' ') << "   ";
+      if (line_index==run_index) { std::cout << "\x1b[42m"; }
+      for (const auto& s: commands[line_index]) {
+        std::cout << s << " ";
+      }
+      if (line_index==run_index) { std::cout << "\x1b[49m"; }
+      std::cout << std::endl;
     }
   }
 
-  std::cout << "#############################################\n\n"
+  std::cout << "#############################################\n"
             << std::endl;
 }
 
-std::vector<std::vector<std::string>> read_command_plan(const std::string &filename)
+std::vector<std::vector<std::string>> read_command_plan(const std::string& filename)
 {
   CommandBuilder builder;
   std::vector<std::vector<std::string>> commands;
@@ -114,7 +84,7 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
       try {
         builder.get_command_property(com_args[0]);
       }
-      catch (CommandException &e) {
+      catch (CommandException& e) {
         std::cout << "Command exception caught: " << e.print() << " in " << com_args[0] << " <- Exit" << std::endl;
         exit(1);
       }
@@ -131,34 +101,46 @@ std::vector<std::vector<std::string>> read_command_plan(const std::string &filen
 
 void run_command_sequence(const std::vector<std::vector<std::string>>& commands)
 {
+  print_command(commands, -1, true);
+
   anlnext::ReadLine reader;
-  int run_index = 0;
-  const std::vector<std::string> completion_candidate = {"send", "back", "skip", "exit", "goto"};
+  const std::vector<std::string> completion_candidate = {"send", "back", "skip", "exit", "goto", "help"};
   reader.set_completion_candidates(completion_candidate);
+
+  int run_index = 0;
+  bool print_flag = true;
+
   while (true) {
     if (run_index >= static_cast<int>(commands.size())) {
       break;
     }
-    if (commands[run_index].size() == 0) {
+    if (commands[run_index].size() == 0 || commands[run_index][0][0] == '#') {
       run_index++;
       continue;
     }
-    if (commands[run_index][0][0] == '#') {
-      run_index++;
-      continue;
+
+    if (print_flag) {
+      print_command(commands, run_index);
+      print_flag = false;
     }
-    print_command(commands, run_index);
+
     const int count = reader.read("INPUT> ");
-    std::cout << std::endl;
     const std::string line = reader.str();
-    if (line == "send") {
-      send_command(commands, run_index);
-      run_index++;
-      continue;
+    if (line == "") {
+      ;
     }
-    else if (line == "exit") {
-      std::cout << "Exiting the command sender." << std::endl;
-      break;
+    else if (line == "help") {
+      print_help();
+    }
+    else if (line == "send") {
+      send_command(commands[run_index]);
+      run_index++;
+      print_flag = true;
+    }
+    else if (line == "skip") {
+      std::cout << "Skipped line " << run_index << std::endl;
+      run_index++;
+      print_flag = true;
     }
     else if (line == "back") {
       int i = run_index;
@@ -177,7 +159,7 @@ void run_command_sequence(const std::vector<std::vector<std::string>>& commands)
         run_index = i;
         break;
       }
-      continue;
+      print_flag = true;
     }
     else if (line == "goto") {
       std::cout << "Which line do you want to go?" << std::endl;
@@ -186,56 +168,71 @@ void run_command_sequence(const std::vector<std::vector<std::string>>& commands)
       const int destination = std::stoi(destination_str);
       if (destination >= commands.size() || destination < 0) {
         std::cout << "Invalid value" << std::endl;
-        continue;
       }
-      if (commands[destination].size() == 0) {
+      else if (commands[destination].size() == 0) {
         std::cout << "This line is blank" << std::endl;
-        continue;
       }
       else if (commands[destination][0][0] == '#') {
         std::cout << "This line is comment" << std::endl;
-        continue;
       }
       else {
         std::cout << "Go to line " << destination << std::endl;
         run_index = destination;
-        continue;
+        print_flag = true;
       }
     }
-    else if (line == "skip") {
-      std::cout << "Skipped line " << run_index << std::endl;
-      run_index++;
-      continue;
+    else if (line == "exit") {
+      std::cout << "Exiting the command sender." << std::endl;
+      break;
     }
     else {
       std::cout << "Error: invalid input." << std::endl;
-      continue;
     }
   }
 }
 
-void send_command(const std::vector<std::vector<std::string>> &commands, int run_index)
+void send_command(const std::vector<std::string>& command)
 {
-  CommandBuilder builder;
-  std::vector<int> args;
-  for (int i = 1; i < static_cast<int>(commands[run_index].size()); i++) {
-    args.push_back(std::stoi(commands[run_index][i]));
+  const std::string command_name = command[0];
+  std::vector<int> arg_array;
+  for (std::size_t i=1; i<command.size(); i++) {
+    arg_array.push_back(std::stoi(command[i]));
   }
-  std::vector<uint8_t> command_bits = builder.make_byte_array(commands[run_index][0], args);
+
+  CommandBuilder builder;
+  std::vector<uint8_t> command_byte_array = builder.make_byte_array(command_name, arg_array);
+
   CommandSender sender;
   sender.set_serial_port("/dev/tty.usbserial-14410");
-  //sender.set_serial_port("/dev/ttyAMA0");
-  if (!sender.open_serial_port()) {
+  if ( !sender.open_serial_port() ) {
     std::cout << "Serial port open error -> Skip" << std::endl;
     return;
   }
-  int rval = sender.send(command_bits);
-  if (rval != command_bits.size()) {
+
+  int rval = sender.send(command_byte_array);
+  if (rval != command_byte_array.size()) {
     std::cout << "Send Error" << std::endl;
   }
   else {
-    std::cout << "Command " << commands[run_index][0] << " sent." << std::endl;
-    write_command(command_bits, commands[run_index][0]);
+    std::cout << "Command " << command_name << " sent." << std::endl;
+    write_command(command_byte_array, command_name);
   }
+
   sender.close_serial_port();
+}
+
+void print_help()
+{
+  std::cout << "\n"
+            << "#### HELP ####\n"
+            << "#\n"
+            << "# send \n"
+            << "# skip \n"
+            << "# back \n"
+            << "# goto <N> \n"
+            << "# exit \n"
+            << "# help \n"
+            << "# \n"
+            << "##############\n"
+            << std::endl;
 }
