@@ -3,7 +3,9 @@
 import pathlib
 from display_HK_telemetry import create_telemetry_definition, TELEMETRY_LENGTH
 import sys
-VERBOSE = 2
+VERBOSE = 3
+if VERBOSE >= 2:
+    import matplotlib.pyplot as plt
 
 
 def current_time(dirname: str, runID: int, ) -> float:
@@ -17,6 +19,15 @@ def current_time(dirname: str, runID: int, ) -> float:
     index = 0
     current_time = 0
     t_previous = None
+
+    if VERBOSE >= 2:
+        current_time_arr = []
+        time_arr = []
+        current_arr = []
+        fig = plt.figure()
+        ax = fig.add_subplot(111, xlabel="time[s]", ylabel="Current_time[As]")
+        ax2 = ax.twinx()
+        ax2.set_ylabel("Current[A]")
     while 1:
         if VERBOSE >= 2:
             print(f"loop: {index}")
@@ -34,10 +45,18 @@ def current_time(dirname: str, runID: int, ) -> float:
             current_time += current * (t - t_previous)
             t_previous = t
             if VERBOSE >= 2:
-                print(f"Current time: {current_time}")
+                print(f"Current time: {current_time} As")
+                current_time_arr.append(current_time)
+                current_arr.append(current)
+                time_arr.append(t)
+                print(f"Current time: {current_time/60/60} Ah")
             index += TELEMETRY_LENGTH
         else:
             index += 1
+    if VERBOSE >= 2:
+        ax.plot(time_arr, current_time_arr, c="red")
+        ax2.plot(time_arr, current_arr, c="blue")
+        plt.show()
     return current_time
 
 
