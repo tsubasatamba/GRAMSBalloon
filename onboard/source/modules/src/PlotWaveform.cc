@@ -86,14 +86,16 @@ void PlotWaveform::makeImage(std::vector<std::string>& image_filenames)
   TCanvas* canv1 = new TCanvas("c1", "c1", 1600, 1200);
   TCanvas* canv2 = new TCanvas("c2", "c2", 1600, 1200);
   canv1 -> Divide(2, 2);
+  const double ymin = -100.0;
+  const double ymax = 100.0;
   
   for (int i=0; i<num_channels; i++) {
     canv1->cd(i+1);
     histograms[i]->Draw("hist");
-    const double vmin = histograms[i]->GetMinimum();
-    const double vmax = histograms[i]->GetMaximum();
-    const double ymin = vmin - (vmax-vmin)/8.0;
-    const double ymax = vmax + (vmax-vmin)/8.0;
+    //const double vmin = histograms[i]->GetMinimum();
+    //const double vmax = histograms[i]->GetMaximum();
+    //const double ymin = vmin - (vmax-vmin)/8.0;
+    //const double ymax = vmax + (vmax-vmin)/8.0;
     histograms[i]->GetYaxis()->SetRangeUser(ymin, ymax);
     histograms[i]->GetXaxis()->SetTitle("Time (us)");
     histograms[i]->GetYaxis()->SetTitle("Voltage (mV)");
@@ -110,10 +112,10 @@ void PlotWaveform::makeImage(std::vector<std::string>& image_filenames)
   {
     canv2->cd();
     histograms[0]->Draw("hist");
-    const double vmin = histograms[0]->GetMinimum();
-    const double vmax = histograms[0]->GetMaximum();
-    const double ymin = vmin - (vmax-vmin)/8.0;
-    const double ymax = vmax + (vmax-vmin)/8.0;
+    //const double vmin = histograms[0]->GetMinimum();
+    //const double vmax = histograms[0]->GetMaximum();
+    //const double ymin = vmin - (vmax-vmin)/8.0;
+    //const double ymax = vmax + (vmax-vmin)/8.0;
     histograms[0]->GetYaxis()->SetRangeUser(ymin, ymax);
     histograms[0]->GetXaxis()->SetRangeUser(5.0, 20.0);
     histograms[0]->GetXaxis()->SetTitle("Time (us)");
