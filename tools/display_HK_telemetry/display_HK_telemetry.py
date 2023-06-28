@@ -118,19 +118,19 @@ class Telmetry_Definition():
             74, 2, False, lambda x: x, (0, 10))
         # telemetry_definition["hk_pressure_1"] = 76, 78, False, lambda x: x,
         self.telemetry_definition["hk_pressure_1"] = Telemetry_Property(
-            76, 2, False, lambda x: x / 1013.25, (0.9, 1.5))
+            76, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
         # telemetry_definition["hk_pressure_2"] = 78, 80, False, lambda x: x,
         self.telemetry_definition["hk_pressure_2"] = Telemetry_Property(
-            78, 2, False, lambda x: x / 1013.25, (0.9, 1.5))
+            78, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
         # telemetry_definition["hk_pressure_3"] = 80, 82, False, lambda x: x,
         self.telemetry_definition["hk_pressure_3"] = Telemetry_Property(
-            80, 2, False, lambda x: x / 1013.25, (0.9, 1.5))
+            80, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
         # telemetry_definition["hk_pressure_4"] = 82, 84, False, lambda x: x,
         self.telemetry_definition["hk_pressure_4"] = Telemetry_Property(
-            82, 2, False, lambda x: x / 1013.25, (0.9, 1.5))
+            82, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
         # telemetry_definition["hk_pressure_5"] = 84, 86, False, lambda x: x,
         self.telemetry_definition["hk_pressure_5"] = Telemetry_Property(
-            84, 2, False, lambda x: x / 1013.25, (0.9, 1.5))
+            84, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
         # telemetry_definition["acceleration_x"] = 86, 88, True, lambda x: x,
         self.telemetry_definition["acceleration_x"] = Telemetry_Property(86, 2, True)
         # telemetry_definition["acceleration_y"] = 88, 90, True, lambda x: x,
@@ -182,8 +182,8 @@ class Telmetry_Definition():
             136, 4, True)
 
         self.groups: dict[str, set[str]] = {}
-        self.add_group("time_sec", ["time_sec", "receive_time_sec"])
-        self.add_group("time_usec", ["time_usec", "receive_time_usec"])
+        self.add_group("sec", ["time_sec", "receive_time_sec"])
+        self.add_group("usec", ["time_usec", "receive_time_usec"])
         self.add_group("chamber_temperature", ["chamber_temperature_1", "chamber_temperature_2", "chamber_temperature_3"])
         self.add_group("pressure", ["chamber_pressure", "hk_pressure_3", "hk_pressure_4", "hk_pressure_5"])
         self.add_group("hk_pressure", ["hk_pressure_3", "hk_pressure_4", "hk_pressure_5"])
@@ -252,7 +252,7 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
         raise ValueError(
             f"Telemetry length is inconsisttent with the files\nFile bytes: {len(binary)}\nTELEMETRY_LENGTH: {TELEMETRY_LENGTH}")
     tel = Telmetry_Definition()
-    if set(telemetry_keys) <= set(tel.keys()):
+    if not set(telemetry_keys) <= set(tel.keys()):
         raise ValueError("Invalid telemetry code")
     i = 0
     x: list[int] = []
@@ -275,14 +275,14 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
             i += 1
 
     x_arr = (np.array(x, dtype=float) - x[0])
-    y_arr = np.array(list(map(tel[telemetry_keys[i]].func, y)))
     fig = plt.figure(1, figsize=(6.4, 4.8))
     ax = fig.add_subplot(111, xlabel=x_key)
     for i in range(len(telemetry_keys)):
-        ax.plot(x_arr, y_arr)
-        if show_limit is not None:
-            ax.set_ylim(*show_limit)
-    fig.savefig(f"telemetry_{runID}_{telemetry_keys}.png")
+        ax.plot(x_arr, y[i], label=telemetry_keys[i])
+    if show_limit is not None:
+        ax.set_ylim(*show_limit)
+    ax.legend()
+    fig.savefig(f"telemetry_{runID}_{telemetry_keys}.png".replace("[", "").replace("]", "").replace("'", ""))
     plt.show()
 
 
