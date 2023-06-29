@@ -243,8 +243,8 @@ void send_command(const std::vector<std::vector<std::string>> &commands,
   // sender.close_serial_port();
 
   std::string send_command_args = "./send_command ";
-  for (int i = 0; i < static_cast<int>(command.size()); i++) {
-    send_command_args += (command[i] + " ");
+  for (int i = 0; i < static_cast<int>(commands[run_index].size()); i++) {
+    send_command_args += (commands[run_index][i] + " ");
   }
   std::cout << send_command_args << std::endl;
   int ret = system(send_command_args.c_str());
@@ -252,6 +252,6 @@ void send_command(const std::vector<std::vector<std::string>> &commands,
   if (ret != 0) {
     std::cout << "Send error (code: " << ret << ")" << std::endl;
   } else {
-    std::cout << "Sent command " << command[0] << std::endl;
+    std::cout << "Sent command " << commands[run_index][0] << std::endl;
   }
 }
