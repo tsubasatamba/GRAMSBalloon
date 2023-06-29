@@ -177,7 +177,7 @@ HSQuickLook.main.schema =
                         {"source": "Chamber_Pressure","conversion":convert_Chamber_Pressure,"options":{"legend":"Chamber","color":"red"}},
                     ],
                     "options":{"xWidth": 1000,"yRange":[0.9, 1.5]}
-                    
+
                 }
             }
         }
@@ -207,7 +207,7 @@ var status_configuration = {
     "TPC_Current_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "PMT_High_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "PMT_High_Voltage_Setting_": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-    "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[50, 80]] },
+    "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[60, 80]] },
     "HK_Humidity": { "error_ranges": [[10, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "HK_Temperature": { "error_ranges": [[50, Infinity], [-Infinity, -20]], "warning_ranges": [[40, Infinity], [-Infinity, 0]] },
     "HK_Pressure": { "error_ranges": [[2000 / 1013.25, Infinity], [-Infinity, 800 / 1013.25]], "warning_ranges": [[1500 / 1013.25, Infinity], [-Infinity, 900 / 1013.25]] },

@@ -1,3 +1,5 @@
+var data_count = 0
+var previous_crc = 0
 HSQuickLook.main.schema =
     [
         {
@@ -37,6 +39,7 @@ HSQuickLook.main.schema =
 	          "section": "Footer",
 	          "contents": {
                 "CRC": {"type": "int"},
+                "Downloaded": { "type": "int", "format": "%d / 8", "source": "CRC", "conversion": count_downloaded_data},
                 "Stop_Code": {"type": "int", "format": "0x%04X"}
             }
         },
@@ -63,3 +66,15 @@ HSQuickLook.main.schema =
 
 
     ];
+
+function count_downloaded_data(v) {
+    if (data_count == 8) {
+        data_count = 0
+        return data_count
+    }
+    if (previous_crc != v) {
+        previous_crc = v
+        data_count++
+        return data_count
+    }
+    }
