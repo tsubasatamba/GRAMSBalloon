@@ -39,7 +39,7 @@ HSQuickLook.main.schema =
 	          "section": "Footer",
 	          "contents": {
                 "CRC": {"type": "int"},
-                "Downloaded": { "type": "int", "format": "%d / 8", "source": "CRC", "conversion": count_downloaded_data},
+                "Downloaded": { "type": "int", "source": "CRC", "conversion": count_downloaded_data},
                 "Stop_Code": {"type": "int", "format": "0x%04X"}
             }
         },
