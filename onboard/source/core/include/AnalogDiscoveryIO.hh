@@ -37,9 +37,9 @@ public:
 
   int NumDevices() { return numDevices_; }
   const std::vector<HDWF>& HandlerList() const { return handlerList_; }
-  
 
-  
+
+
 private:
   int numDevices_ = 0;
   std::vector<HDWF> handlerList_;
