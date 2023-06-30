@@ -1,7 +1,6 @@
 var Va = 5.026 //[V] for slow ADC
 var Rref = 430 //[ohm] for RTD measurement
 var Rshunt = 100 //[ohm] for Pressure gauge
-var error_TPC_measurement = 0.2
 
 
 //Global variables
@@ -43,7 +42,7 @@ HSQuickLook.main.schema =
                 "Chamber_Temperature_Lower": { "source": "Chamber_Temperature_3", "type": "float", "format": "%7.3f &deg;C", "conversion": convert_RTD_measure, "status": function (v) { return status_func("Chamber_Temperature", v); } },
                 "Valve_Temperature": { "type": "float", "format": "%7.3f &deg;C", "conversion": convert_RTD_measure, "status": function (v) { return status_func("Valve_Temperature", v); } },
                 "Outer_Temperature": { "type": "float", "format": "%7.3f &deg;C", "conversion": convert_RTD_measure, "status": function (v) { return status_func("Outer_Temperature", v); } },
-                "TPC_Control_Voltage_Setting": { "source": "TPC_High_Voltage_Setting", "type": "float", "format": "%7.3f V", "status": function (v) { return status_func("TPC_High_Voltage_Setting", v); } },
+                "TPC_Control_Voltage_Setting": { "source": "TPC_High_Voltage_Setting", "type": "float", "format": "%7.3f V",},
                 "TPC_High_Voltage_Setting": {
                     "source": "TPC_High_Voltage_Setting", "type": "float", "format": "%7.3f kV", "conversion": function (v) { return v * 2; },
                     "status": function (v) {
@@ -54,18 +53,13 @@ HSQuickLook.main.schema =
                 "TPC_High_Voltage_Measurement_ADC": { "source": "TPC_High_Voltage_Measurement", "type": "int" },
                 "TPC_High_Voltage_Measurement": {
                     "source": "TPC_High_Voltage_Measurement", "type": "float", "format": "%7.3f kV", "conversion": function (v) { return convert_Slow_ADC(v) * 4; },
-                    "status": function (v) {
-                        if ((TPC_setting - v) >= error_TPC_measurement) {
-                            return "error";
-                        }
-                        return "safe";
-                    }
+                    "status": function (v) { return status_func("TPC_High_Voltage_Setting", v); }
                 },
                 "TPC_Current_Measurement_ADC": { "source": "TPC_High_Voltage_Current_Measurement", "type": "int" },
                 "TPC_Current_Measurement": {
                     "type": "float", "format": "%7.3f &micro;A", "source": "TPC_High_Voltage_Current_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }, "status": function (v) { return status_func("TPC_Current_Measurement", v); }
                 },
-                "PMT_Control_Voltage_Setting": { "source": "PMT_High_Voltage_Setting", "type": "float", "format": "%7.3f V", "status": function (v) { return status_func("PMT_High_Voltage_Setting", v); } },
+                "PMT_Control_Voltage_Setting": { "source": "PMT_High_Voltage_Setting", "type": "float", "format": "%7.3f V",},
                 "PMT_High_Voltage_Setting": { "source": "PMT_High_Voltage_Setting", "type": "float", "format": "%7.0f V", "conversion": convert_PMT_control_voltage, "status": function (v) { return status_func("PMT_High_Voltage_Setting", v); } }
             }
         },
@@ -149,8 +143,8 @@ HSQuickLook.main.schema =
             "contents": {
                 "Last_Command_Index": { "type": "int", "status": "safe" },
                 "Last_Command_Code": { "type": "int" },
-                "Command_Reject_Count": { "type": "int", "status": function (v) { return (v > 0) ? "warning" : "safe"; } },
-                "Software_Error_Code": { "type": "int", "status": function (v) { return (v > 0) ? "warning" : "safe"; } },
+                "Command_Reject_Count": { "type": "int", "status": function (v) { return (v > 0) ? "error" : "safe"; } },
+                "Software_Error_Code": { "type": "int", "status": function (v) { return (v > 0) ? "error" : "safe"; } },
                 "CRC": { "type": "int" },
                 "Stop_Code": { "type": "int", "format": "0x%04X" }
             }
@@ -177,7 +171,6 @@ HSQuickLook.main.schema =
                         {"source": "Chamber_Pressure","conversion":convert_Chamber_Pressure,"options":{"legend":"Chamber","color":"red"}},
                     ],
                     "options":{"xWidth": 1000,"yRange":[0.9, 1.5]}
-
                 }
             }
         }
@@ -202,13 +195,13 @@ var status_configuration = {
     "Chamber_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
     "Outer_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
     "Valve_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
-    "TPC_High_Voltage_Setting": { "error_ranges": [[0.1, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-    "TPC_Control_Voltage_Setting": { "error_ranges": [[0.1, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+    "TPC_High_Voltage_Setting": { "error_ranges": [[3, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+    "TPC_Control_Voltage_Setting": { "error_ranges": [[1.5, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "TPC_High_Voltage_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-    "TPC_Current_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-    "PMT_High_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-    "PMT_Control_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-    "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[60, 80]] },
+    "TPC_Current_Measurement": { "error_ranges": [[10, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+    "PMT_High_Voltage_Setting": { "error_ranges": [[800, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+    "PMT_Control_Voltage_Setting": { "error_ranges": [[3.5, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+    "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[50, 80]] },
     "HK_Humidity": { "error_ranges": [[10, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "HK_Temperature": { "error_ranges": [[50, Infinity], [-Infinity, -20]], "warning_ranges": [[40, Infinity], [-Infinity, 0]] },
     "HK_Pressure": { "error_ranges": [[2000 / 1013.25, Infinity], [-Infinity, 800 / 1013.25]], "warning_ranges": [[1500 / 1013.25, Infinity], [-Infinity, 900 / 1013.25]] },

@@ -68,10 +68,6 @@ HSQuickLook.main.schema =
     ];
 
 function count_downloaded_data(v) {
-    if (data_count == 8) {
-        data_count = 0
-        return data_count
-    }
     if (previous_crc != v) {
         previous_crc = v
         data_count++
