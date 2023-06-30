@@ -34,9 +34,9 @@ HSQuickLook.main.schema =
             "period": 1,
             "section": "Detector",
             "contents": {
-                "Event_Count": { "type": "int", "status": "safe" },
-                "Event_Rate" : {"type": "float", "status": "safe" , "format": "%7.3f"},
-                "Current_EventID": { "type": "int", "status": "safe" },
+                "Event_Count": { "type": "int" },
+                "Event_Rate" : {"type": "float" , "format": "%7.3f"},
+                "Current_EventID": { "type": "int"},
                 "Chamber_Pressure": { "type": "int", "format": "%7.3f atm", "conversion": convert_Chamber_Pressure, "status": function (v) { return status_func("Chamber_Pressure", v); } },
                 "Chamber_Temperature_Upper": { "source": "Chamber_Temperature_1", "type": "float", "format": "%7.3f &deg;C", "conversion": convert_RTD_measure, "status": function (v) { return status_func("Chamber_Temperature", v); } },
                 "Chamber_Temperature_Middle": { "source": "Chamber_Temperature_2", "type": "float", "format": "%7.3f &deg;C", "conversion": convert_RTD_measure, "status": function (v) { return status_func("Chamber_Temperature_Middle", v); } },
@@ -63,7 +63,7 @@ HSQuickLook.main.schema =
                 },
                 "TPC_Current_Measurement_ADC": { "source": "TPC_High_Voltage_Current_Measurement", "type": "int" },
                 "TPC_Current_Measurement": {
-                    "type": "float", "format": "%7.3f uA", "source": "TPC_High_Voltage_Current_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }, "status": function (v) { return status_func("TPC_Current_Measurement", v); }
+                    "type": "float", "format": "%7.3f &micro;A", "source": "TPC_High_Voltage_Current_Measurement", "conversion": function (v) { return convert_Slow_ADC(v) / 4 * 200 }, "status": function (v) { return status_func("TPC_Current_Measurement", v); }
                 },
                 "PMT_Control_Voltage_Setting": { "source": "PMT_High_Voltage_Setting", "type": "float", "format": "%7.3f V", "status": function (v) { return status_func("PMT_High_Voltage_Setting", v); } },
                 "PMT_High_Voltage_Setting": { "source": "PMT_High_Voltage_Setting", "type": "float", "format": "%7.0f V", "conversion": convert_PMT_control_voltage, "status": function (v) { return status_func("PMT_High_Voltage_Setting", v); } }
@@ -92,19 +92,19 @@ HSQuickLook.main.schema =
                     "type": "float", "format": "%7.3f G", "conversion": function (v) {
                         accel_x = v;
                         return v;
-                    }, "status": function (v) { return status_func("Acceleration", v); }
+                    }, 
                 },
                 "Acceleration_y": {
                     "type": "float", "format": "%7.3f G", "conversion": function (v) {
                         accel_y = v;
                         return v;
-                    }, "status": function (v) { return status_func("Acceleration", v); }
+                    }, 
                 },
                 "Acceleration_z": {
                     "type": "float", "format": "%7.3f G", "conversion": function (v) {
                         accel_z = v;
                         return v;
-                    }, "status": function (v) { return status_func("Acceleration", v); }
+                    },
                 },
                 "Acceleration": {
                     "source": "Acceleration_x", "type": "float", "format": "%7.3f G", "conversion": function (v) {
@@ -115,9 +115,9 @@ HSQuickLook.main.schema =
                 "Gyro_x": { "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Gyro", v); } },
                 "Gyro_y": { "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Gyro", v); } },
                 "Gyro_z": { "type": "float", "format": "%7.3f", "status": function (v) { return status_func("Gyro", v); } },
-                "Magnet_x": { "source": "Magnet_x", "type": "float", "format": "%7.3f uT", "status": function (v) { return status_func("Magnet", v); } },
-                "Magnet_y": { "source": "Magnet_y", "type": "float", "format": "%7.3f uT", "status": function (v) { return status_func("Magnet", v); } },
-                "Magnet_z": { "source": "Magnet_z", "type": "float", "format": "%7.3f uT", "status": function (v) { return status_func("Magnet", v); } },
+                "Magnet_x": { "source": "Magnet_x", "type": "float", "format": "%7.3f &micro;T", "status": function (v) { return status_func("Magnet", v); } },
+                "Magnet_y": { "source": "Magnet_y", "type": "float", "format": "%7.3f &micro;T", "status": function (v) { return status_func("Magnet", v); } },
+                "Magnet_z": { "source": "Magnet_z", "type": "float", "format": "%7.3f &micro;T", "status": function (v) { return status_func("Magnet", v); } },
                 "Accel_Sensor_Temperature": { "source": "Accel_Sensor_Temperature", "type": "float", "format": "%7.3f &deg;C", "status": function (v) { return status_func("HK_Temperature", v); } },
                 "Main_Current": { "source": "Main_Current", "type": "float", "format": "%7.3f A", "conversion": function (v) { return (convert_Slow_ADC(v) - 1) * 1.25; }, "status": function (v) { return status_func("Main_Current", v); } },
                 "Main_Voltage": { "source": "Main_Voltage", "type": "float", "format": "%7.3f V", "conversion": function (v) { return (convert_Slow_ADC(v)) * 24 / 3.34; }, "status": function (v) { return status_func("Main_Voltage", v); } }
@@ -203,10 +203,11 @@ var status_configuration = {
     "Outer_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
     "Valve_Temperature": { "error_ranges": [[-Infinity, -256]], "warning_ranges": [[Infinity, Infinity]] },
     "TPC_High_Voltage_Setting": { "error_ranges": [[0.1, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+    "TPC_Control_Voltage_Setting": { "error_ranges": [[0.1, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "TPC_High_Voltage_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "TPC_Current_Measurement": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "PMT_High_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
-    "PMT_High_Voltage_Setting_": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
+    "PMT_Control_Voltage_Setting": { "error_ranges": [[Infinity, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "CPU_Temperature": { "error_ranges": [[80, Infinity]], "warning_ranges": [[60, 80]] },
     "HK_Humidity": { "error_ranges": [[10, Infinity]], "warning_ranges": [[Infinity, Infinity]] },
     "HK_Temperature": { "error_ranges": [[50, Infinity], [-Infinity, -20]], "warning_ranges": [[40, Infinity], [-Infinity, 0]] },
