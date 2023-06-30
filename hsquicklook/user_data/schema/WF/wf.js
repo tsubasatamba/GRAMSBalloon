@@ -1,3 +1,5 @@
+var data_count = 0
+var previous_crc = 0
 HSQuickLook.main.schema =
     [
         {
@@ -26,7 +28,7 @@ HSQuickLook.main.schema =
                 "Event_Time": {"type": "int"},
                 "Event_Time_us": {"type": "int"},
                 "Sample_Frequency": {"type": "double", "format": "%7.3f MHz", "source": "Sample_Frequency"},
-                "Time_Window": {"type": "double", "format": "%7.3f us", "source": "Time_Window"}
+                "Time_Window": {"type": "double", "format": "%7.3f &micro;s", "source": "Time_Window"}
             }
         },
         {
@@ -37,6 +39,7 @@ HSQuickLook.main.schema =
 	          "section": "Footer",
 	          "contents": {
                 "CRC": {"type": "int"},
+                "Downloaded": { "type": "int", "source": "CRC", "conversion": count_downloaded_data},
                 "Stop_Code": {"type": "int", "format": "0x%04X"}
             }
         },
@@ -63,3 +66,11 @@ HSQuickLook.main.schema =
 
 
     ];
+
+function count_downloaded_data(v) {
+    if (previous_crc != v) {
+        previous_crc = v
+        data_count++
+        return data_count
+    }
+    }
