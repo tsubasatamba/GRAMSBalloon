@@ -216,8 +216,8 @@ int main(int argc, char **argv)
         //std::cout << "wf: " << wf[j][k] << std::endl;
         index += sizeof(int16_t);
       }
-      tree->Fill();
     }
+    tree->Fill();
     const double dt = 1.0 / sample_frequency;
     std::ostringstream sout;
     sout << std::setfill('0') << std::right << std::setw(6) << i;

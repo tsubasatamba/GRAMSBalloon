@@ -33,5 +33,6 @@ end
 a = MyApp.new
 a.serial_path = get_serial_path()
 #a.filenames = Dir.glob("/Users/grams/data/telemetry/telemetry_000120_20230609124507_HK_*.dat")
-a.filenames = Dir.glob(Dir.home + "/data/telemetry/telemetry_000160_20230620151216_WF_*.dat")
+#a.filenames = Dir.glob(Dir.home + "/data/telemetry/telemetry_000160_20230620151216_WF_*.dat")
+a.filenames = Dir.glob(Dir.home + "/data/telemetry/telemetry_000178_20230628140421_WF_*.dat")
 a.run(:all, 1)
