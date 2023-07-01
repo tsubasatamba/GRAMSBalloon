@@ -27,7 +27,8 @@ if __name__ == "__main__":
     parser.add_argument("y", nargs=1, help="Telemetry key of y axis. You can also choise a group.", type=str)
     parser.add_argument("run_ids", nargs='*', type=int, help="RunIDs")
     # group.add_argument("-ir", "--run_id_range", nargs=2, type=int, help="runID range")
-    parser.add_argument("-x", nargs=1, default="receive_time_sec", help="Telemetry key of x axis.")
+    parser.add_argument("-x", nargs=1, default=["receive_time_sec"], help="Telemetry key of x axis.")
+    parser.add_argument("--type", nargs=1, default=["plot"], help="plot type")
 
     args = parser.parse_args()
     tel = Telmetry_Definition()
@@ -47,4 +48,4 @@ if __name__ == "__main__":
             filenames.append(s)
     print(telemetry_keys)
     print(filenames)
-    run(telemetry_keys, filenames, args.x, show_limit=show_limit)
+    run(telemetry_keys, filenames, args.x[0], show_limit=show_limit, type=args.type[0])
