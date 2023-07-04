@@ -1,4 +1,4 @@
-var data_count = 0
+var data_count = -1
 var previous_crc = 0
 HSQuickLook.main.schema =
     [
