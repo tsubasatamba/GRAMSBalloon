@@ -242,7 +242,7 @@ def read_binary(filename: list[str]) -> bytes:
     return binary
 
 
-def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None)) -> None:
+def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot") -> None:
     runID = filenames[0].split("_")[1]
 
     if VERVOSE >= 2:
@@ -263,22 +263,27 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
         if i >= len(binary) - 1:
             break
         if binary[i] == 0xeb and binary[i + 1] == 0x90:
-            x.append(int.from_bytes(binary[i + tel[x_key].start_index:i + tel[x_key].end_index], 'big', signed=tel[x_key].signed))
+            x.append(tel[x_key].func(int.from_bytes(binary[i + tel[x_key].start_index:i + tel[x_key].end_index], 'big', signed=tel[x_key].signed)))
             if VERVOSE >= 1:
                 print(f"x[{i}]: {x[-1]}")
             for j in range(len(telemetry_keys)):
                 y[j].append(tel[telemetry_keys[j]].func(int.from_bytes(binary[i + tel[telemetry_keys[j]].start_index: i + tel[telemetry_keys[j]].end_index], "big", signed=tel[telemetry_keys[j]].signed)))
                 if VERVOSE >= 1:
-                    print(f"y[{j}]: {y[j][-1]}")
+                    print(f"y[{j}][{i}]: {y[j][-1]}")
             i += TELEMETRY_LENGTH
         else:
             i += 1
-
-    x_arr = (np.array(x, dtype=float) - x[0])
+    if x_key.find("time") >= 0:
+        x_arr = (np.array(x, dtype=float) - x[0])
+    else:
+        x_arr = np.array(x, dtype=float)
     fig = plt.figure(1, figsize=(6.4, 4.8))
     ax = fig.add_subplot(111, xlabel=x_key)
     for i in range(len(telemetry_keys)):
-        ax.plot(x_arr, y[i], label=telemetry_keys[i])
+        if type == "plot":
+            ax.plot(x_arr, y[i], label=telemetry_keys[i])
+        elif type == "scatter":
+            ax.scatter(x_arr, y[i], label=telemetry_keys[i], s=0.1)
     if show_limit is not None:
         ax.set_ylim(*show_limit)
     ax.legend()
