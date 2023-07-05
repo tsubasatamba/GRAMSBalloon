@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from typing import Callable, Optional, Any, Iterable, Union
 import sys
 import numpy as np
+import datetime
 
 TELEMETRY_LENGTH = 140
 VERVOSE = 2
@@ -280,8 +281,8 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
             i += TELEMETRY_LENGTH
         else:
             i += 1
-    if x_key.find("time") >= 0:
-        x_arr = (np.array(x, dtype=float) - x[0])
+    if x_key.find("time_sec") >= 0:
+        x_arr = np.array(list(map(datetime.datetime.fromtimestamp, x)), dtype=np.datetime64)
     else:
         x_arr = np.array(x, dtype=float)
     fig = plt.figure(1, figsize=(6.4, 4.8))
