@@ -242,7 +242,7 @@ def read_binary(filename: list[str]) -> bytes:
     return binary
 
 
-def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot") -> None:
+def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot", twinx: Optional[list[str]] = None) -> None:
     runID = filenames[0].split("_")[1]
 
     if VERVOSE >= 2:
@@ -279,9 +279,13 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
         x_arr = np.array(x, dtype=float)
     fig = plt.figure(1, figsize=(6.4, 4.8))
     ax = fig.add_subplot(111, xlabel=x_key)
+    if twinx is not None:
+        ax2 = ax.twinx()
     for i in range(len(telemetry_keys)):
         if type == "plot":
             ax.plot(x_arr, y[i], label=telemetry_keys[i])
+            if twinx is not None:
+                ax2.plot(x_arr, y2[i], label=twinx[i])
         elif type == "scatter":
             ax.scatter(x_arr, y[i], label=telemetry_keys[i], s=0.1)
     if show_limit is not None:

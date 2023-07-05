@@ -25,6 +25,7 @@ def get_filenames(run_id: int) -> list[str]:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("y", nargs=1, help="Telemetry key of y axis. You can also choise a group.", type=str)
+    parser.add_argument("-tw", "--twinx", nargs=1, help="Telemetry of another y axis", type=str)
     parser.add_argument("run_ids", nargs='*', type=int, help="RunIDs")
     # group.add_argument("-ir", "--run_id_range", nargs=2, type=int, help="runID range")
     parser.add_argument("-x", nargs=1, default=["receive_time_sec"], help="Telemetry key of x axis.")
