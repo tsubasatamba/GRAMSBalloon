@@ -6,7 +6,7 @@ import sys
 import numpy as np
 
 TELEMETRY_LENGTH = 140
-VERVOSE = 0
+VERVOSE = 2
 
 plt.rcParams['font.family'] = 'Times New Roman'  # 使用するフォント
 plt.rcParams['xtick.direction'] = 'in'  # x軸の目盛線が内向き('in')か外向き('out')か双方向か('inout')
@@ -242,7 +242,7 @@ def read_binary(filename: list[str]) -> bytes:
     return binary
 
 
-def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot", twinx: Optional[list[str]] = None) -> None:
+def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot", twinx: Optional[list[str]] = None, show_limit_twinx: Optional[tuple[float, float]] = None) -> None:
     runID = filenames[0].split("_")[1]
 
     if VERVOSE >= 2:
@@ -257,6 +257,8 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
     i = 0
     x: list[int] = []
     y: list[list[int]] = [[] for i in range(len(telemetry_keys))]
+    if twinx is not None:
+        y2: list[list[int]] = [[] for i in range(len(twinx))]
     while 1:
         if VERVOSE >= 2:
             print(f"loop: {i}")
@@ -270,6 +272,11 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
                 y[j].append(tel[telemetry_keys[j]].func(int.from_bytes(binary[i + tel[telemetry_keys[j]].start_index: i + tel[telemetry_keys[j]].end_index], "big", signed=tel[telemetry_keys[j]].signed)))
                 if VERVOSE >= 1:
                     print(f"y[{j}][{i}]: {y[j][-1]}")
+            if twinx is not None:
+                for j in range(len(twinx)):
+                    y2[j].append(tel[twinx[j]].func(int.from_bytes(binary[i + tel[twinx[j]].start_index:i + tel[twinx[j]].end_index], "big", signed=tel[twinx[j]].signed)))
+                    if VERVOSE >= 1:
+                        print(f"y2[{j}][{i}]: {y2[j][-1]}")
             i += TELEMETRY_LENGTH
         else:
             i += 1
@@ -284,13 +291,25 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
     for i in range(len(telemetry_keys)):
         if type == "plot":
             ax.plot(x_arr, y[i], label=telemetry_keys[i])
-            if twinx is not None:
-                ax2.plot(x_arr, y2[i], label=twinx[i])
         elif type == "scatter":
             ax.scatter(x_arr, y[i], label=telemetry_keys[i], s=0.1)
+    if twinx is not None:
+        for i in range(len(twinx)):
+            if type == "plot":
+                ax2.plot(x_arr, y2[i], label=twinx[i], linestyle="dashdot")
+            elif type == "scatter":
+                if twinx is not None:
+                    ax2.scatter(x_arr, y2[i], label=twinx[i], s=0.1)
     if show_limit is not None:
         ax.set_ylim(*show_limit)
-    ax.legend()
+    if (show_limit_twinx is not None) and (twinx is not None):
+        ax2.set_ylim(*show_limit_twinx)
+    if twinx is not None:
+        lines1, labels1 = ax.get_legend_handles_labels()
+        lines2, labels2 = ax2.get_legend_handles_labels()
+        ax2.legend(lines1 + lines2, labels1 + labels2)
+    else:
+        ax.legend()
     fig.savefig(f"telemetry_{runID}_{telemetry_keys}.png".replace("[", "").replace("]", "").replace("'", ""))
     plt.show()
 

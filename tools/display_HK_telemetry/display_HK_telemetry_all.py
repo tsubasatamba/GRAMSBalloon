@@ -16,9 +16,11 @@ def get_filenames(run_id: int) -> list[str]:
     dirname = os.environ['HOME'] + "/data/telemetry/"
     run_id_str = '{:0=6}'.format(run_id)
     arr = glob.glob(dirname + "telemetry_" + run_id_str + "_*_HK_*.dat")
+    print(arr)
     if len(arr) == 0:
         raise FileNotFoundError("HK Telemetry data file not found")
-    arr = sorted(arr, key=get_filename_id)
+    arr = sorted(arr)
+    # arr = sorted(arr, key=get_filename_id)
     return arr
 
 
@@ -32,6 +34,8 @@ if __name__ == "__main__":
     parser.add_argument("--type", nargs=1, default=["plot"], help="plot type")
 
     args = parser.parse_args()
+    twinx = None
+    show_limit_twinx = None
     tel = Telmetry_Definition()
     if args.y[0] in tel.keys():
         telemetry_keys = args.y
@@ -41,12 +45,22 @@ if __name__ == "__main__":
         show_limit = tel.get_group_show_limit(args.y[0])
     else:
         raise KeyError("Key not found in telemetry_keys or groups key: " + args.y[0])
+    if args.twinx is not None:
+        if args.twinx[0] in tel.keys():
+            twinx = args.twinx
+            show_limit_twinx = tel.telemetry_definition[twinx[0]].show_limit
+        elif args.twinx[0] in tel.groups.keys():
+            twinx = list(tel.groups[args.twinx[0]])
+            show_limit_twinx = tel.get_group_show_limit(args.twinx[0])
+        else:
+            raise KeyError("Key of twinx not found in telemetry_keys or groups key: " + args.twinx[0])
     filenames = []
     args.run_ids.sort()
     for run_id in args.run_ids:
         arr = get_filenames(run_id)
         for s in arr:
             filenames.append(s)
-    print(telemetry_keys)
-    print(filenames)
-    run(telemetry_keys, filenames, args.x[0], show_limit=show_limit, type=args.type[0])
+    print(f"telemetry_keys: {telemetry_keys}")
+    print(f"twinx: {twinx}")
+    print(f"filenames:{filenames}")
+    run(telemetry_keys, filenames, args.x[0], show_limit=show_limit, type=args.type[0], twinx=twinx, show_limit_twinx=show_limit_twinx)
