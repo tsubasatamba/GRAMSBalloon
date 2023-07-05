@@ -36,13 +36,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
     twinx = None
     show_limit_twinx = None
+    ylabel = None
+    ylabel_twinx = None
     tel = Telmetry_Definition()
     if args.y[0] in tel.keys():
         telemetry_keys = args.y
         show_limit = tel.telemetry_definition[telemetry_keys[0]].show_limit
+        ylabel = args.y[0]
     elif args.y[0] in tel.groups.keys():
         telemetry_keys = list(tel.groups[args.y[0]])
         show_limit = tel.get_group_show_limit(args.y[0])
+        ylabel = args.y[0]
     else:
         raise KeyError("Key not found in telemetry_keys or groups key: " + args.y[0])
     if args.twinx is not None:
@@ -63,4 +67,4 @@ if __name__ == "__main__":
     print(f"telemetry_keys: {telemetry_keys}")
     print(f"twinx: {twinx}")
     print(f"filenames:{filenames}")
-    run(telemetry_keys, filenames, args.x[0], show_limit=show_limit, type=args.type[0], twinx=twinx, show_limit_twinx=show_limit_twinx)
+    run(telemetry_keys, filenames, args.x[0], show_limit=show_limit, type=args.type[0], twinx=twinx, show_limit_twinx=show_limit_twinx, ylabel=args.y[0], ylabel_twinx=args.twinx)

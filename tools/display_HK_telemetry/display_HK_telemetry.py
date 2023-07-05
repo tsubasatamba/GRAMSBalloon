@@ -7,7 +7,7 @@ import numpy as np
 import datetime
 
 TELEMETRY_LENGTH = 140
-VERVOSE = 2
+VERVOSE = 0
 
 plt.rcParams['font.family'] = 'Times New Roman'  # 使用するフォント
 plt.rcParams['xtick.direction'] = 'in'  # x軸の目盛線が内向き('in')か外向き('out')か双方向か('inout')
@@ -28,6 +28,7 @@ class Telemetry_Property:
         self.func = func
         self.show_limit = show_limit
         self.__groups: set[str] = set()
+        # self.name = name
 
     @property
     def groups(self) -> set[str]:
@@ -58,8 +59,7 @@ class Telemetry_Property:
 class Telmetry_Definition():
     def __init__(self) -> None:
         self.telemetry_definition: dict[str, Telemetry_Property] = {}
-        self.telemetry_definition["start_code"] = Telemetry_Property(
-            0, 4, False, lambda x: x, )
+        self.telemetry_definition["start_code"] = Telemetry_Property(0, 4, False, lambda x: x, )
         self.telemetry_definition["telemetry_type"] = Telemetry_Property(
             4, 2, False, lambda x: x, )
         self.telemetry_definition["time_sec"] = Telemetry_Property(
@@ -243,7 +243,7 @@ def read_binary(filename: list[str]) -> bytes:
     return binary
 
 
-def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot", twinx: Optional[list[str]] = None, show_limit_twinx: Optional[tuple[float, float]] = None) -> None:
+def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot", twinx: Optional[list[str]] = None, show_limit_twinx: Optional[tuple[float, float]] = None, ylabel: Optional[str] = None, ylabel_twinx: Optional[str] = None) -> None:
     runID = filenames[0].split("_")[1]
 
     if VERVOSE >= 2:
@@ -287,8 +287,12 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
         x_arr = np.array(x, dtype=float)
     fig = plt.figure(1, figsize=(6.4, 4.8))
     ax = fig.add_subplot(111, xlabel=x_key)
+    if ylabel is not None:
+        ax.set_ylabel(ylabel)
     if twinx is not None:
         ax2 = ax.twinx()
+        if ylabel_twinx is not None:
+            ax2.set_ylabel(ylabel_twinx)
     for i in range(len(telemetry_keys)):
         if type == "plot":
             ax.plot(x_arr, y[i], label=telemetry_keys[i])
