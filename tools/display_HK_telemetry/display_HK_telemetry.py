@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import matplotlib.pyplot as plt
-from typing import Callable, Optional, Any, Iterable, Union
+from typing import Callable, Optional, Any, Iterable, Union, Iterator, Literal
 import sys
 import numpy as np
 import datetime
@@ -20,7 +20,7 @@ plt.rcParams["mathtext.fontset"] = "stixsans"
 
 
 class Telemetry_Property:
-    def __init__(self, start_index: int, length: int, signed: bool, func: Callable = lambda x: x, show_limit: tuple[Optional[float], Optional[float]] = (None, None)) -> None:
+    def __init__(self, name: str, start_index: int, length: int, signed: bool, func: Callable = lambda x: x, show_limit: tuple[Optional[float], Optional[float]] = (None, None)) -> None:
         self.__start_index = start_index
         self.__length = length
         self.end_index = start_index + length
@@ -28,7 +28,7 @@ class Telemetry_Property:
         self.func = func
         self.show_limit = show_limit
         self.__groups: set[str] = set()
-        # self.name = name
+        self.name = name
 
     @property
     def groups(self) -> set[str]:
@@ -56,133 +56,84 @@ class Telemetry_Property:
         self.end_index = self.__length + self.__start_index
 
 
+class Telemetry_Group():
+    def __init__(self, name: str, key: str = None, show_name: Optional[str] = None) -> None:
+        self.name = name
+        if show_name is None:
+            self.show_name = name
+        else:
+            self.show_name = show_name
+        if key is None:
+            self.telemetries: set[str] = set()
+        else:
+            self.telemetries = set([key])
+
+    def add(self, key: str) -> None:
+        self.telemetries.add(key)
+
+    def __iter__(self) -> Iterator[str]:
+        return self.telemetries.__iter__()
+
+
 class Telmetry_Definition():
     def __init__(self) -> None:
         self.telemetry_definition: dict[str, Telemetry_Property] = {}
-        self.telemetry_definition["start_code"] = Telemetry_Property(0, 4, False, lambda x: x, )
-        self.telemetry_definition["telemetry_type"] = Telemetry_Property(
-            4, 2, False, lambda x: x, )
-        self.telemetry_definition["time_sec"] = Telemetry_Property(
-            6, 4, True, lambda x: x, )
-        self.telemetry_definition["time_usec"] = Telemetry_Property(
-            10, 4, True, lambda x: x,)
-        self.telemetry_definition["telemetry_index"] = Telemetry_Property(
-            14, 4, False, lambda x: x,)
-        self.telemetry_definition["run_id"] = Telemetry_Property(
-            18, 4, True, lambda x: x, )
-        self.telemetry_definition["event_count"] = Telemetry_Property(
-            22, 4, False, lambda x: x,)
-        self.telemetry_definition["current_event_id"] = Telemetry_Property(
-            26, 4, False, lambda x: x, )
-        self.telemetry_definition["chamber_pressure"] = Telemetry_Property(
-            30, 2, False, lambda x: convert_chamber_pressure(convert_slow_ADC(x)), (0.9, 1.5))
-        self.telemetry_definition["chamber_temperature_1"] = Telemetry_Property(
-            32, 2, False, convert_RTD, (-200, 30))
-        self.telemetry_definition["chamber_temperature_2"] = Telemetry_Property(
-            34, 2, False, convert_RTD, (-200, 30))
-        self.telemetry_definition["chamber_temperature_3"] = Telemetry_Property(
-            36, 2, False, convert_RTD, (-200, 30))
-        self.telemetry_definition["valve_temperature"] = Telemetry_Property(
-            38, 2, False, convert_RTD, (-50, 30))
-        self.telemetry_definition["outer_temperature"] = Telemetry_Property(
-            40, 2, False, convert_RTD, (-50, 30))
-        self.telemetry_definition["tpc_high_voltage_setting"] = Telemetry_Property(
-            42, 4, True, lambda x: x, (0, 5))
-        self.telemetry_definition["tpc_high_voltage_measurement"] = Telemetry_Property(
-            46, 2, False, lambda x: 2 * x, (0, 3))
-        self.telemetry_definition["pmt_high_voltage_setting"] = Telemetry_Property(
-            48, 4, True, lambda x: x, (0, 5))
-        self.telemetry_definition["tpc_high_voltage_current_measurement"] = Telemetry_Property(
-            52, 54, False, lambda x: x)
-        self.telemetry_definition["cpu_temperature"] = Telemetry_Property(
-            54, 2, True, lambda x: x / 10, (0, 80))
-        self.telemetry_definition["hk_temperature_1"] = Telemetry_Property(
-            56, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_2"] = Telemetry_Property(
-            58, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_3"] = Telemetry_Property(
-            60, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_4"] = Telemetry_Property(
-            62, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_5"] = Telemetry_Property(
-            64, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_humidity_1"] = Telemetry_Property(
-            66, 2, False, lambda x: x, (0, 10))
-        self.telemetry_definition["hk_humidity_2"] = Telemetry_Property(
-            68, 2, False, lambda x: x, (0, 10))
-        self.telemetry_definition["hk_humidity_3"] = Telemetry_Property(
-            70, 2, False, lambda x: x, (0, 10))
-        self.telemetry_definition["hk_humidity_4"] = Telemetry_Property(
-            72, 2, False, lambda x: x, (0, 10))
-        # telemetry_definition["hk_humidity_5"] = 74, 76, False, lambda x: x,
-        self.telemetry_definition["hk_humidity_5"] = Telemetry_Property(
-            74, 2, False, lambda x: x, (0, 10))
-        # telemetry_definition["hk_pressure_1"] = 76, 78, False, lambda x: x,
-        self.telemetry_definition["hk_pressure_1"] = Telemetry_Property(
-            76, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
-        # telemetry_definition["hk_pressure_2"] = 78, 80, False, lambda x: x,
-        self.telemetry_definition["hk_pressure_2"] = Telemetry_Property(
-            78, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
-        # telemetry_definition["hk_pressure_3"] = 80, 82, False, lambda x: x,
-        self.telemetry_definition["hk_pressure_3"] = Telemetry_Property(
-            80, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
-        # telemetry_definition["hk_pressure_4"] = 82, 84, False, lambda x: x,
-        self.telemetry_definition["hk_pressure_4"] = Telemetry_Property(
-            82, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
-        # telemetry_definition["hk_pressure_5"] = 84, 86, False, lambda x: x,
-        self.telemetry_definition["hk_pressure_5"] = Telemetry_Property(
-            84, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
-        # telemetry_definition["acceleration_x"] = 86, 88, True, lambda x: x,
-        self.telemetry_definition["acceleration_x"] = Telemetry_Property(86, 2, True)
-        # telemetry_definition["acceleration_y"] = 88, 90, True, lambda x: x,
-        self.telemetry_definition["acceleration_y"] = Telemetry_Property(88, 2, True)
-        # telemetry_definition["acceleration_y"] = 90, 92, True, lambda x: x,
-        self.telemetry_definition["acceleration_y"] = Telemetry_Property(90, 2, True)
-        # telemetry_definition["gyro_x"] = 92, 94, True, lambda x: x,
-        self.telemetry_definition["gyro_x"] = Telemetry_Property(92, 2, True)
-        # telemetry_definition["gyro_y"] = 94, 96, True, lambda x: x,
-        self.telemetry_definition["gyro_y"] = Telemetry_Property(94, 2, True)
-        # telemetry_definition["gyro_z"] = 96, 98, True, lambda x: x,
-        self.telemetry_definition["gyro_z"] = Telemetry_Property(96, 2, True)
-        # telemetry_definition["magnet_x"] = 98, 100, True, lambda x: x,
-        self.telemetry_definition["magnet_x"] = Telemetry_Property(98, 2, True)
-        # telemetry_definition["magnet_y"] = 100, 102, True, lambda x: x,
-        self.telemetry_definition["magnet_y"] = Telemetry_Property(100, 2, True)
-        # telemetry_definition["magnet_z"] = 102, 104, True, lambda x: x,
-        self.telemetry_definition["magnet_z"] = Telemetry_Property(102, 2, True)
-        # telemetry_definition["accel_sensor_temperature"] = 104, 106, True, lambda x: x,
-        self.telemetry_definition["accel_sensor_temperature"] = Telemetry_Property(
-            104, 2, True)
-        # telemetry_definition["main_current"] = 106, 108, False, lambda x: x,
-        self.telemetry_definition["main_current"] = Telemetry_Property(
-            106, 2, False, convert_main_current, (0, 1))
-        # telemetry_definition["main_voltage"] = 108, 110, False, lambda x: 4096 / 5.026 * x
-        self.telemetry_definition["main_voltage"] = Telemetry_Property(
-            108, 2, False, convert_main_voltage, (0, 32))
-        # telemetry_definition["last_command_index"] = 110, 114, False, lambda x: x
-        self.telemetry_definition["last_command_index"] = Telemetry_Property(
-            110, 4, False)
-        # telemetry_definition["last_command_code"] = 114, 116, False, lambda x: x,
-        self.telemetry_definition["last_command_code"] = Telemetry_Property(
-            114, 2, False,)
-        # telemetry_definition["command_reject_count"] = 116, 118, False, lambda x: x,
-        self.telemetry_definition["command_reject_count"] = Telemetry_Property(
-            116, 2, False,)
-        # telemetry_definition["software_error_code"] = 118, 126, False, lambda x: x,
-        self.telemetry_definition["software_error_code"] = Telemetry_Property(
-            118, 8, False)
-        # telemetry_definition["crc"] = 126, 128, False, lambda x: x,
-        self.telemetry_definition["crc"] = Telemetry_Property(126, 2, False)
-        # telemetry_definition["end_code"] = 128, 132, False, lambda x: x,
-        self.telemetry_definition["end_code"] = Telemetry_Property(128, 4, False,)
-        # telemetry_definition["receive_time_sec"] = 132, 136, True, lambda x: x,
-        self.telemetry_definition["receive_time_sec"] = Telemetry_Property(
-            132, 4, True,)
-        # telemetry_definition["receive_time_usec"] = 136, 140, True, lambda x: x,
-        self.telemetry_definition["receive_time_usec"] = Telemetry_Property(
-            136, 4, True)
+        self.telemetry_definition["start_code"] = Telemetry_Property("start_code", 0, 4, False, lambda x: x, )
+        self.telemetry_definition["telemetry_type"] = Telemetry_Property("telemetry_type", 4, 2, False, lambda x: x, )
+        self.telemetry_definition["time_sec"] = Telemetry_Property("time[sec]", 6, 4, True, lambda x: x, )
+        self.telemetry_definition["time_usec"] = Telemetry_Property("time[usec]", 10, 4, True, lambda x: x,)
+        self.telemetry_definition["telemetry_index"] = Telemetry_Property("telemetry_index", 14, 4, False, lambda x: x,)
+        self.telemetry_definition["run_id"] = Telemetry_Property("run_id", 18, 4, True, lambda x: x, )
+        self.telemetry_definition["event_count"] = Telemetry_Property("event_count", 22, 4, False, lambda x: x,)
+        self.telemetry_definition["current_event_id"] = Telemetry_Property("current_event_id", 26, 4, False, lambda x: x, )
+        self.telemetry_definition["chamber_pressure"] = Telemetry_Property("chamber_pressure[atm]", 30, 2, False, lambda x: convert_chamber_pressure(convert_slow_ADC(x)), (0.9, 1.5))
+        self.telemetry_definition["chamber_temperature_1"] = Telemetry_Property("chamber_temperature_upper[degree]", 32, 2, False, convert_RTD, (-200, 30))
+        self.telemetry_definition["chamber_temperature_2"] = Telemetry_Property("chamber_temperature_middle[degree]", 34, 2, False, convert_RTD, (-200, 30))
+        self.telemetry_definition["chamber_temperature_3"] = Telemetry_Property("chamber_temperature_lower[degree]", 36, 2, False, convert_RTD, (-200, 30))
+        self.telemetry_definition["valve_temperature"] = Telemetry_Property("valve_temperature[degree]", 38, 2, False, convert_RTD, (-50, 30))
+        self.telemetry_definition["outer_temperature"] = Telemetry_Property("outer_temperature[degree]", 40, 2, False, convert_RTD, (-50, 30))
+        self.telemetry_definition["tpc_high_voltage_setting"] = Telemetry_Property("tpc_high_voltage_setting[V]", 42, 4, True, lambda x: x, (0, 5))
+        self.telemetry_definition["tpc_high_voltage_measurement"] = Telemetry_Property("tpc_high_voltage_measurement[kV]", 46, 2, False, lambda x: 2 * x, (0, 3))
+        self.telemetry_definition["pmt_high_voltage_setting"] = Telemetry_Property("pmt_high_voltage_setting[V]", 48, 4, True, lambda x: x, (0, 5))
+        self.telemetry_definition["tpc_high_voltage_current_measurement"] = Telemetry_Property("tpc_high_voltage_current_measurement[uA]", 52, 54, False, lambda x: x)
+        self.telemetry_definition["cpu_temperature"] = Telemetry_Property("cpu_temperature[degree]", 54, 2, True, lambda x: x / 10, (0, 80))
+        self.telemetry_definition["hk_temperature_1"] = Telemetry_Property("hk_temperature_1", 56, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_2"] = Telemetry_Property("hk_temperature_2", 58, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_3"] = Telemetry_Property("hk_temperature_3[degree]", 60, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_4"] = Telemetry_Property("hk_temperature_4[degree]", 62, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_5"] = Telemetry_Property("hk_temperature_5[degree]", 64, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_humidity_1"] = Telemetry_Property("hk_humidity_1[%]", 66, 2, False, lambda x: x, (0, 10))
+        self.telemetry_definition["hk_humidity_2"] = Telemetry_Property("hk_humidity_2[%]", 68, 2, False, lambda x: x, (0, 10))
+        self.telemetry_definition["hk_humidity_3"] = Telemetry_Property("hk_humidity_3[%]", 70, 2, False, lambda x: x, (0, 10))
+        self.telemetry_definition["hk_humidity_4"] = Telemetry_Property("hk_humidity_4[%]", 72, 2, False, lambda x: x, (0, 10))
+        self.telemetry_definition["hk_humidity_5"] = Telemetry_Property("hk_humidity_5[%]", 74, 2, False, lambda x: x, (0, 10))
+        self.telemetry_definition["hk_pressure_1"] = Telemetry_Property("hk_pressure_1[atm]", 76, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
+        self.telemetry_definition["hk_pressure_2"] = Telemetry_Property("hk_pressure_2[atm]", 80, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
+        self.telemetry_definition["hk_pressure_3"] = Telemetry_Property("hk_pressure_3[atm]", 78, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
+        self.telemetry_definition["hk_pressure_4"] = Telemetry_Property("hk_pressure_4[atm]", 82, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
+        self.telemetry_definition["hk_pressure_5"] = Telemetry_Property("hk_pressure_5[atm]", 84, 2, False, lambda x: x / 1013.25 / 10, (0.9, 1.5))
+        self.telemetry_definition["acceleration_x"] = Telemetry_Property("acceleration_x[G]", 86, 2, True)
+        self.telemetry_definition["acceleration_y"] = Telemetry_Property("acceleration_y[G]", 88, 2, True)
+        self.telemetry_definition["acceleration_z"] = Telemetry_Property("acceleration_z[G]", 90, 2, True)
+        self.telemetry_definition["gyro_x"] = Telemetry_Property("gyro_x", 92, 2, True)
+        self.telemetry_definition["gyro_y"] = Telemetry_Property("gyro_y", 94, 2, True)
+        self.telemetry_definition["gyro_z"] = Telemetry_Property("gyro_z", 96, 2, True)
+        self.telemetry_definition["magnet_x"] = Telemetry_Property("magnet_x[uT]", 98, 2, True)
+        self.telemetry_definition["magnet_y"] = Telemetry_Property("magnet_y[uT]", 100, 2, True)
+        self.telemetry_definition["magnet_z"] = Telemetry_Property("magnet_z[uT]", 102, 2, True)
+        self.telemetry_definition["accel_sensor_temperature"] = Telemetry_Property("accel_sensor_temperature", 104, 2, True)
+        self.telemetry_definition["main_current"] = Telemetry_Property("main_current", 106, 2, False, convert_main_current, (0, 1))
+        self.telemetry_definition["main_voltage"] = Telemetry_Property("main_voltage", 108, 2, False, convert_main_voltage, (0, 32))
+        self.telemetry_definition["last_command_index"] = Telemetry_Property("last_command_index", 110, 4, False)
+        self.telemetry_definition["last_command_code"] = Telemetry_Property("last_command_code", 114, 2, False,)
+        self.telemetry_definition["command_reject_count"] = Telemetry_Property("command_reject_count", 116, 2, False,)
+        self.telemetry_definition["software_error_code"] = Telemetry_Property("software_error_code", 118, 8, False)
+        self.telemetry_definition["crc"] = Telemetry_Property("crc", 126, 2, False)
+        self.telemetry_definition["end_code"] = Telemetry_Property("end_code", 128, 4, False,)
+        self.telemetry_definition["receive_time_sec"] = Telemetry_Property("receive_time[sec]", 132, 4, True,)
+        self.telemetry_definition["receive_time_usec"] = Telemetry_Property("receive_time[usec]", 136, 4, True)
 
-        self.groups: dict[str, set[str]] = {}
+        self.groups: dict[str, Telemetry_Group] = {}
         self.add_group("sec", ["time_sec", "receive_time_sec"])
         self.add_group("usec", ["time_usec", "receive_time_usec"])
         self.add_group("chamber_temperature", ["chamber_temperature_1", "chamber_temperature_2", "chamber_temperature_3"])
@@ -190,6 +141,11 @@ class Telmetry_Definition():
         self.add_group("hk_pressure", ["hk_pressure_3", "hk_pressure_4", "hk_pressure_5"])
         self.add_group("hk_temperature", ["hk_temperature_3", "hk_temperature_4", "hk_temperature_5"])
         self.add_group("temperature", ["chamber_temperature_1", "chamber_temperature_2", "chamber_temperature_3", "outer_temperature", "valve_temperature", "hk_temperature_3", "hk_temperature_4", "hk_temperature_5"])
+        self.groups["pressure"].show_name = "pressure[atm]"
+        self.groups["temperature"].show_name = "temperature[degree]"
+        self.groups["hk_pressure"].show_name = "hk_pressure[atm]"
+        self.groups["hk_temperature"].show_name = "hk_temperature[degree]"
+        self.groups["chamber_temperature"].show_name = "chamber_temperature[degree]"
 
     def __getitem__(self, index: str) -> Telemetry_Property:
         return self.telemetry_definition[index]
@@ -210,12 +166,12 @@ class Telmetry_Definition():
                 if group in self.groups.keys():
                     self.groups[group].add(key)
                 else:
-                    self.groups[group] = {key}
+                    self.groups[group] = Telemetry_Group(group, key=key)
 
     def get_group_show_limit(self, group: str) -> tuple[Optional[float], Optional[float]]:
         minimum: float | None = None
         maximum: float | None = None
-        for key in self.groups[group]:
+        for key in self.groups[group].telemetries:
             if self.telemetry_definition[key].show_limit is not None:
                 if minimum is None:
                     minimum = self.telemetry_definition[key].show_limit[0]
@@ -243,8 +199,32 @@ def read_binary(filename: list[str]) -> bytes:
     return binary
 
 
-def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_time_sec", show_limit: tuple[Optional[float], Optional[float]] = (None, None), type="plot", twinx: Optional[list[str]] = None, show_limit_twinx: Optional[tuple[float, float]] = None, ylabel: Optional[str] = None, ylabel_twinx: Optional[str] = None) -> None:
+def run(telemetry_key: str, filenames: list[str], x_key: str = "receive_time_sec", type: Literal["plot", "scatter"] = "plot", twinx_key: Optional[str] = None,) -> None:
     runID = filenames[0].split("_")[1]
+    tel = Telmetry_Definition()
+    if telemetry_key in tel.keys():
+        show_limit = tel.telemetry_definition[telemetry_key].show_limit
+        telemetry_keys = [telemetry_key]
+        ylabel = tel[telemetry_key].name
+    elif telemetry_key in tel.groups.keys():
+        telemetry_keys = list(tel.groups[telemetry_key])
+        show_limit = tel.get_group_show_limit(telemetry_key)
+        ylabel = tel.groups[telemetry_key].show_name
+    else:
+        raise KeyError("Key not found in telemetry_keys or groups key: " + telemetry_key)
+    twinx = None
+    show_limit_twinx = None
+    if twinx_key is not None:
+        if twinx_key in tel.keys():
+            twinx = [twinx_key]
+            show_limit_twinx = tel.telemetry_definition[twinx_key].show_limit
+            ylabel_twinx = tel[twinx_key].name
+        elif twinx_key in tel.groups.keys():
+            twinx = list(tel.groups[twinx_key])
+            show_limit_twinx = tel.get_group_show_limit(twinx_key)
+            ylabel_twinx = tel.groups[twinx_key].show_name
+        else:
+            raise KeyError("Key of twinx not found in telemetry_keys or groups key: " + twinx_key)
 
     if VERVOSE >= 2:
         print(f"Open files: {filenames}")
@@ -252,9 +232,6 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
     if len(binary) % TELEMETRY_LENGTH != 0:
         raise ValueError(
             f"Telemetry length is inconsisttent with the files\nFile bytes: {len(binary)}\nTELEMETRY_LENGTH: {TELEMETRY_LENGTH}")
-    tel = Telmetry_Definition()
-    if not set(telemetry_keys) <= set(tel.keys()):
-        raise ValueError("Invalid telemetry code")
     i = 0
     x: list[int] = []
     y: list[list[int]] = [[] for i in range(len(telemetry_keys))]
@@ -291,7 +268,7 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
         ax.set_ylabel(ylabel)
     if twinx is not None:
         ax2 = ax.twinx()
-        if ylabel_twinx is not None:
+        if twinx_key is not None:
             ax2.set_ylabel(ylabel_twinx)
     for i in range(len(telemetry_keys)):
         if type == "plot":
@@ -322,7 +299,7 @@ def run(telemetry_keys: list[str], filenames: list[str], x_key: str = "receive_t
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         raise ValueError("The arguments must be larger than 2.")
-    run([sys.argv[1]], sys.argv[2:])
+    run(sys.argv[1], sys.argv[2:])
 
 
 def convert_chamber_pressure(v: float) -> float:
