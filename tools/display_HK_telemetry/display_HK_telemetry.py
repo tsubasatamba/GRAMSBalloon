@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import matplotlib.pyplot as plt
+import matplotlib.cm
 from typing import Callable, Optional, Any, Iterable, Union, Iterator, Literal
 import sys
 import numpy as np
@@ -81,27 +82,27 @@ class Telmetry_Definition():
         self.telemetry_definition["start_code"] = Telemetry_Property("start_code", 0, 4, False, lambda x: x, )
         self.telemetry_definition["telemetry_type"] = Telemetry_Property("telemetry_type", 4, 2, False, lambda x: x, )
         self.telemetry_definition["time_sec"] = Telemetry_Property("time[sec]", 6, 4, True, lambda x: x, )
-        self.telemetry_definition["time_usec"] = Telemetry_Property("time[usec]", 10, 4, True, lambda x: x,)
+        self.telemetry_definition["time_usec"] = Telemetry_Property("time[$\mu$sec]", 10, 4, True, lambda x: x,)
         self.telemetry_definition["telemetry_index"] = Telemetry_Property("telemetry_index", 14, 4, False, lambda x: x,)
         self.telemetry_definition["run_id"] = Telemetry_Property("run_id", 18, 4, True, lambda x: x, )
         self.telemetry_definition["event_count"] = Telemetry_Property("event_count", 22, 4, False, lambda x: x,)
         self.telemetry_definition["current_event_id"] = Telemetry_Property("current_event_id", 26, 4, False, lambda x: x, )
         self.telemetry_definition["chamber_pressure"] = Telemetry_Property("chamber_pressure[atm]", 30, 2, False, lambda x: convert_chamber_pressure(convert_slow_ADC(x)), (0.9, 1.5))
-        self.telemetry_definition["chamber_temperature_1"] = Telemetry_Property("chamber_temperature_upper[degree]", 32, 2, False, convert_RTD, (-200, 30))
-        self.telemetry_definition["chamber_temperature_2"] = Telemetry_Property("chamber_temperature_middle[degree]", 34, 2, False, convert_RTD, (-200, 30))
-        self.telemetry_definition["chamber_temperature_3"] = Telemetry_Property("chamber_temperature_lower[degree]", 36, 2, False, convert_RTD, (-200, 30))
-        self.telemetry_definition["valve_temperature"] = Telemetry_Property("valve_temperature[degree]", 38, 2, False, convert_RTD, (-50, 30))
-        self.telemetry_definition["outer_temperature"] = Telemetry_Property("outer_temperature[degree]", 40, 2, False, convert_RTD, (-50, 30))
+        self.telemetry_definition["chamber_temperature_1"] = Telemetry_Property("chamber_temperature_upper[$^\\circ \\rm{C}$]", 32, 2, False, convert_RTD, (-200, 30))
+        self.telemetry_definition["chamber_temperature_2"] = Telemetry_Property("chamber_temperature_middle[$^\\circ \\rm{C}$]]", 34, 2, False, convert_RTD, (-200, 30))
+        self.telemetry_definition["chamber_temperature_3"] = Telemetry_Property("chamber_temperature_lower[$^\\circ \\rm{C}$]", 36, 2, False, convert_RTD, (-200, 30))
+        self.telemetry_definition["valve_temperature"] = Telemetry_Property("valve_temperature[$^\\circ \\rm{C}$]", 38, 2, False, convert_RTD, (-50, 30))
+        self.telemetry_definition["outer_temperature"] = Telemetry_Property("outer_temperature[$^\\circ \\rm{C}$]", 40, 2, False, convert_RTD, (-50, 30))
         self.telemetry_definition["tpc_high_voltage_setting"] = Telemetry_Property("tpc_high_voltage_setting[V]", 42, 4, True, lambda x: x, (0, 5))
         self.telemetry_definition["tpc_high_voltage_measurement"] = Telemetry_Property("tpc_high_voltage_measurement[kV]", 46, 2, False, lambda x: 2 * x, (0, 3))
         self.telemetry_definition["pmt_high_voltage_setting"] = Telemetry_Property("pmt_high_voltage_setting[V]", 48, 4, True, lambda x: x, (0, 5))
         self.telemetry_definition["tpc_high_voltage_current_measurement"] = Telemetry_Property("tpc_high_voltage_current_measurement[uA]", 52, 54, False, lambda x: x)
-        self.telemetry_definition["cpu_temperature"] = Telemetry_Property("cpu_temperature[degree]", 54, 2, True, lambda x: x / 10, (0, 80))
-        self.telemetry_definition["hk_temperature_1"] = Telemetry_Property("hk_temperature_1", 56, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_2"] = Telemetry_Property("hk_temperature_2", 58, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_3"] = Telemetry_Property("hk_temperature_3[degree]", 60, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_4"] = Telemetry_Property("hk_temperature_4[degree]", 62, 2, True, lambda x: x / 10, (-10, 50))
-        self.telemetry_definition["hk_temperature_5"] = Telemetry_Property("hk_temperature_5[degree]", 64, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["cpu_temperature"] = Telemetry_Property("cpu_temperature[$^\\circ \\rm{C}$]", 54, 2, True, lambda x: x / 10, (0, 80))
+        self.telemetry_definition["hk_temperature_1"] = Telemetry_Property("hk_temperature_1[$^\\circ \\rm{C}$]", 56, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_2"] = Telemetry_Property("hk_temperature_2[$^\\circ \\rm{C}$]", 58, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_3"] = Telemetry_Property("hk_temperature_3[$^\\circ \\rm{C}$]", 60, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_4"] = Telemetry_Property("hk_temperature_4[$^\\circ \\rm{C}$]", 62, 2, True, lambda x: x / 10, (-10, 50))
+        self.telemetry_definition["hk_temperature_5"] = Telemetry_Property("hk_temperature_5[$^\\circ \\rm{C}$]", 64, 2, True, lambda x: x / 10, (-10, 50))
         self.telemetry_definition["hk_humidity_1"] = Telemetry_Property("hk_humidity_1[%]", 66, 2, False, lambda x: x, (0, 10))
         self.telemetry_definition["hk_humidity_2"] = Telemetry_Property("hk_humidity_2[%]", 68, 2, False, lambda x: x, (0, 10))
         self.telemetry_definition["hk_humidity_3"] = Telemetry_Property("hk_humidity_3[%]", 70, 2, False, lambda x: x, (0, 10))
@@ -115,12 +116,12 @@ class Telmetry_Definition():
         self.telemetry_definition["acceleration_x"] = Telemetry_Property("acceleration_x[G]", 86, 2, True)
         self.telemetry_definition["acceleration_y"] = Telemetry_Property("acceleration_y[G]", 88, 2, True)
         self.telemetry_definition["acceleration_z"] = Telemetry_Property("acceleration_z[G]", 90, 2, True)
-        self.telemetry_definition["gyro_x"] = Telemetry_Property("gyro_x", 92, 2, True)
-        self.telemetry_definition["gyro_y"] = Telemetry_Property("gyro_y", 94, 2, True)
-        self.telemetry_definition["gyro_z"] = Telemetry_Property("gyro_z", 96, 2, True)
-        self.telemetry_definition["magnet_x"] = Telemetry_Property("magnet_x[uT]", 98, 2, True)
-        self.telemetry_definition["magnet_y"] = Telemetry_Property("magnet_y[uT]", 100, 2, True)
-        self.telemetry_definition["magnet_z"] = Telemetry_Property("magnet_z[uT]", 102, 2, True)
+        self.telemetry_definition["gyro_x"] = Telemetry_Property("gyro_x[dps]", 92, 2, True)
+        self.telemetry_definition["gyro_y"] = Telemetry_Property("gyro_y[dps]", 94, 2, True)
+        self.telemetry_definition["gyro_z"] = Telemetry_Property("gyro_z[dps]", 96, 2, True)
+        self.telemetry_definition["magnet_x"] = Telemetry_Property("magnet_x[$\mu$T]", 98, 2, True)
+        self.telemetry_definition["magnet_y"] = Telemetry_Property("magnet_y[$\mu$T]", 100, 2, True)
+        self.telemetry_definition["magnet_z"] = Telemetry_Property("magnet_z[$\mu$T]", 102, 2, True)
         self.telemetry_definition["accel_sensor_temperature"] = Telemetry_Property("accel_sensor_temperature", 104, 2, True)
         self.telemetry_definition["main_current"] = Telemetry_Property("main_current", 106, 2, False, convert_main_current, (0, 1))
         self.telemetry_definition["main_voltage"] = Telemetry_Property("main_voltage", 108, 2, False, convert_main_voltage, (0, 32))
@@ -131,7 +132,7 @@ class Telmetry_Definition():
         self.telemetry_definition["crc"] = Telemetry_Property("crc", 126, 2, False)
         self.telemetry_definition["end_code"] = Telemetry_Property("end_code", 128, 4, False,)
         self.telemetry_definition["receive_time_sec"] = Telemetry_Property("receive_time[sec]", 132, 4, True,)
-        self.telemetry_definition["receive_time_usec"] = Telemetry_Property("receive_time[usec]", 136, 4, True)
+        self.telemetry_definition["receive_time_usec"] = Telemetry_Property("receive_time[$\mu$sec]", 136, 4, True)
 
         self.groups: dict[str, Telemetry_Group] = {}
         self.add_group("sec", ["time_sec", "receive_time_sec"])
@@ -142,10 +143,10 @@ class Telmetry_Definition():
         self.add_group("hk_temperature", ["hk_temperature_3", "hk_temperature_4", "hk_temperature_5"])
         self.add_group("temperature", ["chamber_temperature_1", "chamber_temperature_2", "chamber_temperature_3", "outer_temperature", "valve_temperature", "hk_temperature_3", "hk_temperature_4", "hk_temperature_5"])
         self.groups["pressure"].show_name = "pressure[atm]"
-        self.groups["temperature"].show_name = "temperature[degree]"
+        self.groups["temperature"].show_name = "temperature[$^\\circ \\rm{C}$]"
         self.groups["hk_pressure"].show_name = "hk_pressure[atm]"
-        self.groups["hk_temperature"].show_name = "hk_temperature[degree]"
-        self.groups["chamber_temperature"].show_name = "chamber_temperature[degree]"
+        self.groups["hk_temperature"].show_name = "hk_temperature[$^\\circ \\rm{C}$]"
+        self.groups["chamber_temperature"].show_name = "chamber_temperature[$^\\circ \\rm{C}$]"
 
     def __getitem__(self, index: str) -> Telemetry_Property:
         return self.telemetry_definition[index]
@@ -201,6 +202,7 @@ def read_binary(filename: list[str]) -> bytes:
 
 def run(telemetry_key: str, filenames: list[str], x_key: str = "receive_time_sec", type: Literal["plot", "scatter"] = "plot", twinx_key: Optional[str] = None,) -> None:
     runID = filenames[0].split("_")[1]
+    _colormap = matplotlib.cm.get_cmap("tab20")
     tel = Telmetry_Definition()
     if telemetry_key in tel.keys():
         show_limit = tel.telemetry_definition[telemetry_key].show_limit
@@ -263,7 +265,9 @@ def run(telemetry_key: str, filenames: list[str], x_key: str = "receive_time_sec
     else:
         x_arr = np.array(x, dtype=float)
     fig = plt.figure(1, figsize=(6.4, 4.8))
-    ax = fig.add_subplot(111, xlabel=x_key)
+    ax = fig.add_subplot(111, xlabel=tel[x_key].name)
+    _colormap_index = 0
+
     if ylabel is not None:
         ax.set_ylabel(ylabel)
     if twinx is not None:
@@ -272,16 +276,20 @@ def run(telemetry_key: str, filenames: list[str], x_key: str = "receive_time_sec
             ax2.set_ylabel(ylabel_twinx)
     for i in range(len(telemetry_keys)):
         if type == "plot":
-            ax.plot(x_arr, y[i], label=telemetry_keys[i])
+            ax.plot(x_arr, y[i], label=telemetry_keys[i], c=_colormap.colors[_colormap_index])
+            _colormap_index += 1
         elif type == "scatter":
-            ax.scatter(x_arr, y[i], label=telemetry_keys[i], s=0.1)
+            ax.scatter(x_arr, y[i], label=telemetry_keys[i], s=0.1, c=_colormap.colors[_colormap_index])
+            _colormap_index += 1
     if twinx is not None:
         for i in range(len(twinx)):
             if type == "plot":
-                ax2.plot(x_arr, y2[i], label=twinx[i], linestyle="dashdot")
+                ax2.plot(x_arr, y2[i], label=twinx[i], linestyle="dashdot", c=_colormap.colors[_colormap_index])
+                _colormap_index += 1
             elif type == "scatter":
                 if twinx is not None:
-                    ax2.scatter(x_arr, y2[i], label=twinx[i], s=0.1)
+                    ax2.scatter(x_arr, y2[i], label=twinx[i], s=0.1, c=_colormap.colors[_colormap_index])
+                    _colormap_index += 1
     if show_limit is not None:
         ax.set_ylim(*show_limit)
     if (show_limit_twinx is not None) and (twinx is not None):
