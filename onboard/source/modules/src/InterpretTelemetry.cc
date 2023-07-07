@@ -82,7 +82,7 @@ ANLStatus InterpretTelemetry::mod_analyze()
     if (plotter_!=nullptr) {
       plotter_->makeImage(image_filenames);
       if (pusher_!=nullptr) {
-        std::vector<std::string> keys = {"waveform_all", "waveform_pmt"};
+        std::vector<std::string> keys = {"waveform_all", "waveform_all_autorange", "waveform_pmt"};
         pusher_->pushWaveformImage(keys, image_filenames);
       }
     }

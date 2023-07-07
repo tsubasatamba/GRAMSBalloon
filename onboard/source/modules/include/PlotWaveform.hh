@@ -27,6 +27,7 @@ public:
 private:
   InterpretTelemetry* interpreter_ = nullptr;
   std::string wfImageName_;
+  std::string wfAutorangeImageName_;
   std::string pmtImageName_;
   int chatter_ = 0;
 };
