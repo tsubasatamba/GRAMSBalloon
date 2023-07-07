@@ -11,6 +11,7 @@ namespace gramsballoon {
 PlotWaveform::PlotWaveform()
 {
   wfImageName_ = "waveform_all.png";
+  wfAutorangeImageName_ = "waveform_all_autorange.png";
   pmtImageName_ = "waveform_pmt.png";
 }
 
@@ -19,6 +20,7 @@ PlotWaveform::~PlotWaveform() = default;
 ANLStatus PlotWaveform::mod_define()
 {
   define_parameter("wf_image_name", &mod_class::wfImageName_);
+  define_parameter("wf_autorange_image_name", &mod_class::wfAutorangeImageName_);
   define_parameter("pmt_image_name", &mod_class::pmtImageName_);
   define_parameter("chatter", &mod_class::chatter_);
   
@@ -92,11 +94,12 @@ void PlotWaveform::makeImage(std::vector<std::string>& image_filenames)
   for (int i=0; i<num_channels; i++) {
     canv1->cd(i+1);
     histograms[i]->Draw("hist");
-    //const double vmin = histograms[i]->GetMinimum();
-    //const double vmax = histograms[i]->GetMaximum();
-    //const double ymin = vmin - (vmax-vmin)/8.0;
-    //const double ymax = vmax + (vmax-vmin)/8.0;
-    histograms[i]->GetYaxis()->SetRangeUser(ymin, ymax);
+    if (i==0) {
+      histograms[i]->GetYaxis()->SetRangeUser(-2000.0, 100.0);
+    }
+    else {
+      histograms[i]->GetYaxis()->SetRangeUser(ymin, ymax);
+    }
     histograms[i]->GetXaxis()->SetTitle("Time (us)");
     histograms[i]->GetYaxis()->SetTitle("Voltage (mV)");
     histograms[i]->GetXaxis()->SetTitleOffset(0.0);
@@ -108,6 +111,18 @@ void PlotWaveform::makeImage(std::vector<std::string>& image_filenames)
   gStyle->SetPalette(56);
   canv1->SaveAs(wfImageName_.c_str());
   image_filenames.push_back(wfImageName_);
+
+  for (int i=0; i<num_channels; i++) {
+    canv1->cd(i+1);
+    histograms[i]->Draw("hist");
+    const double vmin = histograms[i]->GetBinContent(histograms[i]->GetMinimumBin());
+    const double vmax = histograms[i]->GetBinContent(histograms[i]->GetMaximumBin());
+    const double ymin = vmin - (vmax-vmin)/8.0;
+    const double ymax = vmax + (vmax-vmin)/8.0;
+    histograms[i]->GetYaxis()->SetRangeUser(ymin, ymax);
+  }
+  canv1->SaveAs(wfAutorangeImageName_.c_str());
+  image_filenames.push_back(wfAutorangeImageName_);
 
   {
     canv2->cd();

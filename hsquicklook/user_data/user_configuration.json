@@ -1,5 +1,5 @@
 {
-    "ws_host": "localhost",
+    "ws_host": "192.168.2.1",
     "ws_port": "8080",
     "title": "GRAMS Balloon QuickLook",
     "ti_scaling": 64,

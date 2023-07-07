@@ -58,6 +58,16 @@ HSQuickLook.main.schema =
             "directory": "Telemetry",
             "document": "waveform_image",
             "period": "4",
+            "section": "waveform_all_autorange",
+            "contents": {
+                "waveform_all_autorange": {"type": "image"}
+            }
+        },
+        {
+            "collection": "grams",
+            "directory": "Telemetry",
+            "document": "waveform_image",
+            "period": "4",
             "section": "waveform_pmt",
             "contents": {
                 "waveform_pmt": {"type": "image"}
