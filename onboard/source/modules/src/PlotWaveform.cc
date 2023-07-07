@@ -94,7 +94,12 @@ void PlotWaveform::makeImage(std::vector<std::string>& image_filenames)
   for (int i=0; i<num_channels; i++) {
     canv1->cd(i+1);
     histograms[i]->Draw("hist");
-    histograms[i]->GetYaxis()->SetRangeUser(ymin, ymax);
+    if (i==0) {
+      histograms[i]->GetYaxis()->SetRangeUser(-2000.0, 100.0);
+    }
+    else {
+      histograms[i]->GetYaxis()->SetRangeUser(ymin, ymax);
+    }
     histograms[i]->GetXaxis()->SetTitle("Time (us)");
     histograms[i]->GetYaxis()->SetTitle("Voltage (mV)");
     histograms[i]->GetXaxis()->SetTitleOffset(0.0);
