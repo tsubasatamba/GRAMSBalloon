@@ -279,7 +279,7 @@ def run(telemetry_key: str, filenames: list[str], x_key: str = "receive_time_sec
             ax.plot(x_arr, y[i], label=telemetry_keys[i], c=_colormap.colors[_colormap_index])
             _colormap_index += 1
         elif type == "scatter":
-            ax.scatter(x_arr, y[i], label=telemetry_keys[i], s=0.1, c=_colormap.colors[_colormap_index])
+            ax.scatter(x_arr, y[i], label=telemetry_keys[i], s=0.1, color=_colormap.colors[_colormap_index])
             _colormap_index += 1
     if twinx is not None:
         for i in range(len(twinx)):
@@ -288,7 +288,7 @@ def run(telemetry_key: str, filenames: list[str], x_key: str = "receive_time_sec
                 _colormap_index += 1
             elif type == "scatter":
                 if twinx is not None:
-                    ax2.scatter(x_arr, y2[i], label=twinx[i], s=0.1, c=_colormap.colors[_colormap_index])
+                    ax2.scatter(x_arr, y2[i], label=twinx[i], s=0.1, color=_colormap.colors[_colormap_index])
                     _colormap_index += 1
     if show_limit is not None:
         ax.set_ylim(*show_limit)
