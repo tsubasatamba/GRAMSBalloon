@@ -198,11 +198,11 @@ int main(int argc, char **argv)
   }
   index = 64;
   for (int i=0; i<num_event_per_file; i++) {
-    std::vector<int16_t> event_header(5);
-    getVector<int16_t>(index, 5, arr, event_header);
-    event_id = event_header[0];
-    event_time.tv_sec = (static_cast<int>(event_header[1]))<<16 + static_cast<int>(event_header[2]);
-    event_time.tv_usec = (static_cast<int>(event_header[3]))<<16 + static_cast<int>(event_header[4]);
+    std::vector<uint16_t> event_header(5);
+    getVector<uint16_t>(index, 5, arr, event_header);
+    event_id = static_cast<int>(event_header[0]);
+    event_time.tv_sec = static_cast<long>(((static_cast<uint32_t>(event_header[1]))<<16) + static_cast<uint32_t>(event_header[2]));
+    event_time.tv_usec = static_cast<long>(((static_cast<uint32_t>(event_header[3]))<<16) + static_cast<uint32_t>(event_header[4]));
     std::cout << "event ID: " << event_id << std::endl;
     index += sizeof(int16_t) * 5;
     for (int j=0; j<4; j++) {
