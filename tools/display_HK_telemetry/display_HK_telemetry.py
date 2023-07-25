@@ -82,7 +82,7 @@ class Telmetry_Definition():
         self.telemetry_definition["start_code"] = Telemetry_Property("start_code", 0, 4, False, lambda x: x, )
         self.telemetry_definition["telemetry_type"] = Telemetry_Property("telemetry_type", 4, 2, False, lambda x: x, )
         self.telemetry_definition["time_sec"] = Telemetry_Property("time[sec]", 6, 4, True, lambda x: x, )
-        self.telemetry_definition["time_usec"] = Telemetry_Property("time[$\mu$sec]", 10, 4, True, lambda x: x,)
+        self.telemetry_definition["time_usec"] = Telemetry_Property("time[$\\mu$sec]", 10, 4, True, lambda x: x,)
         self.telemetry_definition["telemetry_index"] = Telemetry_Property("telemetry_index", 14, 4, False, lambda x: x,)
         self.telemetry_definition["run_id"] = Telemetry_Property("run_id", 18, 4, True, lambda x: x, )
         self.telemetry_definition["event_count"] = Telemetry_Property("event_count", 22, 4, False, lambda x: x,)
@@ -96,7 +96,7 @@ class Telmetry_Definition():
         self.telemetry_definition["tpc_high_voltage_setting"] = Telemetry_Property("tpc_high_voltage_setting[V]", 42, 4, True, lambda x: x, (0, 5))
         self.telemetry_definition["tpc_high_voltage_measurement"] = Telemetry_Property("tpc_high_voltage_measurement[kV]", 46, 2, False, lambda x: 2 * x, (0, 3))
         self.telemetry_definition["pmt_high_voltage_setting"] = Telemetry_Property("pmt_high_voltage_setting[V]", 48, 4, True, lambda x: x, (0, 5))
-        self.telemetry_definition["tpc_high_voltage_current_measurement"] = Telemetry_Property("tpc_high_voltage_current_measurement[uA]", 52, 54, False, lambda x: x)
+        self.telemetry_definition["tpc_high_voltage_current_measurement"] = Telemetry_Property("tpc_high_voltage_current_measurement[$\\rm{\\mu}$A]", 52, 54, False, lambda x: x)
         self.telemetry_definition["cpu_temperature"] = Telemetry_Property("cpu_temperature[$^\\circ \\rm{C}$]", 54, 2, True, lambda x: x / 10, (0, 80))
         self.telemetry_definition["hk_temperature_1"] = Telemetry_Property("hk_temperature_1[$^\\circ \\rm{C}$]", 56, 2, True, lambda x: x / 10, (-10, 50))
         self.telemetry_definition["hk_temperature_2"] = Telemetry_Property("hk_temperature_2[$^\\circ \\rm{C}$]", 58, 2, True, lambda x: x / 10, (-10, 50))
@@ -119,12 +119,12 @@ class Telmetry_Definition():
         self.telemetry_definition["gyro_x"] = Telemetry_Property("gyro_x[dps]", 92, 2, True)
         self.telemetry_definition["gyro_y"] = Telemetry_Property("gyro_y[dps]", 94, 2, True)
         self.telemetry_definition["gyro_z"] = Telemetry_Property("gyro_z[dps]", 96, 2, True)
-        self.telemetry_definition["magnet_x"] = Telemetry_Property("magnet_x[$\mu$T]", 98, 2, True)
-        self.telemetry_definition["magnet_y"] = Telemetry_Property("magnet_y[$\mu$T]", 100, 2, True)
-        self.telemetry_definition["magnet_z"] = Telemetry_Property("magnet_z[$\mu$T]", 102, 2, True)
-        self.telemetry_definition["accel_sensor_temperature"] = Telemetry_Property("accel_sensor_temperature", 104, 2, True)
-        self.telemetry_definition["main_current"] = Telemetry_Property("main_current", 106, 2, False, convert_main_current, (0, 1))
-        self.telemetry_definition["main_voltage"] = Telemetry_Property("main_voltage", 108, 2, False, convert_main_voltage, (0, 32))
+        self.telemetry_definition["magnet_x"] = Telemetry_Property("magnet_x[$\\mu$T]", 98, 2, True)
+        self.telemetry_definition["magnet_y"] = Telemetry_Property("magnet_y[$\\mu$T]", 100, 2, True)
+        self.telemetry_definition["magnet_z"] = Telemetry_Property("magnet_z[$\\mu$T]", 102, 2, True)
+        self.telemetry_definition["accel_sensor_temperature"] = Telemetry_Property("accel_sensor_temperature[$^\\circ \\rm{C}$]", 104, 2, True)
+        self.telemetry_definition["main_current"] = Telemetry_Property("main_current[A]", 106, 2, False, convert_main_current, (0, 1))
+        self.telemetry_definition["main_voltage"] = Telemetry_Property("main_voltage[A]", 108, 2, False, convert_main_voltage, (0, 32))
         self.telemetry_definition["last_command_index"] = Telemetry_Property("last_command_index", 110, 4, False)
         self.telemetry_definition["last_command_code"] = Telemetry_Property("last_command_code", 114, 2, False,)
         self.telemetry_definition["command_reject_count"] = Telemetry_Property("command_reject_count", 116, 2, False,)
@@ -132,7 +132,7 @@ class Telmetry_Definition():
         self.telemetry_definition["crc"] = Telemetry_Property("crc", 126, 2, False)
         self.telemetry_definition["end_code"] = Telemetry_Property("end_code", 128, 4, False,)
         self.telemetry_definition["receive_time_sec"] = Telemetry_Property("receive_time[sec]", 132, 4, True,)
-        self.telemetry_definition["receive_time_usec"] = Telemetry_Property("receive_time[$\mu$sec]", 136, 4, True)
+        self.telemetry_definition["receive_time_usec"] = Telemetry_Property("receive_time[$\\mu$sec]", 136, 4, True)
 
         self.groups: dict[str, Telemetry_Group] = {}
         self.add_group("sec", ["time_sec", "receive_time_sec"])
@@ -177,11 +177,11 @@ class Telmetry_Definition():
                 if minimum is None:
                     minimum = self.telemetry_definition[key].show_limit[0]
                 else:
-                    minimum = min((minimum, self.telemetry_definition[key].show_limit[0]))
+                    minimum = min((minimum, self.telemetry_definition[key].show_limit[0]))  # type: ignore
                 if maximum is None:
                     maximum = self.telemetry_definition[key].show_limit[1]
                 else:
-                    maximum = max((maximum, self.telemetry_definition[key].show_limit[1]))
+                    maximum = max((maximum, self.telemetry_definition[key].show_limit[1]))  # type: ignore
         return minimum, maximum
 
 
@@ -201,7 +201,7 @@ def read_binary(filename: list[str]) -> bytes:
 
 
 def run(telemetry_key: str, filenames: list[str], x_key: str = "receive_time_sec", type: Literal["plot", "scatter"] = "plot", twinx_key: Optional[str] = None,) -> None:
-    runID = filenames[0].split("_")[1]
+    runID = filenames[0].split("_")[-4]
     _colormap = matplotlib.cm.get_cmap("tab20")
     tel = Telmetry_Definition()
     if telemetry_key in tel.keys():

@@ -17,7 +17,7 @@ def get_filenames(run_id: int) -> list[str]:
     run_id_str = '{:0=6}'.format(run_id)
     arr = glob.glob(dirname + "telemetry_" + run_id_str + "_*_HK_*.dat")
     if len(arr) == 0:
-        raise FileNotFoundError("HK Telemetry data file not found")
+        raise FileNotFoundError(f"HK Telemetry data file(runID: {run_id}) not found")
     arr = sorted(arr)
     return arr
 
