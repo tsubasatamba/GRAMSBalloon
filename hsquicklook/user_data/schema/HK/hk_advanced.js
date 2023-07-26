@@ -184,14 +184,24 @@ HSQuickLook.main.schema =
             "contents": {
                 "Acceleration_graph": { "type": "trend-graph",
                     "group": [
-                        {"source": "Acceleration_x","conversion": function (v) {
-                            return Math.sqrt(accel_x * accel_x + accel_y * accel_y + accel_z * accel_z);
-                        }, "options":{"legend": "Acc","color": "black"}},
+                       
+                        {"source": "Acceleration_x","options":{"legend": "Acc_x","color": "black"}},
+                        {"source": "Acceleration_y","options":{"legend": "Acc_y","color": "blue"}},
+                        {"source": "Acceleration_z","options":{"legend": "Acc_z","color": "green"}},
                     ],
                     "options":{"xWidth": 1000}
                 },
+                "Acceleration_abs":{"type":"trend-graph",
+                    "group":[
+                        {"source": "Acceleration_x","conversion": function (v) {
+                            return Math.sqrt(accel_x * accel_x + accel_y * accel_y + accel_z * accel_z);
+                        }, "options":{"legend": "Acc","color": "red"}},  
+                    ], 
+                    "options":{"xWidth": 1000}
+                }
             }
         }
+       
     ];
 
 function convert_Slow_ADC(v) { return (v / 4096 * Va) }
