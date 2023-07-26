@@ -173,6 +173,24 @@ HSQuickLook.main.schema =
                     "options":{"xWidth": 1000,"yRange":[0.9, 1.5]}
                 }
             }
+        },
+        {
+            "collection": "grams",
+            "directory": "Telemetry",
+            "document": "HK",
+            "period": 1,
+            "tableName": "Trend_graph_Acc",
+            "section": "DAQ_Vessel",
+            "contents": {
+                "Acceleration_graph": { "type": "trend-graph",
+                    "group": [
+                        {"source": "Acceleration_x","conversion": function (v) {
+                            return Math.sqrt(accel_x * accel_x + accel_y * accel_y + accel_z * accel_z);
+                        }, "options":{"legend": "Acc","color": "black"}},
+                    ],
+                    "options":{"xWidth": 1000}
+                },
+            }
         }
     ];
 
