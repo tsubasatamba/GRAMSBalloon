@@ -12,7 +12,8 @@ def current_time(dirname: str, runID: int, ) -> float:
     telemetry_key = "main_current"
     path = pathlib.Path(dirname)
     binary = bytes()
-    for i in path.glob("telemetry_{:0=6}_*_HK_*.dat".format(runID)):
+    globbed = sorted(list(path.glob("telemetry_{:0=6}_*_HK_*.dat".format(runID))))
+    for i in globbed:
         with open(i, "rb") as fp:
             binary += fp.read()
     telemetry_difinition = create_telemetry_definition()
