@@ -33,7 +33,7 @@ T getValue(int index, const std::vector<uint8_t>& vec)
   for (int i=0; i<byte; i++) {
     const int j = index + i;
     const int shift = 8 * (byte-1-i);
-    v |= vec[j] << (shift);
+    v |= (static_cast<uint32_t>(vec[j]) << (shift));
   }
   return static_cast<T>(v);
 }
@@ -81,7 +81,7 @@ void plotWaveform(const std::vector<std::vector<double> >& wf, double dt, const 
     graph[i]->Draw("AP");
     const double min_y = *std::min_element(wf[i].begin(), wf[i].end());
     const double max_y = *std::max_element(wf[i].begin(), wf[i].end());
-    std::cout << "min max" << min_y << " " << max_y << std::endl;
+    //std::cout << "min max" << min_y << " " << max_y << std::endl;
     graph[i]->GetYaxis()->SetRangeUser(min_y, max_y);
     const std::string title = "channel " + std::to_string(i);
     graph[i]->SetTitle(title.c_str());
@@ -102,9 +102,9 @@ int main(int argc, char **argv)
     ifs.read(&c, 1);
     arr.push_back(static_cast<uint8_t>(c));
   }
-  std::cout << arr.size() << std::endl;
-  std::cout << static_cast<int>(arr.back()) << std::endl;
-  std::cout << static_cast<int>(arr[arr.size()-2]) << std::endl;
+  //std::cout << arr.size() << std::endl;
+  //std::cout << static_cast<int>(arr.back()) << std::endl;
+  //std::cout << static_cast<int>(arr[arr.size()-2]) << std::endl;
     
   std::vector<int16_t> file_header;
   getVector<int16_t>(0, 32, arr, file_header);
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
   // read header
 
   for (int i=0; i<static_cast<int>(file_header.size()); i++) {
-    std::cout << i << " " << file_header[i] << std::endl;
+    std::cout << i << " " << static_cast<int>(file_header[i]) << std::endl;
   }
 
   int trigger_device = static_cast<int>(file_header[0]);
@@ -133,8 +133,12 @@ int main(int argc, char **argv)
   int num_sample = 8192;
   int num_event_per_file = static_cast<int>(file_header[9]);
   timeval header_time;
-  header_time.tv_sec = ((static_cast<int>(file_header[10]))<<16) + static_cast<int>(file_header[11]);
-  header_time.tv_usec = ((static_cast<int>(file_header[12]))<<16) + static_cast<int>(file_header[13]);
+  /*
+  header_time.tv_sec = ((static_cast<uint32_t>(file_header[10]))<<16) + static_cast<uint32_t>(file_header[11]);
+  header_time.tv_usec = ((static_cast<uint32_t>(file_header[12]))<<16) + static_cast<uint32_t>(file_header[13]);
+  */
+  header_time.tv_sec = static_cast<long>((static_cast<uint16_t>(file_header[10])<<16) + static_cast<uint16_t>(file_header[11]));
+  header_time.tv_usec = static_cast<long>((static_cast<uint16_t>(file_header[12])<<16) + static_cast<uint16_t>(file_header[13]));
   std::vector<double> range(4);
   std::vector<double> offset(4);
   int index = 14;
