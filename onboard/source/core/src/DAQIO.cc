@@ -159,7 +159,7 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
     #endif
     if (status==DwfStateDone) {
       data_acquired = true;
-      eventCount_++;
+      eventCount_++;      
       break;
     }
     if (trigSrc_==static_cast<int>(TriggerSrc::PERIODIC_TRIGGER)) {
@@ -175,6 +175,15 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
       break;
     }
   }
+
+  for (int i=0; i<num_devices; i++) {
+    if (i!=trigDevice_) continue;
+    for (int j=0; j<2; j++) {
+      const int k = i*2 + j;
+      FDwfAnalogInStatusData16(handler_list[i], j, &data[k][0], 0, numSample_);
+    }
+  }
+
 
   gettimeofday(&event_time, NULL);
   header[1] = static_cast<int16_t>((event_time.tv_sec>>16)&(0xffff));
@@ -210,6 +219,7 @@ DAQResult DAQIO::getData(int event_id, std::vector<int16_t>& header, std::vector
   
   for (int i=0; i<num_devices; i++) {
     if (!detected[i]) continue;
+    if (i==trigDevice_) continue;
     for (int j=0; j<2; j++) {
       const int k = i*2 + j;
       FDwfAnalogInStatusData16(handler_list[i], j, &data[k][0], 0, numSample_);
