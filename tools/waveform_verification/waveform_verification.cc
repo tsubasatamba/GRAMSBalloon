@@ -19,6 +19,7 @@ void calculate_diff_score(const std::vector<double>& v1, const std::vector<doubl
   shift = 10000;
   const int n1 = v1.size();
   const int n2 = v2.size();
+
   if (n1!=n2) {
     std::cerr << "v1 and v2 should have the same size." << std::endl;
     exit(1);
@@ -27,6 +28,7 @@ void calculate_diff_score(const std::vector<double>& v1, const std::vector<doubl
     std::cerr << "maximum shift too large or negative. maximum_shift = " << maximum_shift << std::endl;
     exit(1);
   }
+
 
   for (int diff=-maximum_shift; diff<=maximum_shift; diff++) {
     double sum = 0.0;
@@ -60,24 +62,38 @@ int main(int argc, char **argv)
 
   TFile* f = new TFile(root_filename.c_str());
   TTree *tree = (TTree*)f->Get("tree");
-  std::vector<double>* wf1;
-  std::vector<double>* wf2;
-  tree->SetBranchAddress(key1.c_str(), (&wf1));
-  if (key1==key2) {
-    wf2 = wf1;
-  }
-  else {
-    tree->SetBranchAddress(key2.c_str(), (&wf2));
-  }
+  std::vector<double>* wf1 = nullptr;
+  std::vector<double>* wf2 = nullptr;
+  tree->SetBranchAddress(key1.c_str(), &wf1);
+  tree->SetBranchAddress(key2.c_str(), &wf2);
+  //wf1->resize(8192);
+  //wf2->resize(8192);
   const int num_entries = tree->GetEntries();
+
+  std::vector<std::vector<double>> v1(num_entries);
+  std::vector<std::vector<double>> v2(num_entries);
+  double effective_bin = 8000;
+  
+  for (int i=0; i<num_entries; i++) {
+    tree->GetEntry(i);
+    if (effective_bin>wf1->size() || effective_bin>wf2->size()) {
+      std::cerr << "effective_bin inappropriate" << std::endl;
+      std::cout << effective_bin << " " << wf1->size() << " " << wf2->size() << std::endl;
+      exit(1);
+    }
+    for (int j=0; j<effective_bin; j++) {
+      v1[i].push_back((*wf1)[j]);
+      v2[i].push_back((*wf2)[j]);
+    }
+  }
+
 
   // zero check
   for (int i=0; i<num_entries; i++) {
-    tree->GetEntry(i);
-    const double max1 = *std::max_element(wf1->begin(), wf1->end());
-    const double min1 = *std::min_element(wf1->begin(), wf1->end());
-    const double max2 = *std::max_element(wf2->begin(), wf2->end());
-    const double min2 = *std::min_element(wf2->begin(), wf2->end());
+    const double max1 = *std::max_element(v1[i].begin(), v1[i].end());
+    const double min1 = *std::min_element(v1[i].begin(), v1[i].end());
+    const double max2 = *std::max_element(v2[i].begin(), v2[i].end());
+    const double min2 = *std::min_element(v2[i].begin(), v2[i].end());
     const double diff1 = max1 - min1;
     const double diff2 = max2 - min2;
     //std::cout << "diff" << i << " " << diff1 << " " << diff2 << std::endl;
@@ -87,28 +103,18 @@ int main(int argc, char **argv)
     }
   }
 
-
-  double effective_bin = 8000;
   double maximum_shift = 1000;
   double score = 0.0;
   double shift = 0.0;
 
+  std::cout << "aaa" << std::endl;
+
   for (int i=0; i<num_entries; i++) {
-    std::vector<double> v1;
-    tree->GetEntry(i);
-    for (int k=0; k<effective_bin; k++) {
-      v1.push_back((*wf1)[k]);
-    }
     double min_score = 1E18;
     int event_id_shift = 100000;
     for (int j=i-1; j<=i+1; j++) {
       if (j<0 || j>=num_entries) continue;
-      std::vector<double> v2;
-      tree->GetEntry(j);
-      for (int k=0; k<effective_bin; k++) {
-        v2.push_back((*wf2)[k]);
-      }
-      calculate_diff_score(v1, v2, maximum_shift, score, shift);
+      calculate_diff_score(v1[i], v2[j], maximum_shift, score, shift);
       //std::cout << i << " " << j << " " << score << " " << shift << std::endl;
       if (score<min_score) {
         event_id_shift = j - i;
@@ -116,6 +122,6 @@ int main(int argc, char **argv)
     }
     std::cout << i << " " << event_id_shift << std::endl;
   }
-    
+
   return 0;
 }
