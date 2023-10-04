@@ -110,7 +110,7 @@ int main(int argc, char **argv)
   getVector<int16_t>(0, 32, arr, file_header);
 
   // open root
-  const std::string root_filename = std::regex_replace(input_filename, std::regex(".dat"), ".root");
+  const std::string root_filename = std::regex_replace(input_filename, std::regex("\\.dat"), ".root");
   TFile* rootfile = TFile::Open(root_filename.c_str(), "recreate");
   TTree* header = new TTree("header", "header");
   TTree* tree = new TTree("tree", "tree");
