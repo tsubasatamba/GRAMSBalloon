@@ -107,7 +107,6 @@ int main(int argc, char **argv)
   double score = 0.0;
   double shift = 0.0;
 
-  std::cout << "aaa" << std::endl;
 
   for (int i=0; i<num_entries; i++) {
     double min_score = 1E18;
@@ -117,6 +116,7 @@ int main(int argc, char **argv)
       calculate_diff_score(v1[i], v2[j], maximum_shift, score, shift);
       //std::cout << i << " " << j << " " << score << " " << shift << std::endl;
       if (score<min_score) {
+        min_score = score;
         event_id_shift = j - i;
       }
     }
