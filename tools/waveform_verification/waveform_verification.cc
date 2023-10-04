@@ -99,6 +99,8 @@ int main(int argc, char **argv)
     for (int k=0; k<effective_bin; k++) {
       v1.push_back((*wf1)[k]);
     }
+    double min_score = 1E18;
+    int event_id_shift = 100000;
     for (int j=i-1; j<=i+1; j++) {
       if (j<0 || j>=num_entries) continue;
       std::vector<double> v2;
@@ -107,8 +109,12 @@ int main(int argc, char **argv)
         v2.push_back((*wf2)[k]);
       }
       calculate_diff_score(v1, v2, maximum_shift, score, shift);
-      std::cout << i << " " << j << " " << score << " " << shift << std::endl;
+      //std::cout << i << " " << j << " " << score << " " << shift << std::endl;
+      if (score<min_score) {
+        event_id_shift = j - i;
+      }
     }
+    std::cout << i << " " << event_id_shift << std::endl;
   }
     
   return 0;
