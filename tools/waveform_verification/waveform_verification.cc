@@ -56,7 +56,7 @@ int main(int argc, char **argv)
   const std::string root_filename = argv[1];
 
   std::string key1 = "wf_channel0";
-  std::string key2 = "wf_channel1";
+  std::string key2 = "wf_channel2";
 
   TFile* f = new TFile(root_filename.c_str());
   TTree *tree = (TTree*)f->Get("tree");
@@ -65,6 +65,22 @@ int main(int argc, char **argv)
   tree->SetBranchAddress(key1.c_str(), (&wf1));
   tree->SetBranchAddress(key2.c_str(), (&wf2));
   const int num_entries = tree->GetEntries();
+
+  // zero check
+  for (int i=0; i<num_entries; i++) {
+    tree->GetEntry(i);
+    const double max1 = *std::max_element(wf1->begin(), wf1->end());
+    const double min1 = *std::min_element(wf1->begin(), wf1->end());
+    const double max2 = *std::max_element(wf2->begin(), wf2->end());
+    const double min2 = *std::min_element(wf2->begin(), wf2->end());
+    const double diff1 = max1 - min1;
+    const double diff2 = max2 - min2;
+    std::cout << "diff" << i << " " << diff1 << " " << diff2 << std::endl;
+    const double threshold = 0.33E-3;
+    if (diff2<threshold) {
+      std::cout << "event " << i << " did not detect any signal." << std::endl;
+    }
+  }
 
 
   double effective_bin = 8000;
