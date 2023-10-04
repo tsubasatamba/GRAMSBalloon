@@ -63,7 +63,12 @@ int main(int argc, char **argv)
   std::vector<double>* wf1;
   std::vector<double>* wf2;
   tree->SetBranchAddress(key1.c_str(), (&wf1));
-  tree->SetBranchAddress(key2.c_str(), (&wf2));
+  if (key1==key2) {
+    wf2 = wf1;
+  }
+  else {
+    tree->SetBranchAddress(key2.c_str(), (&wf2));
+  }
   const int num_entries = tree->GetEntries();
 
   // zero check
@@ -75,7 +80,7 @@ int main(int argc, char **argv)
     const double min2 = *std::min_element(wf2->begin(), wf2->end());
     const double diff1 = max1 - min1;
     const double diff2 = max2 - min2;
-    std::cout << "diff" << i << " " << diff1 << " " << diff2 << std::endl;
+    //std::cout << "diff" << i << " " << diff1 << " " << diff2 << std::endl;
     const double threshold = 0.33E-3;
     if (diff2<threshold) {
       std::cout << "event " << i << " did not detect any signal." << std::endl;
