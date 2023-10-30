@@ -16,45 +16,40 @@
 
 using namespace gramsballoon;
 
-double RTD_conversion(int adcValue)
-{
+double RTD_conversion(int adcValue) {
   const double rRef_ = 430.0;
   const double res = (static_cast<double>(adcValue) * static_cast<double>(rRef_) / 400.0) / 32.0 - 256.0;
   return res;
 }
-double slow_ADC_conversion(int adcValue)
-{
+double slow_ADC_conversion(int adcValue) {
   const double va = 5.026;
   return static_cast<double>(adcValue) / 4096.0 * va;
 }
 
-double TPC_current_conversion(int adcValue)
-{
+double TPC_current_conversion(int adcValue) {
   const double va = 5.026;
   const double voltage = static_cast<double>(adcValue) / 4096.0 * va;
   const double current = voltage / 4.0 * 200.0;
   return current;
 }
 
-double pressure_conversion(int adcValue)
-{
+double pressure_conversion(int adcValue) {
   double resistor = 100.0;
   double current = slow_ADC_conversion(adcValue) / resistor * 1000.; // mA
   return (current - 4.0) * 2.0 / 16.0;
 }
 
-double main_current_conversion(int adcValue)
-{
+double main_current_conversion(int adcValue) {
   return (slow_ADC_conversion(adcValue) - 1.0) * 1.25;
 }
 
-double main_voltage_conversion(int adcValue){
-  return slow_ADC_conversion(adcValue)*24.0/3.34;
+double main_voltage_conversion(int adcValue) {
+  return slow_ADC_conversion(adcValue) * 24.0 / 3.34;
 }
-  
-int main(int argc, char **argv)
-{
+
+int main(int argc, char** argv) {
   constexpr int TELEMETRY_LENGTH = 140;
+  // constexpr int TELEMETRY_LENGTH = 132;  // If telemetry data on raspi
 
   if (argc != 3) {
     std::cerr << "Usage: ./make_telemetry_root inputfile outputfile" << std::endl;
@@ -89,15 +84,21 @@ int main(int argc, char **argv)
     }
     while (!ifs_binary.eof()) {
       std::vector<uint8_t> buf(TELEMETRY_LENGTH);
+      bool is_bad_data = false;
       for (int j = 0; j < TELEMETRY_LENGTH; j++) {
         if (ifs_binary.eof()) {
           break;
         }
         char c;
         ifs_binary.read(&c, 1);
-        buf[j] = static_cast<uint8_t>(c);
+        const uint8_t byte = static_cast<uint8_t>(c);
+        if (j > 2 && j < TELEMETRY_LENGTH - 1 && byte == 0x79 && buf[j - 1] == 0xd2 && buf[j - 2] == 0xa4 && buf[j - 3] == 0xc5) {
+          is_bad_data = true;
+          break;
+        }
+        buf[j] = byte;
       }
-      if (ifs_binary.eof()) break;
+      if (ifs_binary.eof() || is_bad_data) break;
       telemetry.push_back(buf);
     }
     ifs_binary.close();
@@ -153,7 +154,7 @@ int main(int argc, char **argv)
   tree->Branch("current_event_id", &current_event_id, "current_event_id/i");
   tree->Branch("chamber_pressure", &chamber_pressure, "chamber_pressure/D");
   for (int i = 0; i < MTR_NUM_CHAMBER_TEMP; i++) {
-    const int j = i+1;
+    const int j = i + 1;
     tree->Branch(Form("chamber_temperature_%d", j), &chamber_temperature[i], Form("chamber_temperature_%d/D", j));
   }
   tree->Branch("outer_temperature", &outer_temperature, "outer_temperature/D");
@@ -168,7 +169,7 @@ int main(int argc, char **argv)
     const int j = i + 1;
     tree->Branch(Form("env_temperature_%d", j), &env_temperature[i], Form("env_temperature_%d/D", j));
     tree->Branch(Form("env_humidity_%d", j), &env_humidity[i], Form("env_humidity_%d/D", j));
-    tree->Branch(Form("env_pressure_%d", j), &env_pressure[i], Form("env_pressure_%d/D",j));
+    tree->Branch(Form("env_pressure_%d", j), &env_pressure[i], Form("env_pressure_%d/D", j));
   }
 
   tree->Branch("acceleration_x", &acceleration[0], "acceleration_x/D");
@@ -184,7 +185,7 @@ int main(int argc, char **argv)
   tree->Branch("magnet_z", &magnet[2], "magnet_z/D");
 
   tree->Branch("accel_sensor_temperature", &accel_sensor_temperature, "accel_sensor_temperature/D");
-    
+
   tree->Branch("main_current", &main_current, "main_current/D");
   tree->Branch("main_voltage", &main_voltage, "main_voltage/D");
   tree->Branch("last_command_code", &last_command_code, "last_command_code/s");
@@ -198,19 +199,20 @@ int main(int argc, char **argv)
   for (int i = 0; i < static_cast<int>(telemetry.size()); i++) {
     received_time_sec = 0;
     received_time_usec = 0;
-    for (int j=0; j<2; j++) {
-      for (int k=0; k<4; k++) {
-        const int shift = k*8;
+    for (int j = 0; j < 2; j++) {
+      for (int k = 0; k < 4; k++) {
+        const int shift = k * 8;
         const int now = static_cast<int>(static_cast<uint32_t>(telemetry[i].back()) << shift);
-        if (j==0) {
+        if (j == 0) {
           received_time_usec |= now;
         }
-        if (j==1) {
+        if (j == 1) {
           received_time_sec |= now;
         }
         telemetry[i].pop_back();
       }
     }
+
     teldef.setTelemetry(telemetry[i]);
     teldef.interpret();
     start_code = teldef.StartCode();
