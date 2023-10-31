@@ -51,7 +51,7 @@ double main_current_conversion(int adcValue)
 double main_voltage_conversion(int adcValue){
   return slow_ADC_conversion(adcValue)*24.0/3.34;
 }
-  
+
 int main(int argc, char **argv)
 {
   constexpr int TELEMETRY_LENGTH = 140;
@@ -89,15 +89,22 @@ int main(int argc, char **argv)
     }
     while (!ifs_binary.eof()) {
       std::vector<uint8_t> buf(TELEMETRY_LENGTH);
+      bool is_bad_data = false;
       for (int j = 0; j < TELEMETRY_LENGTH; j++) {
         if (ifs_binary.eof()) {
           break;
         }
         char c;
         ifs_binary.read(&c, 1);
-        buf[j] = static_cast<uint8_t>(c);
+        const uint8_t byte = static_cast<uint8_t>(c);
+        if (j > 2 && j < TELEMETRY_LENGTH - 1 && byte == 0x79 && buf[j - 1] == 0xd2 && buf[j - 2] == 0xa4 && buf[j - 3] == 0xc5) {
+          is_bad_data = true;
+          break;
+        }
+        buf[j] = byte;
       }
       if (ifs_binary.eof()) break;
+      if (is_bad_data) continue;
       telemetry.push_back(buf);
     }
     ifs_binary.close();
@@ -184,7 +191,7 @@ int main(int argc, char **argv)
   tree->Branch("magnet_z", &magnet[2], "magnet_z/D");
 
   tree->Branch("accel_sensor_temperature", &accel_sensor_temperature, "accel_sensor_temperature/D");
-    
+
   tree->Branch("main_current", &main_current, "main_current/D");
   tree->Branch("main_voltage", &main_voltage, "main_voltage/D");
   tree->Branch("last_command_code", &last_command_code, "last_command_code/s");
