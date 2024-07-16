@@ -8,6 +8,9 @@
 
 #ifndef GetRaspiStatus_H
 #define GetRaspiStatus_H 1
+#ifdef GB_DEMO_MODE
+#include "GetRaspiStatusDemo.hh"
+#else /* GB_DEMO_MODE */
 
 #include <anlnext/BasicModule.hh>
 #include <cstdint>
@@ -52,5 +55,5 @@ private:
 };
 
 } /* namespace gramsballoon */
-
+#endif /* GB_DEMO_MODE */
 #endif /* GetRaspiStatus_H */

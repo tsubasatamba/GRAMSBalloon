@@ -1,5 +1,8 @@
 #ifndef ShutdownSystem_H
 #define ShutdownSystem_H 1
+#ifdef GB_DEMO_MODE
+#include "ShutdownSystemDemo.hh"
+#else /* GB_DEMO_MODE */
 
 /**
  * Test module for shutdown system
@@ -62,4 +65,5 @@ private:
 
 } /* namespace gramsballoon */
 
+#endif /* GB_DEMO_MODE */
 #endif /*ShutdownSystem_H*/

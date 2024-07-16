@@ -8,7 +8,9 @@
 
 #ifndef ControlHighVoltage_H
 #define ControlHighVoltage_H 1
-
+#ifdef GB_DEMO_MODE
+#include "ControlHighVoltageDemo.hh"
+#else /* GB_DEMO_MODE */
 #include <anlnext/BasicModule.hh>
 #include "AnalogDiscoveryManager.hh"
 #include "SendTelemetry.hh"
@@ -62,4 +64,5 @@ private:
 
 } /* namespace gramsballoon */
 
+#endif /* GB_DEMO_MODE */
 #endif /* ControlHighVoltage_H */
