@@ -21,6 +21,12 @@ public:
 
 protected:
   MeasureTemperatureWithRTDSensor(const MeasureTemperatureWithRTDSensor &r) = default;
+  double SetTemperature(double temperature) {
+    return singleton_self()->temperature_ = temperature;
+  }
+  double SetTemperatureADC(int temperatureADC) {
+    return singleton_self()->temperatureADC_ = temperatureADC;
+  }
 
 public:
   anlnext::ANLStatus mod_define() override;
@@ -28,14 +34,14 @@ public:
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_pre_initialize() override;
   void setDataAquisitionError();
-  double TemperatureADC() { return singleton_self()->temperatureADC_; }
+  virtual int16_t TemperatureADC() { return singleton_self()->temperatureADC_; }
+  double TConversion(int adc) const;
+  int TInverseConversion(double temperature) const;
 
 private:
   std::shared_ptr<SendTelemetry> sendTelemetry_ = nullptr;
   int chatter_ = 0;
   double temperature_ = 0.0;
-  double TConversion(int adc) const;
-  int TInverseConversion(double temperature) const;
   const int rRef_ = 430;
   int temperatureADC_ = 0;
   double meanTemperature_ = 25.0;

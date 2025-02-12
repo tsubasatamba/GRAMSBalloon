@@ -4,21 +4,19 @@ include_directories(
   ../BME68x-Sensor-API/include
   ../ICM20948-linux-i2c/src
   ../ICM20948-linux-i2c/I2C/src
-  ${ANLG4_INC_DIR}
   ${ANLNEXT_INC_DIR}
   ${ROOT_INC_DIR}
-  ${G4_INC_DIR}
   ${BOOST_INC_DIR}
   ${PIGPIO_INC_DIR}
   ${HSQUICKLOOK_INC_DIR}
+  ${MYSQL_INC_DIR}
   )
 
 link_directories(
   /usr/local/lib
   ${ANLNEXT_LIB_DIR}
   ${ROOT_LIB_DIR}
-  ${G4_LIB_DIR}
-  #${PIGPIO_LIB_DIR}
+  ${MYSQL_LIB_DIR}
   )
 
 set(GB_MODULES
@@ -27,7 +25,19 @@ set(GB_MODULES
   src/RunIDManager.cc
   src/ReadTelemetry.cc
   src/DumpSerial.cc
-  )
+  src/GetArduinoData.cc
+  src/EncodedSerialCommunicator.cc
+  src/GetMHADCData.cc
+  src/GetCompressorData.cc
+  src/GetPressure.cc
+  src/PressureGaugeManager.cc
+  src/InterpretTelemetry.cc
+  src/Sleep.cc
+  src/MosquittoManager.cc
+  src/ReceiveCommand.cc
+  src/DistributeCommand.cc
+  src/MeasureOrientationByMHADC.cc
+)
 
 if(GB_DEMO_MODE)
   set(GB_DEMO_MODULES
@@ -40,6 +50,9 @@ if(GB_DEMO_MODE)
     ../demo/src/ControlHighVoltageDemo.cc
     ../demo/src/GetEnvironmentalDataDemo.cc
     ../demo/src/GetSlowADCDataDemo.cc
+    ../demo/src/GetSlowADCDataIncludingPressure.cc
+    ../demo/src/MeasureTemperatureWithRTDSensorByArduino.cc
+    ../demo/src/MeasureTemperatureWithRTDSensorByMHADC.cc
   )
   list(APPEND GB_MODULES 
     src/ReceiveCommand.cc
@@ -62,7 +75,6 @@ if(GB_USE_WAVEFORMS)
     src/AnalogDiscoveryManager.cc
     src/ControlHighVoltage.cc
     src/ReadWaveform.cc
-    src/ReceiveCommand.cc
     src/SendTelemetry.cc
     )
 endif(GB_USE_WAVEFORMS)
@@ -89,9 +101,14 @@ endif(GB_USE_HSQUICKLOOK)
 if(GB_USE_ROOT)
   set(GB_ROOT_MODULES
     src/PlotWaveform.cc
-    src/InterpretTelemetry.cc
   )
 endif(GB_USE_ROOT)
+
+if(GB_USE_MYSQL)
+  set(GB_MYSQL_MODULES
+    src/PushToMySQL.cc
+  )
+endif(GB_USE_MYSQL)
 
 add_library(GBModules SHARED
   ${GB_MODULES}
@@ -102,21 +119,22 @@ add_library(GBModules SHARED
   ${GB_HSQUICKLOOK_MODULES}
   ${GB_ROOT_MODULES}
   ${GB_DEMO_MODULES}
+  ${GB_MYSQL_MODULES}
+  ${GB_MOSQUITTO_MODULES}
   )
-
 target_link_libraries(GBModules
   GBCore
   ${BME68x_LIB}
-  ${ANLG4_LIB}
   ${ANLNEXT_LIB}
   ${ROOT_LIB}
-  ${G4_LIB}
   ${PIGPIO_LIB_DAEMON}
   ${PIGPIO_LIB_RT}
   ${WAVEFORMS_LIB}
   ${ICM20948_LIB}
   ${MONGODB_LIB}
   ${HSQUICKLOOK_LIB}
+  ${MYSQL_LIB}
+  ${MOSQUITTO_LIB}
   )
 
 install(TARGETS GBModules LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

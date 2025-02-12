@@ -8,6 +8,7 @@ namespace gramsballoon {
 InterpretTelemetry::InterpretTelemetry()
 {
   telemdef_ = std::make_shared<TelemetryDefinition>();
+  errorManager_ = std::make_shared<ErrorManager>();
   binaryFilenameBase_ = "Telemetry";
   runIDFilename_ = "/Users/grams/settings/run_id/run_id.txt";
   receiverModuleName_ = "ReceiveTelemetry";
@@ -34,17 +35,18 @@ ANLStatus InterpretTelemetry::mod_initialize()
   if (exist_module(receiverModuleName_)) {
     get_module_NC(receiverModuleName_, &receiver_);
   }
-
+#ifdef USE_ROOT
   const std::string plotter_module_name = "PlotWaveform";
   if (exist_module(plotter_module_name)) {
     get_module_NC(plotter_module_name, &plotter_);
   }
-
+#endif // USE_ROOT
+#ifdef USE_HSQUICKLOOK
   const std::string pusher_module_name = "PushToMongoDB";
   if (exist_module(pusher_module_name)) {
     get_module_NC(pusher_module_name, &pusher_);
   }
-
+#endif // USE_HSQUICKLOOK
   
   return AS_OK;
 }
@@ -52,6 +54,7 @@ ANLStatus InterpretTelemetry::mod_initialize()
 ANLStatus InterpretTelemetry::mod_analyze()
 {
   if (!(receiver_->Valid())) {
+    currentTelemetryType_ = 0;
     return AS_OK;
   }
   
@@ -66,6 +69,8 @@ ANLStatus InterpretTelemetry::mod_analyze()
     return AS_OK;
   }
   telemdef_->interpret();
+  const uint64_t err = telemdef_->SoftwareErrorCode();
+  errorManager_->SetErrorCode(err);
   currentTelemetryType_ = telemdef_->TelemetryType();
 
   if (telemdef_->RunID() != currentRunID_) {
@@ -79,13 +84,17 @@ ANLStatus InterpretTelemetry::mod_analyze()
 
   if (telemdef_->WFDownloadDone()) {
     std::vector<std::string> image_filenames;
+#ifdef USE_ROOT
     if (plotter_!=nullptr) {
       plotter_->makeImage(image_filenames);
+#ifdef USE_HSQUICKLOOK
       if (pusher_!=nullptr) {
         std::vector<std::string> keys = {"waveform_all", "waveform_all_autorange", "waveform_pmt"};
         pusher_->pushWaveformImage(keys, image_filenames);
       }
+#endif // USE_HSQUICKLOOK
     }
+#endif // USE_ROOT
     telemdef_->setWFDownloadDone(false);
   }
   

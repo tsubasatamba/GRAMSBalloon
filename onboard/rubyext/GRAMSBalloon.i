@@ -2,7 +2,9 @@
 %{
 // include headers of my modules
 #include <anlnext/BasicModule.hh>
+#include <string>
 #include "SimpleLoop.hh"
+#include "Sleep.hh"
 #ifdef USE_PIGPIO
 #include "SPIManager.hh"
 #endif
@@ -37,9 +39,7 @@
 #ifdef USE_RASPISYS
 #include "ShutdownSystem.hh"
 #endif
-#ifdef USE_ROOT
 #include "InterpretTelemetry.hh"
-#endif
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
 #endif
@@ -49,8 +49,17 @@
 #include "RunIDManager.hh"
 #include "ReadTelemetry.hh"
 #include "DumpSerial.hh"
+#include "GetArduinoData.hh"
+#include "GetMHADCData.hh"
+#include "EncodedSerialCommunicator.hh"
+#include "GetCompressorData.hh"
+#include "GetPressure.hh"
+#include "PressureGaugeManager.hh"
 #ifdef USE_ROOT
 #include "PlotWaveform.hh"
+#endif
+#ifdef USE_MYSQL
+#include "PushToMySQL.hh"
 #endif
 #ifdef GB_DEMO_MODE
 #include "GBBasicDemoModule.hh"
@@ -58,11 +67,15 @@
 #include "GetEnvironmentalDataDemo.hh"
 #include "MeasureAccelerationDemo.hh"
 #include "MeasureTemperatureWithRTDSensorDemo.hh"
+#include "MeasureTemperatureWithRTDSensorByArduino.hh"
+#include "MeasureTemperatureWithRTDSensorByMHADC.hh"
 #include "GetRaspiStatusDemo.hh"
 #include "ControlHighVoltageDemo.hh"
 #include "ReadWaveformDemo.hh"
 #include "GetSlowADCDataDemo.hh"
 #endif
+#include "MosquittoManager.hh"
+#include "DistributeCommand.hh"
 %}
 
 %include "std_vector.i"
@@ -77,7 +90,13 @@ class SimpleLoop : public anlnext::BasicModule
 public:
   SimpleLoop();
 };
-
+namespace pgrams{
+class Sleep : public anlnext::BasicModule
+{
+public:
+  Sleep();
+};
+}
 #ifdef USE_PIGPIO
 class SPIManager : public anlnext::BasicModule
 {
@@ -169,6 +188,54 @@ public:
     DumpSerial();
 };
 
+namespace pgrams {
+class GetArduinoData: public anlnext::BasicModule {
+public:
+  GetArduinoData();
+};
+
+class GetMHADCData: public anlnext::BasicModule {
+public:
+  GetMHADCData();
+};
+
+class EncodedSerialCommunicator: public anlnext::BasicModule {
+public:
+  EncodedSerialCommunicator();
+};
+
+class GetCompressorData: public anlnext::BasicModule {
+public:
+  GetCompressorData();
+};
+
+class GetPressure: public anlnext::BasicModule {
+public:
+  GetPressure();
+};
+
+class PressureGaugeManager: public EncodedSerialCommunicator{
+public:
+  PressureGaugeManager();
+};
+#ifdef USE_MYSQL
+class PushToMySQL : public anlnext::BasicModule
+{
+public:
+  PushToMySQL();
+};
+#endif
+class MosquittoManager : public anlnext::BasicModule
+{
+public:
+  MosquittoManager();
+};
+class DistributeCommand: public anlnext::BasicModule {
+public:
+  DistributeCommand();
+};
+} // namespace pgrams
+
 #ifdef USE_RASPISYS
 class ShutdownSystem : public anlnext::BasicModule
 {
@@ -177,13 +244,11 @@ public:
 };
 #endif
 
-#ifdef USE_ROOT
 class InterpretTelemetry : public anlnext::BasicModule
 {
 public:
   InterpretTelemetry();
 };
-#endif
 
 #ifdef USE_HSQUICKLOOK
 class PushToMongoDB : public anlnext::BasicModule
@@ -227,7 +292,6 @@ public:
   GBBasicDemoModule();
 protected:
   double SampleFromUniformDistribution();
-  void PrintInfo(const std::string &msg) const;
 };
 
 class ShutdownSystem : public anlnext::BasicModule
@@ -253,7 +317,21 @@ class MeasureTemperatureWithRTDSensor : public GBBasicDemoModule
 public:
   MeasureTemperatureWithRTDSensor();
 };
+namespace pgrams{
+class MeasureTemperatureWithRTDSensorByArduino: public MeasureTemperatureWithRTDSensor {
+public:
+  MeasureTemperatureWithRTDSensorByArduino();
+};
 
+class MeasureTemperatureWithRTDSensorByMHADC: public MeasureTemperatureWithRTDSensor {
+public:
+  MeasureTemperatureWithRTDSensorByMHADC();
+};
+class MeasureOrientationByMHADC: public anlnext::BasicModule {
+public:
+  MeasureOrientationByMHADC();
+};
+} // namespace pgrams
 class GetRaspiStatus : public GBBasicDemoModule
 {
 public:
