@@ -39,7 +39,6 @@ ANLStatus DistributeCommand::mod_initialize() {
   }
   else {
     std::cerr << "SendTelemetry module is not found." << std::endl;
-    return AS_ERROR;
   }
 
   /// Set SIGPIPE handler in case of broken pipe

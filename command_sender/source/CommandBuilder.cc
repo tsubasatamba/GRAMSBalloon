@@ -78,35 +78,39 @@ int CommandBuilder::get_argnum(const std::string& name) const
 std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string& name, const std::vector<int32_t>& arg_array) const
 {
   std::vector<uint8_t> command;
-  command.push_back(0xEB);
   command.push_back(0x90);
+  command.push_back(0xEB);
+  command.push_back(0x6A);
+  command.push_back(0x5B);
 
   const CommandProperty property = get_command_property(name);
   const uint16_t code = property.code;
   const int argnum = property.argnum;
-  command.push_back((code & 0xFF00u) >> 8);
   command.push_back((code & 0x00FFu) >> 0);
-  command.push_back((argnum & 0xFF00u) >> 8);
+  command.push_back((code & 0xFF00u) >> 8);
   command.push_back((argnum & 0x00FFu) >> 0);
+  command.push_back((argnum & 0xFF00u) >> 8);
 
   if (argnum != static_cast<int>(arg_array.size())) {
     throw CommandException("Invalid argument number");
   }
 
   for (const int32_t arg: arg_array) {
-    command.push_back((arg & 0xFF000000u) >> 24);
-    command.push_back((arg & 0x00FF0000u) >> 16);
-    command.push_back((arg & 0x0000FF00u) >>  8);
     command.push_back((arg & 0x000000FFu) >>  0);
+    command.push_back((arg & 0x0000FF00u) >>  8);
+    command.push_back((arg & 0x00FF0000u) >> 16);
+    command.push_back((arg & 0xFF000000u) >> 24);
   }
 
   const uint16_t crc = crc_calc(command);
-  command.push_back((crc & 0xFF00u) >> 8);
   command.push_back((crc & 0x00FFu) >> 0);
+  command.push_back((crc & 0xFF00u) >> 8);
 
   // termination word C5A4
-  command.push_back(0xC5);
   command.push_back(0xA4);
+  command.push_back(0xC5);
+  command.push_back(0x79);
+  command.push_back(0xD2);
   
   return command;
 }
