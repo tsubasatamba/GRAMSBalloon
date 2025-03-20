@@ -3,6 +3,7 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <signal.h>
+#include <string>
 using namespace anlnext;
 
 void SigPipeHandler(int) {
@@ -11,7 +12,7 @@ void SigPipeHandler(int) {
 namespace gramsballoon::pgrams {
 DistributeCommand::DistributeCommand() {
   subSystems_ = {
-      {"TPC", SubSystem(-1, 50000, "localhost", "TPC")},
+      {"TPC", SubSystem(-1, 50000, "192.168.160.16", "TPC")},
       {"SiPM", SubSystem(-1, 50001, "localhost", "SiPM")},
       {"DAQ", SubSystem(-1, 50002, "localhost", "DAQ")},
       {"TOF", SubSystem(-1, 50003, "localhost", "TOF")}};
