@@ -1,7 +1,16 @@
+/**
+ * Module for distributing command to other subsystems.
+ *
+ * @author Shota Arai
+ * @date 2025-02-** | First design
+ * @date 2025-03-24 | Delete socket communication feature and make based on SocketCommunicationManager
+ *
+ */
 #ifndef GB_DistributeCommand_hh
 #define GB_DistributeCommand_hh 1
 #include "MosquittoManager.hh"
 #include "SendTelemetry.hh"
+#include "SocketCommunicationManager.hh"
 #include "anlnext/BasicModule.hh"
 #include "sys/socket.h"
 #include <arpa/inet.h>
@@ -12,25 +21,13 @@ class SendTelemetry;
 } // namespace gramsballoon
 namespace gramsballoon::pgrams {
 class MosquittoManager;
-struct SubSystem {
-  int socket = 0;
-  sockaddr_in serverAddress;
-  int port = 0;
-  std::string ip = "";
-  std::string topic;
-  SubSystem(int s, int p, const std::string &i, const std::string &t) : socket(s), port(p), ip(i), topic(t) {
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(port);
-    serverAddress.sin_addr.s_addr = inet_addr(ip.c_str());
-  }
-};
-
+class SocketCommunicationManager;
 class DistributeCommand: public anlnext::BasicModule {
-  DEFINE_ANL_MODULE(DistributeCommand, 1.0);
+  DEFINE_ANL_MODULE(DistributeCommand, 2.0);
   ENABLE_PARALLEL_RUN();
 
 public:
-  DistributeCommand();
+  DistributeCommand() = default;
   virtual ~DistributeCommand() = default;
 
 protected:
@@ -41,15 +38,15 @@ public:
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
-  bool IsFailed() const { return singleton_self()->failed_; }
 
 private:
   MosquittoManager *mosquittoManager_ = nullptr;
-  MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;
-  std::map<const std::string, SubSystem, std::less<>> subSystems_;
+  SocketCommunicationManager *socketCommunicationManager_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
-  int chatter_ = 0;
+  std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
+  std::string topic_ = "command";
   int numTrial_ = 10;
+  int chatter_ = 0;
   bool failed_ = false;
 };
 } // namespace gramsballoon::pgrams

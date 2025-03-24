@@ -76,6 +76,7 @@
 #endif
 #include "MosquittoManager.hh"
 #include "DistributeCommand.hh"
+#include "ReceiveStatusFromDAQComputer.hh"
 %}
 
 %include "std_vector.i"
@@ -217,6 +218,14 @@ public:
 class PressureGaugeManager: public EncodedSerialCommunicator{
 public:
   PressureGaugeManager();
+};
+class ReceiveStatusFromDAQComputer: public anlnext::BasicModule{
+public:
+  ReceiveStatusFromDAQComputer();
+};
+class SocketCommunicationManager: public anlnext::BasicModule{
+public:
+  SocketCommunicationManager();
 };
 #ifdef USE_MYSQL
 class PushToMySQL : public anlnext::BasicModule

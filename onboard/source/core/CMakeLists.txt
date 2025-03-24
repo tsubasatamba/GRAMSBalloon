@@ -23,6 +23,7 @@ set(GB_CORE_CLASSES
   src/DateManager.cc
   src/EncodedSerialCommunication.cc
   src/OrientationInformation.cc
+  src/SocketCommunication.cc
   )
 
 if(GB_USE_PIGPIO)

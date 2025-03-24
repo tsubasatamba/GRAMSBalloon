@@ -22,6 +22,7 @@ ANLStatus MeasureTemperatureWithRTDSensorByMHADC::mod_initialize() {
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
+    return AS_ERROR;
   }
   if (channel_ > getMHADCData_->NumCH()) {
     std::cerr << "Channel number must be smaller than " << getMHADCData_->NumCH() << std::endl;
