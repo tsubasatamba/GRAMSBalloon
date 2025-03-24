@@ -4,7 +4,9 @@ using namespace anlnext;
 namespace gramsballoon {
 ANLStatus ReceiveTelemetry::mod_define() {
   define_parameter("topic", &mod_class::subTopic_);
+  set_parameter_description("Topic to subscribe");
   define_parameter("qos", &mod_class::qos_);
+  set_parameter_description("QoS");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }

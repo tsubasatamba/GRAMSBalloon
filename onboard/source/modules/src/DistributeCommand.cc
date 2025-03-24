@@ -9,7 +9,9 @@ using namespace anlnext;
 namespace gramsballoon::pgrams {
 ANLStatus DistributeCommand::mod_define() {
   define_parameter("SocketCommunicationManager_name", &mod_class::socketCommunicationManagerName_);
+  set_parameter_description("Name of SocketCommunicationManager");
   define_parameter("topic", &mod_class::topic_);
+  set_parameter_description("Topic to subscribe");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
