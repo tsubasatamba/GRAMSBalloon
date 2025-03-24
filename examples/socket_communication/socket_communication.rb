@@ -13,13 +13,15 @@ class MyApp < ANL::ANLApp
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SocketCommunicationManager
-      with_parameters(ip:"localhost", port: 50000, chatter: 1) do |m|
+      with_parameters(ip:"192.168.160.27", port: 50000, timeout: 1000000.0, chatter: 1) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::DistributeCommand
-      with_parameters(chatter: 0) do |m|
+      with_parameters(topic: "TPC", chatter: 0) do |m|
         m.set_singleton(0)
       end
+      chain GRAMSBalloon::ReceiveStatusFromDAQComputer
+      with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager", chatter:2)
       chain GRAMSBalloon::Sleep
       with_parameters(sleep_sec: 1)
       

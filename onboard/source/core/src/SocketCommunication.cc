@@ -1,6 +1,7 @@
 #include "SocketCommunication.hh"
 #include <iostream>
 #include <signal.h>
+#include <sys/select.h>
 namespace gramsballoon::pgrams {
 void SigPipeHander(int) {
   std::cout << "Caught SIGPIPE!" << std::endl;
@@ -32,5 +33,12 @@ void SocketCommunication::HandleSIGPIPE() {
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   sigaction(SIGPIPE, &sa, NULL);
+}
+int SocketCommunication::WaitForTimeOut(timeval timeout) {
+  fd_set fdset;
+  FD_ZERO(&fdset);
+  FD_SET(socket_, &fdset);
+  int rv = select(socket_ + 1, &fdset, NULL, NULL, &timeout);
+  return rv;
 }
 } // namespace gramsballoon::pgrams

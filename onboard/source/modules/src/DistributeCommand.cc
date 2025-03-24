@@ -118,7 +118,7 @@ ANLStatus DistributeCommand::mod_analyze() {
         std::cout << std::endl;
       }
     }
-    mosq->popPayloadFront();
+    mosq->popPayloadFront(); // TODO: How to handle the case when the data is not sent?
   }
   return AS_OK;
 }

@@ -12,6 +12,7 @@
 #include "SocketCommunicationManager.hh"
 #include "anlnext/BasicModule.hh"
 #include <memory>
+#include <queue>
 #include <string>
 namespace gramsballoon {
 class SendTelemetry;
@@ -40,6 +41,9 @@ private:
   SendTelemetry *sendTelemetry_ = nullptr;
   std::string socketCommunicationManagerName_ = "";
   std::shared_ptr<CommandDefinition> commandDefinition_ = nullptr;
+  int chatter_ = 0;
+  std::queue<uint8_t> buffer_;
+  static constexpr int MAX_BYTES = 1024;
 };
 } // namespace gramsballoon::pgrams
 #endif // GB_ReceiveStatusFromDAQComputer_hh

@@ -10,6 +10,7 @@
 #include "SendTelemetry.hh"
 #include "SocketCommunication.hh"
 #include "anlnext/BasicModule.hh"
+#include <optional>
 namespace gramsballoon {
 class SendTelemetry;
 }
@@ -41,6 +42,8 @@ private:
   int chatter_ = 0;
   std::shared_ptr<SocketCommunication> socketCommunication_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
+  double timeout_ = -1;
+  std::optional<timeval> timeoutTV_;
   bool handleSigpipe_ = false;
 };
 } // namespace gramsballoon::pgrams
