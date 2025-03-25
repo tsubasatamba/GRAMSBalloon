@@ -35,11 +35,19 @@ public:
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
+  uint8_t PopAndGetOneByte() {
+    const uint8_t byte = buffer_.front();
+    buffer_.pop();
+    return byte;
+  }
+  size_t GetBufferSize() {
+    return buffer_.size();
+  }
 
 private:
   SocketCommunicationManager *socketCommunicationManager_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
-  std::string socketCommunicationManagerName_ = "";
+  std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
   std::shared_ptr<CommandDefinition> commandDefinition_ = nullptr;
   int chatter_ = 0;
   std::queue<uint8_t> buffer_;

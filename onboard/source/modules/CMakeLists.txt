@@ -39,6 +39,8 @@ set(GB_MODULES
   src/MeasureOrientationByMHADC.cc
   src/SocketCommunicationManager.cc
   src/ReceiveStatusFromDAQComputer.cc
+  src/DividePacket.cc
+  src/PassTelemetry.cc
 )
 
 if(GB_DEMO_MODE)

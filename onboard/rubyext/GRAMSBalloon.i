@@ -77,6 +77,8 @@
 #include "MosquittoManager.hh"
 #include "DistributeCommand.hh"
 #include "ReceiveStatusFromDAQComputer.hh"
+#include "DividePacket.hh"
+#include "PassTelemetry.hh"
 %}
 
 %include "std_vector.i"
@@ -242,6 +244,14 @@ public:
 class DistributeCommand: public anlnext::BasicModule {
 public:
   DistributeCommand();
+};
+class DividePacket: public anlnext::BasicModule {
+public:
+  DividePacket();
+};
+class PassTelemetry: public anlnext::BasicModule {
+public:
+  PassTelemetry();
 };
 } // namespace pgrams
 

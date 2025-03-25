@@ -22,6 +22,10 @@ class MyApp < ANL::ANLApp
       end
       chain GRAMSBalloon::ReceiveStatusFromDAQComputer
       with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager", chatter:2)
+      chain GRAMSBalloon::DividePacket
+      with_parameters(ReceiveStatusFromDAQComputer_name: "ReceiveStatusFromDAQComputer", chatter: 4)
+      chain GRAMSBalloon::PassTelemetry
+      with_parameters(chatter: 100)
       chain GRAMSBalloon::Sleep
       with_parameters(sleep_sec: 1)
       

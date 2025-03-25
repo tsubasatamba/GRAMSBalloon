@@ -26,11 +26,11 @@ bool CommandDefinition::setCommand(const std::vector<uint8_t> &v) {
   }
 
   command_ = v;
-  uint16_t argc = getValue<uint16_t>(4);
+  uint16_t argc = getValue<uint16_t>(6);
 
   if (n != 14 + 4 * static_cast<int>(argc)) {
     std::cerr << "Invalid command: length not appropriate" << std::endl;
-    std::cerr << "The length of command should be " << 10 + 4 * static_cast<int>(argc) << ", but now it is " << n << std::endl;
+    std::cerr << "The length of command should be " << 14 + 4 * static_cast<int>(argc) << ", but now it is " << n << std::endl;
     return false;
   }
 
@@ -49,11 +49,11 @@ bool CommandDefinition::setCommand(const std::vector<uint8_t> &v) {
 }
 
 void CommandDefinition::interpret() {
-  code_ = getValue<uint16_t>(2);
-  argc_ = getValue<uint16_t>(4);
+  code_ = getValue<uint16_t>(4);
+  argc_ = getValue<uint16_t>(6);
 
   arguments_.clear();
-  getVector<int32_t>(6, static_cast<int>(argc_), arguments_);
+  getVector<int32_t>(8, static_cast<int>(argc_), arguments_);
 }
 
 void CommandDefinition::writeFile(const std::string &filename, bool append) {

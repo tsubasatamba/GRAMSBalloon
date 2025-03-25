@@ -1,4 +1,5 @@
 #include "ReceiveStatusFromDAQComputer.hh"
+#include <iomanip>
 using namespace anlnext;
 namespace gramsballoon::pgrams {
 ANLStatus ReceiveStatusFromDAQComputer::mod_define() {
@@ -56,10 +57,13 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
         buffer_for_display->push_back(byte);
       }
     }
-    else {
+    else if (result != 0) {
       if (chatter_ > 1) {
         std::cout << "Error in ReceiveStatusFromDAQComputer::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
       }
+      break;
+    }
+    else {
       break;
     }
   }
@@ -69,7 +73,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
   if (chatter_ > 1) {
     std::cout << "Payload:" << std::endl;
     for (const auto &byte: *buffer_for_display) {
-      std::cout << static_cast<int>(byte) << " ";
+      std::cout << std::hex << static_cast<int>(byte) << std::dec << " ";
     }
     std::cout << std::endl;
   }
