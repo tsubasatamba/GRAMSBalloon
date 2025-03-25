@@ -37,8 +37,9 @@ private:
   ReceiveStatusFromDAQComputer *receiveStatusFromDAQComputer_ = nullptr;
   std::string receiveStatusFromDAQComputerName_ = "ReceiveStatusFromDAQComputer";
   std::queue<std::vector<uint8_t>> commandQueue_;
-  bool inPacket_ = false;
+  std::vector<uint8_t> vec;
   int chatter_ = 0;
+  size_t lastPacketSize_ = 0;
   static constexpr int MAX_BYTES = 1024;
 };
 } // namespace gramsballoon::pgrams
