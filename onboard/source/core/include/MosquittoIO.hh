@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#define GB_MOSQUITTOIO_ALL_BINARY 1 // This is switch for handling vector<uint8_t> as binary.
+//#undef GB_MOSQUITTOIO_ALL_BINARY
 
 namespace gramsballoon::pgrams {
 namespace mqtt {

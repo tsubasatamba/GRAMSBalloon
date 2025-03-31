@@ -24,6 +24,7 @@ set(GB_CORE_CLASSES
   src/EncodedSerialCommunication.cc
   src/OrientationInformation.cc
   src/SocketCommunication.cc
+  src/MQTTFormatConverter.cc
   )
 
 if(GB_USE_PIGPIO)

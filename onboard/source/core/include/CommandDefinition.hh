@@ -30,8 +30,8 @@ public:
   void getVector(int index, int num, std::vector<T> &vec);
 
   const std::vector<uint8_t> &Command() const { return command_; }
-  uint16_t Code() { return code_; }
-  uint16_t Argc() { return argc_; }
+  uint16_t Code() const { return code_; }
+  uint16_t Argc() const { return argc_; }
   const std::vector<int32_t> &Arguments() const { return arguments_; }
 
 private:

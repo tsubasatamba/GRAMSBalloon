@@ -10,6 +10,7 @@ int MosquittoIO<std::string>::Publish(const std::string &message, const std::str
 }
 template <>
 int MosquittoIO<std::vector<uint8_t>>::Publish(const std::vector<uint8_t> &message, const std::string &topic, int qos) {
+#ifndef GB_MOSQUITTOIO_ALL_BINARY
   std::string m_sptrstr;
   for (const auto &m: message) {
     m_sptrstr += std::to_string(static_cast<int>(m)) + ",";
@@ -25,6 +26,9 @@ int MosquittoIO<std::vector<uint8_t>>::Publish(const std::vector<uint8_t> &messa
     std::cout << std::endl;
   }
   return HandleError(publish(NULL, topic.c_str(), strlen(m_sptrstr.c_str()), m_sptrstr.c_str(), qos));
+#else
+  return HandleError(publish(NULL, topic.c_str(), sizeof(std::vector<uint8_t>), message.data(), qos));
+#endif
 }
 template <>
 void MosquittoIO<std::string>::on_message(const struct mosquitto_message *message) {
@@ -51,6 +55,7 @@ void MosquittoIO<std::vector<uint8_t>>::on_message(const struct mosquitto_messag
   m_sptr->qos = message->qos;
   m_sptr->retain = message->retain;
   m_sptr->topic = std::string(message->topic);
+#ifndef GB_MOSQUITTOIO_ALL_BINARY
   std::string value(static_cast<char *>(message->payload));
   std::string value_str;
   m_sptr->payloadlen = 0;
@@ -67,8 +72,15 @@ void MosquittoIO<std::vector<uint8_t>>::on_message(const struct mosquitto_messag
   if (verbose_ < 3) {
     return;
   }
+#else
+  for (int i = 0; i < message->payloadlen; i++) {
+    m_sptr->payload.push_back(static_cast<uint8_t *>(message->payload)[i]);
+  }
+  m_sptr->payloadlen = message->payloadlen;
+  payLoad_.push_back(m_sptr);
+#endif
   std::cout << "Received topic: " << m_sptr->topic << std::endl;
-  std::cout << "Received message: " << static_cast<int>((m_sptr->payload)[0]) << std::endl;
+  std::cout << "Received first element of message: " << static_cast<int>((m_sptr->payload)[0]) << std::endl;
   std::cout << "Received length: " << m_sptr->payloadlen << std::endl;
 }
 } // namespace gramsballoon::pgrams
