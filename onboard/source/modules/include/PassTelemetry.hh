@@ -28,7 +28,6 @@ private:
   std::string mosquittoManagerName_ = "MosquittoManager";
   DividePacket *dividePacket_ = nullptr;
   std::string dividePacketName_ = "DividePacket";
-  std::shared_ptr<CommandDefinition> comdef_ = nullptr; // TODO: This is for Temporaly handling
   int chatter_ = 0;
   int qos_ = 0;
 };

@@ -1,6 +1,6 @@
 #ifndef GB_MQTTFormatConverter_hh
 #define GB_MQTTFormatConverter_hh 1
-#include "CommandDefinition.hh"
+#include "CommunicationFormat.hh"
 #include <memory>
 #define GB_MQTTFormatConverter_ALL_BINARY 1
 //#undef GB_MQTTFormatConverter_ALL_BINARY
@@ -61,7 +61,7 @@ private:
   MQTTFormatConverter(const MQTTFormatConverter &r) = default;
 
 public:
-  std::string Convert(time_t t, const CommandDefinition &comdef);
+  std::string Convert(time_t t, const CommunicationFormat &comdef);
 
 private:
   template <typename T>

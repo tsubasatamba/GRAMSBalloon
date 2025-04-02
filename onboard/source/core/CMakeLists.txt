@@ -17,7 +17,7 @@ link_directories(
 set(GB_CORE_CLASSES
   src/SerialCommunication.cc
   src/TelemetryDefinition.cc
-  src/CommandDefinition.cc
+  src/CommunicationFormat.cc
   src/CRC16.cc
   src/ErrorManager.cc
   src/DateManager.cc

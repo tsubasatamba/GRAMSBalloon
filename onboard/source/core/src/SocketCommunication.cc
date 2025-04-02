@@ -19,6 +19,7 @@ int SocketCommunication::connect() {
       continue;
     }
     failed_ = false;
+    std::cout << "SocketCommunication: Connected to server." << std::endl;
     break;
   }
   if (failed_) {

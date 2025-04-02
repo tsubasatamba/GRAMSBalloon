@@ -1,5 +1,5 @@
-#ifndef CommandDefinition_H
-#define CommandDefinition_H 1
+#ifndef GB_CommunicationFormat_H
+#define GB_CommunicationFormat_H 1
 
 #include "CRC16.hh"
 #include <cstdint>
@@ -8,18 +8,19 @@
 #include <vector>
 
 /**
- * A class to define telemetry
+ * A class to define the command format for the pGRAMS system.
  *
  * @author Tsubasa Tamba, Shota Arai
  * @date 2023-03-25
  * @date 2025-03-11 | Modified to fit the pGRAMS command format.
+ * @date 2025-04-01 | Name changed from CommandDefinition to CommunicationFormat
  */
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
-class CommandDefinition {
+class CommunicationFormat {
 public:
-  CommandDefinition();
+  CommunicationFormat();
 
   bool setCommand(const std::vector<uint8_t> &v);
   void interpret();
@@ -41,6 +42,6 @@ private:
   std::vector<int32_t> arguments_;
 };
 
-} /* namespace gramsballoon */
+} // namespace gramsballoon::pgrams
 
 #endif /* CommandDefinition_H */

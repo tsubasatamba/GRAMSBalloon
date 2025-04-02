@@ -7,7 +7,7 @@
  */
 #ifndef GB_ReceiveStatusFromDAQComputer_hh
 #define GB_ReceiveStatusFromDAQComputer_hh 1
-#include "CommandDefinition.hh"
+#include "CommunicationFormat.hh"
 #include "SendTelemetry.hh"
 #include "SocketCommunicationManager.hh"
 #include "anlnext/BasicModule.hh"
@@ -48,7 +48,7 @@ private:
   SocketCommunicationManager *socketCommunicationManager_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
   std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
-  std::shared_ptr<CommandDefinition> commandDefinition_ = nullptr;
+  std::shared_ptr<CommunicationFormat> commandDefinition_ = nullptr;
   int chatter_ = 0;
   std::queue<uint8_t> buffer_;
   static constexpr int MAX_BYTES = 1024;

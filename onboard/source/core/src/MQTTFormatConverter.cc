@@ -4,7 +4,7 @@
 namespace gramsballoon::pgrams {
 MQTTFormatConverter::MQTTFormatConverter() {
 }
-std::string MQTTFormatConverter::Convert(time_t t, const CommandDefinition &comdef) {
+std::string MQTTFormatConverter::Convert(time_t t, const CommunicationFormat &comdef) {
   std::string result = "{";
   result += ConstructOneItem("t", t) + ",";
   result += ConstructOneItem("c", comdef.Code()) + ",";

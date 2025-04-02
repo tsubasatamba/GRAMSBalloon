@@ -16,8 +16,8 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
   else {
     std::cerr << "Error in ReceiveStatusFromDAQComputer::mod_initialize: SendTelemetry not found." << std::endl;
   }
-  if (exist_module("SocketCommunicationManager")) {
-    get_module_NC("SocketCommunicationManager", &socketCommunicationManager_);
+  if (exist_module(socketCommunicationManagerName_)) {
+    get_module_NC(socketCommunicationManagerName_, &socketCommunicationManager_);
   }
   else {
     std::cerr << "Error in ReceiveStatusFromDAQComputer::mod_initialize: SocketCommunicationManager not found." << std::endl;

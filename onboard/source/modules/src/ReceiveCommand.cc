@@ -3,7 +3,7 @@
 #include <thread>
 
 using namespace anlnext;
-
+using namespace gramsballoon::pgrams;
 namespace gramsballoon {
 
 ReceiveCommand::ReceiveCommand() {
@@ -11,7 +11,7 @@ ReceiveCommand::ReceiveCommand() {
   PMTHVControllerModuleName_ = "ControlHighVoltage_PMT";
   binaryFilenameBase_ = "Command";
   topic_ = "command";
-  comdef_ = std::make_shared<CommandDefinition>();
+  comdef_ = std::make_shared<CommunicationFormat>();
 }
 
 ReceiveCommand::~ReceiveCommand() = default;

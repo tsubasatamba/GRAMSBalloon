@@ -32,7 +32,6 @@ ANLStatus PassTelemetry::mod_initialize() {
     std::cerr << "ReceiveStatusFromDAQComputer module is not found." << std::endl;
     return AS_ERROR;
   }
-  comdef_ = std::make_shared<CommandDefinition>();
   return AS_OK;
 }
 ANLStatus PassTelemetry::mod_analyze() {
@@ -49,28 +48,14 @@ ANLStatus PassTelemetry::mod_analyze() {
     std::cerr << "PassTelemetry::mod_analyze: MosquittoIO in the MosquittoManager is nullptr." << std::endl;
     return AS_OK;
   }
-  if (!comdef_) {
-    std::cerr << "PassTelemetry::mod_analyze: CommandDefinition is nullptr." << std::endl;
-    return AS_OK;
-  }
   if (dividePacket_->IsEmpty()) {
     return AS_OK;
   }
   auto &packet = dividePacket_->GetLastPacket();
-  const auto result = comdef_->setCommand(packet);
-  if (!result) {
-    std::cerr << "PassTelemetry::mod_analyze: Command is invalid." << std::endl;
-    dividePacket_->PopPacket();
-    return AS_ERROR;
+  MosquittoIO<std::vector<uint8_t>>::HandleError(mosq->Publish(packet, topic_, qos_));
+  if (chatter_ > 0) {
+    std::cout << "PassTelemetry::mod_analyze: Published packet to " << topic_ << std::endl;
   }
-  comdef_->interpret();
-  std::cout << "Command code: " << comdef_->Code() << std::endl;
-  std::cout << "Number of arguments: " << comdef_->Argc() << std::endl;
-  const auto &args = comdef_->Arguments();
-  for (const auto &arg: args) {
-    std::cout << "Argument: " << arg << std::endl;
-  }
-  std::cout << std::endl;
   dividePacket_->PopPacket();
   return AS_OK;
 }

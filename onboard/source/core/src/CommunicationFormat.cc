@@ -1,15 +1,15 @@
-#include "CommandDefinition.hh"
+#include "CommunicationFormat.hh"
 #include <chrono>
 #include <fstream>
 #include <iomanip>
 #include <thread>
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
-CommandDefinition::CommandDefinition() {
+CommunicationFormat::CommunicationFormat() {
 }
 
-bool CommandDefinition::setCommand(const std::vector<uint8_t> &v) {
+bool CommunicationFormat::setCommand(const std::vector<uint8_t> &v) {
   const int n = v.size();
   if (n < 10) {
     std::cerr << "Command is too short!!: length = " << n << std::endl;
@@ -48,7 +48,7 @@ bool CommandDefinition::setCommand(const std::vector<uint8_t> &v) {
   return true;
 }
 
-void CommandDefinition::interpret() {
+void CommunicationFormat::interpret() {
   code_ = getValue<uint16_t>(4);
   argc_ = getValue<uint16_t>(6);
 
@@ -56,7 +56,7 @@ void CommandDefinition::interpret() {
   getVector<int32_t>(8, static_cast<int>(argc_), arguments_);
 }
 
-void CommandDefinition::writeFile(const std::string &filename, bool append) {
+void CommunicationFormat::writeFile(const std::string &filename, bool append) {
   std::ofstream ofs;
   if (append) {
     ofs = std::ofstream(filename, std::ios::app | std::ios::binary);
@@ -75,16 +75,16 @@ void CommandDefinition::writeFile(const std::string &filename, bool append) {
 }
 
 template <typename T>
-T CommandDefinition::getValue(int index) {
+T CommunicationFormat::getValue(int index) {
   const int n = command_.size();
   const int byte = sizeof(T);
   if (index + byte > n) {
-    std::cerr << "CommandDefinition::getValue error: out of range" << std::endl;
+    std::cerr << "CommunicationFormat::getValue error: out of range" << std::endl;
     std::cerr << "command_.size() = " << n << ", index = " << index << ", byte = " << byte << std::endl;
     return static_cast<T>(0);
   }
   if (byte > 8) {
-    std::cerr << "CommandDefinition::getValue error: typename error" << std::endl;
+    std::cerr << "CommunicationFormat::getValue error: typename error" << std::endl;
     std::cerr << "byte should be equal to or less than 8: byte = " << byte << std::endl;
     return static_cast<T>(0);
   }
@@ -98,17 +98,17 @@ T CommandDefinition::getValue(int index) {
 }
 
 template <typename T>
-void CommandDefinition::getVector(int index, int num, std::vector<T> &vec) {
+void CommunicationFormat::getVector(int index, int num, std::vector<T> &vec) {
   const int n = command_.size();
   const int byte = sizeof(T);
   if (index + byte * num > n) {
-    std::cerr << "CommandDefinition::getVector error: out of range" << std::endl;
+    std::cerr << "CommunicationFormat::getVector error: out of range" << std::endl;
     std::cerr << "command_.size() = " << n << ", index = " << index << ", byte = " << byte
               << ", num = " << num << std::endl;
     return;
   }
   if (byte > 8) {
-    std::cerr << "CommandDefinition::getVector error: typename error" << std::endl;
+    std::cerr << "CommunicationFormat::getVector error: typename error" << std::endl;
     std::cerr << "byte should be equal to or less than 8: byte = " << byte << std::endl;
     return;
   }
@@ -120,4 +120,4 @@ void CommandDefinition::getVector(int index, int num, std::vector<T> &vec) {
   }
 }
 
-} /* namespace gramsballoon */
+} // namespace gramsballoon::pgrams

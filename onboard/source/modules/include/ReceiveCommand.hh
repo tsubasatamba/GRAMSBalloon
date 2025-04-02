@@ -9,7 +9,7 @@
 #ifndef ReceiveCommand_H
 #define ReceiveCommand_H 1
 
-#include "CommandDefinition.hh"
+#include "CommunicationFormat.hh"
 #include "ControlHighVoltage.hh"
 #include "MosquittoManager.hh"
 #include "ReadWaveform.hh"
@@ -57,7 +57,7 @@ public:
   uint16_t CommandRejectCount() { return singleton_self()->commandRejectCount_; }
 
 private:
-  std::shared_ptr<CommandDefinition> comdef_ = nullptr;
+  std::shared_ptr<pgrams::CommunicationFormat> comdef_ = nullptr;
   uint32_t commandIndex_ = 0;
   uint16_t commandRejectCount_ = 0;
   std::map<int, std::pair<int, int>> fileIDmp_;

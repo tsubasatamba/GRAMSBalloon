@@ -24,10 +24,19 @@ int MosquittoIO<std::vector<uint8_t>>::Publish(const std::vector<uint8_t> &messa
       std::cout << static_cast<int>(message[i]) << " ";
     };
     std::cout << std::endl;
+    std::cout << "Size: " << message.size() << std::endl;
   }
   return HandleError(publish(NULL, topic.c_str(), strlen(m_sptrstr.c_str()), m_sptrstr.c_str(), qos));
 #else
-  return HandleError(publish(NULL, topic.c_str(), sizeof(std::vector<uint8_t>), message.data(), qos));
+  if (verbose_ > 2) {
+    std::cout << "Publishing message in int: ";
+    for (size_t i = 0; i < message.size(); i++) {
+      std::cout << static_cast<int>(message[i]) << " ";
+    };
+    std::cout << std::endl;
+    std::cout << "Size: " << message.size() << std::endl;
+  }
+  return HandleError(publish(NULL, topic.c_str(), message.size(), message.data(), qos));
 #endif
 }
 template <>
