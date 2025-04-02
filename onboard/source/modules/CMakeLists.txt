@@ -41,6 +41,7 @@ set(GB_MODULES
   src/ReceiveStatusFromDAQComputer.cc
   src/DividePacket.cc
   src/PassTelemetry.cc
+  src/InterpretDAQFormattedTelemetry.cc
 )
 
 if(GB_DEMO_MODE)

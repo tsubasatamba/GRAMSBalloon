@@ -9,7 +9,7 @@ namespace gramsballoon::pgrams {
 CommunicationFormat::CommunicationFormat() {
 }
 
-bool CommunicationFormat::setCommand(const std::vector<uint8_t> &v) {
+bool CommunicationFormat::setData(const std::vector<uint8_t> &v) {
   const int n = v.size();
   if (n < 10) {
     std::cerr << "Command is too short!!: length = " << n << std::endl;

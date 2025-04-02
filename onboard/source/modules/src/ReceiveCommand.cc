@@ -134,7 +134,7 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
       std::cout << static_cast<int>(command[i]) << std::endl;
     }
   }
-  const bool status = comdef_->setCommand(command);
+  const bool status = comdef_->setData(command);
   if (!status) {
     return false;
   }

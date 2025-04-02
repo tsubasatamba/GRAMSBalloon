@@ -22,7 +22,7 @@ class CommunicationFormat {
 public:
   CommunicationFormat();
 
-  bool setCommand(const std::vector<uint8_t> &v);
+  bool setData(const std::vector<uint8_t> &v);
   void interpret();
   void writeFile(const std::string &filename, bool append);
   template <typename T>

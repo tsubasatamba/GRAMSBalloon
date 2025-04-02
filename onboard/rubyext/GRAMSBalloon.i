@@ -79,6 +79,7 @@
 #include "ReceiveStatusFromDAQComputer.hh"
 #include "DividePacket.hh"
 #include "PassTelemetry.hh"
+#include "InterpretDAQFormattedTelemetry.hh"
 %}
 
 %include "std_vector.i"
@@ -349,6 +350,10 @@ public:
 class MeasureOrientationByMHADC: public anlnext::BasicModule {
 public:
   MeasureOrientationByMHADC();
+};
+class InterpretDAQFormattedTelemetry: public anlnext::BasicModule {
+public:
+  InterpretDAQFormattedTelemetry();
 };
 } // namespace pgrams
 class GetRaspiStatus : public GBBasicDemoModule
