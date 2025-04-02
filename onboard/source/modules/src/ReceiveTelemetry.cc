@@ -1,7 +1,7 @@
 #include "ReceiveTelemetry.hh"
 using namespace anlnext;
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 ANLStatus ReceiveTelemetry::mod_define() {
   define_parameter("topic", &mod_class::subTopic_);
   set_parameter_description("Topic to subscribe");
@@ -77,4 +77,4 @@ ANLStatus ReceiveTelemetry::mod_finalize() {
   return AS_OK;
 }
 
-} // namespace gramsballoon
+} // namespace gramsballoon::pgrams

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 using namespace anlnext;
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 ANLStatus DumpSerial::mod_define() {
   define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
   define_parameter("chatter", &mod_class::chatter_);

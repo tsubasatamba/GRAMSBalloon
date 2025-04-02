@@ -2,6 +2,7 @@
 #include "DateManager.hh"
 
 using namespace anlnext;
+using namespace gramsballoon::pgrams;
 
 namespace gramsballoon {
 

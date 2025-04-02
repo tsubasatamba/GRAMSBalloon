@@ -7,10 +7,8 @@
 #include <deque>
 #include <thread>
 
-namespace gramsballoon {
-namespace pgrams {
+namespace gramsballoon::pgrams {
 class MosquittoManager;
-} // namespace pgrams
 
 class ReceiveTelemetry: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(ReceiveTelemetry, 1.0);
@@ -40,12 +38,12 @@ private:
   bool valid_;
 
   // communication
-  pgrams::MosquittoManager *mosquittoManager_ = nullptr;
-  pgrams::MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;
+  MosquittoManager *mosquittoManager_ = nullptr;
+  MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;
   int qos_ = 0;
   std::string subTopic_ = "Telemetry";
   int chatter_ = 0;
 };
 
-} // namespace gramsballoon
+} // namespace gramsballoon::pgrams
 #endif // ReceiveTelemetry_H

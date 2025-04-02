@@ -180,6 +180,7 @@ public:
 };
 #endif
 
+namespace pgrams {
 class ReceiveTelemetry :  public anlnext::BasicModule
 {
 public:
@@ -191,7 +192,6 @@ public:
     DumpSerial();
 };
 
-namespace pgrams {
 class GetArduinoData: public anlnext::BasicModule {
 public:
   GetArduinoData();
