@@ -2,7 +2,7 @@
 #include <tuple>
 
 namespace {
-uint16_t crc_calc(std::vector<uint8_t> byte_array) {
+uint16_t crc_calc(const std::vector<uint8_t> &byte_array) {
   uint16_t crc = 0;
   for (const uint8_t i: byte_array) {
     crc = crc ^ i;
@@ -48,7 +48,7 @@ CommandBuilder::CommandBuilder() {
   code_map_["dummy_1"] = CommandProperty{900, 0};
   code_map_["dummy_2"] = CommandProperty{901, 1};
   code_map_["dummy_3"] = CommandProperty{902, 0};
-  code_map_["dummy_4"] = CommandProperty{903, 10};
+  code_map_["dummy_4"] = CommandProperty{903, 5};
   code_map_["invalid_command_1"] = CommandProperty{12345, 0};
 }
 
@@ -98,7 +98,6 @@ std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string &name, co
   const uint16_t crc = crc_calc(command);
   command.push_back((crc & 0xFF00u) >> 8);
   command.push_back((crc & 0x00FFu) >> 0);
-  
 
   // termination word C5A4
   command.push_back(0xC5);

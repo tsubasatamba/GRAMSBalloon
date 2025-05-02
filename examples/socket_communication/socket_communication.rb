@@ -20,15 +20,15 @@ class MyApp < ANL::ANLApp
       m.set_singleton(0)
     end
     chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_TPC"
-    with_parameters(ip: @inifile["TPC"]["ip"], port: @inifile["TPC"]["comport"].to_i, timeout: 1000000.0, chatter: 100) do |m|
+    with_parameters(ip: @inifile["TPC"]["ip"], port: @inifile["TPC"]["comport"].to_i, timeout: 1000.0, chatter: 100) do |m|
       m.set_singleton(0)
     end
     chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_TPC_rsv"
-    with_parameters(ip: @inifile["TPC"]["telport"], port: @inifile["TPC"]["telport"].to_i, timeout: 1000000.0, chatter: 100) do |m|
+    with_parameters(ip: @inifile["TPC"]["ip"], port: @inifile["TPC"]["telport"].to_i, timeout: 1000.0, chatter: 100) do |m|
       m.set_singleton(0)
     end
     chain GRAMSBalloon::DistributeCommand
-    with_parameters(topic: "TPC_command", chatter: 0, SocketCommunicationManager_name: "SocketCommunicationManager_TPC") do |m|
+    with_parameters(topic: @inifile["TPC"]["comtopic"], chatter: 100, SocketCommunicationManager_name: "SocketCommunicationManager_TPC") do |m|
       m.set_singleton(0)
     end
     chain GRAMSBalloon::ReceiveStatusFromDAQComputer
@@ -36,9 +36,9 @@ class MyApp < ANL::ANLApp
     chain GRAMSBalloon::DividePacket
     with_parameters(ReceiveStatusFromDAQComputer_name: "ReceiveStatusFromDAQComputer", chatter: 4)
     chain GRAMSBalloon::PassTelemetry
-    with_parameters(DividePacket_name: "DividePacket", topic: "TPC_telemetry", chatter: 100)
-    chain GRAMSBalloon::Sleep
-    with_parameters(sleep_sec: 1)
+    with_parameters(DividePacket_name: "DividePacket", topic: @inifile["TPC"]["teltopic"], chatter: 100)
+    #chain GRAMSBalloon::Sleep
+    #with_parameters(sleep_sec: 1)
     
     chain GRAMSBalloon::RunIDManager
     with_parameters(

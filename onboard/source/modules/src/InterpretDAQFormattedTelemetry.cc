@@ -52,7 +52,7 @@ ANLStatus InterpretDAQFormattedTelemetry::mod_analyze() {
   return AS_OK;
 }
 void InterpretDAQFormattedTelemetry::printTelemetry() const {
-  std::cout << "Code: " << std::hex << std::setw(4) << std::setfill('0') << communicationFormat_->Code() << std::dec << std::endl;
+  std::cout << "Code: " << communicationFormat_->Code() << std::dec << std::endl;
   std::cout << "Argc: " << communicationFormat_->Argc() << std::endl;
   std::cout << "Arguments: ";
   const std::vector<int32_t> &args = communicationFormat_->Arguments();

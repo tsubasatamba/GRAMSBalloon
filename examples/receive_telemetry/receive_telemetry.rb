@@ -14,7 +14,7 @@ class MyApp < ANL::ANLApp
     chain GRAMSBalloon::MosquittoManager
     with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 60, chatter: 0, threaded_set: true, device_id: "ground_system")
     chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_TPC"
-    with_parameters(topic: @inifile["TPC"], qos: 0, chatter: 100)
+    with_parameters(topic: @inifile["TPC"]["teltopic"], qos: 0, chatter: 100)
     chain GRAMSBalloon::InterpretDAQFormattedTelemetry, "InterpretDAQFormattedTelemetry_TPC"
     with_parameters(ReceiveTelemetry_name: "ReceiveTelemetry_TPC", print_telemetry:true, chatter: 100)
   end

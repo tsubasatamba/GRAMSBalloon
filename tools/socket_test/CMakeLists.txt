@@ -24,3 +24,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(socket_test
   socket_test.cc
 )
+add_executable(socket_server_test
+  socket_server_test.cc
+)
