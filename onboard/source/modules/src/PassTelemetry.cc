@@ -51,7 +51,7 @@ ANLStatus PassTelemetry::mod_analyze() {
   if (dividePacket_->IsEmpty()) {
     return AS_OK;
   }
-  auto &packet = dividePacket_->GetLastPacket();
+  auto &packet = dividePacket_->GetLastPacket(); // TODO: Need to check the size of the packet not to block the main chain.
   MosquittoIO<std::vector<uint8_t>>::HandleError(mosq->Publish(packet, topic_, qos_));
   if (chatter_ > 0) {
     std::cout << "PassTelemetry::mod_analyze: Published packet to " << topic_ << std::endl;

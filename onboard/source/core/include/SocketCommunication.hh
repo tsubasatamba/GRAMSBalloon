@@ -24,9 +24,11 @@ protected:
 
 private:
   int socket_ = -1;
+  int socketServer_ = -1;
   sockaddr_in serverAddress_;
   int numTrial_ = 10;
   bool failed_ = false;
+  bool binded_ = false;
   std::optional<timeval> timeout_ = std::nullopt;
   ssize_t sendImpl(const void *buf, size_t n) {
     for (int i = 0; i < numTrial_; i++) {

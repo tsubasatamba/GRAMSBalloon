@@ -82,6 +82,7 @@ ANLStatus DistributeCommand::mod_analyze() {
   if (commands.empty()) {
     return AS_OK;
   }
+  // need to lock the mutex here or use a thread-safe queue
   const auto command = commands.front();
   const auto &command_payload = command->payload;
   if (topic_ == command->topic) {
