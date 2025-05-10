@@ -8,7 +8,7 @@
 #ifndef GRAMSBalloon_SocketCommunicationManager_hh
 #define GRAMSBalloon_SocketCommunicationManager_hh 1
 #include "SendTelemetry.hh"
-#include "SocketCommunication.hh"
+#include "SocketCommunicationServer.hh"
 #include "anlnext/BasicModule.hh"
 #include <optional>
 namespace gramsballoon {

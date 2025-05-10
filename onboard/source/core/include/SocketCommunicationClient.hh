@@ -1,5 +1,6 @@
-#ifndef GB_SocketCommunication_hh
-#define GB_SocketCommunication_hh 1
+#if 0
+#ifndef GB_SocketCommunicationClient_hh
+#define GB_SocketCommunicationClient_hh 1
 #include "sys/socket.h"
 #include <arpa/inet.h>
 #include <errno.h>
@@ -102,4 +103,5 @@ inline ssize_t SocketCommunication::receive(std::vector<uint8_t> &data) {
   return ret;
 }
 } // namespace gramsballoon::pgrams
-#endif //GB_SocketCommunication_hh
+#endif //GB_SocketCommunicationClient_hh
+#endif

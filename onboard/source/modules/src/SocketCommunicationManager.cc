@@ -51,7 +51,7 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
 ANLStatus SocketCommunicationManager::mod_analyze() {
   if (socketCommunication_ && socketCommunication_->isFailed()) {
     std::cout << "SocketCommunicationManager::mod_analyze: reconnecting socket communication..." << std::endl;
-    if (socketCommunication_->connect() != 0) {
+    if (socketCommunication_->accept() != 0) {
       std::cerr << "SocketCommunicationManager::mod_initialize: Failed to connect to the server." << std::endl;
       socketCommunication_->close();
       if (sendTelemetry_) {

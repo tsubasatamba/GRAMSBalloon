@@ -23,7 +23,6 @@ set(GB_CORE_CLASSES
   src/DateManager.cc
   src/EncodedSerialCommunication.cc
   src/OrientationInformation.cc
-  src/SocketCommunication.cc
   src/MQTTFormatConverter.cc
   )
 
@@ -56,6 +55,15 @@ endif(GB_USE_MYSQL)
 set(GB_MOSQUITTO_CORE_CLASSES
     src/MosquittoIO.cc
   )
+if (GB_SOCKET_CLIENT)
+  set(GB_SOCKET_CLIENT_CORE_CLASSES
+    src/SocketCommunicationClient.cc
+  )
+else(GB_SOCKET_CLIENT)
+  set(GB_SOCKET_SERVER_CORE_CLASSES
+    src/SocketCommunicationServer.cc
+  )
+endif(GB_SOCKET_CLIENT)
 
 add_library(GBCore SHARED
   ${GB_CORE_CLASSES}
@@ -64,6 +72,8 @@ add_library(GBCore SHARED
   ${GB_ICM20948_CORE_CLASSES}
   ${GB_MYSQL_CORE_CLASSES}
   ${GB_MOSQUITTO_CORE_CLASSES}
+  ${GB_SOCKET_CLIENT_CORE_CLASSES}
+  ${GB_SOCKET_SERVER_CORE_CLASSES}
   )
 
 target_link_libraries(GBCore
