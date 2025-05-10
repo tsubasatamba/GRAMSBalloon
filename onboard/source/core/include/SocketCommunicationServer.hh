@@ -2,9 +2,12 @@
 #define GB_SocketCommunicationServer_hh 1
 
 #include "boost/asio.hpp"
+#include "boost/asio/steady_timer.hpp"
 #include "boost/bind.hpp"
+#include <atomic>
 #include <iostream>
 #include <memory>
+#include <vector>
 namespace gramsballoon::pgrams {
 /**
  * @brief SocketCommunicationServer class for managing socket communication.
@@ -26,57 +29,49 @@ protected:
 private:
   std::shared_ptr<boost::asio::io_context> ioContext_ = nullptr;
   std::shared_ptr<boost::asio::ip::tcp::socket> socket_ = nullptr;
+  std::shared_ptr<boost::asio::ip::tcp::socket> socketAccepted_ = nullptr;
   std::shared_ptr<boost::asio::ip::tcp::acceptor> acceptor_ = nullptr;
-  bool failed_ = false;
+  std::atomic<bool> failed_ = false;
+  boost::asio::steady_timer timer_;
+  std::atomic<bool> stopped_ = false;
 
 public:
   int accept();
   bool isFailed() const {
     return failed_;
   }
-  void on_accept(const boost::system::error_code &error) {
-    if (!error) {
-      std::cout << "SocketCommunication: Accepted connection." << std::endl;
-    }
-    else {
-      std::cerr << "Error in SocketCommunication: Accept failed." << std::endl;
-    }
-  }
   int close() {
     socket_->close();
     return 0;
   }
   int send(const void *buf, size_t n) {
-    boost::system::error_code error_code;
-    const int num_bytes = socket_->send(boost::asio::buffer(buf, n), 0, error_code);
-    if (error_code) {
-      std::cerr << "Error in SocketCommunication: Send failed. " << error_code.message() << std::endl;
+    if (socketAccepted_ == nullptr) {
+      std::cerr << "Error in SocketCommunication: Socket not accepted." << std::endl;
       return -1;
     }
-    return num_bytes;
+    int return_code = 0;
+    socketAccepted_->async_send(boost::asio::buffer(buf, n), boost::bind(SocketCommunication::on_send, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred()));
   }
   template <typename T>
   int send(const std::vector<T> &data) {
     return send(data.data(), data.size() * sizeof(T));
   }
+
+  void on_send(const boost::system::error_code &error, std::size_t bytes_transferred, int *return_code);
+  void on_receive(const boost::system::error_code &error, std::size_t bytes_transferred, int *return_code);
+
   template <typename T>
   int receive(const std::vector<T> &data) {
     return receive(data.data(), data.size() * sizeof(T));
   }
   int receive(void *buf, size_t n) {
-    boost::system::error_code error_code;
-    const int num_bytes = socket_->receive(boost::asio::buffer(buf, n), 0, error_code);
-    if (error_code) {
-      std::cerr << "Error in SocketCommunication: Receive failed. " << error_code.message() << std::endl;
+    if (socketAccepted_ == nullptr) {
+      std::cerr << "Error in SocketCommunication: Socket not accepted." << std::endl;
       return -1;
     }
-    return num_bytes;
-  }
-  int getSocket() {
-    return socket_->native_handle();
-  }
-  boost::asio::ip::tcp::socket &getSocketRef() {
-    return *socket_;
+    int return_code = 0;
+    socketAccepted_->async_receive(boost::asio::buffer(buf, n), boost::bind(SocketCommunication::on_receive, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred()));
+    return return_code;
   }
 };
 } // namespace gramsballoon::pgrams

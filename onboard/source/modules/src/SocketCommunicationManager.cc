@@ -29,7 +29,7 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
   }
   socketCommunication_ = std::make_shared<SocketCommunication>(ip_, port_);
 
-  if (socketCommunication_->connect() != 0) {
+  if (socketCommunication_->accept() != 0) {
     std::cerr << "SocketCommunicationManager::mod_initialize: Failed to connect to the server." << std::endl;
     socketCommunication_->close();
     if (sendTelemetry_) {
