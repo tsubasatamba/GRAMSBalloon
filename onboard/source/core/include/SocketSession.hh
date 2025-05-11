@@ -10,7 +10,7 @@
 namespace gramsballoon::pgrams {
 class SocketSession: public std::enable_shared_from_this<SocketSession> {
 public:
-  SocketSession(boost::asio::ip::tcp::socket &socket) : socket_(std::move(socket)), buftemp_(BUFFER_SIZE) {};
+  SocketSession(boost::asio::ip::tcp::socket &&socket) : socket_(std::move(socket)), buftemp_(BUFFER_SIZE) {}
   virtual ~SocketSession() {
     if (socket_.is_open()) {
       socket_.close();
@@ -25,6 +25,15 @@ protected:
   auto &getSocket() {
     return socket_;
   }
+  void handler() {
+    if (stopFlag_.load(std::memory_order_acquire)) {
+      return;
+    }
+    if (socket_.available() > 0) {
+      receiveHandler();
+    }
+    sendHandler();
+  }
   void sendHandler() {
     if (stopFlag_.load(std::memory_order_acquire)) {
       return;
@@ -32,6 +41,9 @@ protected:
     auto self = shared_from_this();
     sendMutex_.lock();
     if (sendQueue_.empty()) {
+      sendMutex_.unlock();
+      std::cout << "Send queue is empty." << std::endl;
+      sendHandler();
       return;
     }
     auto data = std::move(sendQueue_.front());
@@ -74,6 +86,7 @@ protected:
 private:
   static constexpr size_t BUFFER_SIZE = 1024;
   int numTrial_ = 10;
+  std::atomic<int> indexTrial_{0};
   boost::asio::ip::tcp::socket socket_;
   std::atomic<bool> stopFlag_{false};
   std::deque<std::vector<uint8_t>> buffer_;
@@ -81,11 +94,9 @@ private:
   std::deque<std::vector<uint8_t>> sendQueue_;
   std::mutex mutex_;
   std::mutex sendMutex_;
+  std::atomic<bool> failed_{false};
 
 public:
-  const auto &getBuffer() const {
-    return buffer_;
-  }
   bool isBufferEmpty() {
     bool empty = false;
     {
@@ -94,12 +105,32 @@ public:
     }
     return empty;
   }
+  std::vector<uint8_t> popBuffer() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (buffer_.empty()) {
+      return {};
+    }
+    auto data = std::move(buffer_.front());
+    buffer_.pop_front();
+    return data;
+  }
+  void popBuffer(std::vector<uint8_t> &data) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (buffer_.empty()) {
+      return;
+    }
+    data = std::move(buffer_.front());
+    buffer_.pop_front();
+  }
   bool getStopFlag() const {
     return stopFlag_.load(std::memory_order_acquire);
   }
-  virtual void start() {}
+  void start() { handler(); }
   auto getMutex() {
     return &mutex_;
+  }
+  auto isFailed() {
+    return &failed_;
   }
   void stop() {
     stopFlag_.store(true, std::memory_order_release);

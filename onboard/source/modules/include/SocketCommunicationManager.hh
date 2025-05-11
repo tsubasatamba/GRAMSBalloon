@@ -45,6 +45,7 @@ private:
   double timeout_ = -1;
   std::optional<timeval> timeoutTV_;
   bool handleSigpipe_ = false;
+  std::shared_ptr<std::thread> thread_ = nullptr;
 };
 } // namespace gramsballoon::pgrams
 #endif //GRAMSBalloon_SocketCommunicationManager_hh

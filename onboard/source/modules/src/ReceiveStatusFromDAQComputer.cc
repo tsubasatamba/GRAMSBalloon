@@ -49,7 +49,9 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
   }
   int num_bytes = 0;
   for (int i = 0; i < MAX_BYTES; i++) {
-    const auto result = sc->receive(byte);
+    //const auto result = sc->receive(byte);
+    const int result = 0;
+    std::cout << "NOTE: this function is disabled for now." << std::endl;
     if (result > 0) {
       buffer_.push(byte);
       num_bytes++;

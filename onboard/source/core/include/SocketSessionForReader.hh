@@ -4,13 +4,14 @@
 namespace gramsballoon::pgrams {
 class SocketSessionForReader: public SocketSession {
 public:
-  SocketSessionForReader(boost::asio::ip::tcp::socket &socket) : SocketSession(socket) {};
+  SocketSessionForReader(boost::asio::ip::tcp::socket &&socket) : SocketSession(std::move(socket)) {};
   virtual ~SocketSessionForReader() = default;
-  void start() override;
+  //void start() override;
 
   virtual void sendAck() {
     requestSend(&bytesReceived_, sizeof(bytesReceived_));
   }
+
 protected:
   void on_receive(const boost::system::error_code &error, std::size_t bytes_transferred) override;
 

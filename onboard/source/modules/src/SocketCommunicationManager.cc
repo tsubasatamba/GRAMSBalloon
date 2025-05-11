@@ -28,33 +28,42 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
     std::cerr << "SocketCommunicationManager::mod_initialize SendTelemetry module is not found." << std::endl;
   }
   socketCommunication_ = std::make_shared<SocketCommunication>(port_);
-
-  if (socketCommunication_->accept() != 0) {
-    std::cerr << "SocketCommunicationManager::mod_initialize: Failed to connect to the server." << std::endl;
-    socketCommunication_->close();
-    if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR); // TODO: This flags is to be defined
-    }
-    return AS_ERROR;
-  }
+  //if (socketCommunication_->accept() != 0) {
+  //  std::cerr << "SocketCommunicationManager::mod_initialize: Failed to connect to the server." << std::endl;
+  //  socketCommunication_->close();
+  //  if (sendTelemetry_) {
+  //    sendTelemetry_->getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR); // TODO: This flags is to be defined
+  //  }
+  //  return AS_ERROR;
+  //}
+  socketCommunication_->accept();
   return AS_OK;
 }
 ANLStatus SocketCommunicationManager::mod_analyze() {
-  if (socketCommunication_ && socketCommunication_->isFailed()) {
-    std::cout << "SocketCommunicationManager::mod_analyze: reconnecting socket communication..." << std::endl;
-    if (socketCommunication_->accept() != 0) {
-      std::cerr << "SocketCommunicationManager::mod_initialize: Failed to connect to the server." << std::endl;
-      socketCommunication_->close();
-      if (sendTelemetry_) {
-        sendTelemetry_->getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR); // TODO: This flags is to be defined
-      }
-      return AS_ERROR;
-    }
+  //if (socketCommunication_ && socketCommunication_->isFailed()) {
+  if (socketCommunication_ && !thread_) {
+    //std::cout << "SocketCommunicationManager::mod_analyze: reconnecting socket communication..." << std::endl;
+    //if (socketCommunication_->accept() != 0) {
+    //  std::cerr << "SocketCommunicationManager::mod_initialize: Failed to connect to the server." << std::endl;
+    //  socketCommunication_->close();
+    //  if (sendTelemetry_) {
+    //    sendTelemetry_->getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR); // TODO: This flags is to be defined
+    //  }
+    //  return AS_ERROR;
+    //}
+    thread_ = std::make_shared<std::thread>([this]() {
+      socketCommunication_->run();
+    });
+  }
+  if (socketCommunication_) {
+    socketCommunication_->updateBuffer();
   }
   return AS_OK;
 }
 ANLStatus SocketCommunicationManager::mod_finalize() {
   if (socketCommunication_) {
+    socketCommunication_->requestStop();
+    thread_->join();
     socketCommunication_->close();
   }
   return AS_OK;
