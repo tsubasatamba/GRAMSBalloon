@@ -27,7 +27,7 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
   else {
     std::cerr << "SocketCommunicationManager::mod_initialize SendTelemetry module is not found." << std::endl;
   }
-  socketCommunication_ = std::make_shared<SocketCommunication>(ip_, port_);
+  socketCommunication_ = std::make_shared<SocketCommunication>(port_);
 
   if (socketCommunication_->accept() != 0) {
     std::cerr << "SocketCommunicationManager::mod_initialize: Failed to connect to the server." << std::endl;
@@ -36,15 +36,6 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
       sendTelemetry_->getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR); // TODO: This flags is to be defined
     }
     return AS_ERROR;
-  }
-  if (timeout_ > 0) {
-    const int timeout_sec = static_cast<int>(timeout_ / 1000000);
-    const int timeout_usec = static_cast<int>(timeout_ - (timeout_sec) * 1000000);
-    timeoutTV_ = {timeout_sec, timeout_usec};
-    socketCommunication_->setTimeout(timeoutTV_.value());
-  }
-  else {
-    timeoutTV_ = std::nullopt;
   }
   return AS_OK;
 }
@@ -58,15 +49,6 @@ ANLStatus SocketCommunicationManager::mod_analyze() {
         sendTelemetry_->getErrorManager()->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR); // TODO: This flags is to be defined
       }
       return AS_ERROR;
-    }
-    if (timeout_ > 0) {
-      const int timeout_sec = static_cast<int>(timeout_ / 1000000);
-      const int timeout_usec = static_cast<int>(timeout_ - (timeout_sec) * 1000000);
-      timeoutTV_ = {timeout_sec, timeout_usec};
-      socketCommunication_->setTimeout(timeoutTV_.value());
-    }
-    else {
-      timeoutTV_ = std::nullopt;
     }
   }
   return AS_OK;

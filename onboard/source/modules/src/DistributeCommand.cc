@@ -57,9 +57,6 @@ ANLStatus DistributeCommand::mod_initialize() {
     std::cout << "IP: " << sc->getIP() << std::endl;
     std::cout << "Port: " << sc->getPort() << std::endl;
   }
-  if (chatter_ > 2) {
-    std::cout << "Socket: " << sc->getSocket() << std::endl;
-  }
   return AS_OK;
 }
 
@@ -95,7 +92,7 @@ ANLStatus DistributeCommand::mod_analyze() {
       return AS_OK;
     }
     for (int i = 0; i < numTrial_; i++) {
-      const auto send_result = sc->send(command_payload); // TODO: this depends on telemetry definition.
+      const auto send_result = sc->Send(command_payload); // TODO: this depends on telemetry definition.
       if (send_result == -1) {
         std::cerr << "Error in DistributeCommand::mod_analyze: " << "Trial " << i << " Sending data failed." << std::endl;
         continue;

@@ -1,6 +1,9 @@
 #include "SocketCommunicationServer.hh"
 #include <iostream>
 namespace gramsballoon::pgrams {
+void SigPipeHander(int) {
+  std::cout << "Caught SIGPIPE!" << std::endl;
+}
 SocketCommunication::SocketCommunication(int port) {
   ioContext_ = std::make_shared<boost::asio::io_context>();
   socket_ = std::make_shared<boost::asio::ip::tcp::socket>(*ioContext_);
@@ -18,34 +21,22 @@ SocketCommunication::~SocketCommunication() {
     ioContext_->stop();
   }
 }
-int SocketCommunication::accept() {
+void SocketCommunication::accept() {
   acceptor_->async_accept([this](const boost::system::error_code &error, boost::asio::ip::tcp::socket socket) {
     if (!error) {
-      socketAccepted_ = std::make_shared<boost::asio::ip::tcp::socket>(std::move(socket));
+      socketsAccepted_.push_back(std::make_shared<SocketSession>(std::move(socket)));
     }
     else {
-      failed_ = true;
+      failed_->store(true, std::memory_order_release);
       std::cerr << "Error in SocketCommunication: Accept failed. Error Code: " << error.message() << std::endl;
     }
   });
-  return 0;
 }
-void on_send(const boost::system::error_code &error, std::size_t bytes_transferred, int *return_code) {
-  if (error) {
-    std::cerr << "Error in SocketCommunication: Send failed. " << error.message() << std::endl;
-    *return_code = -1;
-  }
-  else {
-    std::cout << "Sent " << bytes_transferred << " bytes." << std::endl;
-    *return_code = bytes_transferred;
-  }
-}
-void on_receive(const boost::system::error_code &error, std::size_t bytes_transferred) {
-  if (error) {
-    std::cerr << "Error in SocketCommunication: Receive failed. " << error.message() << std::endl;
-  }
-  else {
-    std::cout << "Received " << bytes_transferred << " bytes." << std::endl;
-  }
+void SocketCommunication::HandleSIGPIPE() {
+  struct sigaction sa;
+  sa.sa_handler = SigPipeHander;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+  sigaction(SIGPIPE, &sa, NULL);
 }
 } // namespace gramsballoon::pgrams
