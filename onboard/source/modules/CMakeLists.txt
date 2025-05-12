@@ -42,6 +42,7 @@ set(GB_MODULES
   src/DividePacket.cc
   src/PassTelemetry.cc
   src/InterpretDAQFormattedTelemetry.cc
+  src/IoContextManager.cc
 )
 
 if(GB_DEMO_MODE)

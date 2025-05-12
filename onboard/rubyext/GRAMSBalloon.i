@@ -80,6 +80,7 @@
 #include "DividePacket.hh"
 #include "PassTelemetry.hh"
 #include "InterpretDAQFormattedTelemetry.hh"
+#include "IoContextManager.hh"
 %}
 
 %include "std_vector.i"
@@ -221,6 +222,10 @@ public:
 class PressureGaugeManager: public EncodedSerialCommunicator{
 public:
   PressureGaugeManager();
+};
+class IoContextManager: public anlnext::BasicModule{
+public:
+  IoContextManager();
 };
 class ReceiveStatusFromDAQComputer: public anlnext::BasicModule{
 public:

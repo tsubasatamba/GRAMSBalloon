@@ -46,3 +46,24 @@ target_link_libraries(socket_server_test
   ${Boost_LIBRARIES}
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+add_executable(socket_server_test_async
+  socket_server_test_async.cc
+)
+target_include_directories(socket_server_test_async
+  PRIVATE
+  ${Boost_INCLUDE_DIRS}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  $ENV{HOME}/include/GRAMSBalloon
+)
+target_link_directories(socket_server_test_async
+  PRIVATE
+  ${Boost_LIBRARY_DIRS}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  $ENV{HOME}/lib
+)
+target_link_libraries(socket_server_test_async
+  ${Boost_LIBRARIES}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  GBCore
+)

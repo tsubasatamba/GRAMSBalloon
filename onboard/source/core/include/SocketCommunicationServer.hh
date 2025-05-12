@@ -1,9 +1,6 @@
 #ifndef GB_SocketCommunicationServer_hh
 #define GB_SocketCommunicationServer_hh 1
 
-#include "SocketSession.hh"
-#include "SocketSessionForReader.hh"
-#include "SocketSessionForWriter.hh"
 #include "boost/asio.hpp"
 #include "boost/asio/steady_timer.hpp"
 #include "boost/bind/bind.hpp"
@@ -24,7 +21,8 @@ class SocketSession;
  */
 class SocketCommunication: public std::enable_shared_from_this<SocketCommunication> {
 public:
-  SocketCommunication(int port, bool isWriter = false);
+  SocketCommunication(int port);
+  SocketCommunication(std::shared_ptr<boost::asio::io_context> ioContext, int port);
   virtual ~SocketCommunication();
 
 protected:
@@ -33,36 +31,30 @@ protected:
 private:
   std::shared_ptr<boost::asio::io_context> ioContext_ = nullptr;
   std::shared_ptr<boost::asio::ip::tcp::socket> socket_ = nullptr;
-  std::vector<std::shared_ptr<SocketSession>> socketsAccepted_;
+  std::shared_ptr<boost::asio::ip::tcp::socket> socketAccepted_;
   std::shared_ptr<boost::asio::ip::tcp::acceptor> acceptor_ = nullptr;
-  std::shared_ptr<std::atomic<int>> failedCount_ = nullptr;
+  std::shared_ptr<std::atomic<bool>> failed_ = nullptr;
   std::shared_ptr<std::atomic<bool>> stopped_ = nullptr;
-  std::deque<std::vector<uint8_t>> receiveQueue_;
-  bool isWriter_ = false;
+  std::shared_ptr<std::mutex> sockMutex_ = nullptr;
 
 public:
   void accept();
-  void run() {
-    if (ioContext_) {
-      stopped_->store(false, std::memory_order_release);
-      ioContext_->run();
-    }
+  bool isConnected() const {
+    std::lock_guard<std::mutex> lock(*sockMutex_);
+    return socketAccepted_ && socketAccepted_->is_open();
   }
   bool isFailed() const {
-    return failedCount_->load(std::memory_order_acquire) != 0;
+    return failed_->load(std::memory_order_acquire);
   }
   void resetFailed() {
-    failedCount_->store(0, std::memory_order_release);
+    failed_->store(false, std::memory_order_release);
   }
   int close() {
-    for (auto sock: socketsAccepted_) {
-      if (sock == nullptr) {
-        continue;
-      }
-      sock->stop();
-      sock.reset();
+    std::lock_guard<std::mutex> lock(*sockMutex_);
+    if (socketAccepted_) {
+      socketAccepted_->close();
+      socketAccepted_.reset();
     }
-    socketsAccepted_.clear();
     socket_->close();
     stopped_->store(true, std::memory_order_release);
     if (ioContext_) {
@@ -71,72 +63,63 @@ public:
     return 0;
   }
   std::string getIP() const {
-    return socket_->remote_endpoint().address().to_string();
+    std::lock_guard<std::mutex> lock(*sockMutex_);
+    return socketAccepted_->remote_endpoint().address().to_string();
   }
   int getPort() const {
-    return socket_->remote_endpoint().port();
+    std::lock_guard<std::mutex> lock(*sockMutex_);
+    return socketAccepted_->remote_endpoint().port();
   }
   bool isOpened() const {
+    std::lock_guard<std::mutex> lock(*sockMutex_);
     return socket_->is_open();
   }
+  int getSocket() const {
+    std::lock_guard<std::mutex> lock(*sockMutex_);
+    return socket_->native_handle();
+  }
   static void HandleSIGPIPE();
-  void send(const void *buf, size_t n) {
-    for (auto sock: socketsAccepted_) {
-      if (sock == nullptr) {
-        continue;
-      }
-      sock->requestSend(buf, n);
-    }
-  }
-  int checkSocketStatus() {
-    for (auto sock: socketsAccepted_) {
-      if (sock == nullptr) {
-        continue;
-      }
-      if (sock->getStopFlag()) {
-        sock->stop();
-        std::cerr << "Socket is closed." << std::endl;
-        sock.reset();
-      }
-      if (sock->isFailed()) {
-        std::cerr << "Error in SocketCommunication::checkSocketStatus: Socket is failed." << std::endl;
-        failedCount_->fetch_add(1, std::memory_order_acq_rel);
-        sock->stop();
-        sock.reset();
-        std::cerr << "Socket is closed." << std::endl;
+  int send(const void *buf, size_t n) {
+    std::lock_guard<std::mutex> lock(*sockMutex_);
+    if (socketAccepted_) {
+      boost::system::error_code errorcode;
+      {
+        const auto ret = boost::asio::write(*socketAccepted_, boost::asio::buffer(buf, n), errorcode);
+        if (errorcode) {
+          std::cerr << "Error in SocketCommunication: " << errorcode.message() << std::endl;
+          return errorcode.value();
+        }
+        if (ret == 0) {
+          std::cerr << "Error in SocketCommunication: No data sent." << std::endl;
+          return -1;
+        }
+        return ret;
       }
     }
-    return failedCount_->load(std::memory_order_acquire);
-  }
-  void requestStop() {
-    for (auto sock: socketsAccepted_) {
-      if (sock == nullptr) {
-        continue;
-      }
-      sock->stop();
-    }
-    stopped_->store(true, std::memory_order_release);
+    return -1;
   }
   template <typename T>
-  void send(const std::vector<T> &data) {
+  int send(const std::vector<T> &data) {
     return send(&data[0], sizeof(T) * data.size());
   }
-  void updateBuffer() {
-    for (auto sock: socketsAccepted_) {
-      if (sock == nullptr) {
-        continue;
+  template <typename T>
+  int receive(std::vector<T> &data) {
+    std::lock_guard<std::mutex> lock(*sockMutex_);
+    if (socketAccepted_) {
+      boost::system::error_code errorcode;
+      size_t sz = socketAccepted_->available(errorcode);
+      if (errorcode) {
+        std::cerr << "Error in SocketCommunication: " << errorcode.message() << std::endl;
+        return errorcode.value();
       }
-      if (sock->isBufferEmpty()) continue;
-      receiveQueue_.push_back(sock->popBuffer());
+      if (sz == 0) {
+        return 0;
+      }
+      const auto n = sz / sizeof(T);
+      data.resize(n);
+      return boost::asio::read(*socketAccepted_, boost::asio::buffer(&data[0], n), errorcode);
     }
-  }
-  int receive(std::vector<uint8_t> &&data) {
-    if (receiveQueue_.empty()) {
-      return 0;
-    }
-    data = std::move(receiveQueue_.front());
-    receiveQueue_.pop_front();
-    return data.size();
+    return -1;
   }
 };
 

@@ -30,6 +30,7 @@ if __name__ == "__main__":
             for i in range(1):
                 # Receive no more than 1024 bytes
                 s.send("Hello, World!".encode())
+                print()
                 msg = s.recv(1024)
                 if len(msg) == 0:
                     break

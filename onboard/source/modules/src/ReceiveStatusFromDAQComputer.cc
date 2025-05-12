@@ -41,36 +41,29 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
     std::cerr << "Socket Communication is failed." << std::endl;
     return AS_OK;
   }
-  uint8_t byte;
+  if (!sc->isConnected()) {
+    std::cerr << "ReceiveStatusFromDAQComputer::mod_analyze(): Socket Communication is not connected." << std::endl;
+    return AS_OK;
+  }
   std::vector<uint8_t> *buffer_for_display = nullptr;
   if (chatter_ > 1) {
     buffer_for_display = new std::vector<uint8_t>;
     buffer_for_display->reserve(MAX_BYTES);
   }
-  int num_bytes = 0;
-  for (int i = 0; i < MAX_BYTES; i++) {
-    //const auto result = sc->receive(byte);
-    const int result = 0;
-    std::cout << "NOTE: this function is disabled for now." << std::endl;
-    if (result > 0) {
-      buffer_.push(byte);
-      num_bytes++;
-      if (chatter_ > 1) {
-        buffer_for_display->push_back(byte);
-      }
+  const auto result = sc->receive(bufTmp_);
+  if (result > 0) {
+    buffer_.insert(buffer_.end(), bufTmp_.begin(), bufTmp_.begin() + result);
+    if (chatter_ > 1) {
+      buffer_for_display->insert(buffer_for_display->end(), bufTmp_.begin(), bufTmp_.begin() + result);
     }
-    else if (result != 0) {
-      if (chatter_ > 1) {
-        std::cout << "Error in ReceiveStatusFromDAQComputer::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
-      }
-      break;
-    }
-    else {
-      break;
+  }
+  else if (result != 0) {
+    if (chatter_ > 1) {
+      std::cout << "Error in ReceiveStatusFromDAQComputer::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
     }
   }
   if (chatter_ > 0) {
-    std::cout << "Received " << num_bytes << " bytes." << std::endl;
+    std::cout << "Received " << result << " bytes." << std::endl;
   }
   if (chatter_ > 1) {
     std::cout << "Payload:" << std::endl;

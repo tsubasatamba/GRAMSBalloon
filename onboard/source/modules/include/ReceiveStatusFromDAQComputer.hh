@@ -36,12 +36,12 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
   uint8_t PopAndGetOneByte() {
-    const uint8_t byte = buffer_.front();
-    buffer_.pop();
+    const uint8_t byte = singleton_self()->buffer_.front();
+    singleton_self()->buffer_.pop_front();
     return byte;
   }
   size_t GetBufferSize() {
-    return buffer_.size();
+    return singleton_self()->buffer_.size();
   }
 
 private:
@@ -50,7 +50,8 @@ private:
   std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
   std::shared_ptr<CommunicationFormat> commandDefinition_ = nullptr;
   int chatter_ = 0;
-  std::queue<uint8_t> buffer_;
+  std::deque<uint8_t> buffer_;
+  std::vector<uint8_t> bufTmp_;
   static constexpr int MAX_BYTES = 1024;
 };
 } // namespace gramsballoon::pgrams

@@ -49,13 +49,8 @@ ANLStatus DistributeCommand::mod_initialize() {
   ///// Initialize sockets
   mosq->subscribe(NULL, topic_.c_str(), 0);
   failed_ = false;
-  auto sc = socketCommunicationManager_->getSocketCommunication();
   if (chatter_ > 0) {
     std::cout << "Connected to " << topic_ << std::endl;
-  }
-  if (chatter_ > 1) {
-    std::cout << "IP: " << sc->getIP() << std::endl;
-    std::cout << "Port: " << sc->getPort() << std::endl;
   }
   return AS_OK;
 }
@@ -79,7 +74,6 @@ ANLStatus DistributeCommand::mod_analyze() {
   if (commands.empty()) {
     return AS_OK;
   }
-  // need to lock the mutex here or use a thread-safe queue
   const auto command = commands.front();
   const auto &command_payload = command->payload;
   if (topic_ == command->topic) {
@@ -91,32 +85,31 @@ ANLStatus DistributeCommand::mod_analyze() {
       mosq->popPayloadFront();
       return AS_OK;
     }
-    //for (int i = 0; i < numTrial_; i++) {
-    sc->send(command_payload); // TODO: this depends on telemetry definition.
-    //const auto send_result = sc->send(command_payload); // TODO: this depends on telemetry definition.
-    //  if (send_result == -1) {
-    //    std::cerr << "Error in DistributeCommand::mod_analyze: " << "Trial " << i << " Sending data failed." << std::endl;
-    //    continue;
-    //  }
-    //  else if (chatter_ > 0) {
-    //    std::cout << "Sent data to " << topic_ << std::endl;
-    //    std::cout << "Payload size: " << send_result << std::endl;
-    //  }
-    //  failed_ = false;
-    //  break;
-    //}
-    //if (failed_) {
-    //  std::cerr << "Error in DistributeCommand::mod_analyze: Sending data failed, despite " << numTrial_ << " times trials." << std::endl;
-    //}
-    //else {
-    //  if (chatter_ > 1) {
-    //    std::cout << "Payload:" << std::endl;
-    //    for (const auto &byte: command_payload) {
-    //      std::cout << static_cast<int>(byte) << " ";
-    //    }
-    //    std::cout << std::endl;
-    //  }
-    //}
+    for (int i = 0; i < numTrial_; i++) {
+      const auto send_result = sc->send(command_payload); // TODO: this depends on telemetry definition.
+      if (send_result == -1) {
+        std::cerr << "Error in DistributeCommand::mod_analyze: " << "Trial " << i << " Sending data failed." << std::endl;
+        continue;
+      }
+      else if (chatter_ > 0) {
+        std::cout << "Sent data to " << topic_ << std::endl;
+        std::cout << "Payload size: " << send_result << std::endl;
+      }
+      failed_ = false;
+      break;
+    }
+    if (failed_) {
+      std::cerr << "Error in DistributeCommand::mod_analyze: Sending data failed, despite " << numTrial_ << " times trials." << std::endl;
+    }
+    else {
+      if (chatter_ > 1) {
+        std::cout << "Payload:" << std::endl;
+        for (const auto &byte: command_payload) {
+          std::cout << static_cast<int>(byte) << " ";
+        }
+        std::cout << std::endl;
+      }
+    }
     mosq->popPayloadFront(); // TODO: How to handle the case when the data is not sent?
   }
   return AS_OK;

@@ -7,6 +7,7 @@
  */
 #ifndef GRAMSBalloon_SocketCommunicationManager_hh
 #define GRAMSBalloon_SocketCommunicationManager_hh 1
+#include "IoContextManager.hh"
 #include "SendTelemetry.hh"
 #include "SocketCommunicationServer.hh"
 #include "anlnext/BasicModule.hh"
@@ -15,6 +16,7 @@ namespace gramsballoon {
 class SendTelemetry;
 }
 namespace gramsballoon::pgrams {
+class IoContextManager;
 class SocketCommunicationManager: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(SocketCommunicationManager, 1.0);
   ENABLE_PARALLEL_RUN();
@@ -33,7 +35,7 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
   SocketCommunication *getSocketCommunication() {
-    return socketCommunication_.get();
+    return singleton_self()->socketCommunication_.get();
   }
 
 private:
@@ -42,6 +44,8 @@ private:
   int chatter_ = 0;
   std::shared_ptr<SocketCommunication> socketCommunication_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
+  IoContextManager *ioContextManager_ = nullptr;
+  std::shared_ptr<boost::asio::io_context> ioContext_ = nullptr;
   double timeout_ = -1;
   std::optional<timeval> timeoutTV_;
   bool handleSigpipe_ = false;

@@ -45,7 +45,7 @@ private:
   SendTelemetry *sendTelemetry_ = nullptr;
   std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
   std::string topic_ = "command";
-  //int numTrial_ = 10;
+  int numTrial_ = 10;
   int chatter_ = 0;
   bool failed_ = false;
 };

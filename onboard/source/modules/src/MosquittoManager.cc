@@ -6,6 +6,9 @@ ANLStatus MosquittoManager::mod_define() {
   define_parameter("port", &mod_class::port_);
   define_parameter("keep_alive", &mod_class::keepAlive_);
   define_parameter("threaded_set", &mod_class::threadedSet_);
+  define_parameter("time_out", &mod_class::timeout_);
+  set_parameter_description("Timeout for the connection. If negative, default value (1000 ms) is used according to the reference of mosquittopp.");
+  set_parameter_unit(1.0, "msec");
   define_parameter("user", &mod_class::user_);
   define_parameter("password", &mod_class::passwd_);
   define_parameter("device_id", &mod_class::deviceId_);
@@ -51,7 +54,7 @@ ANLStatus MosquittoManager::mod_begin_run() {
     return AS_ERROR;
   }
   for (int i = 0; i < 5; i++) {
-    HandleError(mosquittoIO_->loop(-1, 10));
+    HandleError(mosquittoIO_->loop(0, 10));
   }
   return AS_OK;
 }
@@ -59,7 +62,7 @@ ANLStatus MosquittoManager::mod_analyze() {
   if (!mosquittoIO_) {
     return AS_OK;
   }
-  return HandleError(mosquittoIO_->loop(-1, 10));
+  return HandleError(mosquittoIO_->loop(0, 10));
 }
 ANLStatus MosquittoManager::mod_end_run() {
   if (!mosquittoIO_) {

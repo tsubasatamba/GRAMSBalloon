@@ -62,9 +62,6 @@ if (GB_SOCKET_CLIENT)
 else(GB_SOCKET_CLIENT)
   set(GB_SOCKET_SERVER_CORE_CLASSES
     src/SocketCommunicationServer.cc
-    src/SocketSession.cc
-    src/SocketSessionForReader.cc
-    src/SocketSessionForWriter.cc
   )
 endif(GB_SOCKET_CLIENT)
 

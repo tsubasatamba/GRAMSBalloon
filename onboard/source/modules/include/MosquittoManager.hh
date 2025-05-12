@@ -41,6 +41,7 @@ private:
   int port_ = 1883;
   int keepAlive_ = 60;
   int chatter_ = 0;
+  int timeout_ = 10;
   bool threadedSet_ = true;
   anlnext::ANLStatus HandleError(int error_code);
 };

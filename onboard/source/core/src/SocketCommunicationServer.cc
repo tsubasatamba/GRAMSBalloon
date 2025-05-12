@@ -4,14 +4,27 @@ namespace gramsballoon::pgrams {
 void SigPipeHander(int) {
   std::cout << "Caught SIGPIPE!" << std::endl;
 }
-SocketCommunication::SocketCommunication(int port, bool isWriter) {
-  ioContext_ = std::make_shared<boost::asio::io_context>();
+SocketCommunication::SocketCommunication(int port) {
+  if (!ioContext_) {
+    ioContext_ = std::make_shared<boost::asio::io_context>();
+  }
   socket_ = std::make_shared<boost::asio::ip::tcp::socket>(*ioContext_);
   acceptor_ = std::make_shared<boost::asio::ip::tcp::acceptor>(
       *ioContext_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
-  failedCount_ = std::make_shared<std::atomic<int>>(0);
+  failed_ = std::make_shared<std::atomic<bool>>(false);
   stopped_ = std::make_shared<std::atomic<bool>>(true);
-  isWriter_ = isWriter;
+  sockMutex_ = std::make_shared<std::mutex>();
+}
+SocketCommunication::SocketCommunication(std::shared_ptr<boost::asio::io_context> ioContext, int port) : ioContext_(ioContext) {
+  if (!ioContext_) {
+    ioContext_ = std::make_shared<boost::asio::io_context>();
+  }
+  socket_ = std::make_shared<boost::asio::ip::tcp::socket>(*ioContext_);
+  acceptor_ = std::make_shared<boost::asio::ip::tcp::acceptor>(
+      *ioContext_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
+  failed_ = std::make_shared<std::atomic<bool>>(false);
+  stopped_ = std::make_shared<std::atomic<bool>>(false);
+  sockMutex_ = std::make_shared<std::mutex>();
 }
 SocketCommunication::~SocketCommunication() {
   if (socket_) {
@@ -28,16 +41,26 @@ void SocketCommunication::accept() {
   auto self = shared_from_this();
   acceptor_->async_accept([this, self](const boost::system::error_code &error, boost::asio::ip::tcp::socket socket) {
     if (!error) {
-      if (isWriter_)
-        socketsAccepted_.push_back(std::make_shared<SocketSessionForWriter>(std::move(socket)));
-      else
-        socketsAccepted_.push_back(std::make_shared<SocketSessionForReader>(std::move(socket)));
-      socketsAccepted_.back()->start();
+      std::cout << "Accepted connection from " << socket.remote_endpoint().address().to_string() << ":" << socket.remote_endpoint().port() << std::endl;
+      std::lock_guard<std::mutex> lock(*sockMutex_);
+      if (!socketAccepted_) {
+        socketAccepted_ = std::make_shared<boost::asio::ip::tcp::socket>(std::move(socket));
+      }
+      else {
+        std::cout << "Socket is already accepted. Closing the old socket from" << socketAccepted_->remote_endpoint().address() << ":" << socketAccepted_->remote_endpoint().port() << std::endl;
+        socketAccepted_->close();
+        *socketAccepted_ = std::move(socket);
+      }
     }
     else {
-      failedCount_->fetch_add(1, std::memory_order_acq_rel);
+      failed_->store(true, std::memory_order_release);
       std::cerr << "Error in SocketCommunication: Accept failed. Error Code: " << error.message() << std::endl;
     }
+    if (stopped_->load(std::memory_order_acquire)) {
+      std::cerr << "SocketCommunication: Stopped." << std::endl;
+      return;
+    }
+    accept();
   });
 }
 void SocketCommunication::HandleSIGPIPE() {
