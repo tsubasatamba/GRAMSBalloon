@@ -54,7 +54,7 @@ ANLStatus MosquittoManager::mod_begin_run() {
     return AS_ERROR;
   }
   for (int i = 0; i < 5; i++) {
-    HandleError(mosquittoIO_->loop(0, 10));
+    HandleError(mosquittoIO_->loop(timeout_, 10));
   }
   return AS_OK;
 }
@@ -62,7 +62,7 @@ ANLStatus MosquittoManager::mod_analyze() {
   if (!mosquittoIO_) {
     return AS_OK;
   }
-  return HandleError(mosquittoIO_->loop(0, 10));
+  return HandleError(mosquittoIO_->loop(timeout_, 10));
 }
 ANLStatus MosquittoManager::mod_end_run() {
   if (!mosquittoIO_) {
