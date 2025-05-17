@@ -31,6 +31,7 @@ public:
   int get_argnum(const std::string &name) const;
 
   std::vector<uint8_t> make_byte_array(const std::string &name, const std::vector<int32_t> &arg_array) const;
+  std::vector<uint8_t> make_byte_array(uint8_t name, const std::vector<int32_t> &arg_array) const;
 
 private:
   std::map<std::string, CommandProperty> code_map_;

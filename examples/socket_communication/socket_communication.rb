@@ -12,7 +12,7 @@ class MyApp < ANL::ANLApp
       exit 1
     end
     chain GRAMSBalloon::MosquittoManager
-    with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 60, chatter: 0, threaded_set: true, device_id: "hubcomputer") do |m|
+    with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 60, chatter: 0, threaded_set: true, device_id: "hubcomputer", time_out: 1000) do |m|
       m.set_singleton(0)
     end
     chain GRAMSBalloon::IoContextManager do |m|
@@ -22,7 +22,7 @@ class MyApp < ANL::ANLApp
     with_parameters(topic: "command", chatter: 100, qos: 0, binary_filename_base: ENV["HOME"]+"/command_test/command") do |m|
       m.set_singleton(0)
     end
-    subsystems = ["TPC", "TOF"]
+    subsystems = ["TPC", "TOF", "Orchestrator"]
     subsystems.each do |subsystem|
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_" + subsystem
       with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 1000.0, chatter: 100) do |m|
@@ -59,6 +59,7 @@ a = MyApp.new
 
 
 a.num_parallels = 1
+#a.run(1, 1)
 a.run(1000000000, 1)
 exit_status = 1
 puts "exit_status: #{exit_status}"

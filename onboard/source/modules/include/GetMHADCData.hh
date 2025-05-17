@@ -7,7 +7,7 @@
  */
 #ifndef GRAMSBalloon_GetMHADCData_hh
 #define GRAMSBalloon_GetMHADCData_hh 1
-#include "EncodedSerialCommunicator.hh"
+#include "EncodedSerialCommunicator.hh"  
 #include "SendTelemetry.hh"
 #include "anlnext/BasicModule.hh"
 #include <regex>
@@ -42,6 +42,8 @@ public:
 
 private:
   int numCh_ = 32;
+  int numSection_ = 6;
+  int channelPerSection_ = 8;
   SendTelemetry *sendTelemetry_ = nullptr;
   std::vector<int> adcData_;
   std::vector<std::regex> regs_;

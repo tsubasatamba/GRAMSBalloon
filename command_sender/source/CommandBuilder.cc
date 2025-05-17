@@ -50,6 +50,9 @@ CommandBuilder::CommandBuilder() {
   code_map_["dummy_3"] = CommandProperty{902, 0};
   code_map_["dummy_4"] = CommandProperty{903, 5};
   code_map_["invalid_command_1"] = CommandProperty{12345, 0};
+  code_map_["Configure"] = CommandProperty{1, 1};
+  code_map_["Start_run"] = CommandProperty{1, 0};
+  code_map_["Stop_run"] = CommandProperty{1, 0};
 }
 
 CommandProperty CommandBuilder::get_command_property(const std::string &name) const {
@@ -67,6 +70,43 @@ uint16_t CommandBuilder::get_command_code(const std::string &name) const {
 
 int CommandBuilder::get_argnum(const std::string &name) const {
   return get_command_property(name).argnum;
+}
+
+std::vector<uint8_t> CommandBuilder::make_byte_array(uint8_t code, const std::vector<int32_t> &arg_array) const {
+  std::vector<uint8_t> command;
+  command.push_back(0xEB);
+  command.push_back(0x90);
+  command.push_back(0x5B);
+  command.push_back(0x6A);
+
+  const int argnum = arg_array.size();
+  command.push_back((code & 0xFF00u) >> 8);
+  command.push_back((code & 0x00FFu) >> 0);
+  command.push_back((argnum & 0xFF00u) >> 8);
+  command.push_back((argnum & 0x00FFu) >> 0);
+
+  if (argnum != static_cast<int>(arg_array.size())) {
+    throw CommandException("Invalid argument number");
+  }
+
+  for (const int32_t arg: arg_array) {
+    command.push_back((arg & 0xFF000000u) >> 24);
+    command.push_back((arg & 0x00FF0000u) >> 16);
+    command.push_back((arg & 0x0000FF00u) >> 8);
+    command.push_back((arg & 0x000000FFu) >> 0);
+  }
+
+  const uint16_t crc = crc_calc(command);
+  command.push_back((crc & 0xFF00u) >> 8);
+  command.push_back((crc & 0x00FFu) >> 0);
+
+  // termination word C5A4
+  command.push_back(0xC5);
+  command.push_back(0xA4);
+  command.push_back(0xD2);
+  command.push_back(0x79);
+
+  return command;
 }
 
 std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string &name, const std::vector<int32_t> &arg_array) const {
@@ -107,5 +147,4 @@ std::vector<uint8_t> CommandBuilder::make_byte_array(const std::string &name, co
 
   return command;
 }
-
 } /* namespace gramsballoon */

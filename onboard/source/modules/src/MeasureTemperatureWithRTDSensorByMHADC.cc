@@ -66,7 +66,7 @@ ANLStatus MeasureTemperatureWithRTDSensorByMHADC::mod_analyze() {
   return AS_OK;
 }
 float MeasureTemperatureWithRTDSensorByMHADC::ConvertTemperature(int adc, int bit, int offset) const {
-  const float L_V = adc * 5.0 / (1 << bit);
+  const float L_V = adc * 5.0 / 4095.0;
   const float L_R = L_V * 1000. / (5.0 - L_V);
   const float L_tmp = -(std::sqrt(17.59246 - 0.00232 * L_R) - 3.908) / 0.00116;
   const float L_tmpK = L_tmp + 273.15;
