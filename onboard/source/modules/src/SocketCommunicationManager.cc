@@ -122,19 +122,20 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
   }
   return send_result;
 }
-int SocketCommunication::receiveAndSendAck(const uint8_t *buf, size_t n) {
-  const int ret = socketCommunication_->receive(buf, n);
+int SocketCommunicationManager::receiveAndSendAck(std::vector<uint8_t> &data) {
+  const int ret = socketCommunication_->receive(data);
   if (ret < 0) {
     return ret;
   }
+  data.resize(ret);
   if (ackType_ == AcknowledgementType::SIZE) {
     ackBuffer_.resize(sizeof(uint16_t));
-    ackBuffer_[0] = (static_cast<uint16_t>(n) >> 8) & 0x00FF;
-    ackBuffer_[1] = static_cast<uint16_t>(n) & 0x00FF;
+    ackBuffer_[0] = (static_cast<uint16_t>(ret) >> 8) & 0x00FF;
+    ackBuffer_[1] = static_cast<uint16_t>(ret) & 0x00FF;
     socketCommunication_->send(ackBuffer_.data(), sizeof(uint16_t));
   }
   else if (ackType_ == AcknowledgementType::RAW) {
-    socketCommunication_->send(buf, n);
+    socketCommunication_->send(data);
   }
   return ret;
 }

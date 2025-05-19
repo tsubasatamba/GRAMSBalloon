@@ -45,10 +45,7 @@ public:
   inline int sendAndWaitForAck(const std::vector<uint8_t> &data) {
     return sendAndWaitForAck(data.data(), data.size());
   }
-  int receiveAndSendAck(const uint8_t *buf, size_t n);
-  inline int receiveAndSendAck(const std::vector<uint8_t> &data) {
-    return receiveAndSendAck(data.data(), data.size());
-  }
+  int receiveAndSendAck(std::vector<uint8_t> &data);
 
 private:
   std::string ip_;
