@@ -8,7 +8,9 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <optional>
 namespace gramsballoon::pgrams {
+typedef boost::asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO> rcv_timeout_option;
 class SocketSession;
 /**
  * @brief SocketCommunicationServer class for managing socket communication.
@@ -36,9 +38,16 @@ private:
   std::shared_ptr<std::atomic<bool>> failed_ = nullptr;
   std::shared_ptr<std::atomic<bool>> stopped_ = nullptr;
   std::shared_ptr<std::mutex> sockMutex_ = nullptr;
+  std::optional<int> timeout_ = 200;
 
 public:
   void accept();
+  void setTimeout(int timeout_ms) {
+    timeout_ = timeout_ms;
+  }
+  std::optional<int> getTimeout() const {
+    return timeout_;
+  }
   bool isConnected() const {
     std::lock_guard<std::mutex> lock(*sockMutex_);
     return socketAccepted_ && socketAccepted_->is_open();

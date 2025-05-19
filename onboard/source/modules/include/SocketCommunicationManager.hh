@@ -16,6 +16,10 @@ namespace gramsballoon {
 class SendTelemetry;
 }
 namespace gramsballoon::pgrams {
+enum class AcknowledgementType {
+  SIZE = 0,
+  RAW = 1
+};
 class IoContextManager;
 class SocketCommunicationManager: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(SocketCommunicationManager, 1.0);
@@ -37,6 +41,14 @@ public:
   SocketCommunication *getSocketCommunication() {
     return singleton_self()->socketCommunication_.get();
   }
+  int sendAndWaitForAck(const uint8_t *buf, size_t n);
+  inline int sendAndWaitForAck(const std::vector<uint8_t> &data) {
+    return sendAndWaitForAck(data.data(), data.size());
+  }
+  int receiveAndSendAck(const uint8_t *buf, size_t n);
+  inline int receiveAndSendAck(const std::vector<uint8_t> &data) {
+    return receiveAndSendAck(data.data(), data.size());
+  }
 
 private:
   std::string ip_;
@@ -46,10 +58,13 @@ private:
   SendTelemetry *sendTelemetry_ = nullptr;
   IoContextManager *ioContextManager_ = nullptr;
   std::shared_ptr<boost::asio::io_context> ioContext_ = nullptr;
-  double timeout_ = -1;
+  int timeout_ = -1;
   std::optional<timeval> timeoutTV_;
   bool handleSigpipe_ = false;
   std::shared_ptr<std::thread> thread_ = nullptr;
+  AcknowledgementType ackType_ = AcknowledgementType::SIZE;
+  int ackTypeInt_ = 0;
+  std::vector<uint8_t> ackBuffer_;
 };
 } // namespace gramsballoon::pgrams
 #endif //GRAMSBalloon_SocketCommunicationManager_hh

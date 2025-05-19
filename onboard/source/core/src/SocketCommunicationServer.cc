@@ -45,11 +45,17 @@ void SocketCommunication::accept() {
       std::lock_guard<std::mutex> lock(*sockMutex_);
       if (!socketAccepted_) {
         socketAccepted_ = std::make_shared<boost::asio::ip::tcp::socket>(std::move(socket));
+        if (timeout_) {
+          socketAccepted_->set_option(rcv_timeout_option{timeout_.value()});
+        }
       }
       else {
         std::cout << "Socket is already accepted. Closing the old socket from" << socketAccepted_->remote_endpoint().address() << ":" << socketAccepted_->remote_endpoint().port() << std::endl;
         socketAccepted_->close();
         *socketAccepted_ = std::move(socket);
+        if (timeout_) {
+          socketAccepted_->set_option(rcv_timeout_option{timeout_.value()});
+        }
       }
     }
     else {
