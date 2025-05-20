@@ -38,6 +38,14 @@ public:
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
+  std::shared_ptr<mqtt::mosquitto_message<std::vector<uint8_t>>> getAndPopPayload() {
+    if (payloads_.empty()) {
+      return nullptr;
+    }
+    auto payload = payloads_.front();
+    payloads_.pop_front();
+    return payload;
+  }
 
 private:
   MosquittoManager *mosquittoManager_ = nullptr;
@@ -45,7 +53,7 @@ private:
   SendTelemetry *sendTelemetry_ = nullptr;
   std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
   std::string topic_ = "command";
-  int numTrial_ = 10;
+  std::deque<std::shared_ptr<mqtt::mosquitto_message<std::vector<uint8_t>>>> payloads_;
   int chatter_ = 0;
   bool failed_ = false;
 };

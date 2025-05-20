@@ -75,42 +75,12 @@ ANLStatus DistributeCommand::mod_analyze() {
     return AS_OK;
   }
   const auto command = commands.front();
-  const auto &command_payload = command->payload;
   if (topic_ == command->topic) {
     if (chatter_ > 0) {
       std::cout << "Received command for " << topic_ << std::endl;
     }
-    if (sc->isOpened()) {
-      std::cerr << "Socket is not opened." << std::endl;
-      mosq->popPayloadFront();
-      return AS_OK;
-    }
-    for (int i = 0; i < numTrial_; i++) {
-      const auto send_result = sc->send(command_payload); // TODO: this depends on telemetry definition.
-      if (send_result == -1) {
-        std::cerr << "Error in DistributeCommand::mod_analyze: " << "Trial " << i << " Sending data failed." << std::endl;
-        continue;
-      }
-      else if (chatter_ > 0) {
-        std::cout << "Sent data to " << topic_ << std::endl;
-        std::cout << "Payload size: " << send_result << std::endl;
-      }
-      failed_ = false;
-      break;
-    }
-    if (failed_) {
-      std::cerr << "Error in DistributeCommand::mod_analyze: Sending data failed, despite " << numTrial_ << " times trials." << std::endl;
-    }
-    else {
-      if (chatter_ > 1) {
-        std::cout << "Payload:" << std::endl;
-        for (const auto &byte: command_payload) {
-          std::cout << static_cast<int>(byte) << " ";
-        }
-        std::cout << std::endl;
-      }
-    }
-    mosq->popPayloadFront(); // TODO: How to handle the case when the data is not sent?
+    payloads_.push_back(command);
+    mosq->popPayloadFront();
   }
   return AS_OK;
 }
