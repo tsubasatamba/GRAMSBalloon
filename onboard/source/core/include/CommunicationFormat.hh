@@ -34,6 +34,13 @@ public:
   uint16_t Code() const { return code_; }
   uint16_t Argc() const { return argc_; }
   const std::vector<int32_t> &Arguments() const { return arguments_; }
+  void update();
+  void setCode(uint16_t code) { code_ = code; }
+  void setArgc(uint16_t argc) { argc_ = argc; }
+  void setArguments(const std::vector<int32_t> &arguments) {
+    argc_ = static_cast<uint16_t>(arguments.size());
+    arguments_ = arguments;
+  }
 
 private:
   std::vector<uint8_t> command_;

@@ -6,6 +6,9 @@ ANLStatus SendCommandToDAQComputer::mod_define() {
   set_parameter_description("Name of SocketCommunicationManager");
   define_parameter("DistributeCommand_name", &mod_class::distributeCommandName_);
   set_parameter_description("Name of DistributeCommand");
+  define_parameter("duration_between_heartbeat", &mod_class::durationBetweenHeartbeat_);
+  set_parameter_description("Duration between heartbeat in ms");
+  set_parameter_unit(1.0, "ms");
   define_parameter("chatter", &mod_class::chatter_);
   set_parameter_description("Chatter level");
   return AS_OK;
@@ -35,6 +38,17 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
   }
+  durationBetweenHeartbeatChrono_ = std::make_shared<std::chrono::milliseconds>(durationBetweenHeartbeat_);
+  heartbeat_ = std::make_shared<CommunicationFormat>();
+  if (heartbeat_) {
+    heartbeat_->setCode(0xFFFF);
+    heartbeat_->setArgc(0);
+    heartbeat_->update();
+  }
+  else {
+    std::cerr << "Failed to create CommunicationFormat." << std::endl;
+    return AS_ERROR;
+  }
   failed_ = false;
   return AS_OK;
 }
@@ -62,7 +76,26 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
     m_sptr.reset();
     return AS_OK;
   }
-  const auto send_result = socketCommunicationManager_->sendAndWaitForAck(m_sptr->payload); // TODO: this depends on telemetry definition.
+  int send_result = -1;
+  if (!m_sptr) {
+    auto now = std::chrono::high_resolution_clock::now();
+    const bool need_heartbeat = (!lastTime_) || (lastTime_ && (now - *lastTime_) > *durationBetweenHeartbeatChrono_);
+    if (!lastTime_) {
+      lastTime_ = std::make_shared<std::chrono::time_point<std::chrono::high_resolution_clock>>(now);
+    }
+    if (need_heartbeat) {
+      if (chatter_ > 0) {
+        std::cout << "Sending heartbeat" << std::endl;
+      }
+      send_result = socketCommunicationManager_->sendAndWaitForAck(heartbeat_->Command());
+    }
+    else {
+      return AS_OK;
+    }
+  }
+  else {
+    send_result = socketCommunicationManager_->sendAndWaitForAck(m_sptr->payload); // TODO: this depends on telemetry definition.
+  }
   if (send_result == -1) {
     std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending command is failed" << std::endl;
   }

@@ -8,8 +8,6 @@ using namespace anlnext;
 
 namespace gramsballoon::pgrams {
 ANLStatus DistributeCommand::mod_define() {
-  define_parameter("SocketCommunicationManager_name", &mod_class::socketCommunicationManagerName_);
-  set_parameter_description("Name of SocketCommunicationManager");
   define_parameter("topic", &mod_class::topic_);
   set_parameter_description("Topic to subscribe");
   define_parameter("chatter", &mod_class::chatter_);
@@ -36,17 +34,6 @@ ANLStatus DistributeCommand::mod_initialize() {
     std::cerr << "SendTelemetry module is not found." << std::endl;
   }
 
-  if (exist_module(socketCommunicationManagerName_)) {
-    get_module_NC(socketCommunicationManagerName_, &socketCommunicationManager_);
-  }
-  else {
-    std::cerr << "SocketCommunicationManager module is not found." << std::endl;
-    if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
-    }
-    return AS_ERROR; // TODO: This is to be considered
-  }
-  ///// Initialize sockets
   mosq->subscribe(NULL, topic_.c_str(), 0);
   failed_ = false;
   if (chatter_ > 0) {

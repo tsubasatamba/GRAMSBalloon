@@ -25,11 +25,11 @@ class MyApp < ANL::ANLApp
     subsystems = ["TPC", "TOF", "Orchestrator"]
     subsystems.each do |subsystem|
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_" + subsystem
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 1000.0, chatter: 100) do |m|
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 1000.0, ack_type: 1, chatter: 100) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_#{subsystem}_rsv"
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 1000.0, chatter: 100) do |m|
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 1000.0, ack_type: 0, chatter: 100) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::DistributeCommand, "DistributeCommand_#{subsystem}"

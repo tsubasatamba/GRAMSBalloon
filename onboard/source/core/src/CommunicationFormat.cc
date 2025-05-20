@@ -119,5 +119,30 @@ void CommunicationFormat::getVector(int index, int num, std::vector<T> &vec) {
     index += byte;
   }
 }
-
+void CommunicationFormat::update() {
+  command_.clear();
+  const int argc = arguments_.size();
+  argc_ = static_cast<uint16_t>(argc);
+  command_.push_back(0xeb);
+  command_.push_back(0x90);
+  command_.push_back(0x5b);
+  command_.push_back(0x6a);
+  command_.push_back((code_ >> 8) & 0xff);
+  command_.push_back(code_ & 0xff);
+  command_.push_back((argc_ >> 8) & 0xff);
+  command_.push_back(argc_ & 0xff);
+  for (int i = 0; i < argc_; i++) {
+    command_.push_back((arguments_[i] >> 24) & 0xff);
+    command_.push_back((arguments_[i] >> 16) & 0xff);
+    command_.push_back((arguments_[i] >> 8) & 0xff);
+    command_.push_back(arguments_[i] & 0xff);
+  }
+  uint16_t crc = calcCRC16(command_);
+  command_.push_back((crc >> 8) & 0xff);
+  command_.push_back(crc & 0xff);
+  command_.push_back(0xc5);
+  command_.push_back(0xa4);
+  command_.push_back(0xd2);
+  command_.push_back(0x79);
+}
 } // namespace gramsballoon::pgrams

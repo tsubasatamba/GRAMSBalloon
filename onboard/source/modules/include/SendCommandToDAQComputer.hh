@@ -1,9 +1,11 @@
 #ifndef GRAMSBalloon_SendCommandToDAQComputer_hh
 #define GRAMSBalloon_SendCommandToDAQComputer_hh 1
+#include "CommunicationFormat.hh"
 #include "DistributeCommand.hh"
 #include "SendTelemetry.hh"
 #include "SocketCommunicationManager.hh"
 #include "anlnext/BasicModule.hh"
+#include <chrono>
 namespace gramsballoon::pgrams {
 class SocketCommunicationManager;
 class DistributeCommand;
@@ -36,6 +38,10 @@ private:
   DistributeCommand *distributeCommand_ = nullptr;
   std::string distributeCommandName_ = "DistributeCommand";
   SendTelemetry *sendTelemetry_ = nullptr;
+  std::shared_ptr<std::chrono::time_point<std::chrono::high_resolution_clock>> lastTime_ = nullptr;
+  int durationBetweenHeartbeat_ = 800; // ms
+  std::shared_ptr<std::chrono::milliseconds> durationBetweenHeartbeatChrono_ = nullptr;
+  std::shared_ptr<CommunicationFormat> heartbeat_ = nullptr;
 };
 } // namespace gramsballoon::pgrams
 #endif //GRAMSBalloon_SendCommandToDAQComputer_hh
