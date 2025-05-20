@@ -18,13 +18,13 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
     get_module_NC("SendTelemetry", &sendTelemetry_);
   }
   else {
-    std::cerr << "SendTelemetry module is not found." << std::endl;
+    std::cerr << module_id() << "::mod_initialize SendTelemetry module is not found." << std::endl;
   }
   if (exist_module(socketCommunicationManagerName_)) {
     get_module_NC(socketCommunicationManagerName_, &socketCommunicationManager_);
   }
   else {
-    std::cerr << "SocketCommunicationManager module is not found." << std::endl;
+    std::cerr << module_id() << "::mod_initialize SocketCommunicationManager module is not found." << std::endl;
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
@@ -33,7 +33,7 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
     get_module_NC(distributeCommandName_, &distributeCommand_);
   }
   else {
-    std::cerr << "DistributeCommand module is not found." << std::endl;
+    std::cerr << module_id() << "::mod_initialize DistributeCommand module is not found." << std::endl;
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
@@ -46,7 +46,7 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
     heartbeat_->update();
   }
   else {
-    std::cerr << "Failed to create CommunicationFormat." << std::endl;
+    std::cerr << module_id() << "::mod_initialize Failed to create CommunicationFormat." << std::endl;
     return AS_ERROR;
   }
   failed_ = false;
@@ -54,29 +54,28 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
 }
 ANLStatus SendCommandToDAQComputer::mod_analyze() {
   if (!socketCommunicationManager_) {
-    std::cerr << "SocketCommunicationManager is nullptr." << std::endl;
+    std::cerr << module_id() << "::mod_analyze SocketCommunicationManager is nullptr." << std::endl;
     return AS_OK;
   }
   auto sc = socketCommunicationManager_->getSocketCommunication();
   if (!sc) {
-    std::cerr << "SocketCommunication in the SocketCommunicationManager is nullptr." << std::endl;
+    std::cerr << module_id() << "::mod_analyze SocketCommunication in the SocketCommunicationManager is nullptr." << std::endl;
     return AS_OK;
   }
   auto m_sptr = distributeCommand_->getAndPopPayload();
   if (sc->isConnected()) {
-    if (chatter_ > 0) {
+    if (chatter_ > 2) {
       std::cout << "SocketCommunication is connected." << std::endl;
     }
   }
   else {
-    if (chatter_ > 0) {
+    if (chatter_ > 2) {
       std::cout << "SocketCommunication is not connected." << std::endl;
     }
     failed_ = true;
     m_sptr.reset();
     return AS_OK;
   }
-  int send_result = -1;
   if (!m_sptr) {
     auto now = std::chrono::high_resolution_clock::now();
     const bool need_heartbeat = (!lastTime_) || (lastTime_ && (now - *lastTime_) > *durationBetweenHeartbeatChrono_);
@@ -84,19 +83,30 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
       lastTime_ = std::make_shared<std::chrono::time_point<std::chrono::high_resolution_clock>>(now);
     }
     if (need_heartbeat) {
-      if (chatter_ > 0) {
+      if (chatter_ > 1) {
         std::cout << "Sending heartbeat" << std::endl;
       }
-      send_result = socketCommunicationManager_->sendAndWaitForAck(heartbeat_->Command());
+      if (chatter_ > 2) {
+        for (const auto &byte: heartbeat_->Command()) {
+          std::cout << std::hex << static_cast<int>(byte) << std::dec << " ";
+        }
+        std::cout << std::endl;
+      }
+      const int send_result = socketCommunicationManager_->sendAndWaitForAck(heartbeat_->Command());
+      if (send_result < 0) {
+        std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending heartbeat is failed" << std::endl;
+      }
+      else {
+        lastTime_ = std::make_shared<std::chrono::time_point<std::chrono::high_resolution_clock>>(now);
+        if (chatter_ > 1) {
+          std::cout << "Sent heartbeat" << std::endl;
+        }
+      }
     }
-    else {
-      return AS_OK;
-    }
+    return AS_OK;
   }
-  else {
-    send_result = socketCommunicationManager_->sendAndWaitForAck(m_sptr->payload); // TODO: this depends on telemetry definition.
-  }
-  if (send_result == -1) {
+  const int send_result = socketCommunicationManager_->sendAndWaitForAck(m_sptr->payload); // TODO: this depends on telemetry definition.
+  if (send_result < 0) {
     std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending command is failed" << std::endl;
   }
   else if (chatter_ > 0) {
@@ -110,5 +120,6 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
     }
     std::cout << std::endl;
   }
+  return AS_OK;
 }
 } // namespace gramsballoon::pgrams

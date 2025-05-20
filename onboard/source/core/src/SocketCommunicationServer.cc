@@ -41,21 +41,25 @@ void SocketCommunication::accept() {
   auto self = shared_from_this();
   acceptor_->async_accept([this, self](const boost::system::error_code &error, boost::asio::ip::tcp::socket socket) {
     if (!error) {
-      std::cout << "Accepted connection from " << socket.remote_endpoint().address().to_string() << ":" << socket.remote_endpoint().port() << std::endl;
+      try {
+        std::cout << "Accepted connection from " << socket.remote_endpoint().address().to_string() << ":" << socket.remote_endpoint().port() << std::endl;
+      }
+      catch (const boost::system::system_error &e) {
+        std::cerr << "Error in SocketCommunication: " << e.what() << std::endl;
+      }
       std::lock_guard<std::mutex> lock(*sockMutex_);
       if (!socketAccepted_) {
         socketAccepted_ = std::make_shared<boost::asio::ip::tcp::socket>(std::move(socket));
-        if (timeout_) {
-          socketAccepted_->set_option(rcv_timeout_option{timeout_.value()});
-        }
       }
       else {
-        std::cout << "Socket is already accepted. Closing the old socket from" << socketAccepted_->remote_endpoint().address() << ":" << socketAccepted_->remote_endpoint().port() << std::endl;
+        try {
+          std::cout << "Socket is already accepted. Closing the old socket" << std::endl;
+        }
+        catch (const boost::system::system_error &e) {
+          std::cerr << "Error in SocketCommunication: " << e.what() << std::endl;
+        }
         socketAccepted_->close();
         *socketAccepted_ = std::move(socket);
-        if (timeout_) {
-          socketAccepted_->set_option(rcv_timeout_option{timeout_.value()});
-        }
       }
     }
     else {

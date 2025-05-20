@@ -58,14 +58,12 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
     }
   }
   else if (result != 0) {
-    if (chatter_ > 1) {
-      std::cout << "Error in ReceiveStatusFromDAQComputer::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
-    }
-  }
-  if (chatter_ > 0) {
-    std::cout << "Received " << result << " bytes." << std::endl;
+    std::cout << "Error in ReceiveStatusFromDAQComputer::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
   }
   if (chatter_ > 1) {
+    std::cout << "Received " << result << " bytes." << std::endl;
+  }
+  if (chatter_ > 2) {
     std::cout << "Payload:" << std::endl;
     for (const auto &byte: *buffer_for_display) {
       std::cout << std::hex << static_cast<int>(byte) << std::dec << " ";

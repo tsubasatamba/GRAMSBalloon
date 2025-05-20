@@ -41,7 +41,7 @@ int MosquittoIO<std::vector<uint8_t>>::Publish(const std::vector<uint8_t> &messa
 }
 template <>
 void MosquittoIO<std::string>::on_message(const struct mosquitto_message *message) {
-  std::shared_ptr<mqtt::mosquitto_message<std::string>> m_sptr = std::make_shared<mqtt::mosquitto_message<std::string>>();
+  std::shared_ptr<mqtt::mosquitto_message<std::string>> m_sptr = std::allocate_shared<mqtt::mosquitto_message<std::string>>(*allocator_mosq_);
   m_sptr->mid = message->mid;
   m_sptr->qos = message->qos;
   m_sptr->retain = message->retain;
@@ -59,7 +59,7 @@ void MosquittoIO<std::string>::on_message(const struct mosquitto_message *messag
 }
 template <>
 void MosquittoIO<std::vector<uint8_t>>::on_message(const struct mosquitto_message *message) {
-  std::shared_ptr<mqtt::mosquitto_message<std::vector<uint8_t>>> m_sptr = std::make_shared<mqtt::mosquitto_message<std::vector<uint8_t>>>();
+  std::shared_ptr<mqtt::mosquitto_message<std::vector<uint8_t>>> m_sptr = std::allocate_shared<mqtt::mosquitto_message<std::vector<uint8_t>>>(*allocator_mosq_);
   m_sptr->mid = message->mid;
   m_sptr->qos = message->qos;
   m_sptr->retain = message->retain;

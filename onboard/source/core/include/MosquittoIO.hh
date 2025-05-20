@@ -5,6 +5,7 @@
 #include <deque>
 #include <iostream>
 #include <memory>
+#include <memory_resource>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -32,6 +33,8 @@ public:
     host_ = host;
     port_ = port;
     keepAlive_ = keepAlive;
+    memResource_ = std::make_unique<std::pmr::synchronized_pool_resource>();
+    allocator_mosq_ = std::make_unique<std::pmr::polymorphic_allocator<mqtt::mosquitto_message<V>>>(memResource_.get());
   }
   virtual ~MosquittoIO();
   int Connect();
@@ -63,6 +66,8 @@ private:
   int keepAlive_;
   int verbose_ = 0;
   bool connected_ = false;
+  std::unique_ptr<std::pmr::synchronized_pool_resource> memResource_ = nullptr;
+  std::unique_ptr<std::pmr::polymorphic_allocator<mqtt::mosquitto_message<V>>> allocator_mosq_ = nullptr;
 };
 template <typename V>
 int MosquittoIO<V>::Publish(const V &message, const std::string &topic, int qos) {
@@ -141,7 +146,7 @@ void MosquittoIO<V>::on_publish(int mid) {
 }
 template <typename V>
 void MosquittoIO<V>::on_message(const mosquitto_message *message) {
-  auto m_sptr = std::make_shared<mqtt::mosquitto_message<V>>();
+  auto m_sptr = std::allocate_shared<mqtt::mosquitto_message<V>>(*allocator_mosq_);
   m_sptr->mid = message->mid;
   m_sptr->qos = message->qos;
   m_sptr->retain = message->retain;

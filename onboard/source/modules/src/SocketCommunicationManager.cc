@@ -1,6 +1,8 @@
 #include "SocketCommunicationManager.hh"
+#include <sys/select.h>
 using namespace anlnext;
 namespace gramsballoon::pgrams {
+constexpr int verbose = 3;
 ANLStatus SocketCommunicationManager::mod_define() {
   set_module_description("This module is responsible for socket communication, mainly between the DAQ computer");
   define_parameter("ip", &mod_class::ip_);
@@ -83,15 +85,29 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
   if (send_result < 0) {
     return send_result;
   }
+  if constexpr (verbose > 2) {
+    std::cout << module_id() << "::sendAndWaitForAck: Sent data: ";
+    for (size_t i = 0; i < n; ++i) {
+      std::cout << static_cast<int>(buf[i]) << " ";
+    }
+    std::cout << std::endl;
+  }
   ackBuffer_.clear();
   if (ackType_ == AcknowledgementType::SIZE) {
-    const int ret = socketCommunication_->receive(ackBuffer_);
+    const int ret = socketCommunication_->receiveWithTimeout(ackBuffer_);
     if (ret < 0) {
       return ret;
     }
     else if (ret != sizeof(uint16_t)) {
       std::cerr << module_id() << "::sendAndWaitForAck: Error in receiving acknowledgement. Expected size: " << sizeof(uint8_t) << ", Received size: " << ret << std::endl;
       return -ret;
+    }
+    if constexpr (verbose > 2) {
+      std::cout << module_id() << "::sendAndWaitForAck: Received acknowledgement: ";
+      for (const auto &byte: ackBuffer_) {
+        std::cout << static_cast<int>(byte) << " ";
+      }
+      std::cout << std::endl;
     }
     uint16_t packetsz = (ackBuffer_[0] << 8) | ackBuffer_[1];
     if (packetsz != n) {
@@ -100,9 +116,16 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
     }
   }
   else if (ackType_ == AcknowledgementType::RAW) {
-    const int ret = socketCommunication_->receive(ackBuffer_);
+    const int ret = socketCommunication_->receiveWithTimeout(ackBuffer_);
     if (ret < 0) {
       return ret;
+    }
+    if constexpr (verbose > 2) {
+      std::cout << module_id() << "::sendAndWaitForAck: Received acknowledgement: ";
+      for (const auto &byte: ackBuffer_) {
+        std::cout << static_cast<int>(byte) << " ";
+      }
+      std::cout << std::endl;
     }
     const size_t acksz = ackBuffer_.size();
     if (acksz != n) {

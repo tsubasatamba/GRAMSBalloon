@@ -81,6 +81,7 @@
 #include "PassTelemetry.hh"
 #include "InterpretDAQFormattedTelemetry.hh"
 #include "IoContextManager.hh"
+#include "SendCommandToDAQComputer.hh"
 %}
 
 %include "std_vector.i"
@@ -234,6 +235,10 @@ public:
 class SocketCommunicationManager: public anlnext::BasicModule{
 public:
   SocketCommunicationManager();
+};
+class SendCommandToDAQComputer: public anlnext::BasicModule {
+public:
+  SendCommandToDAQComputer();
 };
 #ifdef USE_MYSQL
 class PushToMySQL : public anlnext::BasicModule

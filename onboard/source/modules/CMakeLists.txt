@@ -44,6 +44,7 @@ set(GB_MODULES
   src/InterpretDAQFormattedTelemetry.cc
   src/IoContextManager.cc
   src/MeasureTemperatureWithRTDSensorByMHADC.cc
+  src/SendCommandToDAQComputer.cc
 )
 
 if(GB_DEMO_MODE)

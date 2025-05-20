@@ -43,15 +43,6 @@ ANLStatus DistributeCommand::mod_initialize() {
 }
 
 ANLStatus DistributeCommand::mod_analyze() {
-  if (!socketCommunicationManager_) {
-    std::cerr << "SocketCommunicationManager is nullptr." << std::endl;
-    return AS_OK;
-  }
-  auto sc = socketCommunicationManager_->getSocketCommunication();
-  if (!sc) {
-    std::cerr << "SocketCommunication in the SocketCommunicationManager is nullptr." << std::endl;
-    return AS_OK;
-  }
   auto mosq = mosquittoManager_->getMosquittoIO();
   if (!mosq) {
     std::cerr << "MosquittoIO in the MosquittoManager is nullptr." << std::endl;

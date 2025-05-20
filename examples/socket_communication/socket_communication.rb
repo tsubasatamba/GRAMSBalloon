@@ -12,7 +12,7 @@ class MyApp < ANL::ANLApp
       exit 1
     end
     chain GRAMSBalloon::MosquittoManager
-    with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 60, chatter: 0, threaded_set: true, device_id: "hubcomputer", time_out: 1000) do |m|
+    with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 60, chatter: 0, threaded_set: true, device_id: "hubcomputer", time_out: 100) do |m|
       m.set_singleton(0)
     end
     chain GRAMSBalloon::IoContextManager do |m|
@@ -25,17 +25,19 @@ class MyApp < ANL::ANLApp
     subsystems = ["TPC", "TOF", "Orchestrator"]
     subsystems.each do |subsystem|
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_" + subsystem
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 1000.0, ack_type: 1, chatter: 100) do |m|
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 1000, ack_type: 1, chatter: 100) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_#{subsystem}_rsv"
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 1000.0, ack_type: 0, chatter: 100) do |m|
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 1000, ack_type: 0, chatter: 100) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::DistributeCommand, "DistributeCommand_#{subsystem}"
-      with_parameters(topic: @inifile[subsystem]["comtopic"], chatter: 100, SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}") do |m|
+      with_parameters(topic: @inifile[subsystem]["comtopic"], chatter: 100) do |m|
         m.set_singleton(0)
       end
+      chain GRAMSBalloon::SendCommandToDAQComputer, "SendCommandToDAQComputer_" + subsystem
+      with_parameters(SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}", duration_between_heartbeat: 1000, DistributeCommand_name: "DistributeCommand_#{subsystem}", chatter: 1)
       chain GRAMSBalloon::ReceiveStatusFromDAQComputer, "ReceiveStatusFromDAQComputer_" + subsystem
       with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager_#{subsystem}_rsv", chatter:1)
       chain GRAMSBalloon::DividePacket, "DividePacket_#{subsystem}"
@@ -60,7 +62,7 @@ a = MyApp.new
 
 a.num_parallels = 1
 #a.run(1, 1)
-a.run(1000000000, 1)
+a.run(1000000000, 1000000000)
 exit_status = 1
 puts "exit_status: #{exit_status}"
 exit exit_status
