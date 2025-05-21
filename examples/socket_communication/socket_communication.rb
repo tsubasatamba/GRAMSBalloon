@@ -6,7 +6,7 @@ require 'inifile'
 class MyApp < ANL::ANLApp
   attr_accessor :inifile
   def setup()
-    @inifile = IniFile.load('./network.cfg')
+    @inifile = IniFile.load('../../settings/network.cfg')
     if inifile.nil?
       puts "Error: network.cfg not found"
       exit 1

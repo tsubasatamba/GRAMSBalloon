@@ -111,6 +111,9 @@ int MosquittoIO<V>::Disconnect() {
   if (ret == 0) {
     connected_ = false;
   }
+  payLoad_.clear();
+  memResource_.reset();
+  allocator_mosq_.reset();
   return ret;
 }
 template <typename V>
