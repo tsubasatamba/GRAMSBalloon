@@ -50,7 +50,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
     buffer_for_display = new std::vector<uint8_t>;
     buffer_for_display->reserve(MAX_BYTES);
   }
-  const auto result = sc->receive(bufTmp_);
+  const auto result = socketCommunicationManager_->receiveAndSendAck(bufTmp_);
   if (result > 0) {
     buffer_.insert(buffer_.end(), bufTmp_.begin(), bufTmp_.begin() + result);
     if (chatter_ > 1) {
