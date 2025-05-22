@@ -37,6 +37,8 @@ ANLStatus ReceiveTelemetry::mod_analyze() {
     if (chatter_ >= 1) {
       std::cout << "ReceiveTelemetry: No payload" << std::endl;
     }
+    valid_ = false;
+    telemetry_.clear();
     return AS_OK;
   }
   if (chatter_ >= 1) {
