@@ -36,11 +36,26 @@ public:
   const std::vector<int32_t> &Arguments() const { return arguments_; }
   void update();
   void setCode(uint16_t code) { code_ = code; }
-  void setArgc(uint16_t argc) { argc_ = argc; }
-  void setArguments(const std::vector<int32_t> &arguments) {
-    argc_ = static_cast<uint16_t>(arguments.size());
-    arguments_ = arguments;
+  void setArgc(uint16_t argc) {
+    argc_ = argc;
+    arguments_.resize(argc_);
   }
+  void setArguments(const std::vector<int32_t> &arguments) {
+    setArgc(static_cast<uint16_t>(arguments.size()));
+    for (uint16_t i = 0; i < argc_; ++i) {
+      arguments_[i] = arguments[i];
+    }
+  }
+  void setArguments(uint16_t index, int32_t argument) {
+    arguments_[index] = argument;
+  }
+  int32_t getArguments(uint16_t index) const {
+    if (index < argc_) {
+      return arguments_[index];
+    }
+    return 0;
+  }
+  void setCommand(const std::vector<uint8_t> &command) { command_ = command; }
 
 private:
   std::vector<uint8_t> command_;

@@ -100,6 +100,11 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
     }
     else if (ret != sizeof(uint16_t)) {
       std::cerr << module_id() << "::sendAndWaitForAck: Error in receiving acknowledgement. Expected size: " << sizeof(uint8_t) << ", Received size: " << ret << std::endl;
+      std::cerr << module_id() << "::sendAndWaitForAck: Acknowledgement data: ";
+      for (int i = 0; i < ret; ++i) {
+        std::cerr << static_cast<int>(ackBuffer_[i]) << " ";
+      }
+      std::cerr << std::endl;
       return -ret;
     }
     if constexpr (verbose > 2) {
@@ -147,7 +152,7 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
 }
 int SocketCommunicationManager::receiveAndSendAck(std::vector<uint8_t> &data) {
   const int ret = socketCommunication_->receive(data);
-  if (ret < 0) {
+  if (ret <= 0) {
     return ret;
   }
   data.resize(ret);

@@ -42,7 +42,8 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
   heartbeat_ = std::make_shared<CommunicationFormat>();
   if (heartbeat_) {
     heartbeat_->setCode(0xFFFF);
-    heartbeat_->setArgc(0);
+    heartbeat_->setArgc(1); // index of the heartbeat
+    heartbeat_->setArguments(0, -1);
     heartbeat_->update();
   }
   else {
@@ -83,8 +84,10 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
       lastTime_ = std::make_shared<std::chrono::time_point<std::chrono::high_resolution_clock>>(now);
     }
     if (need_heartbeat) {
+      heartbeat_->setArguments(0, heartbeat_->getArguments(0) + 1);
+      heartbeat_->update();
       if (chatter_ > 1) {
-        std::cout << "Sending heartbeat" << std::endl;
+        std::cout << "Sending heartbeat (index: " << heartbeat_->getArguments(0) << ")" << std::endl;
       }
       if (chatter_ > 2) {
         for (const auto &byte: heartbeat_->Command()) {
@@ -96,12 +99,10 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
       if (send_result < 0) {
         std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending heartbeat is failed" << std::endl;
       }
-      else {
-        lastTime_ = std::make_shared<std::chrono::time_point<std::chrono::high_resolution_clock>>(now);
-        if (chatter_ > 1) {
-          std::cout << "Sent heartbeat" << std::endl;
-        }
+      else if(chatter_ > 1) {
+        std::cout << "Sent heartbeat" << std::endl;
       }
+      *lastTime_ = now;
     }
     return AS_OK;
   }

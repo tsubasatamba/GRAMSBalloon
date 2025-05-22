@@ -92,72 +92,68 @@ public:
     return socket_->native_handle();
   }
   static void HandleSIGPIPE();
-  int send(const void *buf, size_t n) {
-    std::lock_guard<std::mutex> lock(*sockMutex_);
-    if (socketAccepted_) {
-      boost::system::error_code errorcode;
-      {
-        const auto ret = boost::asio::write(*socketAccepted_, boost::asio::buffer(buf, n), errorcode);
-        if (errorcode) {
-          std::cerr << "Error in SocketCommunication: " << errorcode.message() << std::endl;
-          return errorcode.value();
-        }
-        if (ret == 0) {
-          std::cerr << "Error in SocketCommunication: No data sent." << std::endl;
-          return -1;
-        }
-        return ret;
-      }
-    }
-    return -1;
-  }
+  int send(const void *buf, size_t n);
   template <typename T>
   int send(const std::vector<T> &data) {
     return send(&data[0], sizeof(T) * data.size());
   }
   template <typename T>
-  int receive(std::vector<T> &data) {
-    std::lock_guard<std::mutex> lock(*sockMutex_);
+  int receiveImpl(std::vector<T> &data) {
     if (socketAccepted_) {
       boost::system::error_code errorcode;
       size_t sz = socketAccepted_->available(errorcode);
       if (errorcode) {
-        std::cerr << "Error in SocketCommunication: " << errorcode.message() << std::endl;
-        return errorcode.value();
+        std::cerr << "Receive Error in SocketCommunication: " << errorcode.message() << std::endl;
+        return -1;
       }
       if (sz == 0) {
         return 0;
       }
       const auto n = sz / sizeof(T);
       data.resize(n);
-      return boost::asio::read(*socketAccepted_, boost::asio::buffer(&data[0], n), errorcode);
+      const auto ret = boost::asio::read(*socketAccepted_, boost::asio::buffer(&data[0], n), errorcode);
+      if (errorcode) {
+        std::cerr << "Receive Error in SocketCommunication: " << errorcode.message() << std::endl;
+        return -1;
+      }
+      return ret;
     }
     return -1;
   }
   template <typename T>
+  int receive(std::vector<T> &data, bool lock = true) {
+    int ret = 0;
+    if (lock) {
+      std::lock_guard<std::mutex> lock(*sockMutex_);
+      ret = receiveImpl(data);
+    }
+    else {
+      ret = receiveImpl(data);
+    }
+    return ret;
+  }
+  template <typename T>
   int receiveWithTimeout(std::vector<T> &data) {
     if (socketAccepted_) {
-      {
-        std::lock_guard<std::mutex> lock(*sockMutex_);
-        if (timeout_) {
-          auto sock = socketAccepted_->native_handle();
-          fd_set readfds;
-          FD_ZERO(&readfds);
-          FD_SET(sock, &readfds);
-          timeoutTv_.tv_sec = timeoutSec_;
-          timeoutTv_.tv_usec = timeoutUsec_;
-          const int result = select(sock + 1, &readfds, NULL, NULL, &timeoutTv_);
-          if (result < 0) {
-            std::cerr << "Error in SocketCommunication: select failed." << std::endl;
-            return -1;
-          }
-          else if (result == 0) {
-            std::cerr << "Error in SocketCommunication: Timeout." << std::endl;
-            return 0;
-          }
+      std::lock_guard<std::mutex> lock(*sockMutex_);
+      if (timeout_) {
+        auto sock = socketAccepted_->native_handle();
+        fd_set readfds;
+        FD_ZERO(&readfds);
+        FD_SET(sock, &readfds);
+        timeoutTv_.tv_sec = timeoutSec_;
+        timeoutTv_.tv_usec = timeoutUsec_;
+        const int result = select(sock + 1, &readfds, NULL, NULL, &timeoutTv_);
+        if (result < 0) {
+          std::cerr << "Error in SocketCommunication: select failed." << std::endl;
+          return -1;
+        }
+        else if (result == 0) {
+          std::cerr << "Error in SocketCommunication: Timeout." << std::endl;
+          return 0;
         }
       }
-      return receive(data);
+      return receive(data, false);
     }
     return -1;
   }

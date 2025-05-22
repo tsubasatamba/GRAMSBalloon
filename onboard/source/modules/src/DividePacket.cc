@@ -31,8 +31,9 @@ ANLStatus DividePacket::mod_analyze() {
     }
     const auto byte = receiveStatusFromDAQComputer_->PopAndGetOneByte();
     const auto sz = vec.size();
-    std::cout << "byte: " << std::hex << static_cast<int>(byte) << std::dec << std::endl;
-    std::cout << "sz: " << sz << std::endl;
+    if (chatter_ > 3){
+      std::cout << "byte: " << std::hex << static_cast<int>(byte) << std::dec << std::endl;
+    }
     if (byte == 0xEB && sz == 0) {
       vec.push_back(byte);
     }

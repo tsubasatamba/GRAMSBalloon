@@ -42,7 +42,7 @@ void SocketCommunication::accept() {
   acceptor_->async_accept([this, self](const boost::system::error_code &error, boost::asio::ip::tcp::socket socket) {
     if (!error) {
       try {
-        std::cout << "Accepted connection from " << socket.remote_endpoint().address().to_string() << ":" << socket.remote_endpoint().port() << std::endl;
+        std::cout << "Accepted connection from " << socket.remote_endpoint().address().to_string() << ":" << socket.remote_endpoint().port() << "(Server port: " << acceptor_->local_endpoint().port() << ")" << std::endl;
       }
       catch (const boost::system::system_error &e) {
         std::cerr << "Error in SocketCommunication: " << e.what() << std::endl;
@@ -72,6 +72,25 @@ void SocketCommunication::accept() {
     }
     accept();
   });
+}
+int SocketCommunication::send(const void* buf, size_t n){
+  std::lock_guard<std::mutex> lock(*sockMutex_);
+  if (socketAccepted_) {
+    boost::system::error_code errorcode;
+    {
+      const auto ret = boost::asio::write(*socketAccepted_, boost::asio::buffer(buf, n), errorcode);
+      if (errorcode) {
+        std::cerr << "Error in SocketCommunication: " << errorcode.message() << std::endl;
+        return errorcode.value();
+      }
+      if (ret == 0) {
+        std::cerr << "Error in SocketCommunication: No data sent." << std::endl;
+        return -1;
+      }
+      return ret;
+    }
+  }
+  return -1;
 }
 void SocketCommunication::HandleSIGPIPE() {
   struct sigaction sa;

@@ -14,13 +14,13 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
     get_module_NC("SendTelemetry", &sendTelemetry_);
   }
   else {
-    std::cerr << "Error in ReceiveStatusFromDAQComputer::mod_initialize: SendTelemetry not found." << std::endl;
+    std::cerr << "Error in " << module_id() << "::mod_initialize: SendTelemetry not found." << std::endl;
   }
   if (exist_module(socketCommunicationManagerName_)) {
     get_module_NC(socketCommunicationManagerName_, &socketCommunicationManager_);
   }
   else {
-    std::cerr << "Error in ReceiveStatusFromDAQComputer::mod_initialize: SocketCommunicationManager not found." << std::endl;
+    std::cerr << "Error in " << module_id() << "::mod_initialize: SocketCommunicationManager not found." << std::endl;
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
@@ -29,20 +29,21 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
 }
 ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
   if (!socketCommunicationManager_) {
-    std::cerr << "ReceiveStatusFromDAQComputer::mod_analyze: SocketCommunicationManager is nullptr." << std::endl;
+    std::cerr << module_id() << "::mod_analyze: SocketCommunicationManager is nullptr." << std::endl;
     return AS_OK;
   }
   auto sc = socketCommunicationManager_->getSocketCommunication();
   if (!sc) {
-    std::cerr << "ReceiveStatusFromDAQComputer::mod_analyze: SocketCommunication in the SocketCommunicationManager is nullptr." << std::endl;
+    std::cerr << module_id() << "::mod_analyze: SocketCommunication in the SocketCommunicationManager is nullptr." << std::endl;
     return AS_OK;
   }
   if (sc->isFailed()) {
-    std::cerr << "Socket Communication is failed." << std::endl;
+    std::cerr << module_id() << "::mod_analyze(): Socket Communication is failed." << std::endl;
     return AS_OK;
   }
   if (!sc->isConnected()) {
-    std::cerr << "ReceiveStatusFromDAQComputer::mod_analyze(): Socket Communication is not connected." << std::endl;
+    if (chatter_ > 2)
+      std::cerr << module_id() << "::mod_analyze(): Socket Communication is not connected." << std::endl;
     return AS_OK;
   }
   std::vector<uint8_t> *buffer_for_display = nullptr;
@@ -58,7 +59,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
     }
   }
   else if (result != 0) {
-    std::cout << "Error in ReceiveStatusFromDAQComputer::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
+    std::cout << "Error in " << module_id() << "::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
   }
   if (chatter_ > 1) {
     std::cout << "Received " << result << " bytes." << std::endl;
