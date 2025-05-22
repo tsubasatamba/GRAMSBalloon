@@ -22,7 +22,8 @@ class MyApp < ANL::ANLApp
     with_parameters(topic: "command", chatter: 100, qos: 0, binary_filename_base: ENV["HOME"]+"/command_test/command") do |m|
       m.set_singleton(0)
     end
-    subsystems = ["TPC", "TOF", "Orchestrator"]
+    subsystems = ["TPC"]
+    #subsystems = ["TPC", "TOF", "Orchestrator"]
     subsystems.each do |subsystem|
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_" + subsystem
       with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 1000, ack_type: 1, chatter: 100) do |m|
@@ -37,11 +38,11 @@ class MyApp < ANL::ANLApp
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SendCommandToDAQComputer, "SendCommandToDAQComputer_" + subsystem
-      with_parameters(SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}", duration_between_heartbeat: 1000, DistributeCommand_name: "DistributeCommand_#{subsystem}", chatter: 1)
+      with_parameters(SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}", duration_between_heartbeat: 1000, DistributeCommand_name: "DistributeCommand_#{subsystem}", chatter: 2)
       chain GRAMSBalloon::ReceiveStatusFromDAQComputer, "ReceiveStatusFromDAQComputer_" + subsystem
-      with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager_#{subsystem}_rsv", chatter:1)
+      with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager_#{subsystem}_rsv", chatter: 1)
       chain GRAMSBalloon::DividePacket, "DividePacket_#{subsystem}"
-      with_parameters(ReceiveStatusFromDAQComputer_name: "ReceiveStatusFromDAQComputer_#{subsystem}", chatter: 4)
+      with_parameters(ReceiveStatusFromDAQComputer_name: "ReceiveStatusFromDAQComputer_#{subsystem}", chatter: 3)
       chain GRAMSBalloon::PassTelemetry, "PassTelemetry_#{subsystem}"
       with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["teltopic"], chatter: 100)
     end
