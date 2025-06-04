@@ -149,6 +149,22 @@ void MosquittoIO<V>::on_publish(int mid) {
 }
 template <typename V>
 void MosquittoIO<V>::on_message(const mosquitto_message *message) {
+  bool found = false;
+  for (const auto &topic: topicSub_) {
+    if (message->topic && std::string(message->topic) == topic) {
+      if (verbose_ > 1) {
+        std::cout << "Received message on subscribed topic: " << topic << std::endl;
+      }
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    if (verbose_ > 1) {
+      std::cout << "Received message on non-subscribed topic: " << (message->topic ? message->topic : "null") << std::endl;
+    }
+    return;
+  }
   auto m_sptr = std::allocate_shared<mqtt::mosquitto_message<V>>(*allocatorMosq_);
   m_sptr->mid = message->mid;
   m_sptr->qos = message->qos;

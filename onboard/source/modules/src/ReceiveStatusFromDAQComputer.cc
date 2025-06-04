@@ -7,6 +7,9 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_define() {
   define_parameter("SocketCommunicationManager_name", &mod_class::socketCommunicationManagerName_);
   set_parameter_description("Name of SocketCommunicationManager");
   define_parameter("chatter", &mod_class::chatter_);
+  define_parameter("dead_communication_time", &mod_class::deadCommunicationTime_);
+  set_parameter_description("Time in milliseconds to consider the communication dead if no data is received.");
+  set_parameter_unit(1.0, "ms");
   return AS_OK;
 }
 ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
@@ -25,6 +28,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
   }
+  deadCommunicationTimeChrono_ = std::chrono::milliseconds(deadCommunicationTime_);
   return AS_OK;
 }
 ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
@@ -51,12 +55,14 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
     buffer_for_display = new std::vector<uint8_t>;
     buffer_for_display->reserve(MAX_BYTES);
   }
+  const auto now = std::chrono::steady_clock::now();
   const auto result = socketCommunicationManager_->receiveAndSendAck(bufTmp_);
   if (result > 0) {
     buffer_.insert(buffer_.end(), bufTmp_.begin(), bufTmp_.begin() + result);
     if (chatter_ > 1) {
       buffer_for_display->insert(buffer_for_display->end(), bufTmp_.begin(), bufTmp_.begin() + result);
     }
+    lastReceivedTime_ = now;
   }
   else if (result != 0) {
     std::cout << "Error in " << module_id() << "::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;
@@ -70,6 +76,14 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
       std::cout << std::hex << static_cast<int>(byte) << std::dec << " ";
     }
     std::cout << std::endl;
+  }
+  if (lastReceivedTime_ + deadCommunicationTimeChrono_ < now) {
+    if (chatter_ > 0) {
+      std::cerr << module_id() << "::mod_analyze: Communication is dead. No data received for " << deadCommunicationTime_ << " ms." << std::endl;
+    }
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SERIAL_COMMUNICATION_ERROR); //TODO: change to RECEIVE_STATUS_FROM_DAQ_COMPUTER_SERIAL_COMMUNICATION_ERROR
+    }
   }
   return AS_OK;
 }
