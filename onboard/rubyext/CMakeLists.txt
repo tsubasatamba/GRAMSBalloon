@@ -41,7 +41,6 @@ set(RUBY_EXT_LIBRARIES
 
 
 ########################################################
-set(cxx_definitions )
 if(GB_USE_PIGPIO)
   list(APPEND cxx_definitions -DUSE_PIGPIO)
 endif()

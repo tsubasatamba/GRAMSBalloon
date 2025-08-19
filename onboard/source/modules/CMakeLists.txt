@@ -144,6 +144,8 @@ target_link_libraries(GBModules
   ${MOSQUITTO_LIB}
 )
 
+target_compile_definitions(GBModules PUBLIC ${cxx_definitions})
+
 install(TARGETS GBModules LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
 if(INSTALL_HEADERS)

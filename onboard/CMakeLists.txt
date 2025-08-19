@@ -23,6 +23,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(USE_RUBY ON)
 set(GB_SOCKET_CLIENT OFF)
 set(MY_LIBRARY GRAMSBalloon)
+set(cxx_definitions)
 
 # set(RASPI ON)
 find_package(Ruby 3.0 REQUIRED)
@@ -37,6 +38,7 @@ option(GB_USE_HSQUICKLOOK "enable hsquicklook" OFF)
 option(GB_APT_RUBY "installed ruby via apt" OFF)
 option(GB_USE_ROOT "enable root" OFF)
 option(GB_USE_MYSQL "enable mysql" OFF)
+option(GB_USE_RAPIDJSON "enable rapidjson" ON)
 
 # # install options
 option(GB_INSTALL_HEADERS "install all header files" ON)
@@ -57,6 +59,7 @@ if(GB_MAC)
   set(GB_USE_HSQUICKLOOK ON)
   set(GB_APT_RUBY OFF)
   set(GB_USE_ROOT ON)
+  set(GB_USE_RAPIDJSON ON)
 endif(GB_MAC)
 
 if(GB_DEMO_MODE)
@@ -178,6 +181,19 @@ if(GB_USE_MYSQL)
   message(STATUS "MYSQL_LIB: ${MYSQL_LIB}")
 endif(GB_USE_MYSQL)
 
+# Rapid-JSON
+if (GB_USE_RAPIDJSON)
+  find_package(RapidJSON REQUIRED)
+  set(RAPIDJSON_INC_DIR ${RAPIDJSON_INCLUDE_DIRS})
+  set(RAPIDJSON_LIB_DIR ${RAPIDJSON_LIBRARY_DIRS})
+  set(RAPIDJSON_LIB ${RAPIDJSON_LIBRARIES})
+  message("-- RAPIDJSON_INC_DIR: ${RAPIDJSON_INC_DIR}")
+  message("-- RAPIDJSON_LIB_DIR: ${RAPIDJSON_LIB_DIR}")
+  message("-- RAPIDJSON_LIB: ${RAPIDJSON_LIB}")
+  list(APPEND cxx_definitions -DRAPIDJSON_NOMEMBERITERATORCLASS)
+endif(GB_USE_RAPIDJSON)
+
+# Mosquitto
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(Mosquitto IMPORTED_TARGET libmosquittopp REQUIRED)
 set(MOSQUITTO_LIB PkgConfig::Mosquitto)
