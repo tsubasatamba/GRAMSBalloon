@@ -5,35 +5,14 @@
 #include <string>
 #include "SimpleLoop.hh"
 #include "Sleep.hh"
-#ifdef USE_PIGPIO
-#include "SPIManager.hh"
-#endif
-#ifdef USE_PIGPIO
-#include "GetEnvironmentalData.hh"
-#endif
 #ifndef GB_MAC
 #include "ReceiveCommand.hh"
-#endif
-#ifdef USE_WAVEFORMS
-#include "AnalogDiscoveryManager.hh"
-#endif
-#ifdef USE_WAVEFORMS
-#include "ControlHighVoltage.hh"
-#endif
-#ifdef USE_PIGPIO
-#include "MeasureTemperatureWithRTDSensor.hh"
-#endif
-#ifdef USE_WAVEFORMS
-#include "ReadWaveform.hh"
 #endif
 #ifndef GB_MAC
 #include "SendTelemetry.hh"
 #endif
 #ifdef USE_RASPISYS
 #include "GetRaspiStatus.hh"
-#endif
-#ifdef USE_ICM20948
-#include "MeasureAcceleration.hh"
 #endif
 #include "ReceiveTelemetry.hh"
 #ifdef USE_RASPISYS
@@ -42,9 +21,6 @@
 #include "InterpretTelemetry.hh"
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
-#endif
-#ifdef USE_PIGPIO
-#include "GetSlowADCData.hh"
 #endif
 #include "RunIDManager.hh"
 #include "ReadTelemetry.hh"
@@ -55,24 +31,18 @@
 #include "GetCompressorData.hh"
 #include "GetPressure.hh"
 #include "PressureGaugeManager.hh"
-#ifdef USE_ROOT
-#include "PlotWaveform.hh"
-#endif
+#include "MeasureTemperatureWithRTDSensor.hh"
+#include "MeasureTemperatureWithRTDSensorByMHADC.hh"
+#include "MeasureTemperatureWithRTDSensorByArduino.hh"
+
+
 #ifdef USE_MYSQL
 #include "PushToMySQL.hh"
 #endif
 #ifdef GB_DEMO_MODE
 #include "GBBasicDemoModule.hh"
 #include "ShutdownSystemDemo.hh"
-#include "GetEnvironmentalDataDemo.hh"
-#include "MeasureAccelerationDemo.hh"
-#include "MeasureTemperatureWithRTDSensorDemo.hh"
-#include "MeasureTemperatureWithRTDSensorByArduino.hh"
-#include "MeasureTemperatureWithRTDSensorByMHADC.hh"
 #include "GetRaspiStatusDemo.hh"
-#include "ControlHighVoltageDemo.hh"
-#include "ReadWaveformDemo.hh"
-#include "GetSlowADCDataDemo.hh"
 #endif
 #include "MosquittoManager.hh"
 #include "DistributeCommand.hh"
@@ -111,59 +81,11 @@ public:
 };
 #endif
 
-#ifdef USE_PIGPIO
-class GetEnvironmentalData : public anlnext::BasicModule
-{
-public:
-  GetEnvironmentalData();
-};
-#endif
-
 #if defined GB_MAC || defined GB_DEMO_MODE
 class ReceiveCommand : public anlnext::BasicModule
 {
 public:
   ReceiveCommand();
-};
-#endif
-
-#ifdef USE_WAVEFORMS
-class AnalogDiscoveryManager : public anlnext::BasicModule
-{
-public:
-  AnalogDiscoveryManager();
-};
-#endif
-
-#ifdef USE_WAVEFORMS
-class ControlHighVoltage : public anlnext::BasicModule
-{
-public:
-  ControlHighVoltage();
-};
-#endif
-
-#ifdef USE_PIGPIO
-class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
-{
-public:
-  MeasureTemperatureWithRTDSensor();
-};
-#endif
-
-#ifdef USE_WAVEFORMS
-class ReadWaveform : public anlnext::BasicModule
-{
-public:
-  ReadWaveform();
-};
-#endif
-
-#if defined GB_MAC || defined GB_DEMO_MODE
-class SendTelemetry : public anlnext::BasicModule
-{
-public:
-  SendTelemetry();
 };
 #endif
 
@@ -175,15 +97,14 @@ public:
 };
 #endif
 
-#ifdef USE_ICM20948
-class MeasureAcceleration :  public anlnext::BasicModule
+namespace pgrams {
+#if defined GB_MAC || defined GB_DEMO_MODE
+class SendTelemetry : public anlnext::BasicModule
 {
 public:
-  MeasureAcceleration();
+  SendTelemetry();
 };
 #endif
-
-namespace pgrams {
 class ReceiveTelemetry :  public anlnext::BasicModule
 {
 public:
@@ -288,14 +209,6 @@ public:
 };
 #endif
 
-#ifdef USE_PIGPIO
-class GetSlowADCData : public anlnext::BasicModule
-{
-public:
-  GetSlowADCData();
-};
-#endif
-
 class RunIDManager : public anlnext::BasicModule
 {
 public:
@@ -308,13 +221,6 @@ public:
   ReadTelemetry();
 };
 
-#ifdef USE_ROOT
-class PlotWaveform : public anlnext::BasicModule
-{
-public:
-  PlotWaveform();
-};
-#endif
 #ifdef GB_DEMO_MODE
 class GBBasicDemoModule : public anlnext::BasicModule
 {
@@ -328,18 +234,6 @@ class ShutdownSystem : public anlnext::BasicModule
 {
 public:
   ShutdownSystem();
-};
-
-class GetEnvironmentalData : public GBBasicDemoModule
-{
-public:
-  GetEnvironmentalData();
-};
-
-class MeasureAcceleration : public GBBasicDemoModule
-{
-public:
-  MeasureAcceleration();
 };
 
 class MeasureTemperatureWithRTDSensor : public GBBasicDemoModule
@@ -370,24 +264,6 @@ class GetRaspiStatus : public GBBasicDemoModule
 {
 public:
   GetRaspiStatus();
-};
-
-class ControlHighVoltage : public GBBasicDemoModule
-{
-public:
-  ControlHighVoltage();
-};
-
-class ReadWaveform : public GBBasicDemoModule
-{
-public:
-  ReadWaveform();
-};
-
-class GetSlowADCData : public GBBasicDemoModule
-{
-public:
-  GetSlowADCData();
 };
 #endif
 } // namespace GRAMSBalloon

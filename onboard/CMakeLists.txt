@@ -30,9 +30,6 @@ find_package(Ruby 3.0 REQUIRED)
 
 # ## options
 # # library options
-option(GB_USE_PIGPIO "enable PIGPIO" OFF)
-option(GB_USE_WAVEFORMS "enable waveforms" OFF)
-option(GB_USE_ICM20948 "enable ICM20948" OFF)
 option(GB_USE_RASPISYS "enable raspi system control" OFF)
 option(GB_USE_HSQUICKLOOK "enable hsquicklook" OFF)
 option(GB_APT_RUBY "installed ruby via apt" OFF)
@@ -109,35 +106,6 @@ set(ANLNEXT_LIB ANLNext)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ANLNEXT_LIB_DIR}/anlnext)
 message("-- ANLNEXT_INSTALL = ${ANLNEXT_INSTALL}")
 
-# ## PIGPIO ###
-if(GB_USE_PIGPIO)
-  set(PIGPIO_INSTALL_PREFIX /home/grams/software/pigpio/util)
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PIGPIO_INSTALL_PREFIX})
-  find_package(pigpio REQUIRED)
-  set(PIGPIO_INC_DIR ${pigpio_INCLUDE_DIRS})
-  set(PIGPIO_LIB_DIR ${pigpio_LIBRARY_DIRS})
-  set(PIGPIO_LIB ${pigpio_LIBRARIES})
-  message("-- PIGPIO_INC_DIR: ${PIGPIO_INC_DIR}")
-  message("-- PIGPIO_LIB_DIR: ${PIGPIO_LIB_DIR}")
-  message("-- PIGPIO_LIB: ${PIGPIO_LIB}")
-  set(PIGPIO_LIB_DAEMON pigpiod_if2)
-  message("-- PIGPIO_LIB_DAEMON: ${PIGPIO_LIB_DAEMON}")
-  set(PIGPIO_LIB_RT rt)
-  message("-- PIGPIO_LIB_RT: ${PIGPIO_LIB_RT}")
-  set(BME68x_LIB GBBME68x)
-endif(GB_USE_PIGPIO)
-
-# ## Waveforms ###
-if(GB_USE_WAVEFORMS)
-  set(WAVEFORMS_LIB dwf)
-  message("-- WAVEFORMS_LIB: ${WAVEFORMS_LIB}")
-endif(GB_USE_WAVEFORMS)
-
-# ## ICM20948 ###
-if(GB_USE_ICM20948)
-  set(ICM20948_LIB ICM20948 I2C)
-  message("-- ICM20948_LIB: ${ICM20948_LIB}")
-endif(GB_USE_ICM20948)
 
 # ## HSQUICKLOOK ###
 if(GB_USE_HSQUICKLOOK)

@@ -1,13 +1,9 @@
 include_directories(
   include
   ../core/include
-  ../BME68x-Sensor-API/include
-  ../ICM20948-linux-i2c/src
-  ../ICM20948-linux-i2c/I2C/src
   ${ANLNEXT_INC_DIR}
   ${ROOT_INC_DIR}
   ${BOOST_INC_DIR}
-  ${PIGPIO_INC_DIR}
   ${HSQUICKLOOK_INC_DIR}
   ${MYSQL_INC_DIR}
 )
@@ -45,20 +41,14 @@ set(GB_MODULES
   src/IoContextManager.cc
   src/MeasureTemperatureWithRTDSensorByMHADC.cc
   src/SendCommandToDAQComputer.cc
+  src/SendTelemetry.cc
 )
 
 if(GB_DEMO_MODE)
   set(GB_DEMO_MODULES
     ../demo/src/GBBasicDemoModule.cc
     ../demo/src/MeasureTemperatureWithRTDSensorDemo.cc
-    ../demo/src/ReadWaveformDemo.cc
-    ../demo/src/MeasureAccelerationDemo.cc
-    ../demo/src/GetRaspiStatusDemo.cc
     ../demo/src/ShutdownSystemDemo.cc
-    ../demo/src/ControlHighVoltageDemo.cc
-    ../demo/src/GetEnvironmentalDataDemo.cc
-    ../demo/src/GetSlowADCDataDemo.cc
-    ../demo/src/GetSlowADCDataIncludingPressure.cc
     ../demo/src/MeasureTemperatureWithRTDSensorByArduino.cc
   )
   list(APPEND GB_MODULES
@@ -68,29 +58,6 @@ if(GB_DEMO_MODE)
   include_directories(../demo/include)
 endif(GB_DEMO_MODE)
 
-if(GB_USE_PIGPIO)
-  set(GB_PIGPIO_MODULES
-    src/SPIManager.cc
-    src/GetEnvironmentalData.cc
-    src/MeasureTemperatureWithRTDSensor.cc
-    src/GetSlowADCData.cc
-  )
-endif(GB_USE_PIGPIO)
-
-if(GB_USE_WAVEFORMS)
-  set(GB_WAVEFORMS_MODULES
-    src/AnalogDiscoveryManager.cc
-    src/ControlHighVoltage.cc
-    src/ReadWaveform.cc
-    src/SendTelemetry.cc
-  )
-endif(GB_USE_WAVEFORMS)
-
-if(GB_USE_ICM20948)
-  set(GB_ICM20948_MODULES
-    src/MeasureAcceleration.cc
-  )
-endif(GB_USE_ICM20948)
 
 if(GB_USE_RASPISYS)
   set(GB_RASPISYS_MODULES
@@ -105,12 +72,6 @@ if(GB_USE_HSQUICKLOOK)
   )
 endif(GB_USE_HSQUICKLOOK)
 
-if(GB_USE_ROOT)
-  set(GB_ROOT_MODULES
-    src/PlotWaveform.cc
-  )
-endif(GB_USE_ROOT)
-
 if(GB_USE_MYSQL)
   set(GB_MYSQL_MODULES
     src/PushToMySQL.cc
@@ -119,9 +80,6 @@ endif(GB_USE_MYSQL)
 
 add_library(GBModules SHARED
   ${GB_MODULES}
-  ${GB_PIGPIO_MODULES}
-  ${GB_WAVEFORMS_MODULES}
-  ${GB_ICM20948_MODULES}
   ${GB_RASPISYS_MODULES}
   ${GB_HSQUICKLOOK_MODULES}
   ${GB_ROOT_MODULES}
@@ -131,13 +89,8 @@ add_library(GBModules SHARED
 )
 target_link_libraries(GBModules
   GBCore
-  ${BME68x_LIB}
   ${ANLNEXT_LIB}
   ${ROOT_LIB}
-  ${PIGPIO_LIB_DAEMON}
-  ${PIGPIO_LIB_RT}
-  ${WAVEFORMS_LIB}
-  ${ICM20948_LIB}
   ${MONGODB_LIB}
   ${HSQUICKLOOK_LIB}
   ${MYSQL_LIB}
