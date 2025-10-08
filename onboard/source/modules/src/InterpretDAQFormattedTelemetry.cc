@@ -27,7 +27,6 @@ ANLStatus InterpretDAQFormattedTelemetry::mod_initialize() {
     }
     return AS_ERROR;
   }
-  communicationFormat_ = std::make_shared<CommunicationFormat>();
   return AS_OK;
 }
 ANLStatus InterpretDAQFormattedTelemetry::mod_analyze() {
@@ -37,13 +36,19 @@ ANLStatus InterpretDAQFormattedTelemetry::mod_analyze() {
   if (!receiveTelemetry_->Valid()) {
     return AS_OK;
   }
-  const std::vector<uint8_t> &telemetry = receiveTelemetry_->Telemetry();
-  if (chatter_ >= 1) {
-    std::cout << this->module_name() << ": telemetry size = " << telemetry.size() << std::endl;
+  auto telemetry = receiveTelemetry_->Telemetry();
+  if (!telemetry) {
+    if (chatter_ >= 1) {
+      std::cout << this->module_name() << ": telemetry is nullptr" << std::endl;
+    }
+    return AS_OK;
   }
-  const bool result_validation = communicationFormat_->setData(telemetry);
-  if (!result_validation) {
-    std::cerr << this->module_name() << ": telemetry validation failed" << std::endl;
+  communicationFormat_ = telemetry->getContentsNC();
+  if (!communicationFormat_) {
+    if (chatter_ >= 1) {
+      std::cout << this->module_name() << ": CommunicationFormat is nullptr" << std::endl;
+    }
+    return AS_OK;
   }
   communicationFormat_->interpret();
   if (printTelemetry_) {

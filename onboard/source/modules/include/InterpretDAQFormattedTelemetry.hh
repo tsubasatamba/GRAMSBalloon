@@ -25,7 +25,7 @@ public:
 
 protected:
   InterpretDAQFormattedTelemetry(const InterpretDAQFormattedTelemetry &r) = default;
-  std::shared_ptr<const CommunicationFormat> getCommunicationFormat() const {
+  CommunicationFormat *getCommunicationFormat() const {
     return communicationFormat_;
   }
 
@@ -38,7 +38,7 @@ public:
 private:
   ReceiveTelemetry *receiveTelemetry_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
-  std::shared_ptr<CommunicationFormat> communicationFormat_ = nullptr;
+  CommunicationFormat *communicationFormat_ = nullptr;
   std::string receiveTelemetryName_ = "ReceiveTelemetry";
   int chatter_ = 0;
   bool printTelemetry_ = false;

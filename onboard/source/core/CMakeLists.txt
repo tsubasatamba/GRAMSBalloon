@@ -7,13 +7,13 @@ include_directories(
   ${BOOST_INC_DIR}
   ${PIGPIO_INC_DIR}
   ${MYSQL_INC_DIR}
-  ${RAPIDJSON_INC_DIR}
+  ${NLOHMANN_JSON_INC_DIR}
   )
 
 link_directories(
   ${BOOST_LIB_DIR}
   ${MYSQL_LIB_DIR}
-  ${RAPIDJSON_LIB_DIR}
+  ${NLOHMANN_JSON_LIB_DIR}
   )
 
 set(GB_CORE_CLASSES
@@ -27,6 +27,7 @@ set(GB_CORE_CLASSES
   src/OrientationInformation.cc
   src/MQTTFormatConverter.cc
   src/BaseTelemetryDefinition.cc
+  src/HubHKTelemetry.cc
   )
 
 if(GB_USE_PIGPIO)
@@ -89,7 +90,7 @@ target_link_libraries(GBCore
   ${ICM20948_LIB}
   ${MYSQL_LIB}
   ${MOSQUITTO_LIB}
-  ${RAPIDJSON_LIB}
+  ${NLOHMANN_JSON_LIB}
   )
 target_compile_definitions(GBCore PUBLIC ${cxx_definitions})
 

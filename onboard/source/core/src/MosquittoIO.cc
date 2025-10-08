@@ -5,8 +5,7 @@ template <>
 int MosquittoIO<std::string>::Publish(const std::string &message, const std::string &topic, int qos) {
   std::cout << "Publishing message: " << message << std::endl;
   std::cout << "length: " << message.length() << std::endl;
-  std::cout << "strlen(m_sptrstr.c_str()): " << strlen(message.c_str()) << std::endl;
-  return HandleError(publish(NULL, topic.c_str(), strlen(message.c_str()) + 1, message.c_str(), qos));
+  return HandleError(publish(NULL, topic.c_str(), message.size(), message.data(), qos));
 }
 template <>
 int MosquittoIO<std::vector<uint8_t>>::Publish(const std::vector<uint8_t> &message, const std::string &topic, int qos) {
@@ -47,8 +46,10 @@ void MosquittoIO<std::string>::on_message(const struct mosquitto_message *messag
   m_sptr->retain = message->retain;
   m_sptr->topic = std::string(message->topic);
   m_sptr->payloadlen = message->payloadlen;
-  std::string temp(static_cast<char *>(message->payload));
-  m_sptr->payload = std::string(temp);
+  m_sptr->payload = "";
+  for (int i = 0; i < message->payloadlen; i++) {
+    m_sptr->payload += (static_cast<char *>(message->payload)[i]);
+  }
   payLoad_.push_back(m_sptr);
   if (verbose_ < 3) {
     return;
@@ -59,6 +60,22 @@ void MosquittoIO<std::string>::on_message(const struct mosquitto_message *messag
 }
 template <>
 void MosquittoIO<std::vector<uint8_t>>::on_message(const struct mosquitto_message *message) {
+  bool found = false;
+  for (const auto &topic: topicSub_) {
+    if (message->topic && std::string(message->topic) == topic) {
+      if (verbose_ > 1) {
+        std::cout << "Received message on subscribed topic: " << topic << std::endl;
+      }
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    if (verbose_ > 1) {
+      std::cout << "Received message on non-subscribed topic: " << (message->topic ? message->topic : "null") << std::endl;
+    }
+    return;
+  }
   std::shared_ptr<mqtt::mosquitto_message<std::vector<uint8_t>>> m_sptr = std::allocate_shared<mqtt::mosquitto_message<std::vector<uint8_t>>>(*allocatorMosq_);
   m_sptr->mid = message->mid;
   m_sptr->qos = message->qos;

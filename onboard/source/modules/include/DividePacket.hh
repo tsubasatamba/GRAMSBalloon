@@ -1,5 +1,6 @@
 #ifndef DivideCommand_hh
 #define DivideCommand_hh 1
+#include "CommunicationFormat.hh"
 #include "ReceiveStatusFromDAQComputer.hh"
 #include "anlnext/BasicModule.hh"
 #include <queue>
@@ -25,8 +26,8 @@ public:
   bool IsEmpty() const {
     return commandQueue_.empty();
   }
-  const std::vector<uint8_t> &GetLastPacket() const {
-    return commandQueue_.front();
+  const std::shared_ptr<CommunicationFormat> &&GetLastPacket() const {
+    return std::move(commandQueue_.front());
   }
   void PopPacket() {
     if (!commandQueue_.empty())
@@ -36,7 +37,7 @@ public:
 private:
   ReceiveStatusFromDAQComputer *receiveStatusFromDAQComputer_ = nullptr;
   std::string receiveStatusFromDAQComputerName_ = "ReceiveStatusFromDAQComputer";
-  std::queue<std::vector<uint8_t>> commandQueue_;
+  std::queue<std::shared_ptr<CommunicationFormat>> commandQueue_;
   std::vector<uint8_t> vec;
   int chatter_ = 0;
   size_t lastPacketSize_ = 0;

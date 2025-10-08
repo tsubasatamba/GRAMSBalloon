@@ -9,6 +9,10 @@ ANLStatus PassTelemetry::mod_define() {
   set_parameter_description("Topic to publish");
   define_parameter("DividePacket_name", &mod_class::dividePacketName_);
   set_parameter_description("Name of ReceiveStatusFromDAQComputer");
+  define_parameter("qos", &mod_class::qos_);
+  set_parameter_description("QoS level for MQTT");
+  define_parameter("maxPacketSize", &mod_class::maxPacketSize_);
+  set_parameter_description("Maximum packet size to publish (in bytes)");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
@@ -32,6 +36,7 @@ ANLStatus PassTelemetry::mod_initialize() {
     std::cerr << "ReceiveStatusFromDAQComputer module is not found." << std::endl;
     return AS_ERROR;
   }
+  telemdef_ = std::make_shared<BaseTelemetryDefinition>();
   return AS_OK;
 }
 ANLStatus PassTelemetry::mod_analyze() {
@@ -51,8 +56,15 @@ ANLStatus PassTelemetry::mod_analyze() {
   if (dividePacket_->IsEmpty()) {
     return AS_OK;
   }
-  auto &packet = dividePacket_->GetLastPacket(); // TODO: Need to check the size of the packet not to block the main chain.
-  MosquittoIO<std::vector<uint8_t>>::HandleError(mosq->Publish(packet, topic_, qos_));
+  auto packet = dividePacket_->GetLastPacket(); // TODO: Need to check the size of the packet not to block the main chain.
+  const auto size_packet = packet->Command().size();
+  if (size_packet > maxPacketSize_) {
+    std::cerr << "PassTelemetry::mod_analyze: Packet size (" << size_packet << " bytes) is larger than the maximum size (" << maxPacketSize_ << " bytes). Skipping this packet." << std::endl;
+    dividePacket_->PopPacket();
+    return AS_OK;
+  }
+  telemdef_->setContents(packet);
+  MosquittoIO<std::string>::HandleError(mosq->Publish(telemdef_->construct(), topic_, qos_));
   if (chatter_ > 0) {
     std::cout << "PassTelemetry::mod_analyze: Published packet to " << topic_ << std::endl;
   }

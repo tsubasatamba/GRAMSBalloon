@@ -31,7 +31,7 @@ ANLStatus DividePacket::mod_analyze() {
     }
     const auto byte = receiveStatusFromDAQComputer_->PopAndGetOneByte();
     const auto sz = vec.size();
-    if (chatter_ > 3){
+    if (chatter_ > 3) {
       std::cout << "byte: " << std::hex << static_cast<int>(byte) << std::dec << std::endl;
     }
     if (byte == 0xEB && sz == 0) {
@@ -77,7 +77,10 @@ ANLStatus DividePacket::mod_analyze() {
         }
         std::cout << std::endl;
       }
-      commandQueue_.push(vec);
+      auto telem = std::make_shared<CommunicationFormat>();
+      telem->setCommand(vec);
+      telem->interpret();
+      commandQueue_.push(telem);
       vec.clear();
       lastPacketSize_ = 0;
       break;

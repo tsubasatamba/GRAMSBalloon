@@ -55,6 +55,8 @@
 %}
 
 %include "std_vector.i"
+%include "stdint.i"
+%include "std_string.i"
 %import(module="anlnext/ANL") "anlnext/ruby/ANL.i"
 
 // interface to my modules
@@ -97,7 +99,6 @@ public:
 };
 #endif
 
-namespace pgrams {
 #if defined GB_MAC || defined GB_DEMO_MODE
 class SendTelemetry : public anlnext::BasicModule
 {
@@ -105,6 +106,7 @@ public:
   SendTelemetry();
 };
 #endif
+namespace pgrams {
 class ReceiveTelemetry :  public anlnext::BasicModule
 {
 public:
@@ -168,11 +170,13 @@ public:
   PushToMySQL();
 };
 #endif
-class MosquittoManager : public anlnext::BasicModule
+template <typename TelemType>
+class MosquittoManager: public anlnext::BasicModule
 {
 public:
   MosquittoManager();
 };
+
 class DistributeCommand: public anlnext::BasicModule {
 public:
   DistributeCommand();
@@ -185,6 +189,12 @@ class PassTelemetry: public anlnext::BasicModule {
 public:
   PassTelemetry();
 };
+template <typename TelemType>
+class InterpretTelemetry : public anlnext::BasicModule
+{
+public:
+  InterpretTelemetry();
+};
 } // namespace pgrams
 
 #ifdef USE_RASPISYS
@@ -195,11 +205,6 @@ public:
 };
 #endif
 
-class InterpretTelemetry : public anlnext::BasicModule
-{
-public:
-  InterpretTelemetry();
-};
 
 #ifdef USE_HSQUICKLOOK
 class PushToMongoDB : public anlnext::BasicModule
@@ -267,3 +272,6 @@ public:
 };
 #endif
 } // namespace GRAMSBalloon
+%template(TelemMosquittoManager) gramsballoon::pgrams::MosquittoManager<std::string>;
+%template(ComMosquittoManager) gramsballoon::pgrams::MosquittoManager<std::vector<uint8_t>>;
+%template(InterpretHKTelemetry) gramsballoon::pgrams::InterpretTelemetry<gramsballoon::pgrams::HubHKTelemetry>;

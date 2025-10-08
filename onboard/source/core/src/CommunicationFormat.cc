@@ -10,42 +10,21 @@ CommunicationFormat::CommunicationFormat() {
 }
 
 bool CommunicationFormat::setData(const std::vector<uint8_t> &v) {
-  const int n = v.size();
-  if (n < 10) {
-    std::cerr << "Command is too short!!: length = " << n << std::endl;
+  if (!checkHeaderFooter(v)) {
     return false;
   }
-
-  if (v[0] != 0xeb || v[1] != 0x90 || v[2] != 0x5b || v[3] != 0x6a) {
-    std::cerr << "start code incorect" << std::endl;
-    return false;
-  }
-  if (v[n - 4] != 0xc5 || v[n - 3] != 0xa4 || v[n - 2] != 0xd2 || v[n - 1] != 0x79) {
-    std::cerr << "stop code incorrect" << std::endl;
-    return false;
-  }
-
   command_ = v;
   uint16_t argc = getValue<uint16_t>(6);
+  return validate(v, argc);
+}
 
-  if (n != 14 + 4 * static_cast<int>(argc)) {
-    std::cerr << "Invalid command: length not appropriate" << std::endl;
-    std::cerr << "The length of command should be " << 14 + 4 * static_cast<int>(argc) << ", but now it is " << n << std::endl;
+bool CommunicationFormat::setData(const std::string &s) {
+  if (!checkHeaderFooter(s)) {
     return false;
   }
-
-  std::vector<uint8_t> com_without_fotter;
-  for (int i = 0; i < n - 6; i++) {
-    com_without_fotter.push_back(v[i]);
-  }
-  uint16_t crc_calc = calcCRC16(com_without_fotter);
-  uint16_t crc_attached = getValue<uint16_t>(n - 6);
-  if (crc_calc != crc_attached) {
-    std::cerr << "Invalid command: CRC16 not appropriate" << std::endl;
-    return false;
-  }
-
-  return true;
+  command_.assign(s.begin(), s.end());
+  uint16_t argc = getValue<uint16_t>(6);
+  return validate(s, argc);
 }
 
 void CommunicationFormat::interpret() {

@@ -1,4 +1,6 @@
 #include "SendCommandToDAQComputer.hh"
+#include "CommunicationCodes.hh"
+using namespace pgrams::communication;
 using namespace anlnext;
 namespace gramsballoon::pgrams {
 ANLStatus SendCommandToDAQComputer::mod_define() {
@@ -41,7 +43,7 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
   durationBetweenHeartbeatChrono_ = std::make_shared<std::chrono::milliseconds>(durationBetweenHeartbeat_);
   heartbeat_ = std::make_shared<CommunicationFormat>();
   if (heartbeat_) {
-    heartbeat_->setCode(0xFFFF);
+    heartbeat_->setCode(castCommandCode(CommunicationCodes::COM_HeartBeat));
     heartbeat_->setArgc(1); // index of the heartbeat
     heartbeat_->setArguments(0, -1);
     heartbeat_->update();
@@ -99,7 +101,7 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
       if (send_result < 0) {
         std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending heartbeat is failed" << std::endl;
       }
-      else if(chatter_ > 1) {
+      else if (chatter_ > 1) {
         std::cout << "Sent heartbeat" << std::endl;
       }
       *lastTime_ = now;

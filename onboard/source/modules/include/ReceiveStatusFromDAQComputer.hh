@@ -11,6 +11,7 @@
 #include "SendTelemetry.hh"
 #include "SocketCommunicationManager.hh"
 #include "anlnext/BasicModule.hh"
+#include <chrono>
 #include <memory>
 #include <queue>
 #include <string>
@@ -52,6 +53,9 @@ private:
   int chatter_ = 0;
   std::deque<uint8_t> buffer_;
   std::vector<uint8_t> bufTmp_;
+  int deadCommunicationTime_ = 1000; // in milliseconds
+  std::chrono::milliseconds deadCommunicationTimeChrono_;
+  std::chrono::time_point<std::chrono::steady_clock> lastReceivedTime_;
   static constexpr int MAX_BYTES = 1024;
 };
 } // namespace gramsballoon::pgrams

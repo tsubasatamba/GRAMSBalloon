@@ -20,6 +20,7 @@ namespace gramsballoon {
 class SendTelemetry;
 } // namespace gramsballoon
 namespace gramsballoon::pgrams {
+template <typename T>
 class MosquittoManager;
 class DistributeCommand: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(DistributeCommand, 2.0);
@@ -47,7 +48,7 @@ public:
   }
 
 private:
-  MosquittoManager *mosquittoManager_ = nullptr;
+  MosquittoManager<std::vector<uint8_t>> *mosquittoManager_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
   std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
   std::string topic_ = "command";

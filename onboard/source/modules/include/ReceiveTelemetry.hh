@@ -8,6 +8,7 @@
 #include <thread>
 
 namespace gramsballoon::pgrams {
+template <typename T>
 class MosquittoManager;
 
 class ReceiveTelemetry: public anlnext::BasicModule {
@@ -26,20 +27,19 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  const std::vector<uint8_t> &Telemetry() const { return telemetry_; }
-  std::vector<uint8_t> &Telemetry() { return telemetry_; }
+  auto Telemetry() { return telemetry_; }
+  const auto &Telemetry() const { return telemetry_; }
   bool Valid() { return valid_; }
   void setValid(bool v) { valid_ = v; }
   int Chatter() { return chatter_; }
 
 private:
-  std::vector<uint8_t> telemetry_;
-  int maxTelemetry_ = 32000;
+  std::shared_ptr<BaseTelemetryDefinition> telemetry_ = nullptr;
   bool valid_;
 
   // communication
-  MosquittoManager *mosquittoManager_ = nullptr;
-  MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;
+  MosquittoManager<std::string> *mosquittoManager_ = nullptr;
+  MosquittoIO<std::string> *mosq_ = nullptr;
   int qos_ = 0;
   std::string subTopic_ = "Telemetry";
   int chatter_ = 0;

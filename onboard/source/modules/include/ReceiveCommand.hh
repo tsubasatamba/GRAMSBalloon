@@ -3,16 +3,15 @@
  *
  * @author Tsubasa Tamba, Shota Arai
  * @date 2023-03-01
- * @note 2024-11-28 Shota Arai: Modified for pGRAMS telemetry and command system.
+ * @date 2024-11-28 Shota Arai| Modified for pGRAMS telemetry and command system.
  */
 
 #ifndef ReceiveCommand_H
 #define ReceiveCommand_H 1
 
+#include "BinaryFileManipulater.hh"
 #include "CommunicationFormat.hh"
-#include "ControlHighVoltage.hh"
 #include "MosquittoManager.hh"
-#include "ReadWaveform.hh"
 #include "RunIDManager.hh"
 #include "SendTelemetry.hh"
 #include "SerialCommunication.hh"
@@ -26,10 +25,9 @@ namespace gramsballoon {
 
 class ShutdownSystem;
 class SendTelemetry;
-class ReadWaveform;
-class ControlHighVoltage;
 class RunIDManager;
 namespace pgrams {
+template <typename T>
 class MosquittoManager;
 } // namespace pgrams
 class ReceiveCommand: public anlnext::BasicModule {
@@ -69,13 +67,8 @@ private:
   // access to other classes
   SendTelemetry *sendTelemetry_ = nullptr;
   ShutdownSystem *shutdownSystem_ = nullptr;
-  ReadWaveform *readWaveform_ = nullptr;
-  ControlHighVoltage *TPCHVController_ = nullptr;
-  std::string TPCHVControllerModuleName_ = "";
-  ControlHighVoltage *PMTHVController_ = nullptr;
-  std::string PMTHVControllerModuleName_ = "";
   RunIDManager *runIDManager_ = nullptr;
-  pgrams::MosquittoManager *mosquittoManager_ = nullptr;
+  pgrams::MosquittoManager<std::vector<uint8_t>> *mosquittoManager_ = nullptr;
 
   //communication
   pgrams::MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;

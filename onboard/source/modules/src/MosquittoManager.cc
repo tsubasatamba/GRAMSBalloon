@@ -1,7 +1,8 @@
 #include "MosquittoManager.hh"
 using namespace anlnext;
 namespace gramsballoon::pgrams {
-ANLStatus MosquittoManager::mod_define() {
+template <typename T>
+ANLStatus MosquittoManager<T>::mod_define() {
   define_parameter("host", &mod_class::host_);
   define_parameter("port", &mod_class::port_);
   define_parameter("keep_alive", &mod_class::keepAlive_);
@@ -15,7 +16,8 @@ ANLStatus MosquittoManager::mod_define() {
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
-ANLStatus MosquittoManager::mod_pre_initialize() {
+template <typename T>
+ANLStatus MosquittoManager<T>::mod_pre_initialize() {
   if (host_.empty()) {
     std::cerr << "Error in MosquittoManager::mod_pre_initialize: host is empty." << std::endl;
     return AS_ERROR;
@@ -32,11 +34,12 @@ ANLStatus MosquittoManager::mod_pre_initialize() {
     std::cerr << "Error in MosquittoManager::mod_pre_initialize: passwd is set but user is empty." << std::endl;
     return AS_ERROR;
   }
-  mosquittoIO_ = std::make_shared<MosquittoIO<std::vector<uint8_t>>>(deviceId_, host_, port_, keepAlive_, threadedSet_);
+  mosquittoIO_ = std::make_shared<MosquittoIO<T>>(deviceId_, host_, port_, keepAlive_, threadedSet_);
   mosquittoIO_->setVerbose(chatter_);
   return AS_OK;
 }
-ANLStatus MosquittoManager::mod_initialize() {
+template <typename T>
+ANLStatus MosquittoManager<T>::mod_initialize() {
   if (!mosquittoIO_) {
     return AS_ERROR;
   }
@@ -49,7 +52,8 @@ ANLStatus MosquittoManager::mod_initialize() {
   }
   return AS_OK;
 }
-ANLStatus MosquittoManager::mod_begin_run() {
+template <typename T>
+ANLStatus MosquittoManager<T>::mod_begin_run() {
   if (!mosquittoIO_) {
     return AS_ERROR;
   }
@@ -58,25 +62,29 @@ ANLStatus MosquittoManager::mod_begin_run() {
   }
   return AS_OK;
 }
-ANLStatus MosquittoManager::mod_analyze() {
+template <typename T>
+ANLStatus MosquittoManager<T>::mod_analyze() {
   if (!mosquittoIO_) {
     return AS_OK;
   }
   return HandleError(mosquittoIO_->loop(timeout_, 10));
 }
-ANLStatus MosquittoManager::mod_end_run() {
+template <typename T>
+ANLStatus MosquittoManager<T>::mod_end_run() {
   if (!mosquittoIO_) {
     return AS_ERROR;
   }
   return HandleError(mosquittoIO_->loop(-1, 10));
 }
-ANLStatus MosquittoManager::mod_finalize() {
+template <typename T>
+ANLStatus MosquittoManager<T>::mod_finalize() {
   if (!mosquittoIO_) {
     return AS_ERROR;
   }
   return HandleError(mosquittoIO_->Disconnect());
 }
-ANLStatus MosquittoManager::HandleError(int error_code) {
+template <typename T>
+ANLStatus MosquittoManager<T>::HandleError(int error_code) {
   if (error_code != 0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Connecting MQTT failed. Error Message: " << mosqpp::strerror(error_code) << std::endl;
     if (sendTelemetry_) {
@@ -86,4 +94,20 @@ ANLStatus MosquittoManager::HandleError(int error_code) {
   }
   return AS_OK;
 }
+
+template ANLStatus MosquittoManager<std::string>::mod_define();
+template ANLStatus MosquittoManager<std::vector<uint8_t>>::mod_define();
+template ANLStatus MosquittoManager<std::string>::mod_pre_initialize();
+template ANLStatus MosquittoManager<std::vector<uint8_t>>::mod_pre_initialize();
+template ANLStatus MosquittoManager<std::string>::mod_initialize();
+template ANLStatus MosquittoManager<std::vector<uint8_t>>::mod_initialize();
+template ANLStatus MosquittoManager<std::string>::mod_begin_run();
+template ANLStatus MosquittoManager<std::vector<uint8_t>>::mod_begin_run();
+template ANLStatus MosquittoManager<std::string>::mod_analyze();
+template ANLStatus MosquittoManager<std::vector<uint8_t>>::mod_analyze();
+template ANLStatus MosquittoManager<std::string>::mod_end_run();
+template ANLStatus MosquittoManager<std::vector<uint8_t>>::mod_end_run();
+template ANLStatus MosquittoManager<std::string>::mod_finalize();
+template ANLStatus MosquittoManager<std::vector<uint8_t>>::mod_finalize();
+
 } // namespace gramsballoon::pgrams

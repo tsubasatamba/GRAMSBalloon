@@ -1,29 +1,34 @@
 #ifndef InterpretTelemetry_H
 #define InterpretTelemetry_H 1
 
+#include "BaseTelemetryDefinition.hh"
 #include "ErrorManager.hh"
 #include "ReceiveTelemetry.hh"
-#include "TelemetryDefinition.hh"
 #include <anlnext/BasicModule.hh>
 #include <chrono>
 #include <thread>
 #ifdef USE_ROOT
-#include "PlotWaveform.hh"
 #endif // USE_ROOT
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
 #endif // USE_HSQUICKLOOK
-namespace gramsballoon {
-namespace pgrams {
+namespace gramsballoon::pgrams {
 class ReceiveTelemetry;
-} // namespace pgrams
-class PlotWaveform;
+class BaseTelemetryDefinition;
 #ifdef USE_HSQUICKLOOK
 class PushToMongoDB;
 #endif // USE_HSQUICKLOOK
 
+/**
+ * Module for interpretation of telemetry
+ * @author Tsubasa Tamba, Shota Arai
+ * @date 2023-**-**
+ * @date 2025-09-20 Shota Arai| Comparatible to different type of telemetry. (v2.0)
+ */
+template <typename TelemType>
 class InterpretTelemetry: public anlnext::BasicModule {
-  DEFINE_ANL_MODULE(InterpretTelemetry, 1.0);
+  DEFINE_ANL_MODULE(InterpretTelemetry<TelemType>, 2.0);
+  ENABLE_PARALLEL_RUN();
 
 public:
   InterpretTelemetry();
@@ -41,17 +46,14 @@ public:
   void writeTelemetryToFile(bool failed);
   void updateRunIDFile();
 
-  TelemetryDefinition *Telemdef() { return telemdef_.get(); }
-  std::shared_ptr<const ErrorManager> getErrorManager() const { return errorManager_; }
-  int CurrentTelemetryType() { return currentTelemetryType_; }
+  std::shared_ptr<const ErrorManager> getErrorManager() const { return singleton_self()->errorManager_; }
+  int CurrentTelemetryType() { return singleton_self()->currentTelemetryType_; }
+  bool interpret(const std::shared_ptr<BaseTelemetryDefinition> &telemDef);
 
 private:
-  std::shared_ptr<TelemetryDefinition> telemdef_;
+  std::shared_ptr<TelemType> telemetry_ = nullptr;
   pgrams::ReceiveTelemetry *receiver_ = nullptr;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
-#ifdef USE_ROOT
-  PlotWaveform *plotter_ = nullptr;
-#endif // USE_ROOT
 #ifdef USE_HSQUICKLOOK
   PushToMongoDB *pusher_ = nullptr;
 #endif // USE_HSQUICKLOOK
@@ -67,5 +69,5 @@ private:
   std::string receiverModuleName_;
 };
 
-} // namespace gramsballoon
+} // namespace gramsballoon::pgrams
 #endif // InterpretTelemetry_H

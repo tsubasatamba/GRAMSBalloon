@@ -49,6 +49,7 @@ if(GB_DEMO_MODE)
     ../demo/src/GBBasicDemoModule.cc
     ../demo/src/MeasureTemperatureWithRTDSensorDemo.cc
     ../demo/src/ShutdownSystemDemo.cc
+    ../demo/src/GetRaspiStatusDemo.cc
     ../demo/src/MeasureTemperatureWithRTDSensorByArduino.cc
   )
   list(APPEND GB_MODULES

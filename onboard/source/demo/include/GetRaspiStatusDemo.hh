@@ -3,6 +3,7 @@
 #include "GBBasicDemoModule.hh"
 #include "SendTelemetry.hh"
 namespace gramsballoon {
+class SendTelemetry;
 class GetRaspiStatus: public GBBasicDemoModule {
   DEFINE_ANL_MODULE(GetRaspiStatus, 1.0);
   ENABLE_PARALLEL_RUN();
