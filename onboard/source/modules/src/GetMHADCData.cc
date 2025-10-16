@@ -54,7 +54,7 @@ ANLStatus GetMHADCData::mod_analyze() {
     if (byte_read < 0) {
       std::cerr << "Error in GetMHADCData::mod_analyze: byte_read = " << byte_read << std::endl;
       if (sendTelemetry_) {
-        sendTelemetry_->getErrorManager()->setError(ErrorType::RTD_SERIAL_COMMUNICATION_ERROR);
+        sendTelemetry_->getErrorManager()->setError(ErrorType::MHADC_COM_ERROR);
       }
       for (int i = 0; i < numCh_; i++) {
         failed_ch[i] = true;
@@ -92,7 +92,7 @@ ANLStatus GetMHADCData::mod_analyze() {
     else {
       for (int i = 0; i < numCh_; i++) {
         if (failed_ch[i]) {
-          sendTelemetry_->getErrorManager()->setError(ConvertRTDError(i));
+          //sendTelemetry_->getErrorManager()->setError(ConvertRTDError(i)); // TODO: Define MHADC error
         }
       }
     }

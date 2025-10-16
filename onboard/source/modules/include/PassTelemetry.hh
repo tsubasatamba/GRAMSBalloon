@@ -28,8 +28,9 @@ public:
 private:
   std::string topic_ = "Telemetry";
   MosquittoManager<std::string> *mosquittoManager_ = nullptr;
-  std::string mosquittoManagerName_ = "MosquittoManager";
+  std::string mosquittoManagerName_ = "TelemMosquittoManager";
   DividePacket *dividePacket_ = nullptr;
+  bool isStarlink_ = true;
   std::string dividePacketName_ = "DividePacket";
   std::shared_ptr<BaseTelemetryDefinition> telemdef_ = nullptr;
   int chatter_ = 0;

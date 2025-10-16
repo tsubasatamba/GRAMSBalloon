@@ -1,9 +1,8 @@
 #include "SendTelemetry.hh"
 
 using namespace anlnext;
-using namespace gramsballoon::pgrams;
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
 SendTelemetry::SendTelemetry() {
   telemdef_ = std::make_shared<HubHKTelemetry>();
@@ -14,7 +13,6 @@ SendTelemetry::SendTelemetry() {
 SendTelemetry::~SendTelemetry() = default;
 
 ANLStatus SendTelemetry::mod_define() {
-  define_parameter("MeasureTemperature_module_names", &mod_class::measureTemperatureModuleNames_);
   define_parameter("save_telemetry", &mod_class::saveTelemetry_);
   define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
   define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
@@ -26,15 +24,6 @@ ANLStatus SendTelemetry::mod_define() {
 }
 
 ANLStatus SendTelemetry::mod_initialize() {
-  const int num_modules_temp = measureTemperatureModuleNames_.size();
-  for (int i = 0; i < num_modules_temp; i++) {
-    const std::string module_name = measureTemperatureModuleNames_[i];
-    if (exist_module(module_name)) {
-      MeasureTemperatureWithRTDSensor *mt;
-      get_module_NC(module_name, &mt);
-      measureTemperatureVec_.push_back(mt);
-    }
-  }
 
   const std::string receive_command_md = "ReceiveCommand";
   if (exist_module(receive_command_md)) {
@@ -76,7 +65,7 @@ ANLStatus SendTelemetry::mod_analyze() {
     const bool failed = (status != mosq_err_t::MOSQ_ERR_SUCCESS);
     if (failed) {
       std::cerr << "Error in SendTelemetry::mod_analyze: Publishing MQTT failed.Error Message: " << mosqpp::strerror(status) << std::endl;
-      errorManager_->setError(ErrorType::SEND_TELEMETRY_SERIAL_COMMUNICATION_ERROR);
+      errorManager_->setError(ErrorType::MQTT_COM_ERROR);
     }
     if (saveTelemetry_) {
       writeTelemetryToFile(failed);
@@ -124,4 +113,4 @@ void SendTelemetry::writeTelemetryToFile(bool failed) {
   fileEventCnt_++;
 }
 
-} /* namespace gramsballoon */
+} // namespace gramsballoon::pgrams

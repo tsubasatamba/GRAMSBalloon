@@ -88,7 +88,7 @@ ANLStatus MosquittoManager<T>::HandleError(int error_code) {
   if (error_code != 0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Connecting MQTT failed. Error Message: " << mosqpp::strerror(error_code) << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SERIAL_COMMUNICATION_ERROR);
+      sendTelemetry_->getErrorManager()->setError(ErrorType::MQTT_COM_ERROR);
     }
     return AS_ERROR;
   }

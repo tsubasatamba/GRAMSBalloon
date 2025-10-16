@@ -3,8 +3,7 @@
 #include <thread>
 
 using namespace anlnext;
-using namespace gramsballoon::pgrams;
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
 ReceiveCommand::ReceiveCommand() {
   binaryFilenameBase_ = "Command";
@@ -30,14 +29,12 @@ ANLStatus ReceiveCommand::mod_initialize() {
   if (exist_module(send_telem_md)) {
     get_module_NC(send_telem_md, &sendTelemetry_);
   }
-
+#ifdef USE_SYSTEM_MODULES
   const std::string shutdown_system_md = "ShutdownSystem";
   if (exist_module(shutdown_system_md)) {
     get_module_NC(shutdown_system_md, &shutdownSystem_);
   }
-
-
-
+#endif
   const std::string run_id_manager_md = "RunIDManager";
   if (exist_module(run_id_manager_md)) {
     get_module_NC(run_id_manager_md, &runIDManager_);
@@ -51,8 +48,8 @@ ANLStatus ReceiveCommand::mod_initialize() {
     std::cerr << "Error in ReceiveCommand::mod_initialize: MosquittoManager module not found." << std::endl;
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
-      return AS_ERROR;
     }
+    return AS_ERROR;
   }
   // communication
   mosq_ = mosquittoManager_->getMosquittoIO();
@@ -64,7 +61,7 @@ ANLStatus ReceiveCommand::mod_initialize() {
   if (sub_result != 0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Subscribing MQTT failed. Error Message: " << mosqpp::strerror(sub_result) << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SERIAL_COMMUNICATION_ERROR);
+      sendTelemetry_->getErrorManager()->setError(ErrorType::MQTT_COM_ERROR);
     }
   }
   return AS_OK;
@@ -192,4 +189,4 @@ void ReceiveCommand::writeCommandToFile(bool failed, const std::vector<uint8_t> 
   fileIDmp_[type].second++;
 }
 
-} /* namespace gramsballoon */
+} // namespace gramsballoon::pgrams

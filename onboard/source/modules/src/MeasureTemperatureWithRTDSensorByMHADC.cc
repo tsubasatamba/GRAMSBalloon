@@ -49,7 +49,7 @@ ANLStatus MeasureTemperatureWithRTDSensorByMHADC::mod_analyze() {
     if (!std::isfinite(temp)) {
       std::cerr << this->module_id() << " Temperature is invalid: " << temp << std::endl;
       if (sendTelemetry_) {
-        sendTelemetry_->getErrorManager()->setError(ConvertRTDError(channel_));
+        sendTelemetry_->getErrorManager()->setError(ErrorType::OTHER_ERRORS);
       }
       temp = 0;
     }

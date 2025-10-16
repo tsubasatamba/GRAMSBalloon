@@ -2,20 +2,34 @@
 
 require 'anlnext'
 require 'GRAMSBalloon'
-require 'HSQuickLook'
+require 'inifile'
 
 class MyApp < ANL::ANLApp
+  attr_accessor :inifile
   def setup()
-    chain HSQuickLook::MongoDBClient
-    with_parameters(database: "grams")
-    #with_parameters(host: @host_name, database: @database_name, instantiation: false)
-    chain GRAMSBalloon::ReceiveTelemetry
-    with_parameters(serial_path: "/dev/tty.usbserial-1430", open_mode: 2, chatter: 1)
-    chain GRAMSBalloon::InterpretTelemetry
-    with_parameters(save_telemetry: true, num_telem_per_file: 1000, chatter: 1)
-    chain GRAMSBalloon::PushToMongoDB
+    @inifile = IniFile.load('../../settings/network.cfg')
+    if inifile.nil?
+      puts "Error: network.cfg not found"
+      exit 1
+    end
+    chain GRAMSBalloon::TelemMosquittoManager, "TelemMosquittoManager"
+    with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 60, chatter: 0, threaded_set: true, device_id: "Ground") do |m|
+      m.set_singleton(0)
+    end
+    subsystems = ["TPC"]
+    for subsystem in subsystems
+    chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_#{subsystem}"
+    with_parameters(topic: @inifile[subsystem]["iridiumteltopic"], chatter: 0)
+    chain GRAMSBalloon::InterpretBaseTelemetry, "InterpretDAQFormattedTelemetry_#{subsystem}"
+    with_parameters(receiver_module_name: "ReceiveTelemetry_#{subsystem}", chatter: 2)
   end
-  attr_accessor :host_name, :database_name
+  chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_HK"
+  with_parameters(topic: "hub_telemetry", chatter: 0)
+  chain GRAMSBalloon::InterpretHKTelemetry, "InterpretHKTelemetry"
+  with_parameters(receiver_module_name: "ReceiveTelemetry_HK", save_telemetry: true, num_telem_per_file: 1000, chatter: 2)
+  chain GRAMSBalloon::Sleep
+  with_parameters(sleep_sec:1)
+  end
 end
 
 a = MyApp.new

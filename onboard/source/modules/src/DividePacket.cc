@@ -2,9 +2,16 @@
 #include <iomanip>
 using namespace anlnext;
 namespace gramsballoon::pgrams {
+DividePacket::DividePacket() {
+  iridiumPacketQueue_ = std::make_shared<IridiumPacketPool>();
+}
+
 ANLStatus DividePacket::mod_define() {
   define_parameter("ReceiveStatusFromDAQComputer_name", &mod_class::receiveStatusFromDAQComputerName_);
   set_parameter_description("Name of ReceiveStatusFromDAQComputer");
+  define_parameter("starlink_code", &mod_class::starlinkCode_);
+  define_parameter("overwritten_packet_code", &mod_class::overwrittenPacketCode_);
+  set_parameter_description("Packet codes for overwriting packets");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
@@ -30,71 +37,111 @@ ANLStatus DividePacket::mod_analyze() {
       break;
     }
     const auto byte = receiveStatusFromDAQComputer_->PopAndGetOneByte();
-    const auto sz = vec.size();
+    const auto sz = currentPacket_.size();
     if (chatter_ > 3) {
       std::cout << "byte: " << std::hex << static_cast<int>(byte) << std::dec << std::endl;
     }
     if (byte == 0xEB && sz == 0) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (byte == 0x90 && sz == 1) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (byte == 0x5B && sz == 2) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (byte == 0x6A && sz == 3) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
+    }
+    else if (sz == 4) {
+      currentCode_ = byte << 8;
+      currentPacket_.push_back(byte);
+    }
+    else if (sz == 5) {
+      currentCode_ |= byte;
+      currentPacket_.push_back(byte);
     }
     else if (sz == 6) {
       argc = byte << 8;
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (sz == 7) {
       argc |= byte;
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
       lastPacketSize_ = 14 + 4 * argc;
       std::cout << "packet_size: " << static_cast<int>(lastPacketSize_) << std::endl;
     }
     else if ((sz > 4 && sz < lastPacketSize_ - 4) || (sz == 4) || (sz == 5)) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (sz == lastPacketSize_ - 4 && byte == 0xC5) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (sz == lastPacketSize_ - 3 && byte == 0xA4) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (sz == lastPacketSize_ - 2 && byte == 0xD2) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
     }
     else if (sz == lastPacketSize_ - 1 && byte == 0x79) {
-      vec.push_back(byte);
+      currentPacket_.push_back(byte);
       if (chatter_ > 2) {
         std::cout << "Divided packet: ";
-        for (const auto &byte: vec) {
+        for (const auto &byte: currentPacket_) {
           std::cout << static_cast<int>(byte) << " ";
         }
         std::cout << std::endl;
       }
-      auto telem = std::make_shared<CommunicationFormat>();
-      telem->setCommand(vec);
-      telem->interpret();
-      commandQueue_.push(telem);
-      vec.clear();
+      PushCurrentVector();
+      currentPacket_.clear();
       lastPacketSize_ = 0;
-      break;
+      inError_ = false;
+    }
+    else if (inError_) {
+      currentPacket_.push_back(byte);
+      size_t new_sz = currentPacket_.size();
+      if (new_sz >= 4 && currentPacket_[new_sz - 4] == 0xC5 && currentPacket_[new_sz - 3] == 0xA4 && currentPacket_[new_sz - 2] == 0xD2 && currentPacket_[new_sz - 1] == 0x79) {
+        PushCurrentVector();
+        currentPacket_.clear();
+        lastPacketSize_ = 0;
+        inError_ = false;
+      }
     }
     else {
-      std::cerr << "DividePacket::mod_analyze: Error in packet division." << std::endl;
-      vec.clear();
-      lastPacketSize_ = 0;
-      break;
+      std::cerr << "DividePacket::mod_analyze: Error in packet division. Finding next footer..." << std::endl;
+      inError_ = true;
+      currentPacket_.push_back(byte);
     }
   }
   return AS_OK;
 }
 ANLStatus DividePacket::mod_finalize() {
   return AS_OK;
+}
+void DividePacket::PushCurrentVector() {
+  auto telem = std::make_shared<CommunicationFormat>();
+  telem->setCommand(currentPacket_);
+  for (const auto &code: starlinkCode_) {
+    if (currentCode_ == code) {
+      starlinkPacketQueue_.push(telem);
+      if (chatter_ > 1) {
+        std::cout << "DividePacket::PushCurrentVector: Pushed a Starlink packet. Queue size: " << starlinkPacketQueue_.size() << std::endl;
+      }
+
+      return;
+    }
+  }
+  if (currentCode_ == overwrittenPacketCode_) {
+    if (chatter_ > 0) {
+      std::cout << "DividePacket::PushCurrentVector: Overwriting packet with code " << overwrittenPacketCode_ << std::endl;
+    }
+    iridiumPacketQueue_->push(telem, true);
+    return;
+  }
+  iridiumPacketQueue_->push(telem, false);
+
+  if (chatter_ > 1) {
+    std::cout << "DividePacket::PushCurrentVector: Pushed an Iridium packet. Queue size: " << iridiumPacketQueue_->size() << std::endl;
+  }
 }
 } // namespace gramsballoon::pgrams

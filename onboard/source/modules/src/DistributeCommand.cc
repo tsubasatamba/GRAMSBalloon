@@ -14,11 +14,11 @@ ANLStatus DistributeCommand::mod_define() {
   return AS_OK;
 }
 ANLStatus DistributeCommand::mod_initialize() {
-  if (exist_module("MosquittoManager")) {
-    get_module_NC("MosquittoManager", &mosquittoManager_);
+  if (exist_module("ComMosquittoManager")) {
+    get_module_NC("ComMosquittoManager", &mosquittoManager_);
   }
   else {
-    std::cerr << "MosquittoManager module is not found." << std::endl;
+    std::cerr << "ComMosquittoManager module is not found." << std::endl;
     return AS_ERROR;
   }
   auto mosq = mosquittoManager_->getMosquittoIO();
@@ -43,6 +43,10 @@ ANLStatus DistributeCommand::mod_initialize() {
 }
 
 ANLStatus DistributeCommand::mod_analyze() {
+  if (!mosquittoManager_) {
+    std::cerr << "DistributeCommand::mod_analyze: MosquittoManager is nullptr." << std::endl;
+    return AS_OK;
+  }
   auto mosq = mosquittoManager_->getMosquittoIO();
   if (!mosq) {
     std::cerr << "MosquittoIO in the MosquittoManager is nullptr." << std::endl;

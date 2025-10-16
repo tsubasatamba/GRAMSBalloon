@@ -15,13 +15,20 @@ namespace gramsballoon::pgrams {
  * @author Shota Arai
  * @date 2024-**-** Shota Arai| First implementation.
  * @date 2025-09-20 Shota Arai| Changed to template class to handle different types of telemetry. (v2.0)
-**/  
+**/
 
 template <typename T>
 class MosquittoIO;
 template <typename TelemType>
 class MosquittoManager: public anlnext::BasicModule {
-  DEFINE_ANL_MODULE(MosquittoManager<TelemType>, 2.0);
+  using mod_class = MosquittoManager<TelemType>;
+  std::string __module_name__() const override {
+    if constexpr (std::is_same_v<TelemType, std::string>)
+      return "ComMosquittoManager";
+    else if constexpr (std::is_same_v<TelemType, std::vector<uint8_t>>)
+      return "TelemMosquittoManager";
+  }
+  std::string __module_version__() const override { return "2.1"; }
   ENABLE_PARALLEL_RUN();
 
 public:

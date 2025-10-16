@@ -18,7 +18,8 @@ class SendTelemetry;
 namespace gramsballoon::pgrams {
 enum class AcknowledgementType {
   SIZE = 0,
-  RAW = 1
+  RAW = 1,
+  NONE = 2
 };
 class IoContextManager;
 class SocketCommunicationManager: public anlnext::BasicModule {
@@ -59,7 +60,7 @@ private:
   std::optional<timeval> timeoutTV_;
   bool handleSigpipe_ = false;
   std::shared_ptr<std::thread> thread_ = nullptr;
-  AcknowledgementType ackType_ = AcknowledgementType::SIZE;
+  AcknowledgementType ackType_ = AcknowledgementType::NONE;
   int ackTypeInt_ = 0;
   std::vector<uint8_t> ackBuffer_;
 };

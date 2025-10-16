@@ -24,12 +24,11 @@
 namespace gramsballoon {
 
 class ShutdownSystem;
-class SendTelemetry;
 class RunIDManager;
 namespace pgrams {
+class SendTelemetry;
 template <typename T>
 class MosquittoManager;
-} // namespace pgrams
 class ReceiveCommand: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(ReceiveCommand, 1.0);
   ENABLE_PARALLEL_RUN();
@@ -68,16 +67,17 @@ private:
   SendTelemetry *sendTelemetry_ = nullptr;
   ShutdownSystem *shutdownSystem_ = nullptr;
   RunIDManager *runIDManager_ = nullptr;
-  pgrams::MosquittoManager<std::vector<uint8_t>> *mosquittoManager_ = nullptr;
+  MosquittoManager<std::vector<uint8_t>> *mosquittoManager_ = nullptr;
 
   //communication
-  pgrams::MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;
+  MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;
   std::string topic_ = "command";
   int qos_ = 0;
   int timeoutSec_ = 2;
   constexpr static int serialReadingTimems_ = 250;
 };
 
+} // namespace pgrams
 } /* namespace gramsballoon */
 
 #endif /* ReceiveCommand_H */

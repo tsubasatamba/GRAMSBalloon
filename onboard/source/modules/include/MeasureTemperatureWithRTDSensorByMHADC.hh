@@ -1,9 +1,9 @@
 #ifndef GRAMSBalloon_MeasureTemperatureWithRTDSensorByMHADC_hh
 #define GRAMSBalloon_MeasureTemperatureWithRTDSensorByMHADC_hh 1
+#ifdef NOT_USED_MODULE
 #include "GetMHADCData.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
 #include "SendTelemetry.hh"
-
 namespace gramsballoon {
 class SendTelemetry;
 } // namespace gramsballoon
@@ -36,4 +36,5 @@ private:
   bool hasProblem_ = false;
 };
 } // namespace gramsballoon::pgrams
+#endif // NOT_USED_MODULE
 #endif //GRAMSBalloon_MeasureTemperatureWithRTDSensorByMHADC_hh

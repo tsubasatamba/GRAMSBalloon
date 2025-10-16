@@ -10,6 +10,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_define() {
   define_parameter("dead_communication_time", &mod_class::deadCommunicationTime_);
   set_parameter_description("Time in milliseconds to consider the communication dead if no data is received.");
   set_parameter_unit(1.0, "ms");
+  define_parameter("subsystem", &mod_class::subsystemInt_);
   return AS_OK;
 }
 ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
@@ -26,6 +27,13 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
     std::cerr << "Error in " << module_id() << "::mod_initialize: SocketCommunicationManager not found." << std::endl;
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
+    }
+  }
+  subsystem_ = magic_enum::enum_cast<Subsystem>(subsystemInt_).value_or(Subsystem::UNKNOWN);
+  if (subsystem_ == Subsystem::UNKNOWN) {
+    std::cerr << "Error in " << module_id() << "::mod_initialize: Invalid subsystem value " << subsystemInt_ << ". Setting to UNKNOWN." << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::OTHER_ERRORS);
     }
   }
   deadCommunicationTimeChrono_ = std::chrono::milliseconds(deadCommunicationTime_);
@@ -82,7 +90,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
       std::cerr << module_id() << "::mod_analyze: Communication is dead. No data received for " << deadCommunicationTime_ << " ms." << std::endl;
     }
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::RECEIVE_COMMAND_SERIAL_COMMUNICATION_ERROR); //TODO: change to RECEIVE_STATUS_FROM_DAQ_COMPUTER_SERIAL_COMMUNICATION_ERROR
+      sendTelemetry_->getErrorManager()->setError(ErrorManager::GetDaqComErrorType(subsystem_, true));
     }
   }
   return AS_OK;

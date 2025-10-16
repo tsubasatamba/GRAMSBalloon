@@ -16,7 +16,6 @@ set(RUBY_EXT_INCLUDE_DIRS
 set(RUBY_EXT_LIBRARY_DIRS
   /usr/local/lib
   ${ANLNEXT_LIB_DIR}
-  ${ADD_LIB_DIR}
   ${CMAKE_INSTALL_PREFIX}/lib
   ${ROOT_LIB_DIR}
   ${MYSQL_LIB_DIR}
@@ -33,8 +32,8 @@ set(RUBY_EXT_LIBRARIES
 
 
 ########################################################
-if(GB_USE_RASPISYS)
-  list(APPEND cxx_definitions -DUSE_RASPISYS)
+if(GB_USE_SYSTEM_MODULES)
+  list(APPEND cxx_definitions -DUSE_SYSTEM_MODULES)
 endif()
 if(GB_USE_HSQUICKLOOK)
   list(APPEND cxx_definitions -DUSE_HSQUICKLOOK)
@@ -47,9 +46,6 @@ if(GB_USE_MYSQL)
 endif()
 if(GB_MAC)
   list(APPEND cxx_definitions -DGB_MAC)
-endif()
-if(GB_DEMO_MODE)
-  list(APPEND cxx_definitions -DGB_DEMO_MODE)
 endif()
 
 set(SWIG_FLAGS ${cxx_definitions})

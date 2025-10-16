@@ -8,29 +8,27 @@
 
 #ifndef GetRaspiStatus_H
 #define GetRaspiStatus_H 1
-#ifdef GB_DEMO_MODE
-#include "GetRaspiStatusDemo.hh"
-#else /* GB_DEMO_MODE */
-
+#ifdef USE_SYSTEM_MODULES
+#include "SendTelemetry.hh"
 #include <anlnext/BasicModule.hh>
 #include <cstdint>
-#include "SendTelemetry.hh"
 
 namespace gramsballoon {
 
 class SendTelemetry;
 
-class GetRaspiStatus : public anlnext::BasicModule
-{
+class GetRaspiStatus: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(GetRaspiStatus, 1.0);
   ENABLE_PARALLEL_RUN();
+
 public:
   GetRaspiStatus();
   virtual ~GetRaspiStatus();
-protected:
-  GetRaspiStatus(const GetRaspiStatus& r) = default;
 
-public:  
+protected:
+  GetRaspiStatus(const GetRaspiStatus &r) = default;
+
+public:
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
@@ -50,10 +48,10 @@ private:
   std::string path_;
   uint64_t capacityFree_ = 0;
   uint64_t capacityAll_ = 0;
-  SendTelemetry* sendTelemetry_ = nullptr;
+  SendTelemetry *sendTelemetry_ = nullptr;
   int chatter_ = 0;
 };
 
 } /* namespace gramsballoon */
-#endif /* GB_DEMO_MODE */
+#endif // USE_SYSTEM_MODULES
 #endif /* GetRaspiStatus_H */

@@ -15,7 +15,7 @@ ANLStatus SocketCommunicationManager::mod_define() {
   set_parameter_description("Receive Timeout");
   set_parameter_unit(1.0, "msec");
   define_parameter("ack_type", &mod_class::ackTypeInt_);
-  set_parameter_description("Acknowledgement type. 0: Size, 1: Raw");
+  set_parameter_description("Acknowledgement type. 0: Size, 1: Raw, 2: None");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
@@ -60,9 +60,12 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
   else if (ackTypeInt_ == 1) {
     ackType_ = AcknowledgementType::RAW;
   }
+  else if (ackTypeInt_ == 2) {
+    ackType_ = AcknowledgementType::NONE;
+  }
   else {
-    std::cerr << module_id() << "::mod_initialize Invalid acknowledgement type. Use 0 or 1." << std::endl;
-    return AS_ERROR;
+    std::cerr << module_id() << "::mod_initialize Invalid ack_type: " << ackTypeInt_ << ". Setting to NONE." << std::endl;
+    ackType_ = AcknowledgementType::NONE;
   }
   if (timeout_ > 0) {
     std::cout << module_id() << "::mod_initialize Timeout is set to " << timeout_ << " msec." << std::endl;

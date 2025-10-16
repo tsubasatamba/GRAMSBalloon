@@ -12,23 +12,13 @@
 
 #include "BaseTelemetryDefinition.hh"
 #include "ErrorManager.hh"
-#include "GetCompressorData.hh"
 #include "GetRaspiStatus.hh"
 #include "HubHKTelemetry.hh"
 #include "MeasureOrientationByMHADC.hh"
-#include "MeasureTemperatureWithRTDSensor.hh"
 #include "MosquittoManager.hh"
 #include "ReceiveCommand.hh"
 #include "RunIDManager.hh"
 #include "SerialCommunication.hh"
-#ifdef GB_DEMO_MODE
-#include "GetArduinoData.hh"
-//#include "MeasureTemperatureWithRTDSensorByArduino.hh"
-//#include "MeasureTemperatureWithRTDSensorByMHADC.hh"
-#include "GetCompressorData.hh"
-#include "GetMHADCData.hh"
-#include "GetPressure.hh"
-#endif
 #include <anlnext/BasicModule.hh>
 #include <thread>
 
@@ -37,7 +27,8 @@ namespace gramsballoon {
 class MeasureTemperatureWithRTDSensor;
 class ReceiveCommand;
 class RunIDManager;
-namespace pgrams {
+} // namespace gramsballoon
+namespace gramsballoon::pgrams {
 class GetCompressorData;
 class GetArduinoData;
 class MeasureTemperatureWithRTDSensorByMHADC;
@@ -50,7 +41,7 @@ class DistributeCommand;
 class MeasureOrientationByMHADC;
 class BaseTelemetryDefinition;
 class HubHKtelemetry;
-} // namespace pgrams
+class ErrorManager;
 
 class SendTelemetry: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(SendTelemetry, 3.0);
@@ -78,7 +69,7 @@ public:
   int WfDivisionCounter() { return singleton_self()->wfDivisionCounter_; }
 
 private:
-  std::shared_ptr<pgrams::HubHKTelemetry> telemdef_ = nullptr;
+  std::shared_ptr<HubHKTelemetry> telemdef_ = nullptr;
   int telemetryType_ = 1;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
   int fileEventCnt_ = 0;
@@ -89,11 +80,9 @@ private:
   int sleepms_ = 500;
   int wfDivisionCounter_ = 0;
   int chatter_ = 0;
-  std::ofstream* telemetryFile_ = nullptr;
+  std::ofstream *telemetryFile_ = nullptr;
 
   // access to other classes
-  std::vector<std::string> measureTemperatureModuleNames_;
-  std::vector<MeasureTemperatureWithRTDSensor *> measureTemperatureVec_;
   ReceiveCommand *receiveCommand_ = nullptr;
   RunIDManager *runIDManager_ = nullptr;
   pgrams::MosquittoManager<std::string> *mosquittoManager_ = nullptr;
@@ -103,6 +92,6 @@ private:
   int qos_ = 0;
 };
 
-} /* namespace gramsballoon */
+} /* namespace gramsballoon::pgrams */
 
 #endif /* SendTelemetry_H */

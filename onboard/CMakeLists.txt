@@ -30,17 +30,15 @@ find_package(Ruby 3.0 REQUIRED)
 
 # ## options
 # # library options
-option(GB_USE_RASPISYS "enable raspi system control" OFF)
+option(GB_USE_SYSTEM_MODULES "enable system modules" OFF)
 option(GB_USE_HSQUICKLOOK "enable hsquicklook" OFF)
 option(GB_APT_RUBY "installed ruby via apt" OFF)
 option(GB_USE_ROOT "enable root" OFF)
 option(GB_USE_MYSQL "enable mysql" OFF)
-option(GB_USE_NLOHMANN_JSON "enable nlohmann_json" ON)
 
 # # install options
 option(GB_INSTALL_HEADERS "install all header files" ON)
 option(GB_INSTALL_CMAKE_FILES "install all cmake files" ON)
-option(GB_DEMO_MODE "demo mode" ON)
 set(INSTALL_HEADERS ${GB_INSTALL_HEADERS})
 set(INSTALL_CMAKE_FILES ${GB_INSTALL_CMAKE_FILES})
 
@@ -49,25 +47,12 @@ option(GB_MAC "shortcut" OFF)
 
 if(GB_MAC)
   message("-- GB_MAC is set")
-  set(GB_USE_PIGPIO OFF)
-  set(GB_USE_WAVEFORMS OFF)
-  set(GB_USE_ICM20948 OFF)
-  set(GB_USE_RASPISYS OFF)
+  set(GB_USE_SYSTEM_MODULES OFF)
   set(GB_USE_HSQUICKLOOK OFF)
   set(GB_APT_RUBY OFF)
   set(GB_USE_ROOT ON)
-  set(GB_USE_RAPIDJSON ON)
 endif(GB_MAC)
 
-if(GB_DEMO_MODE)
-  message("-- GB_DEMO_MODE is set")
-  set(GB_USE_PIGPIO OFF)
-  set(GB_USE_WAVEFORMS OFF)
-  set(GB_USE_ICM20948 OFF)
-  set(GB_USE_RASPISYS OFF)
-  set(GB_APT_RUBY OFF)
-  add_compile_definitions("GB_DEMO_MODE")
-endif(GB_DEMO_MODE)
 
 if(GB_APT_RUBY)
   set(RUBY_CONFIG_FILE_DIR /usr/include/arm-linux-gnueabihf/ruby-2.7.0)
@@ -80,6 +65,10 @@ endif(GB_USE_ROOT)
 if(GB_USE_HSQUICKLOOK)
   add_compile_definitions("USE_HSQUICKLOOK")
 endif(GB_USE_HSQUICKLOOK)
+
+if(GB_USE_SYSTEM_MODULES)
+  add_compile_definitions("USE_SYSTEM_MODULES")
+endif(GB_USE_SYSTEM_MODULES)
 
 # ## External libraries
 # ## BOOST ###

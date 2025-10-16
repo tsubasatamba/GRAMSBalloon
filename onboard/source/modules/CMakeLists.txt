@@ -21,11 +21,11 @@ set(GB_MODULES
   src/RunIDManager.cc
   src/ReadTelemetry.cc
   src/DumpSerial.cc
-  src/GetArduinoData.cc
+  #src/GetArduinoData.cc
   src/EncodedSerialCommunicator.cc
   src/GetMHADCData.cc
-  src/GetCompressorData.cc
-  src/GetPressure.cc
+  #src/GetCompressorData.cc
+  #src/GetPressure.cc
   src/PressureGaugeManager.cc
   src/InterpretTelemetry.cc
   src/Sleep.cc
@@ -39,33 +39,19 @@ set(GB_MODULES
   src/PassTelemetry.cc
   src/InterpretDAQFormattedTelemetry.cc
   src/IoContextManager.cc
-  src/MeasureTemperatureWithRTDSensorByMHADC.cc
+  #src/MeasureTemperatureWithRTDSensorByMHADC.cc
   src/SendCommandToDAQComputer.cc
   src/SendTelemetry.cc
 )
 
-if(GB_DEMO_MODE)
-  set(GB_DEMO_MODULES
-    ../demo/src/GBBasicDemoModule.cc
-    ../demo/src/MeasureTemperatureWithRTDSensorDemo.cc
-    ../demo/src/ShutdownSystemDemo.cc
-    ../demo/src/GetRaspiStatusDemo.cc
-    ../demo/src/MeasureTemperatureWithRTDSensorByArduino.cc
-  )
-  list(APPEND GB_MODULES
-    src/ReceiveCommand.cc
-    src/SendTelemetry.cc
-  )
-  include_directories(../demo/include)
-endif(GB_DEMO_MODE)
 
 
-if(GB_USE_RASPISYS)
-  set(GB_RASPISYS_MODULES
+if(GB_USE_SYSTEM_MODULES)
+  set(GB_SYSTEM_MODULES
     src/GetRaspiStatus.cc
     src/ShutdownSystem.cc
   )
-endif(GB_USE_RASPISYS)
+endif(GB_USE_SYSTEM_MODULES)
 
 if(GB_USE_HSQUICKLOOK)
   set(GB_HSQUICKLOOK_MODULES
@@ -81,7 +67,7 @@ endif(GB_USE_MYSQL)
 
 add_library(GBModules SHARED
   ${GB_MODULES}
-  ${GB_RASPISYS_MODULES}
+  ${GB_SYSTEM_MODULES}
   ${GB_HSQUICKLOOK_MODULES}
   ${GB_ROOT_MODULES}
   ${GB_DEMO_MODULES}

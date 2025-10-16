@@ -13,6 +13,8 @@ ANLStatus PassTelemetry::mod_define() {
   set_parameter_description("QoS level for MQTT");
   define_parameter("maxPacketSize", &mod_class::maxPacketSize_);
   set_parameter_description("Maximum packet size to publish (in bytes)");
+  define_parameter("is_starlink", &mod_class::isStarlink_);
+  set_parameter_description("Set true if the packets are from Starlink");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
@@ -53,14 +55,14 @@ ANLStatus PassTelemetry::mod_analyze() {
     std::cerr << "PassTelemetry::mod_analyze: MosquittoIO in the MosquittoManager is nullptr." << std::endl;
     return AS_OK;
   }
-  if (dividePacket_->IsEmpty()) {
+  if (dividePacket_->IsEmpty(isStarlink_)) {
     return AS_OK;
   }
-  auto packet = dividePacket_->GetLastPacket(); // TODO: Need to check the size of the packet not to block the main chain.
+  auto packet = dividePacket_->GetLastPacket(isStarlink_); // TODO: Need to check the size of the packet not to block the main chain.
   const auto size_packet = packet->Command().size();
   if (size_packet > maxPacketSize_) {
     std::cerr << "PassTelemetry::mod_analyze: Packet size (" << size_packet << " bytes) is larger than the maximum size (" << maxPacketSize_ << " bytes). Skipping this packet." << std::endl;
-    dividePacket_->PopPacket();
+    dividePacket_->PopPacket(isStarlink_);
     return AS_OK;
   }
   telemdef_->setContents(packet);
@@ -68,7 +70,7 @@ ANLStatus PassTelemetry::mod_analyze() {
   if (chatter_ > 0) {
     std::cout << "PassTelemetry::mod_analyze: Published packet to " << topic_ << std::endl;
   }
-  dividePacket_->PopPacket();
+  dividePacket_->PopPacket(isStarlink_);
   return AS_OK;
 }
 } // namespace gramsballoon::pgrams

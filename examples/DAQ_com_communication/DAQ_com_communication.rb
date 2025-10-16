@@ -51,15 +51,15 @@ class MyApp < ANL::ANLApp
       with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["teltopic"], is_starlink: true, chatter: 100)
       chain GRAMSBalloon::PassTelemetry, "PassTelemetry_#{subsystem}_iridium"
       with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["iridiumteltopic"], is_starlink: false, chatter: 100)
-              chain GRAMSBalloon::SendTelemetry
-        with_parameters(
-            topics: ["telemetry"],
+      chain GRAMSBalloon::SendTelemetry
+      with_parameters(
+            topics: ["hub_telemetry"],
             qos:0,
             save_telemetry: true,
             binary_filename_base: "telemetry_test",
             num_telem_per_file: 1000,
             chatter: 0,
-        )
+    )
     end
     
       

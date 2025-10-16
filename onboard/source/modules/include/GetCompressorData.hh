@@ -5,7 +5,7 @@
 #include "anlnext/BasicModule.hh"
 #include <regex>
 #include <string>
-
+#ifdef NOT_USED_MODULE
 namespace gramsballoon {
 class SendTelemetry;
 } // namespace gramsballoon
@@ -52,4 +52,5 @@ private:
   int chatter_ = 0;
 };
 } // namespace gramsballoon::pgrams
+#endif // NOT_USED
 #endif //GRAMSBalloon_GetCompressorData_hh

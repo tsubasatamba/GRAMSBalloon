@@ -57,6 +57,8 @@ private:
   std::chrono::milliseconds deadCommunicationTimeChrono_;
   std::chrono::time_point<std::chrono::steady_clock> lastReceivedTime_;
   static constexpr int MAX_BYTES = 1024;
+  int subsystemInt_ = 1;
+  Subsystem subsystem_ = Subsystem::UNKNOWN;
 };
 } // namespace gramsballoon::pgrams
 #endif // GB_ReceiveStatusFromDAQComputer_hh
