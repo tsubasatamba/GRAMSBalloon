@@ -75,6 +75,7 @@ private:
   int fileEventCnt_ = 0;
   int fileIndex_ = 0;
   bool saveTelemetry_ = true;
+  uint32_t telemIndex_ = 0;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 1000;
   int sleepms_ = 500;

@@ -22,9 +22,10 @@ bool parse_packet(const std::string &s,
 
   if (tpos == std::string::npos || spos == std::string::npos ||
       ipos == std::string::npos || cpos == std::string::npos ||
-      endpos == std::string::npos)
+      endpos == std::string::npos) {
+    std::cout << "BaseTelemetryDefinition:: Format Error" << std::endl;
     return false;
-
+  }
   t = s.substr(tpos + 5, spos - (tpos + 5)); // 10桁
   stype = s[spos + 7]; // 1文字
   i = std::stoi(s.substr(ipos + 6, cpos - (ipos + 6))); // 数値
@@ -61,6 +62,8 @@ void BaseTelemetryDefinition::construct() {
     contents_->update();
     contents_->CommandStr(content_);
   }
+  outss_.str("");
+  outss_.clear(std::stringstream::goodbit);
   outss_ << "{\"t\":\"" << getTimeString(timeStamp_) << "\",\"s\":\"" << subsystem_str << "\",\"i\":" << std::setfill('0') << std::setw(6) << index_ << std::setw(0) << std::setfill(' ') << ",\"c\":\"" << content_ << "\"}";
   constructed_ = true;
 }

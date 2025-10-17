@@ -58,6 +58,9 @@ ANLStatus SendTelemetry::mod_analyze() {
     std::cout << module_id() << ": mosq_ is nullptr" << std::endl;
     return AS_OK;
   }
+  telemdef_->setCurrentTime();
+  telemdef_->setIndex(telemIndex_);
+  telemIndex_++;
   telemdef_->update();
   telemdef_->construct(telemetryStr_);
   std::cout << module_id() << ":telelemetry is " << telemetryStr_ << std::endl;

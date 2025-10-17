@@ -46,7 +46,12 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
     }
     return AS_ERROR;
   }
-  socketCommunication_ = std::make_shared<SocketCommunication>(ioContext_, port_);
+  try {
+    socketCommunication_ = std::make_shared<SocketCommunication>(ioContext_,  port_);
+  }
+  catch (...) {
+    socketCommunication_ = nullptr;
+  }
   if (!socketCommunication_) {
     std::cerr << module_id() << "::mod_initialize SocketCommunication is not initialized." << std::endl;
     if (sendTelemetry_) {
