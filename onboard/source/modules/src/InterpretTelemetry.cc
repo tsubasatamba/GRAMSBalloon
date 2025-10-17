@@ -43,6 +43,10 @@ ANLStatus InterpretTelemetry<TelemType>::mod_initialize() {
 
 template <typename TelemType>
 ANLStatus InterpretTelemetry<TelemType>::mod_analyze() {
+  if (receiver_ == nullptr) {
+    std::cerr << module_name() << "::mod_analyze: Receiver is nullptr" << std::endl;
+    return AS_ERROR;
+  }
   if (!(receiver_->Valid())) {
     currentTelemetryType_ = 0;
     return AS_OK;

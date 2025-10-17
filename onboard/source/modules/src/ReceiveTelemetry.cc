@@ -42,8 +42,21 @@ ANLStatus ReceiveTelemetry::mod_analyze() {
     valid_ = false;
     return AS_OK;
   }
+  const auto &packet = payload.front();
+  if (packet->topic != subTopic_) {
+    if (chatter_ >= 1) {
+      std::cout << "ReceiveTelemetry: Received topic (" << payload.front()->topic << ") is different from subscribed topic (" << subTopic_ << ")" << std::endl;
+    }
+    valid_ = false;
+    return AS_OK;
+  }
   if (chatter_ >= 1) {
     std::cout << "ReceiveTelemetry Num_packet:" << payload.size() << std::endl;
+  }
+  if (chatter_ > 3) {
+    for (size_t i = 0; i < payload[0]->payload.size(); i++) {
+      std::cout << "payload[" << i << "]=" << std::hex << static_cast<unsigned int>(payload[0]->payload[i]) << std::dec << std::endl;
+    }
   }
   valid_ = false;
   constexpr int i = 0;

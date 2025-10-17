@@ -29,7 +29,7 @@ bool parse_packet(const std::string &s,
   t = s.substr(tpos + 5, spos - (tpos + 5)); // 10桁
   stype = s[spos + 7]; // 1文字
   i = std::stoi(s.substr(ipos + 6, cpos - (ipos + 6))); // 数値
-  c = s.substr(cpos + 7, endpos - (cpos + 7)); // バイナリ部
+  c = s.substr(cpos + 6, endpos - (cpos + 6)); // バイナリ部
   return true;
 }
 void BaseTelemetryDefinition::construct() {
