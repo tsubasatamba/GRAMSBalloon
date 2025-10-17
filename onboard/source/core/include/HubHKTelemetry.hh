@@ -4,7 +4,7 @@
 namespace gramsballoon::pgrams {
 class HubHKTelemetry: public BaseTelemetryDefinition {
 public:
-  HubHKTelemetry() : BaseTelemetryDefinition() {
+  HubHKTelemetry(bool instantiateContents) : BaseTelemetryDefinition(instantiateContents) {
     setType(Subsystem::HUB);
   }
   virtual ~HubHKTelemetry() = default;

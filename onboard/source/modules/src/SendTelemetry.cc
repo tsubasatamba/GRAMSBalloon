@@ -5,7 +5,6 @@ using namespace anlnext;
 namespace gramsballoon::pgrams {
 
 SendTelemetry::SendTelemetry() {
-  telemdef_ = std::make_shared<HubHKTelemetry>();
   errorManager_ = std::make_shared<ErrorManager>();
   binaryFilenameBase_ = "Telemetry";
 }
@@ -48,20 +47,22 @@ ANLStatus SendTelemetry::mod_initialize() {
     std::cerr << "MosquittoIO is nullptr" << std::endl;
     return AS_ERROR;
   }
+  telemdef_ = std::make_shared<HubHKTelemetry>(true);
   return AS_OK;
 }
 
 ANLStatus SendTelemetry::mod_analyze() {
   if (chatter_ > 0) std::cout << "SendTelemetry::mod_analyze" << std::endl;
+  telemetryStr_.clear();
   if (mosq_ == nullptr) {
     std::cout << module_id() << ": mosq_ is nullptr" << std::endl;
     return AS_OK;
   }
   telemdef_->update();
-  const std::string telemetry = telemdef_->construct();
-  std::cout << module_id() << ":telelemetry is " << telemetry << std::endl;
+  telemdef_->construct(telemetryStr_);
+  std::cout << module_id() << ":telelemetry is " << telemetryStr_ << std::endl;
   for (const auto &topic: pubTopics_) {
-    const int status = mosq_->Publish(telemetry, topic, qos_);
+    const int status = mosq_->Publish(telemetryStr_, topic, qos_);
     const bool failed = (status != mosq_err_t::MOSQ_ERR_SUCCESS);
     if (failed) {
       std::cerr << "Error in SendTelemetry::mod_analyze: Publishing MQTT failed.Error Message: " << mosqpp::strerror(status) << std::endl;
@@ -73,9 +74,9 @@ ANLStatus SendTelemetry::mod_analyze() {
   }
 
   if (chatter_ >= 1) {
-    std::cout << (int)telemetry.size() << std::endl;
-    for (int i = 0; i < (int)telemetry.size(); i++) {
-      std::cout << i << " " << static_cast<int>(telemetry[i]) << std::endl;
+    std::cout << (int)telemetryStr_.size() << std::endl;
+    for (int i = 0; i < (int)telemetryStr_.size(); i++) {
+      std::cout << i << " " << static_cast<int>(telemetryStr_[i]) << std::endl;
     }
   }
 

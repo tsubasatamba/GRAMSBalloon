@@ -12,17 +12,21 @@ ANLStatus DividePacket::mod_define() {
   define_parameter("starlink_code", &mod_class::starlinkCode_);
   define_parameter("overwritten_packet_code", &mod_class::overwrittenPacketCode_);
   set_parameter_description("Packet codes for overwriting packets");
+  define_parameter("maxPacketSize", &mod_class::maxPacketSize_);
+  set_parameter_description("Maximum packet size to publish (in bytes)");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
 ANLStatus DividePacket::mod_initialize() {
   if (exist_module(receiveStatusFromDAQComputerName_)) {
     get_module_NC(receiveStatusFromDAQComputerName_, &receiveStatusFromDAQComputer_);
+    subsystem_ = receiveStatusFromDAQComputer_->getSubsystem();
   }
   else {
     std::cerr << "ReceiveStatusFromDAQComputer module is not found." << std::endl;
     return AS_ERROR;
   }
+  index_ = 0;
 
   return AS_OK;
 }
@@ -119,8 +123,18 @@ ANLStatus DividePacket::mod_finalize() {
   return AS_OK;
 }
 void DividePacket::PushCurrentVector() {
-  auto telem = std::make_shared<CommunicationFormat>();
-  telem->setCommand(currentPacket_);
+  const auto size_packet = currentPacket_.size();
+  if (size_packet > maxPacketSize_) {
+    std::cerr << "DividePacket::PushCurrentVector: Packet size (" << size_packet << " bytes) is larger than the maximum size (" << maxPacketSize_ << " bytes). Skipping this packet." << std::endl;
+    return;
+  }
+  auto telem = std::make_shared<BaseTelemetryDefinition>(true);
+  telem->getContentsNC()->setCommand(currentPacket_);
+  telem->setCurrentTime();
+  index_++;
+  telem->setIndex(index_);
+  telem->setType(subsystem_);
+  telem->update();
   for (const auto &code: starlinkCode_) {
     if (currentCode_ == code) {
       starlinkPacketQueue_.push(telem);

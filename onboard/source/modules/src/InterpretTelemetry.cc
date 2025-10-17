@@ -12,9 +12,8 @@ InterpretTelemetry<TelemType>::InterpretTelemetry() {
   binaryFilenameBase_ = "Telemetry";
   runIDFilename_ = "/Users/grams/settings/run_id/run_id.txt";
   receiverModuleName_ = "ReceiveTelemetry";
-  telemetry_ = std::make_shared<TelemType>();
+  telemetry_ = std::make_shared<TelemType>(true);
 }
-
 
 template <typename TelemType>
 ANLStatus InterpretTelemetry<TelemType>::mod_define() {

@@ -39,7 +39,7 @@ public:
 
   const std::vector<uint8_t> &Command() const { return command_; }
   std::vector<uint8_t> &CommandNC() { return command_; }
-  std::string CommandStr() const { return std::string(command_.begin(), command_.end()); }
+  void CommandStr(std::string &outStr) const { outStr.assign(command_.begin(), command_.end()); }
   uint16_t Code() const { return code_; }
   uint16_t Argc() const { return argc_; }
   const std::vector<int32_t> &Arguments() const { return arguments_; }

@@ -44,12 +44,14 @@ public:
   size_t GetBufferSize() {
     return singleton_self()->buffer_.size();
   }
+  Subsystem getSubsystem() const {
+    return singleton_self()->subsystem_;
+  }
 
 private:
   SocketCommunicationManager *socketCommunicationManager_ = nullptr;
   SendTelemetry *sendTelemetry_ = nullptr;
   std::string socketCommunicationManagerName_ = "SocketCommunicationManager";
-  std::shared_ptr<CommunicationFormat> commandDefinition_ = nullptr;
   int chatter_ = 0;
   std::deque<uint8_t> buffer_;
   std::vector<uint8_t> bufTmp_;

@@ -5,10 +5,13 @@
 #include "ReceiveStatusFromDAQComputer.hh"
 #include "anlnext/BasicModule.hh"
 #include <queue>
+#include <tuple>
 #include <vector>
 namespace gramsballoon::pgrams {
+
 class ReceiveStatusFromDAQComputer;
 class IridiumPacketPool;
+class BaseTelemetryDefinition;
 class DividePacket: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(DividePacket, 1.0);
   ENABLE_PARALLEL_RUN();
@@ -26,48 +29,51 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
   bool IsEmptyIridium() const {
-    return iridiumPacketQueue_->empty();
+    return singleton_self()->iridiumPacketQueue_->empty();
   }
-  const std::shared_ptr<CommunicationFormat> GetLastPacketIridium() const {
-    return iridiumPacketQueue_->front();
+  const std::shared_ptr<BaseTelemetryDefinition> GetLastPacketIridium() const {
+    return singleton_self()->iridiumPacketQueue_->front();
   }
   void PopPacketIridium() {
-    if (!iridiumPacketQueue_->empty())
-      iridiumPacketQueue_->pop();
+    if (!singleton_self()->iridiumPacketQueue_->empty())
+      singleton_self()->iridiumPacketQueue_->pop();
   }
   bool IsEmptyStarlink() const {
-    return starlinkPacketQueue_.empty();
+    return singleton_self()->starlinkPacketQueue_.empty();
   }
-  const std::shared_ptr<CommunicationFormat> GetLastPacketStarlink() const {
-    return starlinkPacketQueue_.front();
+  const std::shared_ptr<BaseTelemetryDefinition> GetLastPacketStarlink() const {
+    return singleton_self()->starlinkPacketQueue_.front();
   }
   void PopPacketStarlink() {
-    if (!starlinkPacketQueue_.empty())
-      starlinkPacketQueue_.pop();
+    if (!singleton_self()->starlinkPacketQueue_.empty())
+      singleton_self()->starlinkPacketQueue_.pop();
   }
   void PopPacket(bool isStarlink) {
     if (isStarlink) {
-      PopPacketStarlink();
+      singleton_self()->PopPacketStarlink();
     }
     else {
-      PopPacketIridium();
+      singleton_self()->PopPacketIridium();
     }
   }
   bool IsEmpty(bool isStarlink) const {
     if (isStarlink) {
-      return IsEmptyStarlink();
+      return singleton_self()->IsEmptyStarlink();
     }
     else {
-      return IsEmptyIridium();
+      return singleton_self()->IsEmptyIridium();
     }
   }
-  const std::shared_ptr<CommunicationFormat> GetLastPacket(bool isStarlink) const {
+  const std::shared_ptr<BaseTelemetryDefinition> GetLastPacket(bool isStarlink) const {
     if (isStarlink) {
-      return GetLastPacketStarlink();
+      return singleton_self()->GetLastPacketStarlink();
     }
     else {
-      return GetLastPacketIridium();
+      return singleton_self()->GetLastPacketIridium();
     }
+  }
+  Subsystem GetSubsystem() const {
+    return singleton_self()->subsystem_;
   }
 
 private:
@@ -75,15 +81,18 @@ private:
   ReceiveStatusFromDAQComputer *receiveStatusFromDAQComputer_ = nullptr;
   std::string receiveStatusFromDAQComputerName_ = "ReceiveStatusFromDAQComputer";
   std::vector<int> starlinkCode_;
+  size_t maxPacketSize_ = 10000; // in bytes
   std::shared_ptr<IridiumPacketPool> iridiumPacketQueue_;
   uint16_t overwrittenPacketCode_ = UINT16_MAX;
-  std::queue<std::shared_ptr<CommunicationFormat>> starlinkPacketQueue_;
+  std::queue<std::shared_ptr<BaseTelemetryDefinition>> starlinkPacketQueue_;
   std::vector<uint8_t> currentPacket_;
   int chatter_ = 0;
   size_t lastPacketSize_ = 0;
+  uint32_t index_ = 0;
   uint16_t currentCode_ = 0;
   bool inError_ = false;
   static constexpr int MAX_BYTES = 1024;
+  Subsystem subsystem_ = Subsystem::UNKNOWN;
 };
 } // namespace gramsballoon::pgrams
 #endif // DivideCommand_hh

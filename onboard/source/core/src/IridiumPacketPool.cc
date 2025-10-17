@@ -1,6 +1,6 @@
 #include "IridiumPacketPool.hh"
 namespace gramsballoon::pgrams {
-void IridiumPacketPool::push(const std::shared_ptr<CommunicationFormat> &packet, bool overwrite) {
+void IridiumPacketPool::push(const std::shared_ptr<BaseTelemetryDefinition> &packet, bool overwrite) {
   if (packet == nullptr) {
     std::cout << "IridiumPacketPool::push: packet is nullptr." << std::endl;
     return;
@@ -15,7 +15,7 @@ void IridiumPacketPool::push(const std::shared_ptr<CommunicationFormat> &packet,
 }
 void IridiumPacketPool::pop() {
   if (overwrittenPacket_ && overwrittenPacketIndex_ == 0) {
-    overwrittenPacket_ = nullptr;
+    overwrittenPacket_.reset();
     overwrittenPacketIndex_ = 0;
     return;
   }

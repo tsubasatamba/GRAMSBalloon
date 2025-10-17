@@ -111,7 +111,7 @@ bool HubHKTelemetry::interpret(const std::shared_ptr<BaseTelemetryDefinition> &t
 void HubHKTelemetry::update() {
   auto contents = getContents();
   if (!contents) {
-    return;
+    setContents(std::make_shared<CommunicationFormat>());
   }
   std::cout << "HubHKTelemetry::update(): sampleData_ = " << std::endl;
   setArgc(ARGC);

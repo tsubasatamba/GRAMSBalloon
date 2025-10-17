@@ -32,10 +32,10 @@ private:
   DividePacket *dividePacket_ = nullptr;
   bool isStarlink_ = true;
   std::string dividePacketName_ = "DividePacket";
-  std::shared_ptr<BaseTelemetryDefinition> telemdef_ = nullptr;
+  std::string outStr_ = "";
   int chatter_ = 0;
-  size_t maxPacketSize_ = 10000; // in bytes
   int qos_ = 0;
+  Subsystem subsystem_ = Subsystem::UNKNOWN;
 };
 } // namespace gramsballoon::pgrams
 #endif // PassTelemetry_hh

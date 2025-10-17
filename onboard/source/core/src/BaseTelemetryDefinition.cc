@@ -3,32 +3,39 @@
 #include <iomanip>
 #include <sstream>
 namespace gramsballoon::pgrams {
-BaseTelemetryDefinition::BaseTelemetryDefinition() {
-  contents_ = std::make_shared<CommunicationFormat>();
-  //reg_ = std::make_unique<std::regex>("\\{\"t\":\"([0-9]{10})\",\"s\":\"([hocqt])\",\"i\":([0-9]{6}),\"c\":\"([\\x00-\\xff]+)\"\\}", std::regex_constants::basic);
+BaseTelemetryDefinition::BaseTelemetryDefinition(bool instantiateContents) {
+  if (instantiateContents) {
+    contents_ = std::make_shared<CommunicationFormat>();
+  }
+  else {
+    contents_ = nullptr;
+  }
 }
-bool parse_packet(const std::string& s,
-                  std::string& t, std::string& stype, int& i, std::string& c) {
-    // "t": の位置を探す
-    auto tpos = s.find("\"t\":\"");
-    auto spos = s.find("\",\"s\":\"", tpos);
-    auto ipos = s.find("\",\"i\":", spos);
-    auto cpos = s.find(",\"c\":\"", ipos);
-    auto endpos = s.rfind("\"}");
+bool parse_packet(const std::string &s,
+                  std::string &t, char &stype, int &i, std::string &c) {
+  // "t": の位置を探す
+  auto tpos = s.find("\"t\":\"");
+  auto spos = s.find("\",\"s\":\"", tpos);
+  auto ipos = s.find("\",\"i\":", spos);
+  auto cpos = s.find(",\"c\":\"", ipos);
+  auto endpos = s.rfind("\"}");
 
-    if (tpos == std::string::npos || spos == std::string::npos ||
-        ipos == std::string::npos || cpos == std::string::npos ||
-        endpos == std::string::npos)
-        return false;
+  if (tpos == std::string::npos || spos == std::string::npos ||
+      ipos == std::string::npos || cpos == std::string::npos ||
+      endpos == std::string::npos)
+    return false;
 
-    t = s.substr(tpos + 5, spos - (tpos + 5));             // 10桁
-    stype = s[spos + 7];                                   // 1文字
-    i = std::stoi(s.substr(ipos + 6, cpos - (ipos + 6)));  // 数値
-    c = s.substr(cpos + 7, endpos - (cpos + 7));           // バイナリ部
-    return true;
+  t = s.substr(tpos + 5, spos - (tpos + 5)); // 10桁
+  stype = s[spos + 7]; // 1文字
+  i = std::stoi(s.substr(ipos + 6, cpos - (ipos + 6))); // 数値
+  c = s.substr(cpos + 7, endpos - (cpos + 7)); // バイナリ部
+  return true;
 }
-std::string BaseTelemetryDefinition::construct() {
-  std::string subsystem_str;
+void BaseTelemetryDefinition::construct() {
+  if (constructed_) {
+    return;
+  }
+  const char *subsystem_str = nullptr;
   switch (subsystem_) {
   case Subsystem::HUB:
     subsystem_str = "h";
@@ -49,14 +56,19 @@ std::string BaseTelemetryDefinition::construct() {
     subsystem_str = "u";
     break;
   }
-  std::string content = "";
+  content_.clear();
   if (contents_) {
     contents_->update();
-    content = contents_->CommandStr();
+    contents_->CommandStr(content_);
   }
-  std::stringstream ss;
-  ss << "{\"t\":\"" << getTimeString(timeStamp_) << "\",\"s\":\"" << subsystem_str << "\",\"i\":" << std::setfill('0') << std::setw(6) << index_ << std::setw(0) << std::setfill(' ') << ",\"c\":\"" << content << "\"}";
-  return ss.str();
+  outss_ << "{\"t\":\"" << getTimeString(timeStamp_) << "\",\"s\":\"" << subsystem_str << "\",\"i\":" << std::setfill('0') << std::setw(6) << index_ << std::setw(0) << std::setfill(' ') << ",\"c\":\"" << content_ << "\"}";
+  constructed_ = true;
+}
+void BaseTelemetryDefinition::construct(std::string &outStr) {
+  if (!constructed_) {
+    construct();
+  }
+  outStr = outss_.str();
 }
 std::string BaseTelemetryDefinition::getTimeString(std::time_t t) {
   char buffer[20];
@@ -65,30 +77,21 @@ std::string BaseTelemetryDefinition::getTimeString(std::time_t t) {
 }
 bool BaseTelemetryDefinition::parseJSON(const std::string &jsonString) {
   bool is_success = true;
+  constructed_ = false;
   const size_t sz = jsonString.size();
   if (sz < 44) {
     std::cerr << "BaseTelemetryDefinition::parseJSON error: jsonString is too short" << std::endl;
     return false;
   }
-  //std::smatch match;
-  //if (!std::regex_match(jsonString, match, *reg_)) {
-  //  std::cerr << "BaseTelemetryDefinition::parseJSON error: regex match failed" << std::endl;
-  //  return false;
-  //}
-  //if (match.size() != 5) {
-  //  std::cerr << "BaseTelemetryDefinition::parseJSON error: match size is not 5" << std::endl;
-  //  return false;
-  //}
   std::string t;
-  std::string stype;
+  char stype = 'u';
   int i;
   std::string c;
-  if (!parse_packet(jsonString, t, stype, i, c)){
+  if (!parse_packet(jsonString, t, stype, i, c)) {
     std::cerr << "BaseTelemetryDefinition::parseJSON error: regex match failed" << std::endl;
     return false;
   }
   try {
-    //timeStamp_ = std::stol(match[1].str());
     timeStamp_ = std::stol(t);
   }
   catch (const std::exception &e) {
@@ -96,21 +99,19 @@ bool BaseTelemetryDefinition::parseJSON(const std::string &jsonString) {
     is_success = false;
   }
   try {
-    //const std::string s_str = match[2].str();
-    const std::string s_str = stype;
-    if (s_str == "h") {
+    if (stype == 'h') {
       subsystem_ = Subsystem::HUB;
     }
-    else if (s_str == "o") {
+    else if (stype == 'o') {
       subsystem_ = Subsystem::ORC;
     }
-    else if (s_str == "c") {
+    else if (stype == 'c') {
       subsystem_ = Subsystem::COL;
     }
-    else if (s_str == "q") {
+    else if (stype == 'q') {
       subsystem_ = Subsystem::QM;
     }
-    else if (s_str == "t") {
+    else if (stype == 't') {
       subsystem_ = Subsystem::TOF;
     }
     else {
@@ -123,7 +124,6 @@ bool BaseTelemetryDefinition::parseJSON(const std::string &jsonString) {
     is_success = false;
   }
   try {
-    //index_ = std::stol(match[3].str());
     index_ = i;
   }
   catch (const std::exception &e) {
@@ -131,8 +131,6 @@ bool BaseTelemetryDefinition::parseJSON(const std::string &jsonString) {
     is_success = false;
   }
   try {
-    //const std::string c_str = match[4].str();
-    //std::string c_str
     contents_->setData(c);
     contents_->interpret();
   }

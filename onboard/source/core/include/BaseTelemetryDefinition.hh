@@ -7,6 +7,7 @@
 #include <memory>
 #include <ostream>
 #include <regex>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -22,7 +23,7 @@ enum class Subsystem : uint16_t {
 };
 class BaseTelemetryDefinition {
 public:
-  BaseTelemetryDefinition();
+  BaseTelemetryDefinition(bool instantiateContents);
   virtual ~BaseTelemetryDefinition() = default;
 
 private:
@@ -31,14 +32,17 @@ private:
   Subsystem subsystem_ = Subsystem::UNKNOWN;
   uint32_t index_ = 0;
   std::unique_ptr<std::regex> reg_ = nullptr;
+  std::string content_ = "";
+  std::stringstream outss_;
+  bool constructed_ = false;
 
 protected:
-  void setType(Subsystem s) { subsystem_ = s; }
   void setArgc(uint16_t argc) {
     if (!contents_) {
       std::cerr << "Contents is not set!" << std::endl;
       return;
     }
+    constructed_ = false;
     return contents_->setArgc(argc);
   }
   void setArguments(uint16_t index, int32_t argument) {
@@ -46,13 +50,20 @@ protected:
       std::cerr << "Contents is not set!" << std::endl;
       return;
     }
+    constructed_ = false;
     return contents_->setArguments(index, argument);
   }
 
 public:
-  std::string construct();
+  void setType(Subsystem s) {
+    constructed_ = false;
+    subsystem_ = s;
+  }
+  void construct(std::string &outStr);
+  void construct();
   bool setContents(const std::shared_ptr<CommunicationFormat> &contents) {
     contents_ = contents;
+    constructed_ = false;
     return true;
   }
   const CommunicationFormat *getContents() const { return contents_.get(); }
@@ -61,6 +72,11 @@ public:
   bool parseJSON(const std::string &jsonString);
   void setCurrentTime() {
     timeStamp_ = time(nullptr);
+    constructed_ = false;
+  }
+  void setTimestamp(std::time_t t) {
+    timeStamp_ = t;
+    constructed_ = false;
   }
   static std::string getTimeString(std::time_t t);
   virtual bool interpret(const std::shared_ptr<BaseTelemetryDefinition> &telemDef) {
@@ -73,8 +89,12 @@ public:
   virtual void update() {
     if (contents_)
       contents_->update();
-    index_++;
-  };
+    constructed_ = false;
+  }
+  void setIndex(uint32_t index) {
+    index_ = index;
+    constructed_ = false;
+  }
   virtual std::ostream &print(std::ostream &stream) {
     stream << "BaseTelemetryDefinition" << std::endl;
     stream << "Time: " << timeStamp_ << std::endl;
@@ -96,7 +116,10 @@ public:
     return value;
   }
   virtual std::ofstream &write(std::ofstream &stream) {
-    stream << construct();
+    if (!constructed_) {
+      construct();
+    }
+    stream.write(outss_.str().c_str(), outss_.str().size());
     return stream;
   }
 };

@@ -26,7 +26,7 @@ ANLStatus ReceiveTelemetry::mod_initialize() {
     return AS_ERROR;
   }
   mosq_->Subscribe(subTopic_, qos_);
-  telemetry_ = std::make_shared<BaseTelemetryDefinition>();
+  telemetry_ = std::make_shared<BaseTelemetryDefinition>(true);
   valid_ = false;
   return AS_OK;
 }

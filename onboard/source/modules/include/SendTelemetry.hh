@@ -80,6 +80,7 @@ private:
   int sleepms_ = 500;
   int wfDivisionCounter_ = 0;
   int chatter_ = 0;
+  std::string telemetryStr_ = "";
   std::ofstream *telemetryFile_ = nullptr;
 
   // access to other classes
