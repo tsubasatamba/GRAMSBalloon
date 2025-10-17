@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  uint8_t code = std::stoi(argv[2]);
+  uint16_t code = std::stoi(argv[2]);
   std::vector<int32_t> arg_array;
   for (int i = 3; i < argc; i++) {
     arg_array.push_back(std::stoi(argv[i]));
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   std::vector<uint8_t> command;
   gramsballoon::CommandBuilder command_builder;
   try {
-    command = command_builder.make_byte_array(static_cast<uint8_t>(code), arg_array);
+    command = command_builder.make_byte_array(static_cast<uint16_t>(code), arg_array);
   }
   catch (gramsballoon::CommandException &e) {
     std::cout << "Command exception caught: " << e.print() << std::endl;

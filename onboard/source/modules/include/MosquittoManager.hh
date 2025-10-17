@@ -24,9 +24,9 @@ class MosquittoManager: public anlnext::BasicModule {
   using mod_class = MosquittoManager<TelemType>;
   std::string __module_name__() const override {
     if constexpr (std::is_same_v<TelemType, std::string>)
-      return "ComMosquittoManager";
-    else if constexpr (std::is_same_v<TelemType, std::vector<uint8_t>>)
       return "TelemMosquittoManager";
+    else if constexpr (std::is_same_v<TelemType, std::vector<uint8_t>>)
+      return "ComMosquittoManager";
   }
   std::string __module_version__() const override { return "2.1"; }
   ENABLE_PARALLEL_RUN();

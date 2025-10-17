@@ -32,7 +32,7 @@ class InterpretTelemetry: public anlnext::BasicModule {
 
 public:
   InterpretTelemetry();
-  virtual ~InterpretTelemetry();
+  virtual ~InterpretTelemetry() = default;
 
 protected:
   InterpretTelemetry(const InterpretTelemetry &r) = default;

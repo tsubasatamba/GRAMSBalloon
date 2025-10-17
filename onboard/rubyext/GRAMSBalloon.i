@@ -81,20 +81,16 @@ public:
 #endif
 
 namespace pgrams {
-#if defined GB_MAC
 class ReceiveCommand : public anlnext::BasicModule
 {
 public:
   ReceiveCommand();
 };
-#endif
-#if defined GB_MAC
 class SendTelemetry : public anlnext::BasicModule
 {
 public:
   SendTelemetry();
 };
-#endif
 class ReceiveTelemetry :  public anlnext::BasicModule
 {
 public:

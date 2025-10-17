@@ -72,7 +72,7 @@ int CommandBuilder::get_argnum(const std::string &name) const {
   return get_command_property(name).argnum;
 }
 
-std::vector<uint8_t> CommandBuilder::make_byte_array(uint8_t code, const std::vector<int32_t> &arg_array) const {
+std::vector<uint8_t> CommandBuilder::make_byte_array(uint16_t code, const std::vector<int32_t> &arg_array) const {
   std::vector<uint8_t> command;
   command.push_back(0xEB);
   command.push_back(0x90);

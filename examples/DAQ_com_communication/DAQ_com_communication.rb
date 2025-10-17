@@ -26,15 +26,16 @@ class MyApp < ANL::ANLApp
     with_parameters(topic: "command", chatter: 100, qos: 0, binary_filename_base: ENV["HOME"]+"/command_test/command") do |m|
       m.set_singleton(0)
     end
-    subsystems = ["TPC"]
+    subsystems = ["Orchestrator"]
     #subsystems = ["TPC", "TOF", "Orchestrator"]
     subsystems.each do |subsystem|
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_" + subsystem
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 1000, ack_type: 1, chatter: 100) do |m|
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 2000, ack_type: 2, chatter: 
+      1000) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_#{subsystem}_rsv"
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 1000, ack_type: 0, chatter: 100) do |m|
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 2000, ack_type: 2, chatter: 0) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::DistributeCommand, "DistributeCommand_#{subsystem}"
@@ -42,28 +43,25 @@ class MyApp < ANL::ANLApp
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SendCommandToDAQComputer, "SendCommandToDAQComputer_" + subsystem
-      with_parameters(SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}", duration_between_heartbeat: 1000, DistributeCommand_name: "DistributeCommand_#{subsystem}", chatter: 2)
+        with_parameters(SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}", duration_between_heartbeat: 100000, DistributeCommand_name: "DistributeCommand_#{subsystem}", chatter: 100)
       chain GRAMSBalloon::ReceiveStatusFromDAQComputer, "ReceiveStatusFromDAQComputer_" + subsystem
-      with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager_#{subsystem}_rsv", chatter: 1)
+        with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager_#{subsystem}_rsv", dead_communication_time: 10000,chatter: 3)
       chain GRAMSBalloon::DividePacket, "DividePacket_#{subsystem}"
-      with_parameters(ReceiveStatusFromDAQComputer_name: "ReceiveStatusFromDAQComputer_#{subsystem}", starlink_code: [100], overwritten_packet_code: 200, chatter: 3)
+        with_parameters(ReceiveStatusFromDAQComputer_name: "ReceiveStatusFromDAQComputer_#{subsystem}", starlink_code: [64], overwritten_packet_code: 331, chatter: 10)
       chain GRAMSBalloon::PassTelemetry, "PassTelemetry_#{subsystem}_starlink"
-      with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["teltopic"], is_starlink: true, chatter: 100)
+        with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["teltopic"], is_starlink: true, chatter: 100)
       chain GRAMSBalloon::PassTelemetry, "PassTelemetry_#{subsystem}_iridium"
-      with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["iridiumteltopic"], is_starlink: false, chatter: 100)
-      chain GRAMSBalloon::SendTelemetry
-      with_parameters(
-            topics: ["hub_telemetry"],
-            qos:0,
-            save_telemetry: true,
-            binary_filename_base: "telemetry_test",
-            num_telem_per_file: 1000,
-            chatter: 0,
-    )
+        with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["iridiumteltopic"], is_starlink: false, chatter: 100)
+    #  chain GRAMSBalloon::SendTelemetry
+    #  with_parameters(
+    #        topics: ["hub_telemetry"],
+    #        qos:0,
+    #        save_telemetry: true,
+    #        binary_filename_base: "telemetry_test",
+    #        num_telem_per_file: 1000,
+    #        chatter: 0,
+    #)
     end
-    
-      
-    
     chain GRAMSBalloon::RunIDManager
     with_parameters(
       filename: ENV["HOME"] + "/settings/run_id/run_id.txt"

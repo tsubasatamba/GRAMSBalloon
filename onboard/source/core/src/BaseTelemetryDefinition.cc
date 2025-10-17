@@ -5,7 +5,27 @@
 namespace gramsballoon::pgrams {
 BaseTelemetryDefinition::BaseTelemetryDefinition() {
   contents_ = std::make_shared<CommunicationFormat>();
-  reg_ = std::make_unique<std::regex>("\\{\"t\":\"([0-9]{10})\",\"s\":\"([hocqt])\",\"i\":([0-9]{6}),\"c\":\"([\\x00-\\xff]+)\"\\}");
+  //reg_ = std::make_unique<std::regex>("\\{\"t\":\"([0-9]{10})\",\"s\":\"([hocqt])\",\"i\":([0-9]{6}),\"c\":\"([\\x00-\\xff]+)\"\\}", std::regex_constants::basic);
+}
+bool parse_packet(const std::string& s,
+                  std::string& t, std::string& stype, int& i, std::string& c) {
+    // "t": の位置を探す
+    auto tpos = s.find("\"t\":\"");
+    auto spos = s.find("\",\"s\":\"", tpos);
+    auto ipos = s.find("\",\"i\":", spos);
+    auto cpos = s.find(",\"c\":\"", ipos);
+    auto endpos = s.rfind("\"}");
+
+    if (tpos == std::string::npos || spos == std::string::npos ||
+        ipos == std::string::npos || cpos == std::string::npos ||
+        endpos == std::string::npos)
+        return false;
+
+    t = s.substr(tpos + 5, spos - (tpos + 5));             // 10桁
+    stype = s[spos + 7];                                   // 1文字
+    i = std::stoi(s.substr(ipos + 6, cpos - (ipos + 6)));  // 数値
+    c = s.substr(cpos + 7, endpos - (cpos + 7));           // バイナリ部
+    return true;
 }
 std::string BaseTelemetryDefinition::construct() {
   std::string subsystem_str;
@@ -50,24 +70,34 @@ bool BaseTelemetryDefinition::parseJSON(const std::string &jsonString) {
     std::cerr << "BaseTelemetryDefinition::parseJSON error: jsonString is too short" << std::endl;
     return false;
   }
-  std::smatch match;
-  if (!std::regex_match(jsonString, match, *reg_)) {
+  //std::smatch match;
+  //if (!std::regex_match(jsonString, match, *reg_)) {
+  //  std::cerr << "BaseTelemetryDefinition::parseJSON error: regex match failed" << std::endl;
+  //  return false;
+  //}
+  //if (match.size() != 5) {
+  //  std::cerr << "BaseTelemetryDefinition::parseJSON error: match size is not 5" << std::endl;
+  //  return false;
+  //}
+  std::string t;
+  std::string stype;
+  int i;
+  std::string c;
+  if (!parse_packet(jsonString, t, stype, i, c)){
     std::cerr << "BaseTelemetryDefinition::parseJSON error: regex match failed" << std::endl;
     return false;
   }
-  if (match.size() != 5) {
-    std::cerr << "BaseTelemetryDefinition::parseJSON error: match size is not 5" << std::endl;
-    return false;
-  }
   try {
-    timeStamp_ = std::stol(match[1].str());
+    //timeStamp_ = std::stol(match[1].str());
+    timeStamp_ = std::stol(t);
   }
   catch (const std::exception &e) {
     std::cerr << "BaseTelemetryDefinition::parseJSON error: time conversion failed: " << e.what() << std::endl;
     is_success = false;
   }
   try {
-    const std::string s_str = match[2].str();
+    //const std::string s_str = match[2].str();
+    const std::string s_str = stype;
     if (s_str == "h") {
       subsystem_ = Subsystem::HUB;
     }
@@ -93,15 +123,17 @@ bool BaseTelemetryDefinition::parseJSON(const std::string &jsonString) {
     is_success = false;
   }
   try {
-    index_ = std::stol(match[3].str());
+    //index_ = std::stol(match[3].str());
+    index_ = i;
   }
   catch (const std::exception &e) {
     std::cerr << "BaseTelemetryDefinition::parseJSON error: index conversion failed: " << e.what() << std::endl;
     is_success = false;
   }
   try {
-    const std::string c_str = match[4].str();
-    contents_->setData(c_str);
+    //const std::string c_str = match[4].str();
+    //std::string c_str
+    contents_->setData(c);
     contents_->interpret();
   }
   catch (const std::exception &e) {

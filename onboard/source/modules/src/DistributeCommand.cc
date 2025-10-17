@@ -34,7 +34,7 @@ ANLStatus DistributeCommand::mod_initialize() {
     std::cerr << "SendTelemetry module is not found." << std::endl;
   }
 
-  mosq->subscribe(NULL, topic_.c_str(), 0);
+  mosq->Subscribe(topic_.c_str(), 0);
   failed_ = false;
   if (chatter_ > 0) {
     std::cout << "Connected to " << topic_ << std::endl;

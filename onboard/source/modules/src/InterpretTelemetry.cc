@@ -14,8 +14,7 @@ InterpretTelemetry<TelemType>::InterpretTelemetry() {
   receiverModuleName_ = "ReceiveTelemetry";
   telemetry_ = std::make_shared<TelemType>();
 }
-template <typename TelemType>
-InterpretTelemetry<TelemType>::~InterpretTelemetry() = default;
+
 
 template <typename TelemType>
 ANLStatus InterpretTelemetry<TelemType>::mod_define() {
@@ -137,8 +136,6 @@ bool InterpretTelemetry<TelemType>::interpret(const std::shared_ptr<BaseTelemetr
 
 template InterpretTelemetry<BaseTelemetryDefinition>::InterpretTelemetry();
 template InterpretTelemetry<HubHKTelemetry>::InterpretTelemetry();
-template InterpretTelemetry<BaseTelemetryDefinition>::~InterpretTelemetry();
-template InterpretTelemetry<HubHKTelemetry>::~InterpretTelemetry();
 template ANLStatus InterpretTelemetry<BaseTelemetryDefinition>::mod_define();
 template ANLStatus InterpretTelemetry<HubHKTelemetry>::mod_define();
 template ANLStatus InterpretTelemetry<BaseTelemetryDefinition>::mod_initialize();
