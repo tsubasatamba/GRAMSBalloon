@@ -1,3 +1,4 @@
+#if 0 // This module is currently disabled
 #include "ReadTelemetry.hh"
 #include <chrono>
 #include <thread>
@@ -88,3 +89,4 @@ uint8_t ReadTelemetry::readOneByte() {
 }
 
 } // namespace gramsballoon
+#endif

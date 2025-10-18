@@ -1,3 +1,4 @@
+#if 0
 #include "DumpSerial.hh"
 #include "DateManager.hh"
 #include <fstream>
@@ -33,12 +34,6 @@ ANLStatus DumpSerial::mod_analyze() {
     return AS_ERROR;
   }
   const auto &telemetry = receiveTelemetry_->Telemetry();
-  if (telemetry == nullptr) {
-    if (chatter_ >= 1) {
-      std::cout << "DumpSerial: telemetry is nullptr" << std::endl;
-    }
-    return AS_OK;
-  }
   const auto &vect = telemetry->getContents()->Command();
   if (chatter_ >= 1) {
     std::cout << "DumpSerial: telemetry size = " << vect.size() << std::endl;
@@ -71,3 +66,4 @@ std::string DumpSerial::CreateFilename() {
   return filename;
 }
 } // namespace gramsballoon
+#endif

@@ -31,7 +31,7 @@ public:
   bool validate(const T &v, uint16_t argc);
 
   void interpret();
-  void writeFile(const std::string &filename, bool append);
+  std::ostream &write(std::ostream &stream);
   template <typename T>
   T getValue(int index);
   template <typename T>

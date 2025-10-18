@@ -59,6 +59,7 @@ private:
   using mosqpp::mosquittopp::connect;
   using mosqpp::mosquittopp::disconnect;
   using mosqpp::mosquittopp::publish;
+  using mosqpp::mosquittopp::subscribe;
   std::deque<std::shared_ptr<mqtt::mosquitto_message<V>>> payLoad_;
   std::string host_;
   std::vector<std::string> topicSub_;

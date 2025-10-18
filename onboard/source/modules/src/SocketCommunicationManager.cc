@@ -2,7 +2,6 @@
 #include <sys/select.h>
 using namespace anlnext;
 namespace gramsballoon::pgrams {
-constexpr int verbose = 3;
 ANLStatus SocketCommunicationManager::mod_define() {
   set_module_description("This module is responsible for socket communication, mainly between the DAQ computer");
   define_parameter("ip", &mod_class::ip_);
@@ -16,6 +15,7 @@ ANLStatus SocketCommunicationManager::mod_define() {
   set_parameter_unit(1.0, "msec");
   define_parameter("ack_type", &mod_class::ackTypeInt_);
   set_parameter_description("Acknowledgement type. 0: Size, 1: Raw, 2: None");
+  define_parameter("subsystem", &mod_class::subsystemInt_);
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
@@ -25,6 +25,13 @@ ANLStatus SocketCommunicationManager::mod_pre_initialize() {
   return AS_OK;
 }
 ANLStatus SocketCommunicationManager::mod_initialize() {
+  subsystem_ = magic_enum::enum_cast<Subsystem>(subsystemInt_).value_or(Subsystem::UNKNOWN);
+  if (subsystem_ == Subsystem::UNKNOWN) {
+    std::cerr << "Error in " << module_id() << "::mod_initialize: Invalid subsystem value " << subsystemInt_ << ". Setting to UNKNOWN." << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::OTHER_ERRORS);
+    }
+  }
   if (exist_module("SendTelemetry")) {
     get_module_NC("SendTelemetry", &sendTelemetry_);
   }
@@ -47,7 +54,7 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
     return AS_ERROR;
   }
   try {
-    socketCommunication_ = std::make_shared<SocketCommunication>(ioContext_,  port_);
+    socketCommunication_ = std::make_shared<SocketCommunication>(ioContext_, port_);
   }
   catch (...) {
     socketCommunication_ = nullptr;
@@ -55,7 +62,7 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
   if (!socketCommunication_) {
     std::cerr << module_id() << "::mod_initialize SocketCommunication is not initialized." << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
+      sendTelemetry_->getErrorManager()->setError(ErrorManager::GetDaqComErrorType(subsystem_, true));
     }
     return AS_ERROR;
   }
@@ -93,7 +100,7 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
   if (send_result < 0) {
     return send_result;
   }
-  if constexpr (verbose > 2) {
+  if (chatter_ > 2) {
     std::cout << module_id() << "::sendAndWaitForAck: Sent data: ";
     for (size_t i = 0; i < n; ++i) {
       std::cout << static_cast<int>(buf[i]) << " ";
@@ -115,7 +122,7 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
       std::cerr << std::endl;
       return -ret;
     }
-    if constexpr (verbose > 2) {
+    if (chatter_ > 2) {
       std::cout << module_id() << "::sendAndWaitForAck: Received acknowledgement: ";
       for (const auto &byte: ackBuffer_) {
         std::cout << static_cast<int>(byte) << " ";
@@ -133,7 +140,7 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
     if (ret < 0) {
       return ret;
     }
-    if constexpr (verbose > 2) {
+    if (chatter_ > 2) {
       std::cout << module_id() << "::sendAndWaitForAck: Received acknowledgement: ";
       for (const auto &byte: ackBuffer_) {
         std::cout << static_cast<int>(byte) << " ";

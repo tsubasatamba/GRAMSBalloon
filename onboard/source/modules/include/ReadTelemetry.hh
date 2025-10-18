@@ -1,5 +1,6 @@
 #ifndef ReadTelemetry_H
 #define ReadTelemetry_H 1
+#if 0
 
 #include "ReceiveTelemetry.hh"
 #include <anlnext/BasicModule.hh>
@@ -31,4 +32,5 @@ private:
 };
 
 } // namespace gramsballoon
+#endif // This module is currently disabled
 #endif // ReadTelemetry_H

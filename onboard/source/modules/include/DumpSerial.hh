@@ -1,5 +1,6 @@
 #ifndef GB_DumpSerial_hh
 #define GB_DumpSerial_hh 1
+#if 0
 #include "ReceiveTelemetry.hh"
 #include "RunIDManager.hh"
 #include "anlnext/BasicModule.hh"
@@ -34,5 +35,5 @@ private:
   std::string CreateFilename();
 };
 } // namespace gramsballoon::pgrams
-
+#endif
 #endif //GB_DumpSerial_hh

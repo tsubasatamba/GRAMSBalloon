@@ -9,18 +9,16 @@
 #ifndef ReceiveCommand_H
 #define ReceiveCommand_H 1
 
-#include "BinaryFileManipulater.hh"
 #include "CommunicationFormat.hh"
+#include "CommunicationSaver.hh"
 #include "MosquittoManager.hh"
 #include "RunIDManager.hh"
 #include "SendTelemetry.hh"
-#include "SerialCommunication.hh"
 #include "ShutdownSystem.hh"
 #include <anlnext/BasicModule.hh>
 #include <queue>
 #include <sys/select.h>
 #include <sys/time.h>
-
 namespace gramsballoon {
 
 class ShutdownSystem;
@@ -28,7 +26,10 @@ class RunIDManager;
 namespace pgrams {
 class SendTelemetry;
 template <typename T>
+class CommunicationSaver;
+template <typename T>
 class MosquittoManager;
+
 class ReceiveCommand: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(ReceiveCommand, 1.0);
   ENABLE_PARALLEL_RUN();
@@ -46,18 +47,16 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  bool applyCommand(const std::vector<uint8_t> &command);
-  void writeCommandToFile(bool failed, const std::vector<uint8_t> &command);
-
   uint16_t CommandCode() { return (singleton_self()->comdef_)->Code(); }
   uint32_t CommandIndex() { return singleton_self()->commandIndex_; }
   uint16_t CommandRejectCount() { return singleton_self()->commandRejectCount_; }
 
 private:
+  bool applyCommand(const std::vector<uint8_t> &command);
   std::shared_ptr<pgrams::CommunicationFormat> comdef_ = nullptr;
   uint32_t commandIndex_ = 0;
   uint16_t commandRejectCount_ = 0;
-  std::map<int, std::pair<int, int>> fileIDmp_;
+
   bool saveCommand_ = true;
   std::string binaryFilenameBase_ = "";
   int numCommandPerFile_ = 100;
@@ -65,7 +64,9 @@ private:
 
   // access to other classes
   SendTelemetry *sendTelemetry_ = nullptr;
+#ifdef USE_SYSTEM_MODULES
   ShutdownSystem *shutdownSystem_ = nullptr;
+#endif
   RunIDManager *runIDManager_ = nullptr;
   MosquittoManager<std::vector<uint8_t>> *mosquittoManager_ = nullptr;
 
@@ -74,7 +75,8 @@ private:
   std::string topic_ = "command";
   int qos_ = 0;
   int timeoutSec_ = 2;
-  constexpr static int serialReadingTimems_ = 250;
+
+  std::shared_ptr<CommunicationSaver<std::vector<uint8_t>>> commandSaver_ = nullptr;
 };
 
 } // namespace pgrams

@@ -35,22 +35,15 @@ void CommunicationFormat::interpret() {
   getVector<int32_t>(8, static_cast<int>(argc_), arguments_);
 }
 
-void CommunicationFormat::writeFile(const std::string &filename, bool append) {
-  std::ofstream ofs;
-  if (append) {
-    ofs = std::ofstream(filename, std::ios::app | std::ios::binary);
-  }
-  else {
-    ofs = std::ofstream(filename, std::ios::out | std::ios::binary);
-  }
-  if (!ofs) {
-    std::cerr << "File open error." << std::endl;
-    return;
+std::ostream &CommunicationFormat::write(std::ostream &stream) {
+  if (!stream) {
+    std::cerr << "CommunicationFormat::write error: stream not opened." << std::endl;
+    return stream;
   }
   const int size = command_.size();
-  ofs.write(reinterpret_cast<char *>(&command_[0]), size);
-  ofs.flush();
-  ofs.close();
+  stream.write(reinterpret_cast<char *>(&command_[0]), size);
+  stream.flush();
+  return stream;
 }
 
 template <typename T>

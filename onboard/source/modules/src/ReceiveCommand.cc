@@ -1,7 +1,7 @@
 #include "ReceiveCommand.hh"
+#include "TerminalColoring.hh"
 #include <chrono>
 #include <thread>
-
 using namespace anlnext;
 namespace gramsballoon::pgrams {
 
@@ -9,6 +9,7 @@ ReceiveCommand::ReceiveCommand() {
   binaryFilenameBase_ = "Command";
   topic_ = "command";
   comdef_ = std::make_shared<CommunicationFormat>();
+  commandSaver_ = std::make_shared<CommunicationSaver<std::vector<uint8_t>>>();
 }
 
 ReceiveCommand::~ReceiveCommand() = default;
@@ -40,7 +41,7 @@ ANLStatus ReceiveCommand::mod_initialize() {
     get_module_NC(run_id_manager_md, &runIDManager_);
   }
 
-  const std::string mosq_md = "MosquittoManager";
+  const std::string mosq_md = "ComMosquittoManager";
   if (exist_module(mosq_md)) {
     get_module_NC(mosq_md, &mosquittoManager_);
   }
@@ -57,7 +58,7 @@ ANLStatus ReceiveCommand::mod_initialize() {
     std::cerr << "MosquittoIO is nullptr" << std::endl;
     return AS_ERROR;
   }
-  const int sub_result = mosq_->subscribe(NULL, topic_.c_str(), qos_);
+  const int sub_result = mosq_->Subscribe(topic_, qos_);
   if (sub_result != 0) {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Subscribing MQTT failed. Error Message: " << mosqpp::strerror(sub_result) << std::endl;
     if (sendTelemetry_) {
@@ -90,7 +91,7 @@ ANLStatus ReceiveCommand::mod_analyze() {
     return AS_OK;
   }
   const bool applied = applyCommand(command_payload);
-  writeCommandToFile(!applied, command_payload);
+  commandSaver_->writeCommandToFile(!applied, command_payload);
   if (!applied) {
     commandRejectCount_++;
     if (sendTelemetry_) {
@@ -132,61 +133,22 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
       std::cout << "arguments[" << i << "]: " << arguments[i] << std::endl;
     }
   }
-
   if (code == 900 && argc == 0) {
+    std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Dummy0 command received." << std::endl;
     return true;
   }
 
   if (code == 901 && argc == 1) {
+    std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Dummy1 command received." << std::endl;
     return true;
   }
 
   if (code == 902 && argc == 0) {
+    std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Dummy2 command received." << std::endl;
     return true;
   }
 
   return false;
-}
-
-void ReceiveCommand::writeCommandToFile(bool failed, const std::vector<uint8_t> &command) {
-  int type = 1;
-  std::string type_str = "";
-  if (failed) {
-    type = 0;
-  }
-  if (type == 1) type_str = "normal";
-  if (type == 0) type_str = "failed";
-
-  const bool app = true;
-  if (fileIDmp_.find(type) == fileIDmp_.end()) {
-    fileIDmp_[type] = std::pair<int, int>(0, 0);
-  }
-  else if (fileIDmp_[type].second == numCommandPerFile_) {
-    fileIDmp_[type].first++;
-    fileIDmp_[type].second = 0;
-  }
-
-  int run_id = 0;
-  std::string time_stamp_str = "YYYYMMDDHHMMSS";
-  if (runIDManager_) {
-    run_id = runIDManager_->RunID();
-    time_stamp_str = runIDManager_->TimeStampStr();
-  }
-  std::ostringstream id_sout;
-  id_sout << std::setfill('0') << std::right << std::setw(6) << fileIDmp_[type].first;
-  const std::string id_str = id_sout.str();
-  std::ostringstream run_id_sout;
-  run_id_sout << std::setfill('0') << std::right << std::setw(6) << run_id;
-  const std::string run_id_str = run_id_sout.str();
-  const std::string filename = binaryFilenameBase_ + "_" + run_id_str + "_" + time_stamp_str + "_" + type_str + "_" + id_str + ".dat";
-
-  if (!failed) {
-    comdef_->writeFile(filename, app);
-  }
-  else {
-    writeVectorToBinaryFile(filename, app, command);
-  }
-  fileIDmp_[type].second++;
 }
 
 } // namespace gramsballoon::pgrams

@@ -12,7 +12,7 @@
 #include "SendTelemetry.hh"
 #endif
 #ifdef USE_SYSTEM_MODULES
-#include "GetRaspiStatus.hh"
+#include "GetComputerStatus.hh"
 #endif
 #include "ReceiveTelemetry.hh"
 #ifdef USE_RASPISYS
@@ -37,7 +37,6 @@
 #include "ReceiveStatusFromDAQComputer.hh"
 #include "DividePacket.hh"
 #include "PassTelemetry.hh"
-#include "InterpretDAQFormattedTelemetry.hh"
 #include "IoContextManager.hh"
 #include "SendCommandToDAQComputer.hh"
 %}
@@ -73,10 +72,10 @@ public:
 
 
 #ifdef USE_SYSTEM_MODULES
-class GetRaspiStatus : public anlnext::BasicModule
+class GetComputerStatus : public anlnext::BasicModule
 {
 public:
-  GetRaspiStatus();
+  GetComputerStatus();
 };
 #endif
 
@@ -97,10 +96,10 @@ public:
   ReceiveTelemetry();
 };
 
-class DumpSerial: public anlnext::BasicModule {
-public:
-    DumpSerial();
-};
+//class DumpSerial: public anlnext::BasicModule {
+//public:
+//    DumpSerial();
+//};
 
 class GetMHADCData: public anlnext::BasicModule {
 public:
@@ -185,20 +184,16 @@ public:
   RunIDManager();
 };
 
-class ReadTelemetry : public anlnext::BasicModule
-{
-public:
-  ReadTelemetry();
-};
+//class ReadTelemetry : public anlnext::BasicModule
+//{
+//public:
+//  ReadTelemetry();
+//};
 
 namespace pgrams{
 class MeasureOrientationByMHADC: public anlnext::BasicModule {
 public:
   MeasureOrientationByMHADC();
-};
-class InterpretDAQFormattedTelemetry: public anlnext::BasicModule {
-public:
-  InterpretDAQFormattedTelemetry();
 };
 } // namespace pgrams
 } // namespace GRAMSBalloon

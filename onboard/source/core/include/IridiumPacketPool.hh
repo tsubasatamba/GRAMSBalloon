@@ -6,7 +6,11 @@
 #include <queue>
 
 namespace gramsballoon::pgrams {
-//using TimeComPair = std::pair<std::time_t, std::shared_ptr<CommunicationFormat>>;
+/**
+ * Class for managing Iridium packets with an option to overwrite a packet with a specific code.
+ * @author Shota Arai
+ * @date 2025-10-16 | First implementation.
+ */
 class IridiumPacketPool {
 public:
   IridiumPacketPool() {
@@ -32,14 +36,11 @@ public:
     return nullptr;
   }
   size_t size() const {
-    size_t sz = packetQueue_.size();
-    if (overwrittenPacket_ && overwrittenPacketIndex_ > 0) {
-      sz += 1;
-    }
-    return sz;
+    return size_;
   }
 
 private:
+  size_t size_ = 0;
   std::queue<std::shared_ptr<BaseTelemetryDefinition>> packetQueue_;
   std::shared_ptr<BaseTelemetryDefinition> overwrittenPacket_;
   size_t overwrittenPacketIndex_ = 0;

@@ -141,6 +141,7 @@ bool BaseTelemetryDefinition::parseJSON(const std::string &jsonString) {
     std::cerr << "BaseTelemetryDefinition::parseJSON error: command conversion failed: " << e.what() << std::endl;
     is_success = false;
   }
+  interpret();
   return is_success;
 }
 } // namespace gramsballoon::pgrams

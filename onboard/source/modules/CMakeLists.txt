@@ -37,7 +37,6 @@ set(GB_MODULES
   src/ReceiveStatusFromDAQComputer.cc
   src/DividePacket.cc
   src/PassTelemetry.cc
-  src/InterpretDAQFormattedTelemetry.cc
   src/IoContextManager.cc
   #src/MeasureTemperatureWithRTDSensorByMHADC.cc
   src/SendCommandToDAQComputer.cc
@@ -48,7 +47,7 @@ set(GB_MODULES
 
 if(GB_USE_SYSTEM_MODULES)
   set(GB_SYSTEM_MODULES
-    src/GetRaspiStatus.cc
+    src/GetComputerStatus.cc
     src/ShutdownSystem.cc
   )
 endif(GB_USE_SYSTEM_MODULES)

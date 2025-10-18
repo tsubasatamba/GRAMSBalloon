@@ -18,7 +18,6 @@ public:
   static constexpr size_t NUM_ERROR_FLAGS = 4;
 
 private:
-  uint32_t RunID_ = 0;
   uint16_t lastCommandCodeHub_ = 0;
   uint32_t lastCommandIndexHub_ = 0;
   uint16_t lastCommandCodeOrc_ = 0;
@@ -115,14 +114,14 @@ private:
   uint16_t storageSize_;
   uint16_t cpuTemperature_;
 
+protected:
+  bool interpret() override;
+
 public:
-  bool interpret(const std::shared_ptr<BaseTelemetryDefinition> &telemDef) override;
   void update() override;
   std::ostream &print(std::ostream &stream) override;
 
   // Getters and setters
-  inline void setRunID(uint32_t v) { RunID_ = v; }
-  inline uint32_t RunID() const { return RunID_; }
 
   inline void setLastCommandCodeHub(uint16_t v) { lastCommandCodeHub_ = v; }
   inline uint16_t LastCommandCodeHub() const { return lastCommandCodeHub_; }

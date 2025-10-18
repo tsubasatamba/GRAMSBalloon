@@ -59,6 +59,8 @@ private:
   int timeout_ = -1;
   std::optional<timeval> timeoutTV_;
   bool handleSigpipe_ = false;
+  int subsystemInt_ = 0;
+  Subsystem subsystem_ = Subsystem::UNKNOWN;
   std::shared_ptr<std::thread> thread_ = nullptr;
   AcknowledgementType ackType_ = AcknowledgementType::NONE;
   int ackTypeInt_ = 0;

@@ -51,11 +51,17 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
   }
   if (sc->isFailed()) {
     std::cerr << module_id() << "::mod_analyze(): Socket Communication is failed." << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorManager::GetDaqComErrorType(subsystem_, true));
+    }
     return AS_OK;
   }
   if (!sc->isConnected()) {
     if (chatter_ > 2)
       std::cerr << module_id() << "::mod_analyze(): Socket Communication is not connected." << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorManager::GetDaqComErrorType(subsystem_, false));
+    }
     return AS_OK;
   }
   std::vector<uint8_t> *buffer_for_display = nullptr;
@@ -92,6 +98,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorManager::GetDaqComErrorType(subsystem_, true));
     }
+    lastReceivedTime_ = now;
   }
   return AS_OK;
 }

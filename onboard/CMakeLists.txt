@@ -30,7 +30,12 @@ find_package(Ruby 3.0 REQUIRED)
 
 # ## options
 # # library options
-option(GB_USE_SYSTEM_MODULES "enable system modules" OFF)
+if (LINUX)
+  set(GB_USE_SYSTEM_MODULES ON)
+else()
+  set(GB_USE_SYSTEM_MODULES OFF)
+endif()
+message("-- GB_USE_SYSTEM_MODULES: ${GB_USE_SYSTEM_MODULES}")
 option(GB_USE_HSQUICKLOOK "enable hsquicklook" OFF)
 option(GB_APT_RUBY "installed ruby via apt" OFF)
 option(GB_USE_ROOT "enable root" OFF)
@@ -47,7 +52,6 @@ option(GB_MAC "shortcut" OFF)
 
 if(GB_MAC)
   message("-- GB_MAC is set")
-  set(GB_USE_SYSTEM_MODULES OFF)
   set(GB_USE_HSQUICKLOOK OFF)
   set(GB_APT_RUBY OFF)
   set(GB_USE_ROOT ON)

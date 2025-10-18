@@ -34,6 +34,7 @@ private:
   std::unique_ptr<std::regex> reg_ = nullptr;
   std::string content_ = "";
   std::stringstream outss_;
+  uint32_t runid_ = 0; // 0 means unset
   bool constructed_ = false;
 
 protected:
@@ -53,8 +54,18 @@ protected:
     constructed_ = false;
     return contents_->setArguments(index, argument);
   }
+  virtual bool interpret() {
+    return true;
+  }
 
 public:
+  void setRunID(int runId) {
+    constructed_ = false;
+    runid_ = runId;
+  }
+  int RunID() const {
+    return runid_;
+  }
   void setType(Subsystem s) {
     constructed_ = false;
     subsystem_ = s;
@@ -79,13 +90,6 @@ public:
     constructed_ = false;
   }
   static std::string getTimeString(std::time_t t);
-  virtual bool interpret(const std::shared_ptr<BaseTelemetryDefinition> &telemDef) {
-    contents_ = telemDef->contents_;
-    timeStamp_ = telemDef->timeStamp_;
-    subsystem_ = telemDef->subsystem_;
-    index_ = telemDef->index_;
-    return true;
-  }
   virtual void update() {
     if (contents_)
       contents_->update();

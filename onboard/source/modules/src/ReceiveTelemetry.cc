@@ -26,7 +26,7 @@ ANLStatus ReceiveTelemetry::mod_initialize() {
     return AS_ERROR;
   }
   mosq_->Subscribe(subTopic_, qos_);
-  telemetry_ = std::make_shared<BaseTelemetryDefinition>(true);
+  telemetry_ = "";
   valid_ = false;
   return AS_OK;
 }
@@ -58,19 +58,8 @@ ANLStatus ReceiveTelemetry::mod_analyze() {
       std::cout << "payload[" << i << "]=" << std::hex << static_cast<unsigned int>(payload[0]->payload[i]) << std::dec << std::endl;
     }
   }
-  valid_ = false;
-  constexpr int i = 0;
-  valid_ = telemetry_->parseJSON(payload[i]->payload);
-  if (chatter_ >= 1) {
-    const int sz_packet = telemetry_->getContents()->Command().size();
-    std::cout << "size: " << sz_packet << std::endl;
-    std::cout << "packet: ";
-    for (int j = 0; j < sz_packet; j++) {
-      std::cout << static_cast<int>(telemetry_->getContents()->Command()[j]) << ",";
-    }
-    std::cout << std::endl;
-  }
-
+  setTelemetry(packet->payload);
+  valid_ = true;
   mosq_->popPayloadFront();
   return AS_OK;
 }

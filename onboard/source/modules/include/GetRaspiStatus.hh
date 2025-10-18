@@ -1,5 +1,5 @@
 /**
- * GetRaspiStatus sample module of the ANL Next framework
+ * GetComputerStatus sample module of the ANL Next framework
  *
  * @author 
  * @date
@@ -17,16 +17,16 @@ namespace gramsballoon {
 
 class SendTelemetry;
 
-class GetRaspiStatus: public anlnext::BasicModule {
-  DEFINE_ANL_MODULE(GetRaspiStatus, 1.0);
+class GetComputerStatus: public anlnext::BasicModule {
+  DEFINE_ANL_MODULE(GetComputerStatus, 1.0);
   ENABLE_PARALLEL_RUN();
 
 public:
-  GetRaspiStatus();
-  virtual ~GetRaspiStatus();
+  GetComputerStatus();
+  virtual ~GetComputerStatus();
 
 protected:
-  GetRaspiStatus(const GetRaspiStatus &r) = default;
+  GetComputerStatus(const GetComputerStatus &r) = default;
 
 public:
   anlnext::ANLStatus mod_define() override;

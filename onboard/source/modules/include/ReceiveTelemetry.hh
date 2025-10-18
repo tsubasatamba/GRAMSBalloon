@@ -33,8 +33,11 @@ public:
   void setValid(bool v) { valid_ = v; }
   int Chatter() { return chatter_; }
 
+protected:
+  void setTelemetry(const std::string &v) { telemetry_ = v; }
+
 private:
-  std::shared_ptr<BaseTelemetryDefinition> telemetry_ = nullptr;
+  std::string telemetry_ = "";
   bool valid_;
 
   // communication

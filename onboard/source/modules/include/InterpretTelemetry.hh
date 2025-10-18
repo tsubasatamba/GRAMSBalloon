@@ -43,20 +43,19 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void writeTelemetryToFile(bool failed);
-  void updateRunIDFile();
-
   std::shared_ptr<const ErrorManager> getErrorManager() const { return singleton_self()->errorManager_; }
   int CurrentTelemetryType() { return singleton_self()->currentTelemetryType_; }
-  bool interpret(const std::shared_ptr<BaseTelemetryDefinition> &telemDef);
 
 private:
+  void updateRunIDFile();
+  bool interpret(const std::string &telemetryStr);
   std::shared_ptr<TelemType> telemetry_ = nullptr;
   pgrams::ReceiveTelemetry *receiver_ = nullptr;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
 #ifdef USE_HSQUICKLOOK
   PushToMongoDB *pusher_ = nullptr;
 #endif // USE_HSQUICKLOOK
+  std::shared_ptr<CommunicationSaver<std::string>> telemetrySaver_ = nullptr;
   int currentTelemetryType_ = 0;
   std::map<int, std::pair<int, int>> fileIDmp_;
   bool saveTelemetry_ = true;

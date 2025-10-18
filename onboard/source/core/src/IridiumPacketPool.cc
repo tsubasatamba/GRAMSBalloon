@@ -7,16 +7,18 @@ void IridiumPacketPool::push(const std::shared_ptr<BaseTelemetryDefinition> &pac
   }
   if (overwrite) {
     overwrittenPacket_ = packet;
-    overwrittenPacketIndex_ = 0;
+    overwrittenPacketIndex_ = packetQueue_.size();
+    size_ = overwrittenPacketIndex_ + 1;
     return;
   }
   packetQueue_.push(packet);
-  overwrittenPacketIndex_++;
+  size_++;
 }
 void IridiumPacketPool::pop() {
   if (overwrittenPacket_ && overwrittenPacketIndex_ == 0) {
     overwrittenPacket_.reset();
     overwrittenPacketIndex_ = 0;
+    size_--;
     return;
   }
   if (!packetQueue_.empty()) {
@@ -24,6 +26,7 @@ void IridiumPacketPool::pop() {
     if (overwrittenPacketIndex_ > 0) {
       overwrittenPacketIndex_--;
     }
+    size_--;
   }
 }
 } // namespace gramsballoon::pgrams

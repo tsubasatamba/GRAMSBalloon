@@ -12,8 +12,7 @@ void DivideData(uint32_t srcValue, uint16_t &dest1, uint16_t &dest2) {
   dest1 = static_cast<uint16_t>((srcValue >> 16) & 0xffff);
   dest2 = static_cast<uint16_t>(srcValue & 0xffff);
 }
-bool HubHKTelemetry::interpret(const std::shared_ptr<BaseTelemetryDefinition> &telemDef) {
-  BaseTelemetryDefinition::interpret(telemDef);
+bool HubHKTelemetry::interpret() {
   auto contents = getContents();
   if (!contents) {
     return false;
@@ -22,7 +21,7 @@ bool HubHKTelemetry::interpret(const std::shared_ptr<BaseTelemetryDefinition> &t
     std::cerr << "HubHKTelemetry::interpret(): Argc() != " << ARGC << std::endl;
     return false;
   }
-  RunID_ = static_cast<uint32_t>(contents->getArguments(0));
+  setRunID(static_cast<uint32_t>(contents->getArguments(0)));
   lastCommandIndexHub_ = static_cast<uint32_t>(contents->getArguments(1));
   lastCommandIndexOrc_ = static_cast<uint32_t>(contents->getArguments(2));
   lastCommandIndexTPC_ = static_cast<uint32_t>(contents->getArguments(3));
@@ -115,7 +114,7 @@ void HubHKTelemetry::update() {
   }
   std::cout << "HubHKTelemetry::update(): sampleData_ = " << std::endl;
   setArgc(ARGC);
-  setArguments(0, RunID_);
+  setArguments(0, RunID());
   setArguments(1, lastCommandIndexHub_);
   setArguments(2, lastCommandIndexOrc_);
   setArguments(3, lastCommandIndexTPC_);
@@ -205,7 +204,7 @@ std::ostream &HubHKTelemetry::print(std::ostream &stream) {
   stream << "HubHKTelemetry" << std::endl;
   stream << "index: " << getContents()->Code() << ", Argc(): " << getContents()->Argc() << std::endl;
   stream << "Data: ";
-  stream << "RunID_: " << RunID_ << "\n";
+  stream << "RunID_: " << RunID() << "\n";
   stream << "lastCommandIndexHub_: " << lastCommandIndexHub_ << ", lastCommandIndexOrc_: " << lastCommandIndexOrc_
          << ", lastCommandIndexTPC_: " << lastCommandIndexTPC_ << ", lastCommandIndexTOF_: " << lastCommandIndexTOF_
          << ", lastCommandIndexQM_: " << lastCommandIndexQM_ << "\n";
