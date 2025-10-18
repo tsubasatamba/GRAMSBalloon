@@ -60,6 +60,10 @@ ANLStatus SendTelemetry::mod_analyze() {
   }
   telemdef_->setCurrentTime();
   telemdef_->setIndex(telemIndex_);
+  for (int i = 0; i < HubHKTelemetry::NUM_ERROR_FLAGS; i++) {
+    telemdef_->setHubComputerErrorFlags(i, errorManager_->ErrorCode(i));
+  }
+  telemdef_->setRunID(runIDManager_->RunID());
   telemIndex_++;
   telemdef_->update();
   telemdef_->construct(telemetryStr_);

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include <tuple>
+#include <iomanip>
 namespace gramsballoon {
 class BinaryFileManipulater;
 }

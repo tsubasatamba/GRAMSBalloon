@@ -1,6 +1,7 @@
 #ifndef GRAMSBalloon_HubHKTelemetry_HH
 #define GRAMSBalloon_HubHKTelemetry_HH 1
 #include "BaseTelemetryDefinition.hh"
+#include "ErrorManager.hh"
 namespace gramsballoon::pgrams {
 class HubHKTelemetry: public BaseTelemetryDefinition {
 public:
@@ -15,7 +16,7 @@ public:
   static constexpr size_t NUM_PDU = 6;
   static constexpr size_t ARGC = 206;
   static constexpr size_t NUM_PDU_WARM_TPC_SHAPER = 6;
-  static constexpr size_t NUM_ERROR_FLAGS = 4;
+  static constexpr size_t NUM_ERROR_FLAGS = ErrorManager::NUM_ERROR_FLAGS;
 
 private:
   uint16_t lastCommandCodeHub_ = 0;
@@ -74,45 +75,45 @@ private:
   uint16_t pduMainDCDCTemp_ = 0;
 
   // MHADC
-  uint16_t rtdGondolaFrame1_;
-  uint16_t rtdGondolaFrame2_;
-  uint16_t rtdGondolaFrame3_;
-  uint16_t rtdGondolaFrame4_;
-  uint16_t rtdDaqCrate1_;
-  uint16_t rtdDaqCrate2_;
-  uint16_t rtdDaqCrateBackup_;
-  uint16_t rtdShaperFaradayCage1_;
-  uint16_t rtdShaperFaradayCage2_;
-  uint16_t rtdShaperBoard1_;
-  uint16_t rtdShaperBoard2_;
-  uint16_t rtdShaperBoard3_;
-  uint16_t rtdShaperBoard4_;
-  uint16_t rtdShaperBoard5_;
-  uint16_t rtdShaperBoard6_;
-  uint16_t rtdHubComputerLocation1_;
-  uint16_t rtdHubComputerLocation2_;
-  uint16_t rtdTofFpgas_;
-  uint16_t rtdTof2_;
-  uint16_t rtdSealedEnclosure1WaterTank_;
-  uint16_t rtdSealedEnclosureLocation2_;
-  uint16_t rtdVacuumJacket1_;
-  uint16_t rtdVacuumJacket2_;
-  uint16_t rtdVacuumJacket3_;
-  uint16_t pressureRegulator_;
-  uint16_t pressureTransducer_;
-  uint16_t liquidLevelMeter_;
-  uint16_t inclinometer_;
+  uint16_t rtdGondolaFrame1_ = 0;
+  uint16_t rtdGondolaFrame2_ = 0;
+  uint16_t rtdGondolaFrame3_ = 0;
+  uint16_t rtdGondolaFrame4_ = 0;
+  uint16_t rtdDaqCrate1_ = 0;
+  uint16_t rtdDaqCrate2_ = 0;
+  uint16_t rtdDaqCrateBackup_ = 0;
+  uint16_t rtdShaperFaradayCage1_ = 0;
+  uint16_t rtdShaperFaradayCage2_ = 0;
+  uint16_t rtdShaperBoard1_ = 0;
+  uint16_t rtdShaperBoard2_ = 0;
+  uint16_t rtdShaperBoard3_ = 0;
+  uint16_t rtdShaperBoard4_ = 0;
+  uint16_t rtdShaperBoard5_ = 0;
+  uint16_t rtdShaperBoard6_ = 0;
+  uint16_t rtdHubComputerLocation1_ = 0;
+  uint16_t rtdHubComputerLocation2_ = 0;
+  uint16_t rtdTofFpgas_ = 0;
+  uint16_t rtdTof2_ = 0;
+  uint16_t rtdSealedEnclosure1WaterTank_ = 0;
+  uint16_t rtdSealedEnclosureLocation2_ = 0;
+  uint16_t rtdVacuumJacket1_ = 0;
+  uint16_t rtdVacuumJacket2_ = 0;
+  uint16_t rtdVacuumJacket3_ = 0;
+  uint16_t pressureRegulator_ = 0;
+  uint16_t pressureTransducer_ = 0;
+  uint16_t liquidLevelMeter_ = 0;
+  uint16_t inclinometer_ = 0;
   std::array<uint16_t, NUM_RTD_IN_CHAMBER> rtdsInsideChamber_ = {0};
   std::array<uint16_t, 11> spare_ = {0};
 
   //Tof bias
-  std::array<uint16_t, NUM_TOF_BIAS> tofBiasVoltage_;
-  std::array<uint16_t, NUM_TOF_BIAS> tofBiasSetting_;
+  std::array<uint16_t, NUM_TOF_BIAS> tofBiasVoltage_ = {0};
+  std::array<uint16_t, NUM_TOF_BIAS> tofBiasSetting_ = {0};
 
   //Hub computer
-  std::array<uint32_t, NUM_ERROR_FLAGS> hubComputerErrorFlags_;
-  uint16_t storageSize_;
-  uint16_t cpuTemperature_;
+  std::array<uint32_t, NUM_ERROR_FLAGS> hubComputerErrorFlags_= {0};
+  uint16_t storageSize_ = 0;
+  uint16_t cpuTemperature_ = 0;
 
 protected:
   bool interpret() override;

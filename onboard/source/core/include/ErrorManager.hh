@@ -93,25 +93,26 @@ enum class ErrorType {
 };
 class ErrorManager {
 public:
+  static constexpr int NUM_ERROR_FLAGS = 4;
   ErrorManager();
   void resetError();
   void setError(ErrorType v);
   static int strToBit(const std::string &s);
   static std::string bitToStr(int v);
 
-  std::array<uint32_t, 3> ErrorCode() { return errorCode_; }
+  std::array<uint32_t, NUM_ERROR_FLAGS> ErrorCode() { return errorCode_; }
   uint32_t ErrorCode(int i) {
-    if (i < 0 || i > 2) {
+    if (i < 0 || i > NUM_ERROR_FLAGS - 1) {
       std::cerr << "ErrorManager::ErrorCode: Index out of range. Returning 0." << std::endl;
       return 0;
     }
     return errorCode_[i];
   }
-  void SetErrorCode(std::array<uint32_t, 3> v) { errorCode_ = v; }
+  void SetErrorCode(std::array<uint32_t, NUM_ERROR_FLAGS> v) { errorCode_ = v; }
   void PrintError();
 
 private:
-  std::array<uint32_t, 3> errorCode_ = {0, 0, 0};
+  std::array<uint32_t, NUM_ERROR_FLAGS> errorCode_ = {0};
 
 public:
   static ErrorType GetDaqComErrorType(Subsystem subsystem, bool is_command) {
