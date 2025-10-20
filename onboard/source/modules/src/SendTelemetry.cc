@@ -48,6 +48,16 @@ ANLStatus SendTelemetry::mod_initialize() {
     return AS_ERROR;
   }
   telemdef_ = std::make_shared<HubHKTelemetry>(true);
+  if (saveTelemetry_) {
+    telemetrySaver_ = std::make_shared<CommunicationSaver<std::string>>();
+  }
+  if (telemetrySaver_) {
+    telemetrySaver_->setBinaryFilenameBase(binaryFilenameBase_);
+    if (runIDManager_) {
+      telemetrySaver_->setRunID(runIDManager_->RunID());
+      telemetrySaver_->setTimeStampStr(runIDManager_->TimeStampStr());
+    }
+  }
   return AS_OK;
 }
 
@@ -60,7 +70,7 @@ ANLStatus SendTelemetry::mod_analyze() {
   }
   telemdef_->setCurrentTime();
   telemdef_->setIndex(telemIndex_);
-  for (int i = 0; i < HubHKTelemetry::NUM_ERROR_FLAGS; i++) {
+  for (int i = 0; i < static_cast<int>(HubHKTelemetry::NUM_ERROR_FLAGS); i++) {
     telemdef_->setHubComputerErrorFlags(i, errorManager_->ErrorCode(i));
   }
   telemdef_->setRunID(runIDManager_->RunID());
@@ -75,8 +85,8 @@ ANLStatus SendTelemetry::mod_analyze() {
       std::cerr << "Error in SendTelemetry::mod_analyze: Publishing MQTT failed.Error Message: " << mosqpp::strerror(status) << std::endl;
       errorManager_->setError(ErrorType::MQTT_COM_ERROR);
     }
-    if (saveTelemetry_) {
-      writeTelemetryToFile(failed);
+    if (saveTelemetry_ && telemetrySaver_) {
+      telemetrySaver_->writeCommandToFile(failed, telemetryStr_);
     }
   }
 
@@ -93,32 +103,6 @@ ANLStatus SendTelemetry::mod_analyze() {
 
 ANLStatus SendTelemetry::mod_finalize() {
   return AS_OK;
-}
-
-void SendTelemetry::writeTelemetryToFile(bool failed) {
-  const bool app = true;
-  int run_id = 0;
-  if (fileEventCnt_ >= numTelemPerFile_) {
-    fileEventCnt_ = 0;
-    fileIndex_++;
-  }
-  std::string time_stamp_str = "YYYYMMDDHHMMSS";
-  if (runIDManager_) {
-    run_id = runIDManager_->RunID();
-    time_stamp_str = runIDManager_->TimeStampStr();
-  }
-  std::ostringstream id_sout;
-  id_sout << std::setfill('0') << std::right << std::setw(6) << fileIndex_;
-  const std::string id_str = id_sout.str();
-  std::ostringstream run_id_sout;
-  run_id_sout << std::setfill('0') << std::right << std::setw(6) << run_id;
-  const std::string run_id_str = run_id_sout.str();
-  const std::string filename = binaryFilenameBase_ + "_" + run_id_str + "_" + time_stamp_str + "_" + id_str + ".dat";
-  if (!telemetryFile_) {
-    telemetryFile_ = new std::ofstream(filename, std::ios::app);
-  }
-  telemdef_->write(*telemetryFile_);
-  fileEventCnt_++;
 }
 
 } // namespace gramsballoon::pgrams

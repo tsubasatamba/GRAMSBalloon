@@ -61,7 +61,6 @@ private:
   bool saveTelemetry_ = true;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 100;
-  std::string timeStampStr_ = "";
   int chatter_ = 0;
   std::string runIDFilename_;
   int currentRunID_ = -1;

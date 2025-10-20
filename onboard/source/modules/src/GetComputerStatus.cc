@@ -1,4 +1,5 @@
-#include "GetRaspiStatus.hh"
+#ifdef USE_SYSTEM_MODULES
+#include "GetComputerStatus.hh"
 #include <sys/vfs.h>
 #include <fstream>
 
@@ -77,3 +78,4 @@ int GetComputerStatus::getCapacity()
 }
 
 } /* namespace gramsballoon */
+#endif

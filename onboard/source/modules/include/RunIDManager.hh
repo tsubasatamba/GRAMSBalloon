@@ -29,12 +29,12 @@ protected:
 
 public:  
   anlnext::ANLStatus mod_define() override;
-  anlnext::ANLStatus mod_initialize() override;
+  anlnext::ANLStatus mod_pre_initialize() override;
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  int RunID() { return singleton_self()->runID_; }
-  std::string TimeStampStr() { return singleton_self()->timeStampStr_; }
+  int RunID() const { return singleton_self()->runID_; }
+  std::string TimeStampStr() const { return singleton_self()->timeStampStr_; }
 
 private:
   int runID_ = 0;

@@ -14,6 +14,11 @@ ANLStatus DividePacket::mod_define() {
   set_parameter_description("Packet codes for overwriting packets");
   define_parameter("maxPacketSize", &mod_class::maxPacketSize_);
   set_parameter_description("Maximum packet size to publish (in bytes)");
+  define_parameter("save_status", &mod_class::saveStatus_);
+  define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
+  set_parameter_description("Base name for the binary files to save the received status.");
+  define_parameter("num_status_per_file", &mod_class::numStatusPerFile_);
+  set_parameter_description("Number of status messages to save per binary file.");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
@@ -27,6 +32,21 @@ ANLStatus DividePacket::mod_initialize() {
     return AS_ERROR;
   }
   index_ = 0;
+  if (saveStatus_) {
+    statusSaver_ = std::make_shared<CommunicationSaver<std::vector<uint8_t>>>();
+  }
+  if (statusSaver_) {
+    if (exist_module("RunIDManager")) {
+      const RunIDManager *runIDManager = nullptr;
+      get_module("RunIDManager", &runIDManager);
+      if (statusSaver_) {
+        statusSaver_->setRunID(runIDManager->RunID());
+        statusSaver_->setTimeStampStr(runIDManager->TimeStampStr());
+      }
+    }
+    statusSaver_->setBinaryFilenameBase(binaryFilenameBase_);
+    statusSaver_->setNumCommandPerFile(numStatusPerFile_);
+  }
 
   return AS_OK;
 }
@@ -96,6 +116,9 @@ ANLStatus DividePacket::mod_analyze() {
         }
         std::cout << std::endl;
       }
+      if (statusSaver_ && saveStatus_) {
+        statusSaver_->writeCommandToFile(false, currentPacket_);
+      }
       PushCurrentVector();
       currentPacket_.clear();
       lastPacketSize_ = 0;
@@ -105,6 +128,9 @@ ANLStatus DividePacket::mod_analyze() {
       currentPacket_.push_back(byte);
       size_t new_sz = currentPacket_.size();
       if (new_sz >= 4 && currentPacket_[new_sz - 4] == 0xC5 && currentPacket_[new_sz - 3] == 0xA4 && currentPacket_[new_sz - 2] == 0xD2 && currentPacket_[new_sz - 1] == 0x79) {
+        if (statusSaver_ && saveStatus_) {
+          statusSaver_->writeCommandToFile(true, currentPacket_);
+        }
         PushCurrentVector();
         currentPacket_.clear();
         lastPacketSize_ = 0;

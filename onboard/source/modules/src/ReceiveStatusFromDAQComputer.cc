@@ -10,6 +10,12 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_define() {
   define_parameter("dead_communication_time", &mod_class::deadCommunicationTime_);
   set_parameter_description("Time in milliseconds to consider the communication dead if no data is received.");
   set_parameter_unit(1.0, "ms");
+  define_parameter("save_status", &mod_class::saveStatus_);
+  set_parameter_description("Whether to save the received status to a binary file.");
+  define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
+  set_parameter_description("Base name for the binary files to save the received status.");
+  define_parameter("num_status_per_file", &mod_class::numStatusPerFile_);
+  set_parameter_description("Number of status messages to save per binary file.");
   define_parameter("subsystem", &mod_class::subsystemInt_);
   return AS_OK;
 }
@@ -37,6 +43,19 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_initialize() {
     }
   }
   deadCommunicationTimeChrono_ = std::chrono::milliseconds(deadCommunicationTime_);
+  if (saveStatus_) {
+    statusSaver_ = std::make_shared<CommunicationSaver<std::vector<uint8_t>>>();
+  }
+  if (statusSaver_) {
+    statusSaver_->setBinaryFilenameBase(binaryFilenameBase_);
+    statusSaver_->setNumCommandPerFile(numStatusPerFile_);
+    if (exist_module("RunIDManager")) {
+      const RunIDManager *runIDManager = nullptr;
+      get_module("RunIDManager", &runIDManager);
+      statusSaver_->setRunID(runIDManager->RunID());
+      statusSaver_->setTimeStampStr(runIDManager->TimeStampStr());
+    }
+  }
   return AS_OK;
 }
 ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
@@ -77,6 +96,11 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
       buffer_for_display->insert(buffer_for_display->end(), bufTmp_.begin(), bufTmp_.begin() + result);
     }
     lastReceivedTime_ = now;
+    if (saveStatus_) {
+      if (statusSaver_) {
+        statusSaver_->writeCommandToFile(false, bufTmp_);
+      }
+    }
   }
   else if (result != 0) {
     std::cout << "Error in " << module_id() << "::mod_analyze: receiving data failed. error code = " << errno << "(" << strerror(errno) << ")" << std::endl;

@@ -26,7 +26,7 @@ class MyApp < ANL::ANLApp
   chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_HK"
   with_parameters(topic: "Hub_Telemetry", chatter: 0)
   chain GRAMSBalloon::InterpretHKTelemetry, "InterpretHKTelemetry"
-  with_parameters(receiver_module_name: "ReceiveTelemetry_HK", save_telemetry: true, num_telem_per_file: 1000, chatter: 2)
+  with_parameters(receiver_module_name: "ReceiveTelemetry_HK", run_ID_filename: ENV["HOME"] + "/settings/run_id/run_id_ground.txt", save_telemetry: true, num_telem_per_file: 1000, chatter: 2)
   chain GRAMSBalloon::Sleep
   with_parameters(sleep_sec:1)
   end

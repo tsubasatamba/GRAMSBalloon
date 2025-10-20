@@ -36,6 +36,8 @@ private:
   DistributeCommand *distributeCommand_ = nullptr;
   std::string distributeCommandName_ = "DistributeCommand";
   SendTelemetry *sendTelemetry_ = nullptr;
+  int subsystemInt_ = 0;
+  Subsystem subsystem_ = Subsystem::UNKNOWN;
   std::shared_ptr<std::chrono::time_point<std::chrono::high_resolution_clock>> lastTime_ = nullptr;
   int durationBetweenHeartbeat_ = 800; // ms
   std::shared_ptr<std::chrono::milliseconds> durationBetweenHeartbeatChrono_ = nullptr;

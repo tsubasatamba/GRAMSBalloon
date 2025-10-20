@@ -1,6 +1,7 @@
 #ifndef DivideCommand_hh
 #define DivideCommand_hh 1
 #include "CommunicationFormat.hh"
+#include "CommunicationSaver.hh"
 #include "IridiumPacketPool.hh"
 #include "ReceiveStatusFromDAQComputer.hh"
 #include "anlnext/BasicModule.hh"
@@ -12,6 +13,8 @@ namespace gramsballoon::pgrams {
 class ReceiveStatusFromDAQComputer;
 class IridiumPacketPool;
 class BaseTelemetryDefinition;
+template <typename T>
+class CommunicationSaver;
 class DividePacket: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(DividePacket, 1.0);
   ENABLE_PARALLEL_RUN();
@@ -92,6 +95,10 @@ private:
   uint16_t currentCode_ = 0;
   bool inError_ = false;
   static constexpr int MAX_BYTES = 1024;
+  std::shared_ptr<CommunicationSaver<std::vector<uint8_t>>> statusSaver_ = nullptr;
+  bool saveStatus_ = false;
+  std::string binaryFilenameBase_ = "status";
+  int numStatusPerFile_ = 100;
   Subsystem subsystem_ = Subsystem::UNKNOWN;
 };
 } // namespace gramsballoon::pgrams

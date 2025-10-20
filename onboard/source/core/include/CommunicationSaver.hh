@@ -26,6 +26,7 @@ public:
     run_id_sout << std::setfill('0') << std::right << std::setw(6) << runId;
     runIdStr_ = run_id_sout.str();
   }
+  void setTimeStampStr(const std::string &timeStamp) { timeStampStr_ = timeStamp; }
 
 private:
   void write(std::ofstream *file, const ContentType &command);
@@ -47,7 +48,7 @@ CommunicationSaver<ContentType>::~CommunicationSaver() {
 template <typename ContentType>
 std::unique_ptr<std::ofstream> CommunicationSaver<ContentType>::openFile(int type, const std::string &type_str) {
   std::ostringstream filename_sout;
-  filename_sout << binaryFilenameBase_ << "_" << runIdStr_ << "_" << timeStampStr_ << "_" << type_str << "_" << std::setfill('0') << std::right << std::setw(6) << std::get<0>(fileMap_[type]);
+  filename_sout << binaryFilenameBase_ << "_" << runIdStr_ << "_" << timeStampStr_ << "_" << type_str << "_" << std::setfill('0') << std::right << std::setw(6) << std::get<0>(fileMap_[type]) << ".dat";
   return std::make_unique<std::ofstream>(filename_sout.str(), std::ios::binary);
 }
 template <typename ContentType>

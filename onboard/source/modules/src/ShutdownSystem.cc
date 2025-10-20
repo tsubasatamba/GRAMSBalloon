@@ -1,3 +1,4 @@
+#ifdef USE_SYSTEM_MODULES
 #include "ShutdownSystem.hh"
 #include <string.h>
 #include <errno.h>
@@ -179,3 +180,4 @@ void ShutdownSystem::setSoftwareStop(bool v)
 
 
 } /* namespace gramsballoon */
+#endif

@@ -1,10 +1,18 @@
 #include "ReceiveCommand.hh"
+#include "CommunicationCodes.hh"
 #include "TerminalColoring.hh"
 #include <chrono>
 #include <thread>
 using namespace anlnext;
+using namespace pgrams::communication;
 namespace gramsballoon::pgrams {
-
+inline bool error_in_shutdown_system_not_enabled(SendTelemetry *sendtelemetry, const std::string &module_id) {
+  std::cerr << module_id << termutil::red << "[error]" << termutil::reset << "ShutdownSystem module is not enabled." << std::endl;
+  if (sendtelemetry) {
+    sendtelemetry->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
+  }
+  return false;
+}
 ReceiveCommand::ReceiveCommand() {
   binaryFilenameBase_ = "Command";
   topic_ = "command";
@@ -63,6 +71,13 @@ ANLStatus ReceiveCommand::mod_initialize() {
     std::cerr << "Error in ReceiveCommand::mod_initialize: Subscribing MQTT failed. Error Message: " << mosqpp::strerror(sub_result) << std::endl;
     if (sendTelemetry_) {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MQTT_COM_ERROR);
+    }
+  }
+  if (saveCommand_) {
+    commandSaver_->setBinaryFilenameBase(binaryFilenameBase_);
+    if (runIDManager_) {
+      commandSaver_->setRunID(runIDManager_->RunID());
+      commandSaver_->setTimeStampStr(runIDManager_->TimeStampStr());
     }
   }
   return AS_OK;
@@ -133,19 +148,122 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
       std::cout << "arguments[" << i << "]: " << arguments[i] << std::endl;
     }
   }
-  if (code == 900 && argc == 0) {
+
+  if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Dummy1) && argc == 0) {
     std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Dummy0 command received." << std::endl;
     return true;
   }
-
-  if (code == 901 && argc == 1) {
-    std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Dummy1 command received." << std::endl;
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Dummy2) && argc == 1) {
+    std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Dummy1 command received. Argument: " << arguments[0] << std::endl;
     return true;
   }
-
-  if (code == 902 && argc == 0) {
-    std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Dummy2 command received." << std::endl;
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Prepare_Shutdown) && argc == 0) {
+#ifdef USE_SYSTEM_MODULES
+    if (shutdownSystem_) {
+      shutdownSystem_->prepareShutdown();
+    }
+    else {
+      std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;
+      if (sendTelemetry_) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::SHUTDOWN_REJECTED);
+        return false;
+      }
+    }
     return true;
+#else
+    return error_in_shutdown_system_not_enabled(sendTelemetry_, module_id());
+#endif
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Exec_Shutdown) && argc == 0) {
+#ifdef USE_SYSTEM_MODULES
+    if (shutdownSystem_) {
+      shutdownSystem_->execShutdown();
+    }
+    else {
+      std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;
+      if (sendTelemetry_) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::SHUTDOWN_REJECTED);
+        return false;
+      }
+    }
+    return true;
+#else
+    return error_in_shutdown_system_not_enabled(sendTelemetry_, module_id());
+#endif
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Prepare_Restart) && argc == 0) {
+#ifdef USE_SYSTEM_MODULES
+    if (shutdownSystem_) {
+      shutdownSystem_->prepareRestart();
+    }
+    else {
+      std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;
+      if (sendTelemetry_) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::REBOOT_REJECTED);
+        return false;
+      }
+    }
+    return true;
+#else
+    return error_in_shutdown_system_not_enabled(sendTelemetry_, module_id());
+#endif
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Exec_Restart) && argc == 0) {
+#ifdef USE_SYSTEM_MODULES
+    if (shutdownSystem_) {
+      shutdownSystem_->execRestart();
+    }
+    else {
+      std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;
+      if (sendTelemetry_) {
+        sendTelemetry_->getErrorManager()->setError(ErrorType::REBOOT_REJECTED);
+        return false;
+      }
+    }
+    return true;
+#else
+    return error_in_shutdown_system_not_enabled(sendTelemetry_, module_id());
+#endif
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Emergency_Daq_shutdown) && argc == 0) {
+    if (chatter_ >= 1) {
+      std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Emergency Daq Shutdown command received." << std::endl;
+    }
+    // TODO: Implement emergency DAQ shutdown procedure
+    return true;
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Reset_Error) && argc == 0) {
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->resetError();
+      if (chatter_ >= 1) {
+        std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Reset Error command received. All errors cleared." << std::endl;
+      }
+    }
+    return true;
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::TOF_Bias_ON) && argc == 1) {
+    if (chatter_ >= 1) {
+      std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": TOF Bias ON command received. Index: " << arguments[0] << std::endl;
+    }
+    // TODO: Implement handling
+    return true;
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::TOF_Bias_OFF) && argc == 1) {
+    if (chatter_ >= 1) {
+      std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": TOF Bias OFF command received. Index: " << arguments[0] << std::endl;
+    }
+    //TODO: Implement handling
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::TOF_Bias_Set_Voltage) && argc == 2) {
+    if (chatter_ >= 1) {
+      std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": TOF Bias Set Voltage command received. Index: " << arguments[0] << ", Voltage: " << arguments[1] << std::endl;
+    }
+    //TODO: Implement handling
+    return true;
+  }
+  else {
+    std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": Unknown command received. Code: " << code << ", Argc: " << argc << std::endl;
+    return false;
   }
 
   return false;

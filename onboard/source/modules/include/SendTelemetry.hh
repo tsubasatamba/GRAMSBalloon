@@ -11,8 +11,9 @@
 #define SendTelemetry_H 1
 
 #include "BaseTelemetryDefinition.hh"
+#include "CommunicationSaver.hh"
 #include "ErrorManager.hh"
-#include "GetRaspiStatus.hh"
+#include "GetComputerStatus.hh"
 #include "HubHKTelemetry.hh"
 #include "MeasureOrientationByMHADC.hh"
 #include "MosquittoManager.hh"
@@ -42,9 +43,11 @@ class MeasureOrientationByMHADC;
 class BaseTelemetryDefinition;
 class HubHKtelemetry;
 class ErrorManager;
+template <typename T>
+class CommunicationSaver;
 
 class SendTelemetry: public anlnext::BasicModule {
-  DEFINE_ANL_MODULE(SendTelemetry, 3.0);
+  DEFINE_ANL_MODULE(SendTelemetry, 3.1);
   ENABLE_PARALLEL_RUN();
 
 public:
@@ -60,29 +63,23 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void writeTelemetryToFile(bool failed);
-
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
   int TelemetryType() { return singleton_self()->telemetryType_; }
 
   ErrorManager *getErrorManager() { return (singleton_self()->errorManager_).get(); }
-  int WfDivisionCounter() { return singleton_self()->wfDivisionCounter_; }
 
 private:
   std::shared_ptr<HubHKTelemetry> telemdef_ = nullptr;
   int telemetryType_ = 1;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
-  int fileEventCnt_ = 0;
-  int fileIndex_ = 0;
   bool saveTelemetry_ = true;
+  std::shared_ptr<CommunicationSaver<std::string>> telemetrySaver_ = nullptr;
   uint32_t telemIndex_ = 0;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 1000;
   int sleepms_ = 500;
-  int wfDivisionCounter_ = 0;
   int chatter_ = 0;
   std::string telemetryStr_ = "";
-  std::ofstream *telemetryFile_ = nullptr;
 
   // access to other classes
   ReceiveCommand *receiveCommand_ = nullptr;

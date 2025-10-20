@@ -11,6 +11,7 @@ ANLStatus SendCommandToDAQComputer::mod_define() {
   define_parameter("duration_between_heartbeat", &mod_class::durationBetweenHeartbeat_);
   set_parameter_description("Duration between heartbeat in ms");
   set_parameter_unit(1.0, "ms");
+  define_parameter("subsystem", &mod_class::subsystemInt_);
   define_parameter("chatter", &mod_class::chatter_);
   set_parameter_description("Chatter level");
   return AS_OK;
@@ -40,6 +41,7 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
     }
   }
+  subsystem_ = magic_enum::enum_cast<Subsystem>(subsystemInt_).value_or(Subsystem::UNKNOWN);
   durationBetweenHeartbeatChrono_ = std::make_shared<std::chrono::milliseconds>(durationBetweenHeartbeat_);
   heartbeat_ = std::make_shared<CommunicationFormat>();
   if (heartbeat_) {
@@ -111,6 +113,10 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
   const int send_result = socketCommunicationManager_->sendAndWaitForAck(m_sptr->payload); // TODO: this depends on telemetry definition.
   if (send_result < 0) {
     std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending command is failed" << std::endl;
+    failed_ = true;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorManager::GetDaqComErrorType(subsystem_, true));
+    }
   }
   else if (chatter_ > 0) {
     std::cout << "Sent data from " << m_sptr->topic << std::endl;

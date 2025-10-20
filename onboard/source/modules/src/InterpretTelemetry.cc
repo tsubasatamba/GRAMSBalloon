@@ -29,7 +29,6 @@ ANLStatus InterpretTelemetry<TelemType>::mod_define() {
 
 template <typename TelemType>
 ANLStatus InterpretTelemetry<TelemType>::mod_initialize() {
-  timeStampStr_ = getTimeStr();
   if (exist_module(receiverModuleName_)) {
     get_module_NC(receiverModuleName_, &receiver_);
   }
@@ -42,6 +41,7 @@ ANLStatus InterpretTelemetry<TelemType>::mod_initialize() {
   telemetrySaver_->setNumCommandPerFile(numTelemPerFile_);
   telemetrySaver_->setBinaryFilenameBase(binaryFilenameBase_);
   telemetrySaver_->setRunID(0); // dummy
+  telemetrySaver_->setTimeStampStr(getTimeStr());
   return AS_OK;
 }
 

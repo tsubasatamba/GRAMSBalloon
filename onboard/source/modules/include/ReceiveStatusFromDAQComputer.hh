@@ -59,6 +59,10 @@ private:
   std::chrono::milliseconds deadCommunicationTimeChrono_;
   std::chrono::time_point<std::chrono::steady_clock> lastReceivedTime_;
   static constexpr int MAX_BYTES = 1024;
+  bool saveStatus_ = false;
+  std::shared_ptr<CommunicationSaver<std::vector<uint8_t>>> statusSaver_ = nullptr;
+  std::string binaryFilenameBase_ = "";
+  int numStatusPerFile_ = 100;
   int subsystemInt_ = 1;
   Subsystem subsystem_ = Subsystem::UNKNOWN;
 };

@@ -1,12 +1,12 @@
 #ifndef ShutdownSystem_H
 #define ShutdownSystem_H 1
-
+#ifdef USE_SYSTEM_MODULES
 /**
  * Test module for shutdown system
  * @author Shota Arai, Tsubasa Tamba
  * @date 2023-04-16
  */
-#ifdef USE_SYSTEM_MODULES
+
 #include "SendTelemetry.hh"
 #include <anlnext/BasicModule.hh>
 #include <linux/reboot.h>
@@ -60,6 +60,5 @@ private:
 };
 
 } /* namespace gramsballoon */
-
 #endif /* USE_SYSTEM_MODULES */
 #endif /*ShutdownSystem_H*/
