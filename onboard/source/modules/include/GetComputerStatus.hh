@@ -51,6 +51,8 @@ private:
   uint64_t capacityFree_ = 0;
   uint64_t capacityAll_ = 0;
   uint64_t ramUsage_ = 0;
+  uint64_t ramAvail_ = 0;
+  uint64_t ramTotal_ = 0;
   SendTelemetry *sendTelemetry_ = nullptr;
   int chatter_ = 0;
 };

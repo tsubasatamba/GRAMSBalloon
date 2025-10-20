@@ -51,12 +51,19 @@ ANLStatus GetComputerStatus::mod_analyze()
     }
   }
   const int status2 = getRAMUsage();
-  
+  if (status2 != 0) {
+    std::cerr << "Error in GetComputerStatus::mod_analyze()" << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::GET_MEM_ERROR);
+    }
+  }
   if (chatter_>=1) {
     constexpr uint64_t one = 1;
     std::cout << "CPU Temperature (degreeC): " << CPUTemperature_ << std::endl;
     std::cout << "Free size (MB): " << capacityFree_ / (one<<20) << std::endl;
     std::cout << "All size (MB): " << capacityAll_ / (one<<20) << std::endl;
+    std::cout << "RAM size (MB): " << ramTotal_ / (one<<10) << std::endl;
+    std::cout << "RAM available (MB): " << ramAvail_ / (one<<10) << std::endl;
     std::cout << "RAM usage (MB): " << ramUsage_ / (one<<10) << std::endl;
   }
 
@@ -89,13 +96,29 @@ int GetComputerStatus::getRAMUsage(){
     return -1;
   }
   std::string memstr, key, unit;
+  uint8_t mem_set = 0;
   while (true) {
+    if (mem_set == 3) {
+      ramUsage_ = ramTotal_ - ramAvail_;
+      return 0;
+    }
     ifmem >> key >> memstr >> unit;
     if (ifmem.eof()) break;
-    if (key.find("MemAvailable:")) {
+    if (key.find("MemTotal:") != std::string::npos) {
       try {
-        ramUsage_ = std::stoll(memstr);
-        break;
+        ramTotal_ = std::stoll(memstr);
+        mem_set |= 2U; // MemTotal: bit 1
+      }
+      catch (...) {
+        std::cerr << "failed parse MemTotal value" << std::endl;
+        return -1;
+      }
+    }
+    else if (key.find("MemAvailable:") != std::string::npos) {
+      try {
+        ramAvail_ = std::stoll(memstr);
+        mem_set |= 1U; // MemAvailable: bit 0
+        continue;
       }
       catch (...) {
         std::cerr << "failed parse MemAvailable value" << std::endl;
