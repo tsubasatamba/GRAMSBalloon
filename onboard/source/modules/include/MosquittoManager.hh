@@ -6,10 +6,9 @@
 #include "anlnext/BasicModule.hh"
 #include <string>
 
-namespace gramsballoon {
-class SendTelemetry;
-} // namespace gramsballoon
 namespace gramsballoon::pgrams {
+class SendTelemetry;
+
 /**
  * Module for managing Mosquitto
  * @author Shota Arai

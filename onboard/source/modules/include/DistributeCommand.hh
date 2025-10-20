@@ -16,12 +16,11 @@
 #include <arpa/inet.h>
 #include <map>
 #include <string>
-namespace gramsballoon {
-class SendTelemetry;
-} // namespace gramsballoon
 namespace gramsballoon::pgrams {
+class SendTelemetry;
 template <typename T>
 class MosquittoManager;
+
 class DistributeCommand: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(DistributeCommand, 2.0);
   ENABLE_PARALLEL_RUN();

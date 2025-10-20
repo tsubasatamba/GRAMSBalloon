@@ -5,11 +5,12 @@
 
 using namespace anlnext;
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
 GetComputerStatus::GetComputerStatus()
 {
   tempFile_ = "/sys/class/thermal/thermal_zone0/temp";
+  memFile_ = "/proc/meminfo";
   path_ = "/";
 }
 
@@ -18,6 +19,7 @@ GetComputerStatus::~GetComputerStatus() = default;
 ANLStatus GetComputerStatus::mod_define()
 {
   define_parameter("temperature_filename", &mod_class::tempFile_);
+  define_parameter("memory_filename", &mod_class::memFile_);
   define_parameter("path", &mod_class::path_);
   define_parameter("chatter", &mod_class::chatter_);
 
@@ -45,14 +47,17 @@ ANLStatus GetComputerStatus::mod_analyze()
   if (status != 0) {
     std::cerr << "Error in GetComputerStatus::mod_analyze()" << std::endl;
     if (sendTelemetry_) {
-      sendTelemetry_->getErrorManager()->setError(ErrorType::GET_SD_CAPACITY_ERROR);
+      sendTelemetry_->getErrorManager()->setError(ErrorType::GET_CAPACITY_ERROR);
     }
   }
+  const int status2 = getRAMUsage();
   
   if (chatter_>=1) {
-    uint64_t one = 1;
+    constexpr uint64_t one = 1;
+    std::cout << "CPU Temperature (degreeC): " << CPUTemperature_ << std::endl;
     std::cout << "Free size (MB): " << capacityFree_ / (one<<20) << std::endl;
     std::cout << "All size (MB): " << capacityAll_ / (one<<20) << std::endl;
+    std::cout << "RAM usage (MB): " << ramUsage_ / (one<<10) << std::endl;
   }
 
   return AS_OK;
@@ -72,10 +77,33 @@ int GetComputerStatus::getCapacity()
     std::cerr << "failed in get_freesize(). Code: " << rslt << std::endl;
     return -1;
   }
-  capacityFree_ = capacity.f_bfree * capacity.f_bsize;
+  capacityFree_ = capacity.f_bavail * capacity.f_bsize;
   capacityAll_ = capacity.f_blocks * capacity.f_bsize;
   return 0;
 }
 
+int GetComputerStatus::getRAMUsage(){
+  std::ifstream ifmem(memFile_);
+  if (!ifmem) {
+    std::cerr << "Failed to open memory file: " << memFile_ << std::endl;
+    return -1;
+  }
+  std::string memstr, key, unit;
+  while (true) {
+    ifmem >> key >> memstr >> unit;
+    if (ifmem.eof()) break;
+    if (key.find("MemAvailable:")) {
+      try {
+        ramUsage_ = std::stoll(memstr);
+        break;
+      }
+      catch (...) {
+        std::cerr << "failed parse MemAvailable value" << std::endl;
+        return -1;
+      }
+    }
+  }
+  return -1;
+}
 } /* namespace gramsballoon */
 #endif

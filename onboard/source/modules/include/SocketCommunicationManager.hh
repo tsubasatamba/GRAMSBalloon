@@ -12,16 +12,15 @@
 #include "SocketCommunicationServer.hh"
 #include "anlnext/BasicModule.hh"
 #include <optional>
-namespace gramsballoon {
-class SendTelemetry;
-}
 namespace gramsballoon::pgrams {
+class SendTelemetry;
 enum class AcknowledgementType {
   SIZE = 0,
   RAW = 1,
   NONE = 2
 };
 class IoContextManager;
+
 class SocketCommunicationManager: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(SocketCommunicationManager, 1.0);
   ENABLE_PARALLEL_RUN();

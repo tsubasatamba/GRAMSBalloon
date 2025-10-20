@@ -13,10 +13,8 @@
 #include <sys/reboot.h>
 #include <sys/time.h>
 
-namespace gramsballoon {
-
+namespace gramsballoon::pgrams {
 class SendTelemetry;
-
 class ShutdownSystem: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(ShutdownSystem, 1.0);
   ENABLE_PARALLEL_RUN();

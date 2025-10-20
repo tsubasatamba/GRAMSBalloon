@@ -13,10 +13,10 @@
 #include <anlnext/BasicModule.hh>
 #include <cstdint>
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
 class SendTelemetry;
-
+  
 class GetComputerStatus: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(GetComputerStatus, 1.0);
   ENABLE_PARALLEL_RUN();
@@ -35,6 +35,7 @@ public:
   anlnext::ANLStatus mod_finalize() override;
 
   int getCapacity();
+  int getRAMUsage();
 
   int CPUTemperatureADC() { return singleton_self()->CPUTemperatureADC_; }
   double CPUTemperature() { return singleton_self()->CPUTemperature_; }
@@ -45,9 +46,11 @@ private:
   int CPUTemperatureADC_;
   double CPUTemperature_;
   std::string tempFile_;
+  std::string memFile_;
   std::string path_;
   uint64_t capacityFree_ = 0;
   uint64_t capacityAll_ = 0;
+  uint64_t ramUsage_ = 0;
   SendTelemetry *sendTelemetry_ = nullptr;
   int chatter_ = 0;
 };

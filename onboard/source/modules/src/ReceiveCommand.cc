@@ -160,7 +160,7 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
   else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Prepare_Shutdown) && argc == 0) {
 #ifdef USE_SYSTEM_MODULES
     if (shutdownSystem_) {
-      shutdownSystem_->prepareShutdown();
+      shutdownSystem_->setPrepareShutdown(true);
     }
     else {
       std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;
@@ -177,7 +177,7 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
   else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Exec_Shutdown) && argc == 0) {
 #ifdef USE_SYSTEM_MODULES
     if (shutdownSystem_) {
-      shutdownSystem_->execShutdown();
+      shutdownSystem_->setShutdown(true);
     }
     else {
       std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;
@@ -194,7 +194,7 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
   else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Prepare_Restart) && argc == 0) {
 #ifdef USE_SYSTEM_MODULES
     if (shutdownSystem_) {
-      shutdownSystem_->prepareRestart();
+      shutdownSystem_->setPrepareReboot(true);
     }
     else {
       std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;
@@ -211,7 +211,7 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
   else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Exec_Restart) && argc == 0) {
 #ifdef USE_SYSTEM_MODULES
     if (shutdownSystem_) {
-      shutdownSystem_->execRestart();
+      shutdownSystem_->setReboot(true);
     }
     else {
       std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": ShutdownSystem module not found." << std::endl;

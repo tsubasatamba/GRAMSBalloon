@@ -15,10 +15,8 @@
 #include <memory>
 #include <queue>
 #include <string>
-namespace gramsballoon {
-class SendTelemetry;
-}
 namespace gramsballoon::pgrams {
+class SendTelemetry;
 class SocketCommunicationManager;
 class ReceiveStatusFromDAQComputer: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(ReceiveStatusFromDAQComputer, 1.0);

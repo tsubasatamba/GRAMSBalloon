@@ -12,11 +12,9 @@
 #include "anlnext/BasicModule.hh"
 #include <regex>
 
-namespace gramsballoon {
-class SendTelemetry;
-}
-
 namespace gramsballoon::pgrams {
+class SendTelemetry;
+
 class GetMHADCData: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(GetMHADCData, 1.0);
   ENABLE_PARALLEL_RUN();

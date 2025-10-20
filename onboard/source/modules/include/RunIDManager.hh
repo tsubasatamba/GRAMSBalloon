@@ -12,10 +12,8 @@
 #include <anlnext/BasicModule.hh>
 #include <sys/time.h>
 
-namespace gramsballoon {
-
+namespace gramsballoon::pgrams {
 class SendTelemetry;
-
 class RunIDManager : public anlnext::BasicModule
 {
   DEFINE_ANL_MODULE(RunIDManager, 1.0);

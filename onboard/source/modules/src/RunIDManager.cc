@@ -4,7 +4,7 @@
 
 using namespace anlnext;
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
 RunIDManager::RunIDManager()
 {

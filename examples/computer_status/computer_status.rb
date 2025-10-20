@@ -5,7 +5,8 @@ require 'GRAMSBalloon'
 
 class MyApp < ANL::ANLApp
   def setup()
-    chain GRAMSBalloon::GetRaspiStatus
+    chain GRAMSBalloon::GetComputerStatus
+    with_parameters(chatter: 4)
   end
 end
 

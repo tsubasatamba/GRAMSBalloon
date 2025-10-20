@@ -5,7 +5,7 @@
 
 using namespace anlnext;
 
-namespace gramsballoon {
+namespace gramsballoon::pgrams {
 
 ANLStatus ShutdownSystem::mod_define()
 {

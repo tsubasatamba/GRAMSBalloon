@@ -6,12 +6,11 @@
 #include "SocketCommunicationManager.hh"
 #include "anlnext/BasicModule.hh"
 #include <chrono>
-namespace gramsballoon {
-class SendTelemetry;
-}
 namespace gramsballoon::pgrams {
+class SendTelemetry;
 class SocketCommunicationManager;
 class DistributeCommand;
+
 class SendCommandToDAQComputer: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(SendCommandToDAQComputer, 1.0);
   ENABLE_PARALLEL_RUN();

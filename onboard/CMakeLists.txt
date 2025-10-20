@@ -30,7 +30,7 @@ find_package(Ruby 3.0 REQUIRED)
 
 # ## options
 # # library options
-if (LINUX)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(GB_USE_SYSTEM_MODULES ON)
 else()
   set(GB_USE_SYSTEM_MODULES OFF)

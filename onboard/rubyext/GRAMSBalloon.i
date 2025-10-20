@@ -13,11 +13,9 @@
 #endif
 #ifdef USE_SYSTEM_MODULES
 #include "GetComputerStatus.hh"
-#endif
-#include "ReceiveTelemetry.hh"
-#ifdef USE_RASPISYS
 #include "ShutdownSystem.hh"
 #endif
+#include "ReceiveTelemetry.hh"
 #include "InterpretTelemetry.hh"
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
@@ -71,6 +69,8 @@ public:
 #endif
 
 
+namespace pgrams {
+
 #ifdef USE_SYSTEM_MODULES
 class GetComputerStatus : public anlnext::BasicModule
 {
@@ -78,8 +78,6 @@ public:
   GetComputerStatus();
 };
 #endif
-
-namespace pgrams {
 class ReceiveCommand : public anlnext::BasicModule
 {
 public:
@@ -159,8 +157,6 @@ class InterpretTelemetry : public anlnext::BasicModule
 public:
   InterpretTelemetry();
 };
-} // namespace pgrams
-
 #ifdef USE_SYSTEM_MODULES
 class ShutdownSystem : public anlnext::BasicModule
 {
@@ -168,6 +164,14 @@ public:
   ShutdownSystem();
 };
 #endif
+class RunIDManager : public anlnext::BasicModule
+{
+public:
+  RunIDManager();
+};
+
+} // namespace pgrams
+
 
 
 #ifdef USE_HSQUICKLOOK
@@ -177,12 +181,6 @@ public:
   PushToMongoDB();
 };
 #endif
-
-class RunIDManager : public anlnext::BasicModule
-{
-public:
-  RunIDManager();
-};
 
 //class ReadTelemetry : public anlnext::BasicModule
 //{

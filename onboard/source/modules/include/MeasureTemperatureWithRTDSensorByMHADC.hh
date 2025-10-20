@@ -4,10 +4,9 @@
 #include "GetMHADCData.hh"
 #include "MeasureTemperatureWithRTDSensor.hh"
 #include "SendTelemetry.hh"
-namespace gramsballoon {
-class SendTelemetry;
-} // namespace gramsballoon
 namespace gramsballoon::pgrams {
+class SendTelemetry;
+
 class MeasureTemperatureWithRTDSensorByMHADC: public MeasureTemperatureWithRTDSensor {
   DEFINE_ANL_MODULE(MeasureTemperatureWithRTDSensorByMHADC, 1.0);
   ENABLE_PARALLEL_RUN();

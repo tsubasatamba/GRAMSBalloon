@@ -20,10 +20,9 @@
 #include <sys/select.h>
 #include <sys/time.h>
 namespace gramsballoon {
-
-class ShutdownSystem;
 class RunIDManager;
 namespace pgrams {
+class ShutdownSystem;
 class SendTelemetry;
 template <typename T>
 class CommunicationSaver;

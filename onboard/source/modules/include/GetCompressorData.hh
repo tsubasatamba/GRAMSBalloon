@@ -6,11 +6,9 @@
 #include <regex>
 #include <string>
 #ifdef NOT_USED_MODULE
-namespace gramsballoon {
-class SendTelemetry;
-} // namespace gramsballoon
 
 namespace gramsballoon::pgrams {
+class SendTelemetry;
 class GetCompressorData: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(GetCompressorData, 1.0);
   ENABLE_PARALLEL_RUN();
