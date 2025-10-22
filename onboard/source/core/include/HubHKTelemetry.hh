@@ -106,7 +106,7 @@ private:
 
   //Hub computer
   std::array<uint32_t, NUM_ERROR_FLAGS> hubComputerErrorFlags_ = {0};
-  uint16_t storageSize_ = 0;
+  uint32_t storageSize_ = 0;
   uint16_t cpuTemperature_ = 0;
   uint16_t ramUsage_ = 0;
 
@@ -531,8 +531,8 @@ public:
     return hubComputerErrorFlags_[idx];
   }
 
-  inline void setStorageSize(uint16_t v) { storageSize_ = v; }
-  inline uint16_t StorageSize() const { return storageSize_; }
+  inline void setStorageSize(uint32_t v) { storageSize_ = v; }
+  inline uint32_t StorageSize() const { return storageSize_; }
 
   inline void setCpuTemperature(uint16_t v) { cpuTemperature_ = v; }
   inline uint16_t CpuTemperature() const { return cpuTemperature_; }

@@ -103,9 +103,8 @@ bool HubHKTelemetry::interpret() {
   for (size_t i = 0; i < NUM_ERROR_FLAGS; i++) {
     hubComputerErrorFlags_[i] = static_cast<uint32_t>(contents->getArguments(71 + NUM_TOF_BIAS + i));
   }
-  DivideData(static_cast<uint32_t>(contents->getArguments(71 + NUM_TOF_BIAS + NUM_ERROR_FLAGS)), storageSize_, cpuTemperature_);
-  uint16_t temp;
-  DivideData(static_cast<uint32_t>(contents->getArguments(72 + NUM_TOF_BIAS + NUM_ERROR_FLAGS)), ramUsage_, temp);
+  storageSize_ = contents->getArguments(71 + NUM_TOF_BIAS + NUM_ERROR_FLAGS);
+  DivideData(static_cast<uint32_t>(contents->getArguments(72 + NUM_TOF_BIAS + NUM_ERROR_FLAGS)), cpuTemperature_, ramUsage_);
   return true;
 }
 void HubHKTelemetry::update() {
@@ -198,8 +197,8 @@ void HubHKTelemetry::update() {
   for (size_t i = 0; i < NUM_ERROR_FLAGS; i++) {
     setArguments(71 + NUM_TOF_BIAS + i, hubComputerErrorFlags_[i]);
   }
-  setArguments(71 + NUM_TOF_BIAS + NUM_ERROR_FLAGS, CompileData(storageSize_, cpuTemperature_));
-  setArguments(72 + NUM_TOF_BIAS + NUM_ERROR_FLAGS, CompileData(ramUsage_, 0U));
+  setArguments(71 + NUM_TOF_BIAS + NUM_ERROR_FLAGS, storageSize_);
+  setArguments(72 + NUM_TOF_BIAS + NUM_ERROR_FLAGS, CompileData(cpuTemperature_, ramUsage_));
   BaseTelemetryDefinition::update();
 }
 std::ostream &HubHKTelemetry::print(std::ostream &stream) {

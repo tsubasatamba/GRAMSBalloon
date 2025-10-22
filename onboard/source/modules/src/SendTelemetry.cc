@@ -73,6 +73,7 @@ ANLStatus SendTelemetry::mod_analyze() {
   telemdef_->setCurrentTime();
   telemdef_->setIndex(telemIndex_);
   telemdef_->setRunID(runIDManager_->RunID());
+  setHKTelemetry();
   telemIndex_++;
   telemdef_->update();
   telemdef_->construct(telemetryStr_);
@@ -149,9 +150,12 @@ void SendTelemetry::setHKTelemetry() {
     }
     else {
       telemdef_->setCpuTemperature(getComputerStatus_->CPUTemperatureADC());
-      telemdef_->setStorageSize(getComputerStatus_->CapacityFree());
-      telemdef_->setMemoryUsage(getComputerStatus_->MemoryUsage());
+      constexpr uint64_t toMB = (1<<20);
+      constexpr uint64_t kBtoMB = (1<<10);
+      telemdef_->setStorageSize(getComputerStatus_->CapacityFree() / toMB);
+      telemdef_->setRamUsage(getComputerStatus_->MemoryUsage() / kBtoMB);
     }
+    telemdef_->print(std::cout);
   }
 #endif
 }

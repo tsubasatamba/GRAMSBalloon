@@ -37,11 +37,11 @@ public:
   int getCapacity();
   int getRAMUsage();
 
-  int CPUTemperatureADC() { return singleton_self()->CPUTemperatureADC_; }
-  double CPUTemperature() { return singleton_self()->CPUTemperature_; }
-  uint64_t CapacityFree() { return singleton_self()->capacityFree_; }
-  uint64_t CapacityAll() { return singleton_self()->capacityAll_; }
-  uint64_t MemoryUsage() { return singleton_self()->ramUsage_; }
+  int CPUTemperatureADC() const { return singleton_self()->CPUTemperatureADC_; }
+  double CPUTemperature() const { return singleton_self()->CPUTemperature_; }
+  uint64_t CapacityFree() const { return singleton_self()->capacityFree_; }
+  uint64_t CapacityAll() const { return singleton_self()->capacityAll_; }
+  uint64_t MemoryUsage() const { return singleton_self()->ramUsage_; }
 
 private:
   int CPUTemperatureADC_;
