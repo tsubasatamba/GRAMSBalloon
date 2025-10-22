@@ -7,6 +7,7 @@ namespace gramsballoon::pgrams {
 SendTelemetry::SendTelemetry() {
   errorManager_ = std::make_shared<ErrorManager>();
   binaryFilenameBase_ = "Telemetry";
+  mhadcMapping_ = std::make_shared<MHADCMapping>();
 }
 
 SendTelemetry::~SendTelemetry() = default;
@@ -58,6 +59,7 @@ ANLStatus SendTelemetry::mod_initialize() {
       telemetrySaver_->setTimeStampStr(runIDManager_->TimeStampStr());
     }
   }
+  getHKModules();
   return AS_OK;
 }
 
@@ -70,9 +72,6 @@ ANLStatus SendTelemetry::mod_analyze() {
   }
   telemdef_->setCurrentTime();
   telemdef_->setIndex(telemIndex_);
-  for (int i = 0; i < static_cast<int>(HubHKTelemetry::NUM_ERROR_FLAGS); i++) {
-    telemdef_->setHubComputerErrorFlags(i, errorManager_->ErrorCode(i));
-  }
   telemdef_->setRunID(runIDManager_->RunID());
   telemIndex_++;
   telemdef_->update();
@@ -103,6 +102,58 @@ ANLStatus SendTelemetry::mod_analyze() {
 
 ANLStatus SendTelemetry::mod_finalize() {
   return AS_OK;
+}
+
+void SendTelemetry::getHKModules() {
+  if (exist_module("GetMHADCData")) {
+    get_module("GetMHADCData", &getMhadcData_);
+  }
+  else {
+    std::cerr << "Error in SendTelemetry::getHKModules: GetMHADCData module not found." << std::endl;
+  }
+#ifdef USE_SYSTEM_MODULES
+  if (exist_module("GetComputerStatus")) {
+    get_module("GetComputerStatus", &getComputerStatus_);
+  }
+  else {
+    std::cerr << "Error in SendTelemetry::getHKModules: GetComputerStatus module not found." << std::endl;
+  }
+#else
+  std::cerr << "SendTelemetry::getHKModules: GetComputerStatus is disabled." << std::endl;
+#endif
+}
+
+void SendTelemetry::setHKTelemetry() {
+  if (!telemdef_) {
+    telemdef_ = std::make_shared<HubHKTelemetry>(true);
+  }
+  for (int i = 0; i < static_cast<int>(HubHKTelemetry::NUM_ERROR_FLAGS); i++) {
+    telemdef_->setHubComputerErrorFlags(i, errorManager_->ErrorCode(i));
+  }
+  {
+    if (getMhadcData_ == nullptr) {
+      std::cerr << "SendTelemetry::setHKTelemetry: getMhadcData_ is nullptr" << std::endl;
+    }
+    else {
+      const int num_ch = getMhadcData_->NumCH();
+      const auto adcs = getMhadcData_->AdcData();
+      for (int i = 0; i < num_ch; i++) {
+        mhadcMapping_->setValue(i, adcs[i]);
+      }
+    }
+  }
+#ifdef USE_SYSTEM_MODULES
+  {
+    if (getComputerStatus_ == nullptr) {
+      std::cerr << "SendTelemetry::setHKTelemetry: getComputerStatus_ is nullptr" << std::endl;
+    }
+    else {
+      telemdef_->setCpuTemperature(getComputerStatus_->CPUTemperatureADC());
+      telemdef_->setStorageSize(getComputerStatus_->CapacityFree());
+      telemdef_->setMemoryUsage(getComputerStatus_->MemoryUsage());
+    }
+  }
+#endif
 }
 
 } // namespace gramsballoon::pgrams

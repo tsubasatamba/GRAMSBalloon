@@ -16,7 +16,7 @@
 namespace gramsballoon::pgrams {
 
 class SendTelemetry;
-  
+
 class GetComputerStatus: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(GetComputerStatus, 1.0);
   ENABLE_PARALLEL_RUN();
@@ -41,6 +41,7 @@ public:
   double CPUTemperature() { return singleton_self()->CPUTemperature_; }
   uint64_t CapacityFree() { return singleton_self()->capacityFree_; }
   uint64_t CapacityAll() { return singleton_self()->capacityAll_; }
+  uint64_t MemoryUsage() { return singleton_self()->ramUsage_; }
 
 private:
   int CPUTemperatureADC_;
@@ -57,6 +58,6 @@ private:
   int chatter_ = 0;
 };
 
-} /* namespace gramsballoon */
+} // namespace gramsballoon::pgrams
 #endif // USE_SYSTEM_MODULES
 #endif /* GetRaspiStatus_H */

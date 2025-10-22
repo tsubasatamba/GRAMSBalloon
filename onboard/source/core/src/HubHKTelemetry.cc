@@ -70,14 +70,14 @@ bool HubHKTelemetry::interpret() {
   DivideData(static_cast<uint32_t>(contents->getArguments(46)), pduTofBiasP5V0Vol_, pduTofBiasP5V0Cur_);
   DivideData(static_cast<uint32_t>(contents->getArguments(47)), pduTofBiasTemp_, pduMainDCDCTemp_);
   // MHADC
-  DivideData(static_cast<uint32_t>(contents->getArguments(48)), rtdGondolaFrame1_, rtdGondolaFrame2_);
-  DivideData(static_cast<uint32_t>(contents->getArguments(49)), rtdGondolaFrame3_, rtdGondolaFrame4_);
+  DivideData(static_cast<uint32_t>(contents->getArguments(48)), rtdGondolaFrame_[0], rtdGondolaFrame_[1]);
+  DivideData(static_cast<uint32_t>(contents->getArguments(49)), rtdGondolaFrame_[2], rtdGondolaFrame_[3]);
   DivideData(static_cast<uint32_t>(contents->getArguments(50)), rtdDaqCrate1_, rtdDaqCrate2_);
   DivideData(static_cast<uint32_t>(contents->getArguments(51)), rtdDaqCrateBackup_, rtdShaperFaradayCage1_);
-  DivideData(static_cast<uint32_t>(contents->getArguments(52)), rtdShaperFaradayCage2_, rtdShaperBoard1_);
-  DivideData(static_cast<uint32_t>(contents->getArguments(53)), rtdShaperBoard2_, rtdShaperBoard3_);
-  DivideData(static_cast<uint32_t>(contents->getArguments(54)), rtdShaperBoard4_, rtdShaperBoard5_);
-  DivideData(static_cast<uint32_t>(contents->getArguments(55)), rtdShaperBoard6_, rtdHubComputerLocation1_);
+  DivideData(static_cast<uint32_t>(contents->getArguments(52)), rtdShaperFaradayCage2_, rtdShaperBoard_[0]);
+  DivideData(static_cast<uint32_t>(contents->getArguments(53)), rtdShaperBoard_[1], rtdShaperBoard_[2]);
+  DivideData(static_cast<uint32_t>(contents->getArguments(54)), rtdShaperBoard_[3], rtdShaperBoard_[4]);
+  DivideData(static_cast<uint32_t>(contents->getArguments(55)), rtdShaperBoard_[5], rtdHubComputerLocation1_);
   DivideData(static_cast<uint32_t>(contents->getArguments(56)), rtdHubComputerLocation2_, rtdTofFpgas_);
   DivideData(static_cast<uint32_t>(contents->getArguments(57)), rtdTof2_, rtdSealedEnclosure1WaterTank_);
   DivideData(static_cast<uint32_t>(contents->getArguments(58)), rtdSealedEnclosureLocation2_, rtdVacuumJacket1_);
@@ -103,8 +103,9 @@ bool HubHKTelemetry::interpret() {
   for (size_t i = 0; i < NUM_ERROR_FLAGS; i++) {
     hubComputerErrorFlags_[i] = static_cast<uint32_t>(contents->getArguments(71 + NUM_TOF_BIAS + i));
   }
-  storageSize_ = static_cast<uint16_t>(contents->getArguments(71 + NUM_TOF_BIAS + NUM_ERROR_FLAGS));
-  cpuTemperature_ = static_cast<uint16_t>(contents->getArguments(72 + NUM_TOF_BIAS + NUM_ERROR_FLAGS));
+  DivideData(static_cast<uint32_t>(contents->getArguments(71 + NUM_TOF_BIAS + NUM_ERROR_FLAGS)), storageSize_, cpuTemperature_);
+  uint16_t temp;
+  DivideData(static_cast<uint32_t>(contents->getArguments(72 + NUM_TOF_BIAS + NUM_ERROR_FLAGS)), ramUsage_, temp);
   return true;
 }
 void HubHKTelemetry::update() {
@@ -164,14 +165,14 @@ void HubHKTelemetry::update() {
   setArguments(47, CompileData(pduTofBiasTemp_, pduMainDCDCTemp_));
 
   // MHADC
-  setArguments(48, CompileData(rtdGondolaFrame1_, rtdGondolaFrame2_));
-  setArguments(49, CompileData(rtdGondolaFrame3_, rtdGondolaFrame4_));
+  setArguments(48, CompileData(rtdGondolaFrame_[0], rtdGondolaFrame_[1]));
+  setArguments(49, CompileData(rtdGondolaFrame_[2], rtdGondolaFrame_[3]));
   setArguments(50, CompileData(rtdDaqCrate1_, rtdDaqCrate2_));
   setArguments(51, CompileData(rtdDaqCrateBackup_, rtdShaperFaradayCage1_));
-  setArguments(52, CompileData(rtdShaperFaradayCage2_, rtdShaperBoard1_));
-  setArguments(53, CompileData(rtdShaperBoard2_, rtdShaperBoard3_));
-  setArguments(54, CompileData(rtdShaperBoard4_, rtdShaperBoard5_));
-  setArguments(55, CompileData(rtdShaperBoard6_, rtdHubComputerLocation1_));
+  setArguments(52, CompileData(rtdShaperFaradayCage2_, rtdShaperBoard_[0]));
+  setArguments(53, CompileData(rtdShaperBoard_[1], rtdShaperBoard_[2]));
+  setArguments(54, CompileData(rtdShaperBoard_[3], rtdShaperBoard_[4]));
+  setArguments(55, CompileData(rtdShaperBoard_[5], rtdHubComputerLocation1_));
   setArguments(56, CompileData(rtdHubComputerLocation2_, rtdTofFpgas_));
   setArguments(57, CompileData(rtdTof2_, rtdSealedEnclosure1WaterTank_));
   setArguments(58, CompileData(rtdSealedEnclosureLocation2_, rtdVacuumJacket1_));
@@ -198,6 +199,7 @@ void HubHKTelemetry::update() {
     setArguments(71 + NUM_TOF_BIAS + i, hubComputerErrorFlags_[i]);
   }
   setArguments(71 + NUM_TOF_BIAS + NUM_ERROR_FLAGS, CompileData(storageSize_, cpuTemperature_));
+  setArguments(72 + NUM_TOF_BIAS + NUM_ERROR_FLAGS, CompileData(ramUsage_, 0U));
   BaseTelemetryDefinition::update();
 }
 std::ostream &HubHKTelemetry::print(std::ostream &stream) {
@@ -283,14 +285,22 @@ std::ostream &HubHKTelemetry::print(std::ostream &stream) {
   stream << "pduTofBiasP5V0Vol_: " << pduTofBiasP5V0Vol_ << ", pduTofBiasP5V0Cur_: " << pduTofBiasP5V0Cur_ << "\n";
   stream << "pduTofBiasTemp_: " << pduTofBiasTemp_ << ", pduMainDCDCTemp_: " << pduMainDCDCTemp_ << "\n";
 
-  stream << "rtdGondolaFrame1_: " << rtdGondolaFrame1_ << ", rtdGondolaFrame2_: " << rtdGondolaFrame2_ << "\n";
-  stream << "rtdGondolaFrame3_: " << rtdGondolaFrame3_ << ", rtdGondolaFrame4_: " << rtdGondolaFrame4_ << "\n";
+  {
+    const size_t n = sizeof(rtdGondolaFrame_) / sizeof(rtdGondolaFrame_[0]);
+    stream << "rtdsInsideChamber_: ";
+    for (size_t i = 0; i < n; ++i)
+      stream << rtdGondolaFrame_[i] << (i + 1 < n ? ", " : "\n");
+  }
   stream << "rtdDaqCrate1_: " << rtdDaqCrate1_ << ", rtdDaqCrate2_: " << rtdDaqCrate2_ << "\n";
   stream << "rtdDaqCrateBackup_: " << rtdDaqCrateBackup_ << ", rtdShaperFaradayCage1_: " << rtdShaperFaradayCage1_ << "\n";
-  stream << "rtdShaperFaradayCage2_: " << rtdShaperFaradayCage2_ << ", rtdShaperBoard1_: " << rtdShaperBoard1_ << "\n";
-  stream << "rtdShaperBoard2_: " << rtdShaperBoard2_ << ", rtdShaperBoard3_: " << rtdShaperBoard3_ << "\n";
-  stream << "rtdShaperBoard4_: " << rtdShaperBoard4_ << ", rtdShaperBoard5_: " << rtdShaperBoard5_ << "\n";
-  stream << "rtdShaperBoard6_: " << rtdShaperBoard6_ << ", rtdHubComputerLocation1_: " << rtdHubComputerLocation1_ << "\n";
+  stream << "rtdShaperFaradayCage2_: " << rtdShaperFaradayCage2_ << "\n";
+
+  {
+    const size_t n = sizeof(rtdShaperBoard_) / sizeof(rtdShaperBoard_[0]);
+    stream << "rtdShaperBoard: ";
+    for (size_t i = 0; i < n; ++i)
+      stream << rtdShaperBoard_[i] << (i + 1 < n ? ", " : "\n");
+  }
   stream << "rtdHubComputerLocation2_: " << rtdHubComputerLocation2_ << ", rtdTofFpgas_: " << rtdTofFpgas_ << "\n";
   stream << "rtdTof2_: " << rtdTof2_ << ", rtdSealedEnclosure1WaterTank_: " << rtdSealedEnclosure1WaterTank_ << "\n";
   stream << "rtdSealedEnclosureLocation2_: " << rtdSealedEnclosureLocation2_ << ", rtdVacuumJacket1_: " << rtdVacuumJacket1_ << "\n";
@@ -325,7 +335,7 @@ std::ostream &HubHKTelemetry::print(std::ostream &stream) {
   for (size_t i = 0; i < NUM_ERROR_FLAGS; ++i)
     stream << hubComputerErrorFlags_[i] << (i + 1 < NUM_ERROR_FLAGS ? ", " : "\n");
 
-  stream << "storageSize_: " << storageSize_ << ", cpuTemperature_: " << cpuTemperature_ << "\n";
+  stream << "storageSize_: " << storageSize_ << ", cpuTemperature_: " << cpuTemperature_ << ", ramUsage_: " << ramUsage_ << "\n";
   return stream;
 }
 } // namespace gramsballoon::pgrams

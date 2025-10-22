@@ -14,12 +14,13 @@
 #include "CommunicationSaver.hh"
 #include "ErrorManager.hh"
 #include "GetComputerStatus.hh"
+#include "GetMHADCData.hh"
 #include "HubHKTelemetry.hh"
+#include "MHADCMapping.hh"
 #include "MeasureOrientationByMHADC.hh"
 #include "MosquittoManager.hh"
 #include "ReceiveCommand.hh"
 #include "RunIDManager.hh"
-#include "SerialCommunication.hh"
 #include <anlnext/BasicModule.hh>
 #include <thread>
 
@@ -30,21 +31,18 @@ class ReceiveCommand;
 class RunIDManager;
 } // namespace gramsballoon
 namespace gramsballoon::pgrams {
-class GetCompressorData;
-class GetArduinoData;
-class MeasureTemperatureWithRTDSensorByMHADC;
-class MeasureTemperatureWithRTDSensorByArduino;
 class GetMHADCData;
 class GetPressure;
 template <typename T>
 class MosquittoManager;
 class DistributeCommand;
-class MeasureOrientationByMHADC;
 class BaseTelemetryDefinition;
 class HubHKtelemetry;
 class ErrorManager;
 template <typename T>
 class CommunicationSaver;
+class MHADCMapping;
+class GetComputerStatus;
 
 class SendTelemetry: public anlnext::BasicModule {
   DEFINE_ANL_MODULE(SendTelemetry, 3.1);
@@ -69,11 +67,14 @@ public:
   ErrorManager *getErrorManager() { return (singleton_self()->errorManager_).get(); }
 
 private:
+  void setHKTelemetry();
+  void getHKModules();
   std::shared_ptr<HubHKTelemetry> telemdef_ = nullptr;
   int telemetryType_ = 1;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
   bool saveTelemetry_ = true;
   std::shared_ptr<CommunicationSaver<std::string>> telemetrySaver_ = nullptr;
+  std::shared_ptr<MHADCMapping> mhadcMapping_ = nullptr;
   uint32_t telemIndex_ = 0;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 1000;
@@ -89,6 +90,12 @@ private:
   pgrams::MosquittoIO<std::string> *mosq_ = nullptr;
   std::vector<std::string> pubTopics_ = {"telemetry", "telemetry_2"};
   int qos_ = 0;
+
+  // HK data modules
+  const GetMHADCData *getMhadcData_ = nullptr;
+#ifdef USE_SYSTEM_MODULES
+  const GetComputerStatus *getComputerStatus_ = nullptr;
+#endif
 };
 
 } /* namespace gramsballoon::pgrams */

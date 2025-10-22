@@ -75,21 +75,15 @@ private:
   uint16_t pduMainDCDCTemp_ = 0;
 
   // MHADC
-  uint16_t rtdGondolaFrame1_ = 0;
-  uint16_t rtdGondolaFrame2_ = 0;
-  uint16_t rtdGondolaFrame3_ = 0;
-  uint16_t rtdGondolaFrame4_ = 0;
+  static constexpr int NUM_RTD_GONDOLA = 4;
+  std::array<uint16_t, NUM_RTD_GONDOLA> rtdGondolaFrame_ = {0};
   uint16_t rtdDaqCrate1_ = 0;
   uint16_t rtdDaqCrate2_ = 0;
   uint16_t rtdDaqCrateBackup_ = 0;
   uint16_t rtdShaperFaradayCage1_ = 0;
   uint16_t rtdShaperFaradayCage2_ = 0;
-  uint16_t rtdShaperBoard1_ = 0;
-  uint16_t rtdShaperBoard2_ = 0;
-  uint16_t rtdShaperBoard3_ = 0;
-  uint16_t rtdShaperBoard4_ = 0;
-  uint16_t rtdShaperBoard5_ = 0;
-  uint16_t rtdShaperBoard6_ = 0;
+  static constexpr int NUM_RTD_SHAPER_BOARD = 6;
+  std::array<uint16_t, NUM_RTD_SHAPER_BOARD> rtdShaperBoard_ = {0};
   uint16_t rtdHubComputerLocation1_ = 0;
   uint16_t rtdHubComputerLocation2_ = 0;
   uint16_t rtdTofFpgas_ = 0;
@@ -111,9 +105,10 @@ private:
   std::array<uint16_t, NUM_TOF_BIAS> tofBiasSetting_ = {0};
 
   //Hub computer
-  std::array<uint32_t, NUM_ERROR_FLAGS> hubComputerErrorFlags_= {0};
+  std::array<uint32_t, NUM_ERROR_FLAGS> hubComputerErrorFlags_ = {0};
   uint16_t storageSize_ = 0;
   uint16_t cpuTemperature_ = 0;
+  uint16_t ramUsage_ = 0;
 
 protected:
   bool interpret() override;
@@ -389,17 +384,8 @@ public:
   inline void setPduMainDCDCTemp(uint16_t v) { pduMainDCDCTemp_ = v; }
   inline uint16_t PduMainDCDCTemp() const { return pduMainDCDCTemp_; }
 
-  inline void setRtdGondolaFrame1(uint16_t v) { rtdGondolaFrame1_ = v; }
-  inline uint16_t RtdGondolaFrame1() const { return rtdGondolaFrame1_; }
-
-  inline void setRtdGondolaFrame2(uint16_t v) { rtdGondolaFrame2_ = v; }
-  inline uint16_t RtdGondolaFrame2() const { return rtdGondolaFrame2_; }
-
-  inline void setRtdGondolaFrame3(uint16_t v) { rtdGondolaFrame3_ = v; }
-  inline uint16_t RtdGondolaFrame3() const { return rtdGondolaFrame3_; }
-
-  inline void setRtdGondolaFrame4(uint16_t v) { rtdGondolaFrame4_ = v; }
-  inline uint16_t RtdGondolaFrame4() const { return rtdGondolaFrame4_; }
+  inline void setRtdGondolaFrame(int index, uint16_t v) { rtdGondolaFrame_[index] = v; }
+  inline uint16_t RtdGondolaFrame(int index) const { return rtdGondolaFrame_[index]; }
 
   inline void setRtdDaqCrate1(uint16_t v) { rtdDaqCrate1_ = v; }
   inline uint16_t RtdDaqCrate1() const { return rtdDaqCrate1_; }
@@ -416,23 +402,10 @@ public:
   inline void setRtdShaperFaradayCage2(uint16_t v) { rtdShaperFaradayCage2_ = v; }
   inline uint16_t RtdShaperFaradayCage2() const { return rtdShaperFaradayCage2_; }
 
-  inline void setRtdShaperBoard1(uint16_t v) { rtdShaperBoard1_ = v; }
-  inline uint16_t RtdShaperBoard1() const { return rtdShaperBoard1_; }
-
-  inline void setRtdShaperBoard2(uint16_t v) { rtdShaperBoard2_ = v; }
-  inline uint16_t RtdShaperBoard2() const { return rtdShaperBoard2_; }
-
-  inline void setRtdShaperBoard3(uint16_t v) { rtdShaperBoard3_ = v; }
-  inline uint16_t RtdShaperBoard3() const { return rtdShaperBoard3_; }
-
-  inline void setRtdShaperBoard4(uint16_t v) { rtdShaperBoard4_ = v; }
-  inline uint16_t RtdShaperBoard4() const { return rtdShaperBoard4_; }
-
-  inline void setRtdShaperBoard5(uint16_t v) { rtdShaperBoard5_ = v; }
-  inline uint16_t RtdShaperBoard5() const { return rtdShaperBoard5_; }
-
-  inline void setRtdShaperBoard6(uint16_t v) { rtdShaperBoard6_ = v; }
-  inline uint16_t RtdShaperBoard6() const { return rtdShaperBoard6_; }
+  inline void setRtdShaperBoard(int index, uint16_t v) { rtdShaperBoard_[index] = v; }
+  inline uint16_t RtdShaperBoard(int index) const {
+    return rtdShaperBoard_[index];
+  }
 
   inline void setRtdHubComputerLocation1(uint16_t v) { rtdHubComputerLocation1_ = v; }
   inline uint16_t RtdHubComputerLocation1() const { return rtdHubComputerLocation1_; }
@@ -475,15 +448,15 @@ public:
 
   inline void setRtdsInsideChamber(const std::array<uint16_t, NUM_RTD_IN_CHAMBER> &v) { rtdsInsideChamber_ = v; }
   inline const std::array<uint16_t, NUM_RTD_IN_CHAMBER> &RtdsInsideChamber() const { return rtdsInsideChamber_; }
-  inline void setRtdsInsideChamber(size_t idx, uint16_t v) {
-    if (idx >= NUM_RTD_IN_CHAMBER) {
+  inline void setRtdsInsideChamber(int idx, uint16_t v) {
+    if (idx >= static_cast<int>(NUM_RTD_IN_CHAMBER)) {
       std::cerr << "setRtdsInsideChamber: index out of range: " << idx << std::endl;
       return;
     }
     rtdsInsideChamber_[idx] = v;
   }
-  inline uint16_t RtdsInsideChamber(size_t idx) const {
-    if (idx >= NUM_RTD_IN_CHAMBER) {
+  inline uint16_t RtdsInsideChamber(int idx) const {
+    if (idx >= static_cast<int>(NUM_RTD_IN_CHAMBER)) {
       std::cerr << "RtdsInsideChamber: index out of range: " << idx << std::endl;
       return 0;
     }
@@ -563,6 +536,8 @@ public:
 
   inline void setCpuTemperature(uint16_t v) { cpuTemperature_ = v; }
   inline uint16_t CpuTemperature() const { return cpuTemperature_; }
+  inline void setRamUsage(uint16_t v) { ramUsage_ = v; }
+  inline uint16_t RamUsage() const { return ramUsage_; }
 };
 } // namespace gramsballoon::pgrams
 #endif //GRAMSBalloon_HubHKTelemetry_HH

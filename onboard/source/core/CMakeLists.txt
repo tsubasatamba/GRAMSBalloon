@@ -19,6 +19,8 @@ set(GB_CORE_CLASSES
   src/OrientationInformation.cc
   src/BaseTelemetryDefinition.cc
   src/HubHKTelemetry.cc
+  src/VHKTelemetryMapping.cc
+  src/MHADCMapping.cc
   src/IridiumPacketPool.cc
   )
 
