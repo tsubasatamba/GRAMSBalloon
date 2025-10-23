@@ -20,7 +20,7 @@
    
    `brew install boost ruby swig mosquitto` (Mac, via Homebrew)
 
-   Note: For installing mosquitto into ubuntu/debian, you may need to build from source instead of using apt. Mosquitto library in the hub computer is installed by building from source.
+   Note: For installing mosquitto into ubuntu/debian, you may need to build from source instead of using apt. Mosquitto library on the hub computer is installed by building from source.
 
 2. Install ANLNext
 
@@ -30,7 +30,7 @@
 
    `mkdir build && cd build`
 
-   `cmake ..` (NOTE: If you encounter errors due to missing ruby config path, specify it by `-DRUBY_CONFIG_PATH`. For linux, it is usually `/usr/include/ruby-(version)/(architecture)`.)
+   `cmake ..` (NOTE: If you encounter errors due to missing ruby config path, specify it by `-DRUBY_CONFIG_FILE_DIR`. For linux, it is usually `/usr/include/(architecture)/ruby-(version)`.)
 
    `make`
 
