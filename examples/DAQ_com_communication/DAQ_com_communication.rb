@@ -30,20 +30,20 @@ class MyApp < ANL::ANLApp
     #subsystems = ["TPC", "TOF", "Orchestrator"]
     subsystems.each do |subsystem|
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_" + subsystem
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 2000, ack_type: 2, chatter: 
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["comport"].to_i, timeout: 100, ack_type: 2, chatter: 
       1000) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SocketCommunicationManager, "SocketCommunicationManager_#{subsystem}_rsv"
-      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 2000, ack_type: 2, chatter: 0) do |m|
+      with_parameters(ip: @inifile[subsystem]["ip"], port: @inifile[subsystem]["telport"].to_i, timeout: 100, ack_type: 2, chatter: 1000) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::DistributeCommand, "DistributeCommand_#{subsystem}"
-      with_parameters(topic: @inifile[subsystem]["comtopic"], chatter: 0) do |m|
+      with_parameters(topic: @inifile[subsystem]["comtopic"], chatter: 2) do |m|
         m.set_singleton(0)
       end
       chain GRAMSBalloon::SendCommandToDAQComputer, "SendCommandToDAQComputer_" + subsystem
-        with_parameters(SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}", duration_between_heartbeat: 100000, DistributeCommand_name: "DistributeCommand_#{subsystem}", chatter: 0)
+        with_parameters(SocketCommunicationManager_name: "SocketCommunicationManager_#{subsystem}", duration_between_heartbeat: 1000, DistributeCommand_name: "DistributeCommand_#{subsystem}", chatter: 0)
       chain GRAMSBalloon::ReceiveStatusFromDAQComputer, "ReceiveStatusFromDAQComputer_" + subsystem
         with_parameters(SocketCommunicationManager_name:"SocketCommunicationManager_#{subsystem}_rsv", dead_communication_time: 10000,chatter: 0)
       chain GRAMSBalloon::DividePacket, "DividePacket_#{subsystem}"
@@ -52,16 +52,16 @@ class MyApp < ANL::ANLApp
         with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["teltopic"], is_starlink: true, chatter: 0)
       chain GRAMSBalloon::PassTelemetry, "PassTelemetry_#{subsystem}_iridium"
         with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["iridiumteltopic"], is_starlink: false, chatter: 0)
-      chain GRAMSBalloon::SendTelemetry
-      with_parameters(
-            topics: [@inifile["Hub"]["teltopic"]],
-            qos:0,
-            save_telemetry: true,
-            binary_filename_base: "telemetry_test",
-            num_telem_per_file: 1000,
-            chatter: 0,
+      end
+    chain GRAMSBalloon::SendTelemetry
+    with_parameters(
+          topics: [@inifile["Hub"]["teltopic"]],
+          qos:0,
+          save_telemetry: false,
+          binary_filename_base: "telemetry_test",
+          num_telem_per_file: 1000,
+          chatter: 0,
     )
-    end
     chain GRAMSBalloon::RunIDManager
     with_parameters(
       filename: ENV["HOME"] + "/settings/run_id/run_id.txt"
