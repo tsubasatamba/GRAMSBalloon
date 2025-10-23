@@ -14,7 +14,7 @@ public:
   static constexpr size_t NUM_RTD_IN_CHAMBER = 7;
   static constexpr size_t NUM_PDU_HV_TEMP = 2;
   static constexpr size_t NUM_PDU = 6;
-  static constexpr size_t ARGC = 206;
+  static constexpr size_t ARGC = 207;
   static constexpr size_t NUM_PDU_WARM_TPC_SHAPER = 6;
   static constexpr size_t NUM_ERROR_FLAGS = ErrorManager::NUM_ERROR_FLAGS;
 

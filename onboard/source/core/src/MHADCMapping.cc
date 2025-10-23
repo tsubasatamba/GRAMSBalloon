@@ -64,6 +64,7 @@ bool MHADCMapping::getSetter(int index, HubHKSetterResult &setter) {
     break;
   case 20:
     setSetterResult(&HubHKTelemetry::setRtdSealedEnclosureLocation2, setter);
+    break;
   case 21:
     setSetterResult(&HubHKTelemetry::setRtdVacuumJacket1, setter);
     break;

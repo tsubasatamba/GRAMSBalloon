@@ -56,6 +56,10 @@ public:
     }
   }
   void setArguments(uint16_t index, int32_t argument) {
+    if (index > argc_) {
+      std::cerr << "Error in CommunicationFormat: index(" << index << ") is larger than argc (" << argc_ << ")" << std::endl;
+      return;
+    }
     arguments_[index] = argument;
   }
   int32_t getArguments(uint16_t index) const {

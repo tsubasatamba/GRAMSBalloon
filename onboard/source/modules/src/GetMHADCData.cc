@@ -20,10 +20,21 @@ ANLStatus GetMHADCData::mod_initialize() {
   }
   numCh_ = numSection_ * channelPerSection_;
   adcData_.resize(numCh_);
+  if (chatter_ > 0) {
+    std::cout << "Pattern: " << std::endl;
+  }
   for (int i = 0; i < numSection_; i++) {
+    const char section_name = 'A' + i;
     for (int j = 1; j <= channelPerSection_; j++) {
-      regs_.push_back(std::regex((boost::format("%s%d_(\\d*)") % ('A' + i) % j).str()));
+      std::string pat = (boost::format("%c%d_(\\d*)") % section_name % j).str();
+      if (chatter_ > 0) {
+        std::cout << pat << " ";
+      }
+      regs_.push_back(std::regex(pat));
     }
+    if (chatter_ > 0){
+      std::cout << std::endl;
+    } 
   }
   if (exist_module(encodedSerialCommunicatorName_)) {
     get_module_NC(encodedSerialCommunicatorName_, &encodedSerialCommunicator_);
