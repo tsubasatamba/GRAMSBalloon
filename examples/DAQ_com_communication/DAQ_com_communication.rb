@@ -49,7 +49,7 @@ class MyApp < ANL::ANLApp
       chain GRAMSBalloon::DividePacket, "DividePacket_#{subsystem}"
         with_parameters(ReceiveStatusFromDAQComputer_name: "ReceiveStatusFromDAQComputer_#{subsystem}", starlink_code: [64], overwritten_packet_code: 331, chatter: 10)
       chain GRAMSBalloon::PassTelemetry, "PassTelemetry_#{subsystem}_starlink"
-        with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["teltopic"], is_starlink: true, chatter: 0)
+        with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["iridiumteltopic"], starlink_topic:@inifile[subsystem]["teltopic"], is_starlink: true, chatter: 0)
       chain GRAMSBalloon::PassTelemetry, "PassTelemetry_#{subsystem}_iridium"
         with_parameters(DividePacket_name: "DividePacket_#{subsystem}", topic: @inifile[subsystem]["iridiumteltopic"], is_starlink: false, chatter: 0)
       end

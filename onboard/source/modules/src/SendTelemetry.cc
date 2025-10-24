@@ -17,7 +17,8 @@ ANLStatus SendTelemetry::mod_define() {
   define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
   define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
   define_parameter("sleep_for_msec", &mod_class::sleepms_);
-  define_parameter("topics", &mod_class::pubTopics_);
+  define_parameter("topic", &mod_class::pubTopic_);
+  define_parameter("starlink_topic", &mod_class::starlinkTopic_);
   define_parameter("qos", &mod_class::qos_);
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
@@ -78,16 +79,24 @@ ANLStatus SendTelemetry::mod_analyze() {
   telemdef_->update();
   telemdef_->construct(telemetryStr_);
   std::cout << module_id() << ":telelemetry is " << telemetryStr_ << std::endl;
-  for (const auto &topic: pubTopics_) {
-    const int status = mosq_->Publish(telemetryStr_, topic, qos_);
-    const bool failed = (status != mosq_err_t::MOSQ_ERR_SUCCESS);
-    if (failed) {
-      std::cerr << "Error in SendTelemetry::mod_analyze: Publishing MQTT failed.Error Message: " << mosqpp::strerror(status) << std::endl;
-      errorManager_->setError(ErrorType::MQTT_COM_ERROR);
-    }
-    if (saveTelemetry_ && telemetrySaver_) {
-      telemetrySaver_->writeCommandToFile(failed, telemetryStr_);
-    }
+  int status;
+  if (mosquittoManager_->getLinkType() == CommunicationLinkType::STARLINK) {
+    status = mosq_->Publish(telemetryStr_, starlinkTopic_, qos_);
+  }
+  else if (mosquittoManager_->getLinkType() == CommunicationLinkType::IRIDIUM) {
+    status = mosq_->Publish(telemetryStr_, pubTopic_, qos_);
+  }
+  else {
+    std::cerr << "SendTelemetry::mod_analyze: Unknown CommunicationLinkType" << std::endl;
+    return AS_ERROR;
+  }
+  const bool failed = (status != mosq_err_t::MOSQ_ERR_SUCCESS);
+  if (failed) {
+    std::cerr << "Error in SendTelemetry::mod_analyze: Publishing MQTT failed.Error Message: " << mosqpp::strerror(status) << std::endl;
+    errorManager_->setError(ErrorType::MQTT_COM_ERROR);
+  }
+  if (saveTelemetry_ && telemetrySaver_) {
+    telemetrySaver_->writeCommandToFile(failed, telemetryStr_);
   }
 
   if (chatter_ >= 1) {
@@ -103,6 +112,41 @@ ANLStatus SendTelemetry::mod_analyze() {
 
 ANLStatus SendTelemetry::mod_finalize() {
   return AS_OK;
+}
+
+void SendTelemetry::setLastComIndex(Subsystem subsystem, uint32_t v) {
+  if (subsystem == Subsystem::ORC) {
+    telemdef_->setLastCommandIndexOrc(v);
+  }
+  else if (subsystem == Subsystem::HUB) {
+    telemdef_->setLastCommandIndexHub(v);
+  }
+  else if (subsystem == Subsystem::QM) {
+    telemdef_->setLastCommandIndexQM(v);
+  }
+  else if (subsystem == Subsystem::TOF) {
+    telemdef_->setLastCommandIndexTOF(v);
+  }
+  else {
+    std::cerr << "SendTelemetry::setLastComIndex: Unknown subsystem" << std::endl;
+  }
+}
+void SendTelemetry::setLastComCode(Subsystem subsystem, uint16_t v) {
+  if (subsystem == Subsystem::ORC) {
+    telemdef_->setLastCommandCodeOrc(v);
+  }
+  else if (subsystem == Subsystem::HUB) {
+    telemdef_->setLastCommandCodeHub(v);
+  }
+  else if (subsystem == Subsystem::QM) {
+    telemdef_->setLastCommandCodeQM(v);
+  }
+  else if (subsystem == Subsystem::TOF) {
+    telemdef_->setLastCommandCodeTOF(v);
+  }
+  else {
+    std::cerr << "SendTelemetry::setLastComCode: Unknown subsystem" << std::endl;
+  }
 }
 
 void SendTelemetry::getHKModules() {
@@ -150,8 +194,8 @@ void SendTelemetry::setHKTelemetry() {
     }
     else {
       telemdef_->setCpuTemperature(getComputerStatus_->CPUTemperatureADC());
-      constexpr uint64_t toMB = (1<<20);
-      constexpr uint64_t kBtoMB = (1<<10);
+      constexpr uint64_t toMB = (1 << 20);
+      constexpr uint64_t kBtoMB = (1 << 10);
       telemdef_->setStorageSize(getComputerStatus_->CapacityFree() / toMB);
       telemdef_->setRamUsage(getComputerStatus_->MemoryUsage() / kBtoMB);
     }

@@ -64,6 +64,9 @@ public:
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
   int TelemetryType() { return singleton_self()->telemetryType_; }
 
+  void setLastComIndex(Subsystem subsystem, uint32_t v);
+  void setLastComCode(Subsystem subsystem, uint16_t v);
+
   ErrorManager *getErrorManager() { return (singleton_self()->errorManager_).get(); }
 
 private:
@@ -88,7 +91,8 @@ private:
   pgrams::MosquittoManager<std::string> *mosquittoManager_ = nullptr;
 
   pgrams::MosquittoIO<std::string> *mosq_ = nullptr;
-  std::vector<std::string> pubTopics_ = {"telemetry", "telemetry_2"};
+  std::string pubTopic_ = "telemetry";
+  std::string starlinkTopic_ = "StarlinkTelemetry";
   int qos_ = 0;
 
   // HK data modules

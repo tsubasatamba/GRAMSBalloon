@@ -33,6 +33,7 @@ enum class CommunicationCodes : uint16_t {
   HUB_Prepare_Restart = construct_code(0x2, COM_SUBSYSTEM_HUB_MSK),
   HUB_Exec_Restart = construct_code(0x3, COM_SUBSYSTEM_HUB_MSK),
   HUB_Reset_Error = construct_code(0x4, COM_SUBSYSTEM_HUB_MSK),
+  HUB_Set_Link = construct_code(0x5, COM_SUBSYSTEM_HUB_MSK),
   HUB_Dummy1 = construct_code(0xF1, COM_SUBSYSTEM_HUB_MSK),
   HUB_Dummy2 = construct_code(0xF2, COM_SUBSYSTEM_HUB_MSK),
 
@@ -101,7 +102,6 @@ inline bool isSubsystem(uint16_t code, uint16_t subsystem_mask) {
 inline uint16_t castCommandCode(CommunicationCodes code) {
   return static_cast<uint16_t>(code);
 }
-
 
 enum class TelemetryCodes : uint16_t {
   HUB_Telemetry_Normal = 0x0,

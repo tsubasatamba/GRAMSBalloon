@@ -41,11 +41,11 @@ public:
   SocketCommunication *getSocketCommunication() {
     return singleton_self()->socketCommunication_.get();
   }
-  int sendAndWaitForAck(const uint8_t *buf, size_t n);
-  inline int sendAndWaitForAck(const std::vector<uint8_t> &data) {
-    return sendAndWaitForAck(data.data(), data.size());
+  int sendAndWaitForAck(const uint8_t *buf, size_t n, const uint8_t *ack, size_t ack_n);
+  inline int sendAndWaitForAck(const std::vector<uint8_t> &data, const std::vector<uint8_t> &ack) {
+    return sendAndWaitForAck(data.data(), data.size(), ack.data(), ack.size());
   }
-  int receiveAndSendAck(std::vector<uint8_t> &data);
+  int receive(std::vector<uint8_t> &data);
 
 private:
   std::string ip_;
@@ -61,8 +61,6 @@ private:
   int subsystemInt_ = 0;
   Subsystem subsystem_ = Subsystem::UNKNOWN;
   std::shared_ptr<std::thread> thread_ = nullptr;
-  AcknowledgementType ackType_ = AcknowledgementType::NONE;
-  int ackTypeInt_ = 0;
   std::vector<uint8_t> ackBuffer_;
 };
 } // namespace gramsballoon::pgrams

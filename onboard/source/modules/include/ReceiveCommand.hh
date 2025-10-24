@@ -68,6 +68,7 @@ private:
 #endif
   RunIDManager *runIDManager_ = nullptr;
   MosquittoManager<std::vector<uint8_t>> *mosquittoManager_ = nullptr;
+  MosquittoManager<std::string> *telemetryMosquittoManager_ = nullptr;
 
   //communication
   MosquittoIO<std::vector<uint8_t>> *mosq_ = nullptr;

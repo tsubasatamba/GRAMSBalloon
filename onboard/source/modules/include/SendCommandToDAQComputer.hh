@@ -38,9 +38,13 @@ private:
   int subsystemInt_ = 0;
   Subsystem subsystem_ = Subsystem::UNKNOWN;
   std::shared_ptr<std::chrono::time_point<std::chrono::high_resolution_clock>> lastTime_ = nullptr;
+  uint32_t commandIndex_ = 0;
   int durationBetweenHeartbeat_ = 800; // ms
   std::shared_ptr<std::chrono::milliseconds> durationBetweenHeartbeatChrono_ = nullptr;
   std::shared_ptr<CommunicationFormat> heartbeat_ = nullptr;
+  std::shared_ptr<CommunicationFormat> heartbeatAck_ = nullptr;
+  std::shared_ptr<CommunicationFormat> currentCommand_ = nullptr;
+  std::shared_ptr<CommunicationFormat> commandAck_ = nullptr;
 };
 } // namespace gramsballoon::pgrams
 #endif //GRAMSBalloon_SendCommandToDAQComputer_hh

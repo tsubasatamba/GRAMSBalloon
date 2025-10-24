@@ -73,6 +73,16 @@ ANLStatus ReceiveCommand::mod_initialize() {
       sendTelemetry_->getErrorManager()->setError(ErrorType::MQTT_COM_ERROR);
     }
   }
+
+  if (exist_module("TelemMosquittoManager")) {
+    get_module_NC("TelemMosquittoManager", &telemetryMosquittoManager_);
+  }
+  else {
+    std::cerr << "Error in ReceiveCommand::mod_initialize: TelemMosquittoManager module not found." << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
+    }
+  }
   if (saveCommand_) {
     commandSaver_->setBinaryFilenameBase(binaryFilenameBase_);
     if (runIDManager_) {
@@ -238,6 +248,31 @@ bool ReceiveCommand::applyCommand(const std::vector<uint8_t> &command) {
       if (chatter_ >= 1) {
         std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Reset Error command received. All errors cleared." << std::endl;
       }
+    }
+    return true;
+  }
+  else if (code == static_cast<uint16_t>(CommunicationCodes::HUB_Set_Link) && argc == 1) {
+    if (telemetryMosquittoManager_) {
+      CommunicationLinkType link_type;
+      if (arguments[0] == 0) {
+        link_type = CommunicationLinkType::IRIDIUM;
+      }
+      else if (arguments[0] == 1) {
+        link_type = CommunicationLinkType::STARLINK;
+      }
+      else {
+        std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": Invalid link type argument received: " << arguments[0] << std::endl;
+        return false;
+      }
+      telemetryMosquittoManager_->setLinkType(link_type);
+      if (chatter_ >= 1) {
+        std::cout << module_id() << termutil::green << "[info]" << termutil::reset << ": Set Link command received. Link type set to " << static_cast<int>(link_type) << std::endl;
+      }
+    }
+    else {
+      std::cerr << module_id() << termutil::red << "[error]" << termutil::reset << ": MosquittoManager module not found." << std::endl;
+      sendTelemetry_->getErrorManager()->setError(ErrorType::MODULE_ACCESS_ERROR);
+      return false;
     }
     return true;
   }

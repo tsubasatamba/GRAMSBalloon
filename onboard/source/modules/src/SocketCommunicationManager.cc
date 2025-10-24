@@ -13,8 +13,6 @@ ANLStatus SocketCommunicationManager::mod_define() {
   define_parameter("timeout", &mod_class::timeout_);
   set_parameter_description("Receive Timeout");
   set_parameter_unit(1.0, "msec");
-  define_parameter("ack_type", &mod_class::ackTypeInt_);
-  set_parameter_description("Acknowledgement type. 0: Size, 1: Raw, 2: None");
   define_parameter("subsystem", &mod_class::subsystemInt_);
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
@@ -66,19 +64,6 @@ ANLStatus SocketCommunicationManager::mod_initialize() {
     }
     return AS_ERROR;
   }
-  if (ackTypeInt_ == 0) {
-    ackType_ = AcknowledgementType::SIZE;
-  }
-  else if (ackTypeInt_ == 1) {
-    ackType_ = AcknowledgementType::RAW;
-  }
-  else if (ackTypeInt_ == 2) {
-    ackType_ = AcknowledgementType::NONE;
-  }
-  else {
-    std::cerr << module_id() << "::mod_initialize Invalid ack_type: " << ackTypeInt_ << ". Setting to NONE." << std::endl;
-    ackType_ = AcknowledgementType::NONE;
-  }
   if (timeout_ > 0) {
     std::cout << module_id() << "::mod_initialize Timeout is set to " << timeout_ << " msec." << std::endl;
     socketCommunication_->setTimeout(timeout_);
@@ -95,8 +80,8 @@ ANLStatus SocketCommunicationManager::mod_finalize() {
   }
   return AS_OK;
 }
-int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) {
-  const int send_result = socketCommunication_->send(buf, n);
+int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n, const uint8_t *ack, size_t ack_n) {
+  const int send_result = singleton_self()->socketCommunication_->send(buf, n);
   if (send_result < 0) {
     return send_result;
   }
@@ -107,79 +92,31 @@ int SocketCommunicationManager::sendAndWaitForAck(const uint8_t *buf, size_t n) 
     }
     std::cout << std::endl;
   }
-  ackBuffer_.clear();
-  if (ackType_ == AcknowledgementType::SIZE) {
-    const int ret = socketCommunication_->receiveWithTimeout(ackBuffer_);
-    if (ret < 0) {
-      return ret;
-    }
-    else if (ret != sizeof(uint16_t)) {
-      std::cerr << module_id() << "::sendAndWaitForAck: Error in receiving acknowledgement. Expected size: " << sizeof(uint8_t) << ", Received size: " << ret << std::endl;
-      std::cerr << module_id() << "::sendAndWaitForAck: Acknowledgement data: ";
-      for (int i = 0; i < ret; ++i) {
-        std::cerr << static_cast<int>(ackBuffer_[i]) << " ";
-      }
-      std::cerr << std::endl;
-      return -ret;
-    }
-    if (chatter_ > 2) {
-      std::cout << module_id() << "::sendAndWaitForAck: Received acknowledgement: ";
-      for (const auto &byte: ackBuffer_) {
-        std::cout << static_cast<int>(byte) << " ";
-      }
-      std::cout << std::endl;
-    }
-    uint16_t packetsz = (ackBuffer_[0] << 8) | ackBuffer_[1];
-    if (packetsz != n) {
-      std::cerr << module_id() << "::sendAndWaitForAck: Acknowledgement size mismatch. Expected: " << n << ", Received: " << packetsz << std::endl;
-      return -ackBuffer_[0];
+  singleton_self()->ackBuffer_.clear();
+  singleton_self()->receive(singleton_self()->ackBuffer_);
+  const size_t acksz = singleton_self()->ackBuffer_.size();
+  if (acksz != ack_n) {
+    std::cerr << module_id() << "::sendAndWaitForAck: Acknowledgement size mismatch. Expected: " << ack_n << ", Received: " << acksz << std::endl;
+    return -acksz;
+  }
+  bool failed = false;
+  for (size_t i = 0; i < acksz; ++i) {
+    if (singleton_self()->ackBuffer_[i] != ack[i]) {
+      std::cerr << module_id() << "::sendAndWaitForAck: Acknowledgement data mismatch at " << i << ". Expected: " << static_cast<int>(ack[i]) << ", Received: " << static_cast<int>(singleton_self()->ackBuffer_[i]) << std::endl;
+      failed = true;
     }
   }
-  else if (ackType_ == AcknowledgementType::RAW) {
-    const int ret = socketCommunication_->receiveWithTimeout(ackBuffer_);
-    if (ret < 0) {
-      return ret;
-    }
-    if (chatter_ > 2) {
-      std::cout << module_id() << "::sendAndWaitForAck: Received acknowledgement: ";
-      for (const auto &byte: ackBuffer_) {
-        std::cout << static_cast<int>(byte) << " ";
-      }
-      std::cout << std::endl;
-    }
-    const size_t acksz = ackBuffer_.size();
-    if (acksz != n) {
-      std::cerr << module_id() << "::sendAndWaitForAck: Acknowledgement size mismatch. Expected: " << n << ", Received: " << ackBuffer_.size() << std::endl;
-      return -acksz;
-    }
-    bool failed = false;
-    for (size_t i = 0; i < acksz; ++i) {
-      if (ackBuffer_[i] != buf[i]) {
-        std::cerr << module_id() << "::sendAndWaitForAck: Acknowledgement data mismatch at " << i << ". Expected: " << static_cast<int>(buf[i]) << ", Received: " << static_cast<int>(ackBuffer_[i]) << std::endl;
-        failed = true;
-      }
-    }
-    if (failed) {
-      return -1;
-    }
+  if (failed) {
+    return -1;
   }
   return send_result;
 }
-int SocketCommunicationManager::receiveAndSendAck(std::vector<uint8_t> &data) {
-  const int ret = socketCommunication_->receive(data);
+int SocketCommunicationManager::receive(std::vector<uint8_t> &data) {
+  const int ret = singleton_self()->socketCommunication_->receive(data);
   if (ret <= 0) {
     return ret;
   }
   data.resize(ret);
-  if (ackType_ == AcknowledgementType::SIZE) {
-    ackBuffer_.resize(sizeof(uint16_t));
-    ackBuffer_[0] = (static_cast<uint16_t>(ret) >> 8) & 0x00FF;
-    ackBuffer_[1] = static_cast<uint16_t>(ret) & 0x00FF;
-    socketCommunication_->send(ackBuffer_.data(), sizeof(uint16_t));
-  }
-  else if (ackType_ == AcknowledgementType::RAW) {
-    socketCommunication_->send(data);
-  }
   return ret;
 }
 } // namespace gramsballoon::pgrams

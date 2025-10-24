@@ -7,6 +7,10 @@
 #include <string>
 
 namespace gramsballoon::pgrams {
+enum class CommunicationLinkType : int32_t {
+  IRIDIUM = 0,
+  STARLINK = 1,
+};
 class SendTelemetry;
 
 /**
@@ -50,6 +54,8 @@ public:
     singleton_self()->mosquittoIO_->Publish(message, topic, qos);
   }
   MosquittoIO<TelemType> *getMosquittoIO() { return singleton_self()->mosquittoIO_.get(); }
+  CommunicationLinkType getLinkType() const { return singleton_self()->linkType_; }
+  void setLinkType(CommunicationLinkType v) { singleton_self()->linkType_ = v; }
 
 private:
   std::shared_ptr<MosquittoIO<TelemType>> mosquittoIO_ = nullptr;
@@ -64,6 +70,7 @@ private:
   int timeout_ = 10;
   bool threadedSet_ = true;
   anlnext::ANLStatus HandleError(int error_code);
+  CommunicationLinkType linkType_ = CommunicationLinkType::IRIDIUM;
 };
 } // namespace gramsballoon::pgrams
 #endif // GB_MosquittoManager_hh

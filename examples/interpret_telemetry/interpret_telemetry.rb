@@ -13,24 +13,22 @@ class MyApp < ANL::ANLApp
       exit 1
     end
     chain GRAMSBalloon::TelemMosquittoManager, "TelemMosquittoManager"
-    with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 60, chatter: 0, threaded_set: true, device_id: "Ground") do |m|
+    with_parameters(host: ENV["PGRAMS_MOSQUITTO_HOST"], port: ENV["PGRAMS_MOSQUITTO_PORT"].to_i, password: ENV["PGRAMS_MOSQUITTO_PASSWD"], user: ENV["PGRAMS_MOSQUITTO_USER"], keep_alive: 10, chatter: 0, threaded_set: true, device_id: "Ground") do |m|
       m.set_singleton(0)
     end
     subsystems = ["Orchestrator"]
     for subsystem in subsystems
-    chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_#{subsystem}"
-    with_parameters(topic: @inifile[subsystem]["teltopic"], chatter: 0)
-    chain GRAMSBalloon::InterpretBaseTelemetry, "InterpretBaseTelemetry_#{subsystem}"
-    with_parameters(receiver_module_name: "ReceiveTelemetry_#{subsystem}", chatter: 2)
-  end
-  chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_HK"
-  with_parameters(topic: "Hub_Telemetry", chatter: 0)
-  chain GRAMSBalloon::InterpretHKTelemetry, "InterpretHKTelemetry"
-  with_parameters(receiver_module_name: "ReceiveTelemetry_HK", run_ID_filename: ENV["HOME"] + "/settings/run_id/run_id_ground.txt", save_telemetry: true, num_telem_per_file: 1000, chatter: 2)
-  chain GRAMSBalloon::Sleep
-  with_parameters(sleep_sec:1)
+      chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_#{subsystem}"
+      with_parameters(topic: @inifile[subsystem]["teltopic"], chatter: 0)
+      chain GRAMSBalloon::InterpretBaseTelemetry, "InterpretBaseTelemetry_#{subsystem}"
+      with_parameters(receiver_module_name: "ReceiveTelemetry_#{subsystem}", chatter: 2)
+    end
+    chain GRAMSBalloon::ReceiveTelemetry, "ReceiveTelemetry_HK"
+    with_parameters(topic: "Hub_Telemetry", chatter: 0)
+    chain GRAMSBalloon::InterpretHKTelemetry, "InterpretHKTelemetry"
+    with_parameters(receiver_module_name: "ReceiveTelemetry_HK", run_ID_filename: ENV["HOME"] + "/settings/run_id/run_id_ground.txt", save_telemetry: true, num_telem_per_file: 1000, chatter: 2)
   end
 end
 
 a = MyApp.new
-a.run(:all, 1)
+a.run(:all)

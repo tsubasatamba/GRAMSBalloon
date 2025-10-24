@@ -6,13 +6,15 @@ ANLStatus PassTelemetry::mod_define() {
   define_parameter("MosquittoManager_name", &mod_class::mosquittoManagerName_);
   set_parameter_description("Name of MosquittoManager");
   define_parameter("topic", &mod_class::topic_);
-  set_parameter_description("Topic to publish");
+  set_parameter_description("Topic for iridium packets");
+  define_parameter("starlink_topic", &mod_class::starlinkTopic_);
+  set_parameter_description("Topic for Starlink packets");
   define_parameter("DividePacket_name", &mod_class::dividePacketName_);
   set_parameter_description("Name of DividePacket module");
   define_parameter("qos", &mod_class::qos_);
   set_parameter_description("QoS level for MQTT");
   define_parameter("is_starlink", &mod_class::isStarlink_);
-  set_parameter_description("Set true if the packets are from Starlink");
+  set_parameter_description("Set true if this module handles not critical packets only via Starlink");
   define_parameter("chatter", &mod_class::chatter_);
   return AS_OK;
 }
@@ -65,10 +67,20 @@ ANLStatus PassTelemetry::mod_analyze() {
 
   outStr_.clear();
   packet->construct(outStr_);
-  MosquittoIO<std::string>::HandleError(mosq->Publish(outStr_, topic_, qos_));
-  if (chatter_ > 0) {
-    std::cout << "PassTelemetry::mod_analyze: Published packet to " << topic_ << std::endl;
+  const auto link_type = mosquittoManager_->getLinkType();
+  if (link_type == CommunicationLinkType::STARLINK) {
+    MosquittoIO<std::string>::HandleError(mosq->Publish(outStr_, starlinkTopic_, qos_));
+    if (chatter_ > 0) {
+      std::cout << "PassTelemetry::mod_analyze: Published packet to " << starlinkTopic_ << std::endl;
+    }
   }
+  else if (link_type == CommunicationLinkType::IRIDIUM && !isStarlink_) {
+    MosquittoIO<std::string>::HandleError(mosq->Publish(outStr_, topic_, qos_));
+    if (chatter_ > 0) {
+      std::cout << "PassTelemetry::mod_analyze: Published packet to " << topic_ << std::endl;
+    }
+  }
+
   dividePacket_->PopPacket(isStarlink_);
   return AS_OK;
 }

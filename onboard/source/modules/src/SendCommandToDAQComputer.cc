@@ -54,6 +54,14 @@ ANLStatus SendCommandToDAQComputer::mod_initialize() {
     std::cerr << module_id() << "::mod_initialize Failed to create CommunicationFormat." << std::endl;
     return AS_ERROR;
   }
+  heartbeatAck_ = std::make_shared<CommunicationFormat>();
+  if (heartbeatAck_) {
+    heartbeatAck_->setCode(castCommandCode(CommunicationCodes::COM_HeartBeat));
+    heartbeatAck_->setArgc(1); // index of the heartbeat
+    heartbeatAck_->setArguments(0, heartbeat_->Command().size());
+    heartbeatAck_->update();
+  }
+
   failed_ = false;
   return AS_OK;
 }
@@ -99,7 +107,7 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
         }
         std::cout << std::endl;
       }
-      const int send_result = socketCommunicationManager_->sendAndWaitForAck(heartbeat_->Command());
+      const int send_result = socketCommunicationManager_->sendAndWaitForAck(heartbeat_->Command(), heartbeatAck_->Command());
       if (send_result < 0) {
         std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending heartbeat is failed" << std::endl;
       }
@@ -110,7 +118,31 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
     }
     return AS_OK;
   }
-  const int send_result = socketCommunicationManager_->sendAndWaitForAck(m_sptr->payload); // TODO: this depends on telemetry definition.
+
+  if (!currentCommand_) {
+    currentCommand_ = std::make_shared<CommunicationFormat>();
+  }
+  const bool success = currentCommand_->setData(m_sptr->payload);
+  if (!success) {
+    std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Setting data to CommunicationFormat failed." << std::endl;
+    if (sendTelemetry_) {
+      sendTelemetry_->getErrorManager()->setError(ErrorManager::GetDaqFormatErrorType(subsystem_, true));
+    }
+    return AS_OK;
+  }
+  currentCommand_->interpret();
+  if (chatter_ > 1) {
+    std::cout << "Sending command:" << std::endl;
+    currentCommand_->print(std::cout);
+  }
+  if (!commandAck_) {
+    commandAck_ = std::make_shared<CommunicationFormat>();
+  }
+  commandAck_->setCode(currentCommand_->Code());
+  commandAck_->setArgc(1); // size of the command
+  commandAck_->setArguments(0, currentCommand_->Command().size());
+  commandAck_->update();
+  const int send_result = socketCommunicationManager_->sendAndWaitForAck(m_sptr->payload, commandAck_->Command()); // TODO: this depends on telemetry definition.
   if (send_result < 0) {
     std::cerr << "Error in " << module_id() << "::mod_analyze: " << "Sending command is failed" << std::endl;
     failed_ = true;
@@ -121,6 +153,13 @@ ANLStatus SendCommandToDAQComputer::mod_analyze() {
   else if (chatter_ > 0) {
     std::cout << "Sent data from " << m_sptr->topic << std::endl;
     std::cout << "Payload size: " << send_result << std::endl;
+  }
+  else {
+    commandIndex_++;
+    if (sendTelemetry_) {
+      sendTelemetry_->setLastComIndex(subsystem_, commandIndex_);
+      sendTelemetry_->setLastComCode(subsystem_, currentCommand_->Code());
+    }
   }
   if (chatter_ > 1) {
     std::cout << "Payload:" << std::endl;

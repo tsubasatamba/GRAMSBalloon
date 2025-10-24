@@ -89,7 +89,7 @@ ANLStatus ReceiveStatusFromDAQComputer::mod_analyze() {
     buffer_for_display->reserve(MAX_BYTES);
   }
   const auto now = std::chrono::steady_clock::now();
-  const auto result = socketCommunicationManager_->receiveAndSendAck(bufTmp_);
+  const auto result = socketCommunicationManager_->receive(bufTmp_);
   if (result > 0) {
     buffer_.insert(buffer_.end(), bufTmp_.begin(), bufTmp_.begin() + result);
     if (chatter_ > 1) {
