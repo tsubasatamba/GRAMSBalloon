@@ -78,7 +78,9 @@ ANLStatus SendTelemetry::mod_analyze() {
   telemIndex_++;
   telemdef_->update();
   telemdef_->construct(telemetryStr_);
-  std::cout << module_id() << ":telelemetry is " << telemetryStr_ << std::endl;
+  if (chatter_ > 2) {
+    std::cout << module_id() << ":telelemetry is " << telemetryStr_ << std::endl;
+  }
   int status;
   if (mosquittoManager_->getLinkType() == CommunicationLinkType::STARLINK) {
     status = mosq_->Publish(telemetryStr_, starlinkTopic_, qos_);
@@ -99,7 +101,7 @@ ANLStatus SendTelemetry::mod_analyze() {
     telemetrySaver_->writeCommandToFile(failed, telemetryStr_);
   }
 
-  if (chatter_ >= 1) {
+  if (chatter_ > 3) {
     std::cout << (int)telemetryStr_.size() << std::endl;
     for (int i = 0; i < (int)telemetryStr_.size(); i++) {
       std::cout << i << " " << static_cast<int>(telemetryStr_[i]) << std::endl;
@@ -199,7 +201,9 @@ void SendTelemetry::setHKTelemetry() {
       telemdef_->setStorageSize(getComputerStatus_->CapacityFree() / toMB);
       telemdef_->setRamUsage(getComputerStatus_->MemoryUsage() / kBtoMB);
     }
-    telemdef_->print(std::cout);
+    if (chatter_ > 1) {
+      telemdef_->print(std::cout);
+    }
   }
 #endif
 }
