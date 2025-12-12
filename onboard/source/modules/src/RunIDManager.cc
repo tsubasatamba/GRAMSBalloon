@@ -4,7 +4,7 @@
 
 using namespace anlnext;
 
-namespace gramsballoon::pgrams {
+namespace gramsballoon {
 
 RunIDManager::RunIDManager()
 {
@@ -21,7 +21,7 @@ ANLStatus RunIDManager::mod_define()
   return AS_OK;
 }
 
-ANLStatus RunIDManager::mod_pre_initialize()
+ANLStatus RunIDManager::mod_initialize()
 {
   timeStampStr_ = getTimeStr();
   

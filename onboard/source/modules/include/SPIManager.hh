@@ -8,7 +8,6 @@
 
 #ifndef SPIManager_H
 #define SPIManager_H 1
-#ifndef GB_DEMO_MODE
 
 #include <anlnext/BasicModule.hh>
 #include "SPIInterface.hh"
@@ -51,5 +50,4 @@ private:
 
 } /* namespace gramsballoon */
 
-#endif /* GB_DEMO_MODE */
 #endif /* SPIManager_H */

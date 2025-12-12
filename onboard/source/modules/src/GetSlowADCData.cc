@@ -1,4 +1,3 @@
-#ifndef GB_DEMO_MODE
 #include "GetSlowADCData.hh"
 #include <chrono>
 #include <thread>
@@ -121,4 +120,3 @@ ANLStatus GetSlowADCData::mod_finalize()
 }
 
 } /* namespace gramsballoon */
-#endif /* GB_DEMO_MODE */
