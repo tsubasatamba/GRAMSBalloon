@@ -19,8 +19,11 @@ InterpretTelemetry<TelemType>::InterpretTelemetry() {
 template <typename TelemType>
 ANLStatus InterpretTelemetry<TelemType>::mod_define() {
   define_parameter("save_telemetry", &mod_class::saveTelemetry_);
+  set_parameter_description("Switch for saving telemetry");
   define_parameter("num_telem_per_file", &mod_class::numTelemPerFile_);
+  set_parameter_description("number of packet per a file. This parameter is valid only when save_telemetry is true");
   define_parameter("run_ID_filename", &mod_class::runIDFilename_);
+  set_parameter_description("Filename of run id, This paramater is valid only when The")
   define_parameter("binary_filename_base", &mod_class::binaryFilenameBase_);
   define_parameter("receiver_module_name", &mod_class::receiverModuleName_);
   define_parameter("chatter", &mod_class::chatter_);

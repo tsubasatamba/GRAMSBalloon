@@ -11,7 +11,7 @@ a.push GetMHADCData.new
 
 # a.push GetComputerStatus.new
 
-a.push InterpretBaseTelemetry.new
+a.push InterpretTelemetry.new
 #a.push InterpretHKTelemetry.new
 
 a.push IoContextManager.new
