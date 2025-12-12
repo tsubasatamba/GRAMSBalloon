@@ -2,58 +2,46 @@
 %{
 // include headers of my modules
 #include <anlnext/BasicModule.hh>
+#include <string>
 #include "SimpleLoop.hh"
-#ifdef USE_PIGPIO
-#include "SPIManager.hh"
-#endif
-#ifdef USE_PIGPIO
-#include "GetEnvironmentalData.hh"
-#endif
-#ifdef USE_WAVEFORMS
+#include "Sleep.hh"
+#ifndef GB_MAC
 #include "ReceiveCommand.hh"
 #endif
-#ifdef USE_WAVEFORMS
-#include "AnalogDiscoveryManager.hh"
-#endif
-#ifdef USE_WAVEFORMS
-#include "ControlHighVoltage.hh"
-#endif
-#ifdef USE_PIGPIO
-#include "MeasureTemperatureWithRTDSensor.hh"
-#endif
-#ifdef USE_WAVEFORMS
-#include "ReadWaveform.hh"
-#endif
-#ifdef USE_WAVEFORMS
+#ifndef GB_MAC
 #include "SendTelemetry.hh"
 #endif
-#ifdef USE_RASPISYS
-#include "GetRaspiStatus.hh"
-#endif
-#ifdef USE_ICM20948
-#include "MeasureAcceleration.hh"
-#endif
-#include "ReceiveTelemetry.hh"
-#ifdef USE_RASPISYS
+#ifdef USE_SYSTEM_MODULES
+#include "GetComputerStatus.hh"
 #include "ShutdownSystem.hh"
 #endif
-#ifdef USE_ROOT
+#include "ReceiveTelemetry.hh"
 #include "InterpretTelemetry.hh"
-#endif
 #ifdef USE_HSQUICKLOOK
 #include "PushToMongoDB.hh"
 #endif
-#ifdef USE_PIGPIO
-#include "GetSlowADCData.hh"
-#endif
 #include "RunIDManager.hh"
 #include "ReadTelemetry.hh"
-#ifdef USE_ROOT
-#include "PlotWaveform.hh"
+#include "DumpSerial.hh"
+#include "GetMHADCData.hh"
+#include "EncodedSerialCommunicator.hh"
+
+
+#ifdef USE_MYSQL
+#include "PushToMySQL.hh"
 #endif
+#include "MosquittoManager.hh"
+#include "DistributeCommand.hh"
+#include "ReceiveStatusFromDAQComputer.hh"
+#include "DividePacket.hh"
+#include "PassTelemetry.hh"
+#include "IoContextManager.hh"
+#include "SendCommandToDAQComputer.hh"
 %}
 
 %include "std_vector.i"
+%include "stdint.i"
+%include "std_string.i"
 %import(module="anlnext/ANL") "anlnext/ruby/ANL.i"
 
 // interface to my modules
@@ -65,7 +53,13 @@ class SimpleLoop : public anlnext::BasicModule
 public:
   SimpleLoop();
 };
-
+namespace pgrams{
+class Sleep : public anlnext::BasicModule
+{
+public:
+  Sleep();
+};
+}
 #ifdef USE_PIGPIO
 class SPIManager : public anlnext::BasicModule
 {
@@ -74,99 +68,111 @@ public:
 };
 #endif
 
-#ifdef USE_PIGPIO
-class GetEnvironmentalData : public anlnext::BasicModule
+
+namespace pgrams {
+
+#ifdef USE_SYSTEM_MODULES
+class GetComputerStatus : public anlnext::BasicModule
 {
 public:
-  GetEnvironmentalData();
+  GetComputerStatus();
 };
 #endif
-
-#ifdef USE_WAVEFORMS
 class ReceiveCommand : public anlnext::BasicModule
 {
 public:
   ReceiveCommand();
 };
-#endif
-
-#ifdef USE_WAVEFORMS
-class AnalogDiscoveryManager : public anlnext::BasicModule
-{
-public:
-  AnalogDiscoveryManager();
-};
-#endif
-
-#ifdef USE_WAVEFORMS
-class ControlHighVoltage : public anlnext::BasicModule
-{
-public:
-  ControlHighVoltage();
-};
-#endif
-
-#ifdef USE_PIGPIO
-class MeasureTemperatureWithRTDSensor : public anlnext::BasicModule
-{
-public:
-  MeasureTemperatureWithRTDSensor();
-};
-#endif
-
-#ifdef USE_WAVEFORMS
-class ReadWaveform : public anlnext::BasicModule
-{
-public:
-  ReadWaveform();
-};
-#endif
-
-#ifdef USE_WAVEFORMS
 class SendTelemetry : public anlnext::BasicModule
 {
 public:
   SendTelemetry();
 };
-#endif
-
-#ifdef USE_RASPISYS
-class GetRaspiStatus : public anlnext::BasicModule
-{
-public:
-  GetRaspiStatus();
-};
-#endif
-
-#ifdef USE_ICM20948
-class MeasureAcceleration :  public anlnext::BasicModule
-{
-public:
-  MeasureAcceleration();
-};
-#endif
-
 class ReceiveTelemetry :  public anlnext::BasicModule
 {
 public:
   ReceiveTelemetry();
 };
 
-#ifdef USE_RASPISYS
+//class DumpSerial: public anlnext::BasicModule {
+//public:
+//    DumpSerial();
+//};
+
+class GetMHADCData: public anlnext::BasicModule {
+public:
+  GetMHADCData();
+};
+
+class EncodedSerialCommunicator: public anlnext::BasicModule {
+public:
+  EncodedSerialCommunicator();
+};
+
+class IoContextManager: public anlnext::BasicModule{
+public:
+  IoContextManager();
+};
+class ReceiveStatusFromDAQComputer: public anlnext::BasicModule{
+public:
+  ReceiveStatusFromDAQComputer();
+};
+class SocketCommunicationManager: public anlnext::BasicModule{
+public:
+  SocketCommunicationManager();
+};
+class SendCommandToDAQComputer: public anlnext::BasicModule {
+public:
+  SendCommandToDAQComputer();
+};
+#ifdef USE_MYSQL
+class PushToMySQL : public anlnext::BasicModule
+{
+public:
+  PushToMySQL();
+};
+#endif
+template <typename TelemType>
+class MosquittoManager: public anlnext::BasicModule
+{
+public:
+  MosquittoManager();
+};
+
+class DistributeCommand: public anlnext::BasicModule {
+public:
+  DistributeCommand();
+};
+class DividePacket: public anlnext::BasicModule {
+public:
+  DividePacket();
+};
+class PassTelemetry: public anlnext::BasicModule {
+public:
+  PassTelemetry();
+};
+template <typename TelemType>
+class InterpretTelemetry : public anlnext::BasicModule
+{
+public:
+  InterpretTelemetry();
+};
+#ifdef USE_SYSTEM_MODULES
 class ShutdownSystem : public anlnext::BasicModule
 {
 public:
   ShutdownSystem();
 };
 #endif
-
-#ifdef USE_ROOT
-class InterpretTelemetry : public anlnext::BasicModule
+class RunIDManager : public anlnext::BasicModule
 {
 public:
-  InterpretTelemetry();
+  RunIDManager();
 };
-#endif
+
+} // namespace pgrams
+
+
 
 #ifdef USE_HSQUICKLOOK
 class PushToMongoDB : public anlnext::BasicModule
@@ -176,32 +182,21 @@ public:
 };
 #endif
 
-#ifdef USE_PIGPIO
-class GetSlowADCData : public anlnext::BasicModule
-{
-public:
-  GetSlowADCData();
-};
-#endif
+//class ReadTelemetry : public anlnext::BasicModule
+//{
+//public:
+//  ReadTelemetry();
+//};
 
-class RunIDManager : public anlnext::BasicModule
-{
+namespace pgrams{
+class MeasureOrientationByMHADC: public anlnext::BasicModule {
 public:
-  RunIDManager();
+  MeasureOrientationByMHADC();
 };
-
-class ReadTelemetry : public anlnext::BasicModule
-{
-public:
-  ReadTelemetry();
-};
-
-#ifdef USE_ROOT
-class PlotWaveform : public anlnext::BasicModule
-{
-public:
-  PlotWaveform();
-};
-#endif
-
+} // namespace pgrams
 } // namespace GRAMSBalloon
+%template(TelemMosquittoManager) gramsballoon::pgrams::MosquittoManager<std::string>;
+%template(ComMosquittoManager) gramsballoon::pgrams::MosquittoManager<std::vector<uint8_t>>;
+%template(InterpretHKTelemetry) gramsballoon::pgrams::InterpretTelemetry<gramsballoon::pgrams::HubHKTelemetry>;
+%template(InterpretBaseTelemetry)
+gramsballoon::pgrams::InterpretTelemetry<gramsballoon::pgrams::BaseTelemetryDefinition>;

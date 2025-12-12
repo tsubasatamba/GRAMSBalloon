@@ -1,50 +1,59 @@
 /**
- * Regulate high voltage via Analog Discovery.
+ * Module for Sending telemetry.
  *
  * @author Tsubasa Tamba, Shota Arai
  * @date 2023-03-25
+ * @date 2025-**-** | v2.0
+ * @date 2025-09-20 | Json-wrapped telemetry. (v3.0)
  */
-
 
 #ifndef SendTelemetry_H
 #define SendTelemetry_H 1
 
-#include <anlnext/BasicModule.hh>
-#include "TelemetryDefinition.hh"
+#include "BaseTelemetryDefinition.hh"
+#include "CommunicationSaver.hh"
 #include "ErrorManager.hh"
-#include "ReadWaveform.hh"
-#include "MeasureTemperatureWithRTDSensor.hh"
-#include "ControlHighVoltage.hh"
-#include "GetRaspiStatus.hh"
-#include "GetEnvironmentalData.hh"
-#include "MeasureAcceleration.hh"
-#include "GetSlowADCData.hh"
-#include "SerialCommunication.hh"
+#include "GetComputerStatus.hh"
+#include "GetMHADCData.hh"
+#include "HubHKTelemetry.hh"
+#include "MHADCMapping.hh"
+#include "MeasureOrientationByMHADC.hh"
+#include "MosquittoManager.hh"
 #include "ReceiveCommand.hh"
 #include "RunIDManager.hh"
+#include <anlnext/BasicModule.hh>
+#include <thread>
 
 namespace gramsballoon {
 
-class ReadWaveform;
 class MeasureTemperatureWithRTDSensor;
-class ControlHighVoltage;
-class GetRaspiStatus;
-class GetEnvironmentalData;
-class MeasureAcceleration;
-class GetSlowADCData;
 class ReceiveCommand;
 class RunIDManager;
+} // namespace gramsballoon
+namespace gramsballoon::pgrams {
+class GetMHADCData;
+class GetPressure;
+template <typename T>
+class MosquittoManager;
+class DistributeCommand;
+class BaseTelemetryDefinition;
+class HubHKtelemetry;
+class ErrorManager;
+template <typename T>
+class CommunicationSaver;
+class MHADCMapping;
+class GetComputerStatus;
 
-class SendTelemetry : public anlnext::BasicModule
-{
-  DEFINE_ANL_MODULE(SendTelemetry, 1.0);
+class SendTelemetry: public anlnext::BasicModule {
+  DEFINE_ANL_MODULE(SendTelemetry, 3.1);
   ENABLE_PARALLEL_RUN();
 
 public:
   SendTelemetry();
   virtual ~SendTelemetry();
+
 protected:
-  SendTelemetry(const SendTelemetry& r) = default;
+  SendTelemetry(const SendTelemetry &r) = default;
 
 public:
   anlnext::ANLStatus mod_define() override;
@@ -52,61 +61,47 @@ public:
   anlnext::ANLStatus mod_analyze() override;
   anlnext::ANLStatus mod_finalize() override;
 
-  void inputInfo();
-  void inputDetectorInfo();
-  void inputHKVesselInfo();
-  void inputSoftwareInfo();
-  void inputStatusInfo();
-  void writeTelemetryToFile(bool failed);
-
   void setTelemetryType(int v) { singleton_self()->telemetryType_ = v; }
   int TelemetryType() { return singleton_self()->telemetryType_; }
 
-  void setEventID(int v) { telemdef_->setEventID(v); };
-  void setEventHeader(const std::vector<int16_t>& v) { telemdef_->setEventHeader(v); }
-  void setEventData(const std::vector<std::vector<int16_t>>& v) { telemdef_->setEventData(v); }
-  int EventID() { return telemdef_->EventID(); }
-  const std::vector<int16_t>& EventHeader() const { return telemdef_->EventHeader(); }
-  const std::vector<std::vector<int16_t>>& EventData() const { return telemdef_->EventData(); }
-  ErrorManager* getErrorManager() { return (singleton_self()->errorManager_).get(); }
-  int WfDivisionCounter() { return singleton_self()->wfDivisionCounter_; }
+  void setLastComIndex(Subsystem subsystem, uint32_t v);
+  void setLastComCode(Subsystem subsystem, uint16_t v);
+
+  ErrorManager *getErrorManager() { return (singleton_self()->errorManager_).get(); }
 
 private:
-  std::shared_ptr<TelemetryDefinition> telemdef_ = nullptr;
+  void setHKTelemetry();
+  void getHKModules();
+  std::shared_ptr<HubHKTelemetry> telemdef_ = nullptr;
   int telemetryType_ = 1;
   std::shared_ptr<ErrorManager> errorManager_ = nullptr;
-  std::map<int, std::pair<int, int>> fileIDmp_;
   bool saveTelemetry_ = true;
+  std::shared_ptr<CommunicationSaver<std::string>> telemetrySaver_ = nullptr;
+  std::shared_ptr<MHADCMapping> mhadcMapping_ = nullptr;
+  uint32_t telemIndex_ = 0;
   std::string binaryFilenameBase_ = "";
   int numTelemPerFile_ = 1000;
-  static constexpr int sleepms_ = 500;
-  int wfDivisionCounter_ = 0;
+  int sleepms_ = 500;
   int chatter_ = 0;
+  std::string telemetryStr_ = "";
 
   // access to other classes
-  ReadWaveform* readWaveform_ = nullptr;
-  std::vector<std::string> measureTemperatureModuleNames_;
-  std::vector<MeasureTemperatureWithRTDSensor*> measureTemperatureVec_;
-  std::string TPCHVControllerModuleName_ = "";
-  ControlHighVoltage* TPCHVController_ = nullptr;
-  std::string PMTHVControllerModuleName_ = "";
-  ControlHighVoltage* PMTHVController_ = nullptr;
-  GetRaspiStatus* getRaspiStatus_ = nullptr;
-  std::vector<std::string> getEnvironmentalDataModuleNames_;
-  std::vector<GetEnvironmentalData*> getEnvironmentalDataVec_;
-  MeasureAcceleration* measureAcceleration_ = nullptr;
-  GetSlowADCData* getSlowADCData_ = nullptr;
-  ReceiveCommand* receiveCommand_ = nullptr;
-  RunIDManager* runIDManager_ = nullptr;
+  ReceiveCommand *receiveCommand_ = nullptr;
+  RunIDManager *runIDManager_ = nullptr;
+  pgrams::MosquittoManager<std::string> *mosquittoManager_ = nullptr;
 
-  // communication
-  std::shared_ptr<SerialCommunication> sc_;
-  std::string serialPath_;
-  speed_t baudrate_ = B9600;
-  mode_t openMode_ = O_RDWR;
+  pgrams::MosquittoIO<std::string> *mosq_ = nullptr;
+  std::string pubTopic_ = "telemetry";
+  std::string starlinkTopic_ = "StarlinkTelemetry";
+  int qos_ = 0;
 
+  // HK data modules
+  const GetMHADCData *getMhadcData_ = nullptr;
+#ifdef USE_SYSTEM_MODULES
+  const GetComputerStatus *getComputerStatus_ = nullptr;
+#endif
 };
 
-} /* namespace gramsballoon */
+} /* namespace gramsballoon::pgrams */
 
 #endif /* SendTelemetry_H */
