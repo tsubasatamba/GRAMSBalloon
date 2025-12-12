@@ -1,11 +1,10 @@
-#ifdef USE_SYSTEM_MODULES
 #include "ShutdownSystem.hh"
 #include <string.h>
 #include <errno.h>
 
 using namespace anlnext;
 
-namespace gramsballoon::pgrams {
+namespace gramsballoon {
 
 ANLStatus ShutdownSystem::mod_define()
 {
@@ -180,4 +179,3 @@ void ShutdownSystem::setSoftwareStop(bool v)
 
 
 } /* namespace gramsballoon */
-#endif

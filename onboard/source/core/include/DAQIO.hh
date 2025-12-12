@@ -1,6 +1,5 @@
 #ifndef DAQIO_H
 #define DAQIO_H 1
-#ifndef GB_DEMO_MODE
 
 
 #include <iostream>
@@ -16,7 +15,7 @@
  * @author Tsubasa Tamba, Masato Kimura
  * @date 2023-03-21
  */
-#endif /* GB_DEMO_MODE */
+
 namespace gramsballoon {
 
 enum class TriggerSrc {
@@ -35,7 +34,7 @@ enum class TriggerSlope {
 enum class DAQResult {
   TRIGGERED, NON_DETECTION
 };
-#ifndef GB_DEMO_MODE
+
 class DAQIO
 {
 public:
@@ -85,7 +84,6 @@ private:
   static constexpr int AD2_MAXBIN = 8192;
 };
 
-#endif /* GB_DEMO_MODE */
 } /* namespace gramsballoon */
 
 #endif /* DAQIO_H */
